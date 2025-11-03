@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Kreate Interior Design</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdfdfd;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #1a1a1a;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 25px;
+        }
+
+        .main-nav a {
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: #000;
+            border-bottom: 2px solid #333;
+        }
+
+        /* --- Gallery Page Styles --- */
+        .gallery-main {
+            padding: 60px 0;
+        }
+        
+        .gallery-intro {
+            text-align: center;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            color: #555;
+        }
+        
+        .gallery-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-page-grid .gallery-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .gallery-page-grid .gallery-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- Lightbox Modal Styles --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 4px;
+            animation: zoomIn 0.3s;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        
+        @keyframes zoomIn {
+            from {transform: scale(0.8)}
+            to {transform: scale(1)}
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-nav a {
+            color: #fff;
+        }
+        
+        .footer .logo {
+            color: #fff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .gallery-page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">KREATE</a> <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="gallery-main">
+        <div class="container">
+            <h2>Our Gallery</h2>
+            <p class="gallery-intro">
+                Explore a collection of our completed projects. See how we transform spaces from simple concepts into sophisticated and comfortable homes.
+            </p>
+            
+            <div class="gallery-page-grid">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-1.jpg" alt="Modern interior design project 1" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-2.jpg" alt="Modern interior design project 2" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-3.jpg" alt="Modern interior design project 3" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-4.jpg" alt="Modern interior design project 4" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-5.jpg" alt="Modern interior design project 5" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-6.jpg" alt="Modern interior design project 6" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-7.jpg" alt="Modern interior design project 7" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-8.jpg" alt="Modern interior design project 8" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-9.jpg" alt="Modern interior design project 9" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-10.jpg" alt="Modern interior design project 10" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-11.jpg" alt="Modern interior design project 11" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-12.jpg" alt="Modern interior design project 12" class="gallery-img">
+            </div>
+        </div>
+    </main>
+    
+    <div id="lightbox-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="lightbox-img">
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">KREATE</a>
+            <nav class="footer-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <p class="copyright">
+                © 2025 Kreate Interior Design | interior-design.kreate.com
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal = document.getElementById("lightbox-modal");
+            var modalImg = document.getElementById("lightbox-img");
+            var galleryImages = document.querySelectorAll(".gallery-img");
+            var closeBtn = document.querySelector(".close-btn");
+
+            // Loop through all gallery images and add click event
+            galleryImages.forEach(function(img) {
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                }
+            });
+
+            // When the user clicks on <span> (x), close the modal
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Also close modal when clicking outside the image
+            modal.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

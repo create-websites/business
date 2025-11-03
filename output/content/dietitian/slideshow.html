@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow - NourishWell Nutrition | Healthy Living</title>
+
+    <meta name="description" content="Watch a beautiful slideshow of healthy foods and wellness concepts from NourishWell Nutrition. Get inspired for your health journey.">
+    <meta name="keywords" content="dietitian slideshow, healthy food slideshow, nutrition photos, wellness gallery, healthy meal prep, nourishwell nutrition">
+
+    <meta property="og:title" content="Slideshow - NourishWell Nutrition | Healthy & Vibrant Foods">
+    <meta property="og:description" content="A beautiful presentation of healthy, nourishing foods and wellness concepts from NourishWell Nutrition.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://business.kreate.com/dietitian/slideshow"> <meta property="og:image" content="https://storage.googleapis.com/imagesu/diet/diet-7.jpg"> <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "NourishWell Nutrition Slideshow",
+      "description": "A slideshow of healthy, nourishing foods and wellness concepts from NourishWell Nutrition.",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://business.kreate.com/dietitian/slideshow"
+      },
+      "image": [
+        "https://storage.googleapis.com/imagesu/diet/diet-1.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-2.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-3.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-4.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-5.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-6.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-7.jpg"
+      ]
+    }
+    </script>
+
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f_f_ff; /* Clean white background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: #006A4E; /* Deep Green */
+            font-family: "Georgia", "Times New Roman", serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: #006A4E;
+            font-weight: 500;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #006A4E; /* Green */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #000;
+            font-weight: 600;
+        }
+        
+        /* --- Slideshow Page Styles --- */
+        .slideshow-main {
+            padding: 40px 0 60px 0;
+        }
+        
+        /* Slideshow container */
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        /* Hide the images by default */
+        .mySlides {
+            display: none;
+        }
+        
+        .mySlides img {
+            width: 100%;
+            height: 550px; /* Taller height for a slideshow */
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Next & previous buttons */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Position the "next button" to the right */
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Caption text */
+        .slide-caption {
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-family: "Georgia", "Times New Roman", serif;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* The dots/bullets/indicators */
+        .dot-container {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f1f1f1;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active-dot, .dot:hover {
+            background-color: #006A4E; /* Green color */
+        }
+
+        /* Fading animation */
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f_f_ff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .mySlides img {
+                height: 300px;
+            }
+            .prev, .next {
+                font-size: 18px;
+                padding: 12px;
+            }
+            .dot {
+                height: 12px;
+                width: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">NOURISHWELL</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="slideshow.html" class="active">Slideshow</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="slideshow-main">
+        <div class="container">
+            <h2>Our Wellness Slideshow</h2>
+
+            <div class="slideshow-container">
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/diet/diet-1.jpg" alt="A vibrant, healthy salad bowl">
+                    <div class="slide-caption">Vibrant, Nourishing Food</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/diet/diet-7.jpg" alt="A spread of fresh, colorful fruits and vegetables">
+                    <div class="slide-caption">Eat the Rainbow</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/diet/diet-4.jpg" alt="A healthy yogurt bowl with fruit for gut health">
+                    <div class="slide-caption">Focus on Gut Health</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/diet/diet-5.jpg" alt="Healthy meal prep containers">
+                    <div class="slide-caption">Sustainable Meal Prep</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/diet/diet-3.jpg" alt="Dietitian in consultation with a client">
+                    <div class="slide-caption">Personalized, 1-on-1 Coaching</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/diet/diet-6.jpg" alt="A person writing in a food journal">
+                    <div class="slide-caption">Mindful Eating Practices</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/diet/diet-2.jpg" alt="Fresh vegetables including carrots and broccoli">
+                    <div class="slide-caption">Fresh, Whole Ingredients</div>
+                </div>
+
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                
+                <div class="dot-container">
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                    <span class="dot" onclick="currentSlide(5)"></span>
+                    <span class="dot" onclick="currentSlide(6)"></span>
+                    <span class="dot" onclick="currentSlide(7)"></span>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">NOURISHWELL</a>
+            <div class="footer-contact">
+                <p>Phone: 425-341-1111 | Email: contact@kreate.com</p>
+                <p>https://business.kreate.com/dietitian</p>
+            </div>
+            <p class="copyright">
+                © 2025 NourishWell Nutrition
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        // Next/previous controls
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        // Thumbnail image controls
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            
+            // Hide all slides
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            // Remove "active-dot" class from all dots
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", "");
+            }
+            
+            // Show the current slide and add "active-dot" to the corresponding dot
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active-dot";
+        }
+    </script>
+
+</body>
+</html>

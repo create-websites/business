@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kreate - Interior Design</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdfdfd;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #1a1a1a;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 25px;
+        }
+
+        .main-nav a {
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: #000;
+            border-bottom: 2px solid #333;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://storage.googleapis.com/imagesu/interior-design/interior-design-2.jpg'); /* [cite: 3] */
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 150px 0;
+        }
+
+        .hero h1 {
+            color: #fff;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* --- About Section --- */
+        .about {
+            padding: 60px 0;
+        }
+
+        .about .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .about-content, .about-image {
+            flex: 1;
+        }
+
+        /* --- Services Section --- */
+        .services {
+            background-color: #f9f9f9;
+            padding: 60px 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .service-card-content {
+            padding: 25px;
+        }
+
+        /* --- Featured Work Section --- */
+        .gallery {
+            padding: 60px 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-grid img:hover {
+            transform: scale(1.03);
+        }
+        
+        .gallery-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* --- CTA Section --- */
+        .cta {
+            background-color: #333;
+            color: #fff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .cta h2 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta .btn {
+            background-color: #fff;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .cta .btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+
+        .footer-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-nav a {
+            color: #fff;
+        }
+        
+        .footer .logo {
+            color: #fff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .about .container {
+                flex-direction: column;
+            }
+            .hero {
+                padding: 100px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">KREATE</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li> <li><a href="#">Services</a></li>
+                    <li><a href="#">Gallery</a></li> <li><a href="#">Blog</a></li> <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Transforming Spaces. Inspiring Lives.</h1>
+            <p>Welcome to Kreate Interior Design, where your vision for a beautiful, functional, and personal space becomes a reality.</p>
+            <a href="#contact" class="btn">Book Your Consultation</a>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="container">
+            <div class="about-content">
+                <h3>Designing for How You Live</h3>
+                <p>At Kreate, we believe your home should be a sanctuary—a place that is both sophisticated and comfortable. Our design philosophy is centered on blending timeless principles with modern living.</p>
+                <p>We partner with you from concept to completion, ensuring every detail is thoughtfully curated to craft a space you will love for years to come.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-3.jpg" alt="Stylish modern living room with green sofa"> </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-6.jpg" alt="Modern kitchen design"> <div class="service-card-content">
+                        <h3>Full-Service Design</h3>
+                        <p>Our comprehensive package covers everything from initial concept and space planning to sourcing furniture and final installation.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-8.jpg" alt="Serene minimalist bedroom"> <div class="service-card-content">
+                        <h3>Room Refresh</h3>
+                        <p>Perfect for updating a specific space. We'll help you redefine your kitchen, bedroom, or living area with new layouts and color palettes.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-11.jpg" alt="Contemporary bathroom with freestanding tub"> <div class="service-card-content">
+                        <h3>Finishes & Styling</h3>
+                        <p>Let us handle the final layer. We select and style accessories, art, lighting, and textiles to bring your space to life.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery">
+        <div class="container">
+            <h2>Featured Work</h2>
+            <div class="gallery-grid">
+                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-5.jpg" alt="Living room with blue sectional sofa"> <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-7.jpg" alt="Minimalist home office setup"> <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-10.jpg" alt="Dining area with pendant lights"> <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-4.jpg" alt="Bright living room with large windows"> </div>
+            <div class="gallery-cta">
+                <a href="#" class="btn">View Full Gallery</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>Let's Kreate Your Dream Space</h2>
+            <p>Ready to begin your transformation? Get in touch with our team today.</p>
+            <p><strong>Email:</strong> contact@kreate.com</p> <p><strong>Phone:</strong> 425-341-1111</p> <a href="mailto:contact@kreate.com" class="btn">Contact Us</a> </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="#" class="logo">KREATE</a>
+            <nav class="footer-nav">
+                <ul>
+                    <li><a href="#">Home</a></li> <li><a href="#">Services</a></li>
+                    <li><a href="#">Gallery</a></li> <li><a href="#">Blog</a></li> <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="social-icons">
+                </div>
+            <p class="copyright">
+                © 2025 Kreate Interior Design | interior-design.kreate.com </p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KreateWebsites Landscaping - Premier Garden Care in Redmond, WA</title>
+    <meta name="description" content="Transform your Redmond property with expert landscaping, garden design, and maintenance from KreateWebsites Landscaping. Call 425-341-1111 for a free quote!">
+    
+    <style>
+        /* --- Root Variables (Theme Colors) --- */
+        :root {
+            --primary-green: #2a6b2c; /* Deep forest green */
+            --secondary-green: #5d9c5d; /* Lighter, friendly green */
+            --text-dark: #333333;
+            --text-light: #fefefe;
+            --bg-light: #ffffff;
+            --bg-accent: #f9f7f0; /* Light cream/beige */
+            --border-light: #e0e0e0;
+        }
+
+        /* --- Global Styles --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-green);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; }
+        h3 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        /* --- Button Styles --- */
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .btn-secondary {
+            background: none;
+            border: 2px solid var(--secondary-green);
+            color: var(--secondary-green);
+            margin-left: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-green);
+            color: var(--text-light);
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-light);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin-left: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover, .quick-contact {
+            color: var(--secondary-green);
+        }
+
+        .quick-contact {
+            font-weight: bold;
+            display: block;
+            margin-left: 25px;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1523348837708-15d4a09CFac2?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            padding: 140px 0;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .hero h1 {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* --- Services Section --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .service-card .icon {
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+
+        .service-card h3 {
+            margin-bottom: 15px;
+        }
+
+        /* --- "Why Choose Us" Section --- */
+        .why-us {
+            background-color: var(--bg-accent);
+        }
+
+        .why-us-content {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .why-us-text {
+            flex: 1;
+        }
+        
+        .why-us-image {
+            flex: 1;
+        }
+
+        .why-us-image img {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .why-us-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .why-us-list li {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .why-us-list li .icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: var(--primary-green);
+        }
+
+        /* --- Testimonials Section --- */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: var(--bg-accent);
+            border-left: 5px solid var(--primary-green);
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .testimonial-card p.quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-card p.author {
+            font-weight: bold;
+            color: var(--primary-green);
+            margin: 0;
+        }
+
+        /* --- Process Section --- */
+        .process {
+            background-color: var(--bg-light);
+        }
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            text-align: center;
+        }
+
+        .process-step .step-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--secondary-green);
+            line-height: 1;
+        }
+
+        .process-step h3 {
+            margin: 10px 0;
+        }
+
+        /* --- Final CTA Section --- */
+        .final-cta {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+        }
+
+        .final-cta h2 {
+            color: var(--text-light);
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin: 40px auto 0 auto;
+            text-align: left;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 14px;
+            border: 1px solid var(--border-light);
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group .btn {
+            background: var(--bg-light);
+            color: var(--primary-green);
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .form-group .btn:hover {
+            background: var(--bg-accent);
+        }
+
+        .contact-direct {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1.1rem;
+        }
+
+        .contact-direct a {
+            color: var(--text-light);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #333;
+            color: #ccc;
+            padding: 50px 0 20px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: #ccc;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: var(--text-light);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 900px) {
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+            .why-us-content {
+                flex-direction: column;
+            }
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+
+            nav ul { display: none; } /* Simplifies mobile header */
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group {
+                grid-column: 1 / -1;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <a href="#" class="logo">KreateWebsites Landscaping</a>
+            <nav>
+                <ul>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#why-us">Why Us</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <a href="tel:4253411111" class="quick-contact">Call: 425-341-1111</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Transform Your Redmond Yard into a Pacific Northwest Oasis</h1>
+            <p>
+                Professional landscaping, custom garden design, and reliable year-round maintenance for homes in Redmond, WA, and the Eastside.
+            </p>
+            <a href="#contact" class="btn">Get Your Free, No-Obligation Quote</a>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Complete Landscaping & Garden Care</h2>
+            <div class="services-grid">
+                
+                <div class="service-card">
+                    <div class="icon">🌸</div>
+                    <h3>Garden Design & Planting</h3>
+                    <p>Create the garden of your dreams. We design and install custom flower beds, shrubbery, and native plant gardens that thrive in the Redmond climate.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="icon">🌿</div>
+                    <h3>Lawn Care & Maintenance</h3>
+                    <p>Reliable, scheduled mowing, edging, fertilization, and eco-friendly weed control for a healthy, green lawn all year.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="icon">🍂</div>
+                    <h3>Seasonal Yard Cleanup</h3>
+                    <p>Comprehensive spring and fall cleanups. We handle leaf removal, pruning, debris hauling, and preparing your garden for the coming season.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="icon">✂️</div>
+                    <h3>Pruning & Hedge Trimming</h3>
+                    <p>Expert pruning for your trees, shrubs, and hedges to promote health, beauty, and shape.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="icon">🌱</div>
+                    <h3>Mulching & Soil Health</h3>
+                    <p>Protect your plants and enrich your soil with fresh mulch, compost, and soil amendments.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="icon">🧱</div>
+                    <h3>Patios, Walkways & Hardscaping</h3>
+                    <p>Install beautiful and durable paver patios, stone pathways, and garden retaining walls.</p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <section id="why-us" class="why-us">
+        <div class="container">
+            <div class="why-us-content">
+                <div class="why-us-text">
+                    <h2>Your Local Redmond Landscaping Partner</h2>
+                    <p>We don't just work in Redmond; we live here. We understand the local soil, the PNW climate, and what it takes to make a garden flourish on the Eastside.</p>
+                    <ul class="why-us-list">
+                        <li><span class="icon">🌲</span> <strong>Local Expertise:</strong> We know which plants thrive in our specific climate, from Education Hill to Overlake.</li>
+                        <li><span class="icon">⏱️</span> <strong>Reliable & Professional:</strong> We show up on time, communicate clearly, and treat your property with respect.</li>
+                        <li><span class="icon">✨</span> <strong>Quality You Can See:</strong> Our attention to detail and commitment to quality craftsmanship mean your yard will be the envy of the neighborhood.</li>
+                        <li><span class="icon">💬</span> <strong>Free, Transparent Quotes:</strong> No surprises. We provide clear, detailed estimates before any work begins.</li>
+                    </ul>
+                    <a href="tel:4253411111" class="btn">Call 425-341-1111 Today</a>
+                </div>
+                <div class="why-us-image">
+                    <img src="https://images.unsplash.com/photo-1600492138133-8bea86f03ea6?q=80&w=1974&auto=format&fit=crop" alt="Gardener carefully pruning a shrub">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2>Hear From Your Neighbors</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="quote">"KreateWebsites Landscaping completely revitalized our backyard! They were professional, fast, and the results are stunning. We finally have the garden we've always wanted. Highly recommend for any Redmond homeowner."</p>
+                    <p class="author">— Sarah J., Redmond, WA</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="quote">"Our lawn has never looked better. The weekly maintenance crew is reliable, friendly, and does a fantastic job every single time. It's one less thing I have to worry about."</p>
+                    <p class="author">— Mark T., Redmond, WA</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="process" class="process">
+        <div class="container">
+            <h2>Get Started in 3 Simple Steps</h2>
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="step-number">1.</div>
+                    <h3>Contact Us</h3>
+                    <p>Call <strong>425-341-1111</strong> or fill out our online form. We'll discuss your vision, needs, and budget.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2.</div>
+                    <h3>Get Your Free Plan & Quote</h3>
+                    <p>We'll visit your property to provide a detailed, no-obligation estimate for your project or maintenance plan.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3.</div>
+                    <h3>Schedule & Relax</h3>
+                    <p>We schedule the work at your convenience. You just sit back and watch your dream yard come to life.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="final-cta">
+        <div class="container">
+            <h2>Ready to Love Your Outdoor Space?</h2>
+            <p>Your beautiful, hassle-free yard is just a call or click away. Contact us today to schedule your free on-site consultation.</p>
+            
+            <div class="form-container">
+                <form action="#" method="POST">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="message">How can we help you?</label>
+                            <textarea id="message" name="message" rows="5"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <button type="submit" class="btn">Send My Request</button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="contact-direct">
+                    <p>Or reach us directly: 
+                        <a href="tel:4253411111">Call: 425-341-1111</a> | 
+                        <a href="mailto:contact@kreatewebsites.com">Email: contact@kreatewebsites.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>KreateWebsites Landscaping</h4>
+                    <p>Your local Redmond experts in garden design, maintenance, and landscaping. Let's build your perfect outdoor space.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="#services">Services</a>
+                    <a href="#why-us">Why Us</a>
+                    <a href="#testimonials">Testimonials</a>
+                    <a href="#contact">Get a Quote</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Service Area</h4>
+                    <p>Proudly serving Redmond, Bellevue, Kirkland, Sammamish, and Woodinville, WA.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <p>
+                        <strong>Phone:</strong> <a href="tel:4253411111">425-341-1111</a><br>
+                        <strong>Email:</strong> <a href="mailto:contact@kreatewebsites.com">contact@kreatewebsites.com</a>
+                    </p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2025 KreateWebsites Landscaping | All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

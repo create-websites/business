@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garden & Landscaping</title>
+    
+    <style>
+        /* Basic styles for the page */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 20px auto;
+        }
+
+        /* --- Example 1: Image as a Banner --- */
+        /* This is a "hero" or "banner" section that holds the image */
+        .banner-hero {
+            width: 100%;
+            height: 400px; /* Set a fixed height for the banner */
+            overflow: hidden; /* Hide any parts of the image that overflow */
+            position: relative;
+            background-color: #333; /* Fallback color */
+        }
+
+        .banner-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This is key: it scales the image to cover the
+                                 container, cropping as needed. */
+            object-position: center; /* Center the image */
+        }
+        
+        .banner-hero h1 {
+            /* Style to put text ON TOP of the banner image */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        /* --- Example 2: Image as a Background --- */
+        .content-with-background {
+            /* We use the image URL directly in the CSS */
+            background-image: url('https://storage.googleapis.com/imagesu/garden/gardening-2.jpg');
+            
+            /* These properties make the background image look good */
+            background-size: cover;       /* Cover the entire section */
+            background-position: center;  /* Center the image */
+            background-attachment: fixed; /* Cool parallax effect */
+            
+            /* Styling for the text on top */
+            padding: 50px 20px;
+            text-align: center;
+            color: white; /* Text must be light to be readable on the dark image */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        /* --- Bonus: Image Gallery --- */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="banner-hero">
+        <img src="https://storage.googleapis.com/imagesu/garden/landscaping-1.jpg" 
+             alt="Beautiful landscaped garden path with stone steps and green bushes.">
+        <h1>Welcome to Our Garden</h1>
+    </header>
+
+    
+    <section class="content-with-background">
+        <h2>Our Services</h2>
+        <p>We provide full-service landscaping and garden maintenance.</p>
+        <p>From seasonal planting to complete lawn care, we have you covered.</p>
+    </section>
+
+    
+    <div class="container">
+        <h2>Our Work</h2>
+        <p>Here are some of the other beautiful spaces we've created.</p>
+        
+        <div class="gallery">
+            <img src="https://storage.googleapis.com/imagesu/garden/gardening-1.jpg" alt="Woman in a hat gardening in a raised bed.">
+            <img src="https://storage.googleapis.com/imagesu/garden/landscaping-2.jpg" alt="Landscaped yard with a curved flower bed and green lawn.">
+            <img src="https://storage.googleapis.com/imagesu/garden/landscaping-3.jpg" alt="A modern landscaping design with stone pavers and gravel.">
+            <img src="https://storage.googleapis.com/imagesu/garden/gardening-3.jpg" alt="Close-up of a person planting a small green plant.">
+        </div>
+    </div>
+
+</body>
+</html>

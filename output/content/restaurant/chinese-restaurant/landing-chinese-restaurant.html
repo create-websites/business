@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Golden Wok - Authentic Chinese Cuisine</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fcfaf5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: #b42c2c;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #b42c2c;
+            font-weight: 500;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            background-color: #b42c2c; /* Red color */
+            color: #fff;
+            padding: 14px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #9a2525;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: rgba(26, 26, 26, 0.8);
+            border-bottom: 1px solid #444;
+            padding: 10px 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #f0e1c0; /* Gold color */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: #f0e1c0;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://storage.googleapis.com/imagesu/food/chinese-restaurant-4.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 200px 0 160px 0;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* --- Welcome Section --- */
+        .welcome {
+            padding: 60px 0;
+            background: #fff;
+        }
+
+        .welcome .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .welcome-content, .welcome-image {
+            flex: 1;
+        }
+        
+        .welcome-image img {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* --- Signature Dishes Section --- */
+        .dishes {
+            padding: 60px 0;
+            background-color: #fcfaf5;
+        }
+
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .dish-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .dish-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dish-card-content {
+            padding: 25px;
+        }
+        
+        .dishes-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* --- CTA Section --- */
+        .cta {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://storage.googleapis.com/imagesu/food/chinese-restaurant-6.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta h2 {
+            color: #fff;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f0e1c0;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            .header {
+                position: relative;
+                background-color: #1a1a1a;
+            }
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .welcome .container {
+                flex-direction: column;
+            }
+            .hero {
+                padding: 100px 0;
+            }
+            .cta {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">THE GOLDEN WOK</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>A Journey of Authentic Flavor</h1>
+            <p>Experience the rich traditions of Chinese cuisine, prepared with the freshest ingredients and timeless recipes.</p>
+            <a href="#menu" class="btn">Order Online Now</a>
+        </div>
+    </section>
+
+    <section class="welcome">
+        <div class="container">
+            <div class="welcome-content">
+                <h2>A Taste of Tradition</h2>
+                <p>Welcome to The Golden Wok, where our family's recipes come to life. For over 20 years, we've been a landmark for authentic Chinese dining, sharing our passion for food and hospitality.</p>
+                <p>From our handcrafted dim sum to our sizzling wok creations, every dish is a celebration of flavor. We invite you to join our table and become part of our story.</p>
+            </div>
+            <div class="welcome-image">
+                <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-1.jpg" alt="Handcrafted dim sum selection">
+            </div>
+        </div>
+    </section>
+
+    <section class="dishes" id="menu">
+        <div class="container">
+            <h2>Our Signature Dishes</h2>
+            <div class="dishes-grid">
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-2.jpg" alt="Szechuan Lo Mein">
+                    <div class="dish-card-content">
+                        <h3>Szechuan Lo Mein</h3>
+                        <p>Wok-tossed noodles with a fiery Szechuan spice and fresh vegetables.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-3.jpg" alt="Handmade Pork Dumplings">
+                    <div class="dish-card-content">
+                        <h3>Pork Dumplings</h3>
+                        <p>Steamed or pan-fried, served with our signature ginger-soy dipping sauce.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-5.jpg" alt="Kung Pao Chicken">
+                    <div class="dish-card-content">
+                        <h3>Kung Pao Chicken</h3>
+                        <p>A spicy and savory classic with peanuts, bell peppers, and chili.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-7.jpg" alt="Beef & Broccoli">
+                    <div class="dish-card-content">
+                        <h3>Beef & Broccoli</h3>
+                        <p>Tender slices of beef and crisp broccoli in a rich garlic-ginger sauce.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dishes-cta">
+                <a href="#" class="btn btn-secondary">View Full Menu</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>Book Your Table</h2>
+            <p>Join us for an unforgettable dining experience. Call to book your table or contact us for private event inquiries.</p>
+            <p><strong>Phone:</strong> 425-341-1111</p>
+            <p><strong>Email:</strong> contact@kreate.com</p>
+            <a href="tel:4253411111" class="btn">Call to Reserve</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="#" class="logo">THE GOLDEN WOK</a>
+            <div class="footer-contact">
+                <p>Phone: 425-341-1111 | Email: contact@kreate.com</p>
+                <p>interior-design.kreate.com</p> 
+            </div>
+            <p class="copyright">
+                © 2025 The Golden Wok
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

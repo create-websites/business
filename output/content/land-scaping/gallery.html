@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery - KreateWebsites Landscaping, Redmond, WA</title>
+    <meta name="description" content="See our work! Browse our gallery of landscaping, garden design, and hardscaping projects in the Redmond, WA area.">
+    
+    <style>
+        /* --- Root Variables (Theme Colors) --- */
+        :root {
+            --primary-green: #2a6b2c; /* Deep forest green */
+            --secondary-green: #5d9c5d; /* Lighter, friendly green */
+            --text-dark: #333333;
+            --text-light: #fefefe;
+            --bg-light: #ffffff;
+            --bg-accent: #f9f7f0; /* Light cream/beige */
+            --border-light: #e0e0e0;
+        }
+
+        /* --- Global Styles --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-green);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; }
+        h3 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        /* --- Button Styles --- */
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-light);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin-left: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover, .quick-contact {
+            color: var(--secondary-green);
+        }
+        
+        /* Style for the current, active page link */
+        nav a[href="gallery.html"] {
+            color: var(--primary-green);
+            border-bottom: 2px solid var(--primary-green);
+            padding-bottom: 4px;
+        }
+
+        .quick-contact {
+            font-weight: bold;
+            display: block;
+            margin-left: 25px;
+        }
+        
+        /* --- NEW: Page Header --- */
+        .page-header {
+            background-color: var(--bg-accent);
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        /* --- NEW: Gallery Styles --- */
+        .gallery-grid {
+            display: grid;
+            /* Creates a responsive grid that shows 1, 2, or 3 columns */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .gallery-item {
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden; /* To keep the image corners rounded */
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+        
+        .gallery-item a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+            display: block;
+        }
+        
+        .gallery-caption {
+            padding: 20px 25px;
+        }
+        
+        .gallery-caption h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        
+        .gallery-caption p {
+            margin-bottom: 0;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* --- Footer (Copied from index.html) --- */
+        footer {
+            background: #333;
+            color: #ccc;
+            padding: 50px 0 20px 0;
+            /* Added margin-top to ensure it's not flush with gallery */
+            margin-top: 60px; 
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: #ccc;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: var(--text-light);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+
+            nav ul { display: none; } /* Simplifies mobile header */
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">KreateWebsites Landscaping</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#why-us">Why Us</a></li>
+                    <li><a href="index.html#blog">Blog</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <a href="tel:4253411111" class="quick-contact">Call: 425-341-1111</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Our Work & Photo Gallery</h1>
+            <p>See the transformations we've brought to homes in Redmond, WA, and the Eastside.</p>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="container">
+            <div class="gallery-grid">
+            
+                <div class="gallery-item">
+                    <a href="https://storage.googleapis.com/imagesu/garden/landscaping-1.jpg">
+                        <img src="https://storage.googleapis.com/imagesu/garden/landscaping-1.jpg" alt="Lush backyard landscaping project">
+                        <div class="gallery-caption">
+                            <h3>Redmond Backyard Oasis</h3>
+                            <p>Full landscaping, patio, and lawn installation</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="gallery-item">
+                    <a href="https://storage.googleapis.com/imagesu/garden/gardening-1.jpg">
+                        <img src="https://storage.googleapis.com/imagesu/garden/gardening-1.jpg" alt="Gardener tending to flower beds">
+                        <div class="gallery-caption">
+                            <h3>Seasonal Flower Planting</h3>
+                            <p>Garden bed design and seasonal maintenance</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="gallery-item">
+                    <a href="https://storage.googleapis.com/imagesu/garden/landscaping-2.jpg">
+                        <img src="https://storage.googleapis.com/imagesu/garden/landscaping-2.jpg" alt="Clean walkway and garden path">
+                        <div class="gallery-caption">
+                            <h3>Walkway & Lawn Edging</h3>
+                            <p>Hardscaping and precision lawn care</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="gallery-item">
+                    <a href="https://storage.googleapis.com/imagesu/garden/gardening-2.jpg">
+                        <img src="https://storage.googleapis.com/imagesu/garden/gardening-2.jpg" alt="Close-up of vibrant flowers">
+                        <div class="gallery-caption">
+                            <h3>Native Plant Installation</h3>
+                            <p>Eco-friendly and low-maintenance gardens</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="gallery-item">
+                    <a href="https://storage.googleapis.com/imagesu/garden/gardening-3.jpg">
+                        <img src="https://storage.googleapis.com/imagesu/garden/gardening-3.jpg" alt="Potted plant ready for the garden">
+                        <div class="gallery-caption">
+                            <h3>New Garden Installation</h3>
+                            <p>Soil prep, planting, and mulching</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="gallery-item">
+                    <a href="https://storage.googleapis.com/imagesu/garden/landscaping-3.jpg">
+                        <img src="https://storage.googleapis.com/imagesu/garden/landscaping-3.jpg" alt="Lawnmower on a perfect green lawn">
+                        <div class="gallery-caption">
+                            <h3>Property Maintenance</h3>
+                            <p>Weekly lawn mowing and care</p>
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>KreateWebsites Landscaping</h4>
+                    <p>Your local Redmond experts in garden design, maintenance, and landscaping. Let's build your perfect outdoor space.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#services">Services</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="index.html#blog">Blog</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Service Area</h4>
+                    <p>Proudly serving Redmond, Bellevue, Kirkland, Sammamish, and Woodinville, WA.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <p>
+                        <strong>Phone:</strong> <a href="tel:4253411111">425-341-1111</a><br>
+                        <strong>Email:</strong> <a href="mailto:contact@kreatewebsites.com">contact@kreatewebsites.com</a>
+                    </p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2025 KreateWebsites Landscaping | All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

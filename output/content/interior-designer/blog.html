@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Kreate Interior Design</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdfdfd;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        a:hover {
+            color: #000;
+        }
+        
+        ul {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+        
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #1a1a1a;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 25px;
+        }
+
+        .main-nav a {
+            font-size: 1rem;
+        }
+
+        .main-nav a:hover {
+            color: #000;
+            border-bottom: 2px solid #333;
+        }
+
+        /* --- Blog Page Layout --- */
+        .blog-page {
+            padding: 40px 0;
+        }
+        
+        .blog-layout {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .blog-article {
+            flex: 3; /* Article takes up 3/4 of the space */
+        }
+        
+        .blog-sidebar {
+            flex: 1; /* Sidebar takes up 1/4 of the space */
+            padding-top: 20px;
+        }
+        
+        /* --- Article Styles --- */
+        .article-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .article-meta {
+            font-size: 0.95rem;
+            color: #777;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+        
+        .article-image-main {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            margin-bottom: 2rem;
+            cursor: pointer;
+        }
+        
+        .article-image-inline {
+             width: 100%;
+             margin: 1.5rem 0;
+             cursor: pointer;
+        }
+
+        /* --- Sidebar Styles --- */
+        .sidebar-widget {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-widget ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-widget li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-widget a {
+            font-weight: 400;
+        }
+        
+        .sidebar-widget img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        
+        .recent-post-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .recent-post-item a {
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-nav a {
+            color: #fff;
+        }
+        
+        .footer .logo {
+            color: #fff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Lightbox Modal Styles (Copied from Gallery) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 4px;
+            animation: zoomIn 0.3s;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        
+        @keyframes zoomIn {
+            from {transform: scale(0.8)}
+            to {transform: scale(1)}
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .blog-layout {
+                flex-direction: column-reverse; /* Sidebar on top on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">KREATE</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="blog-page">
+        <div class="container">
+            <div class="blog-layout">
+            
+                <article class="blog-article">
+                    <div class="article-header">
+                        <h1>Embracing the Light: How to Design a Sunroom in Washington State</h1>
+                        <p class="article-meta">By Kreate Design Team | November 2, 2025 | In: Design Tips, PNW Living</p>
+                    </div>
+                    
+                    <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-2.jpg" alt="Bright, modern sunroom with large windows" class="article-image-main gallery-img">
+                    
+                    <p>In Washington state, we cherish the light. Our long, grey winters make those moments of brilliant sun—and even the soft, diffused light of an overcast day—something to be celebrated. A sunroom (or as we often call it, a "four-season room") isn't just an add-on; it's a sanctuary. It’s a place to soak in the outdoors while being protected from the elements. </p>
+                    
+                    <p>But designing a sunroom in the Pacific Northwest is different from designing one in Arizona. Our sunrooms must be cozy retreats from the rain, not just shady escapes from the heat. Here’s how to create a space that feels bright, warm, and inviting all year round.</p>
+
+                    <h3>1. Maximize Light with a Smart Palette</h3>
+                    <p>When light is a precious commodity, you need to make the most of it. Stick to a light and airy color palette to reflect as much natural light as possible. </p>
+                    <ul>
+                        <li><strong>Walls & Ceiling:</strong> Think shades of bright white, soft cream, or very light neutrals. A white-washed wood-paneled ceiling can add texture while keeping the space bright.</li>
+                        <li><strong>Accents:</strong> Bring in the colors of the PNW landscape. Soft blues, misty greys, and fern-inspired greens work beautifully and prevent the space from feeling sterile.</li>
+                    </ul>
+
+                    <h3>2. Create Coziness for Cool Days</h3>
+                    <p>For much of the year, your sunroom will be a cozy nook for watching the rain. The "hygge" factor is essential. Combat the chill of large glass panes with warm textiles.</p>
+                    <ul>
+                        <li><strong>Plush Rugs:</strong> A high-pile or plush wool rug underfoot instantly adds warmth and comfort.</li>
+                        <li><strong>Abundant Throws:</strong> Drape chunky knit blankets and faux-fur throws over every chair.</li>
+                        <li><strong>Comfortable Seating:</strong> While wicker and rattan are sunroom classics, consider at least one fully upholstered piece, like a comfortable armchair or a small loveseat, where you can truly curl up with a book.</li>
+                    </ul>
+                    
+                    <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-4.jpg" alt="Cozy living space with comfortable seating and natural light" class="article-image-inline gallery-img">
+
+                    <h3>3. Choose Durable, Four-Season Materials</h3>
+                    <p>A sunroom bridges the gap between indoors and out, so materials need to be tough. They must withstand strong UV rays in the summer (yes, we get them!) and potential moisture.</p>
+                    <ul>
+                        <li><strong>Flooring:</strong> Tile, luxury vinyl plank (LVP), or even sealed concrete are excellent, easy-to-clean choices. You can easily warm them up with rugs.</li>
+                        <li><strong>Fabrics:</strong> Use performance fabrics (like Sunbrella) for your upholstery. They are designed to resist fading, mildew, and stains, making them perfect for this high-exposure area.</li>
+                    </ul>
+
+                    <h3>4. Blur the Lines with Nature</h3>
+                    <p>The entire point of a sunroom is to feel connected to the outdoors. Enhance this feeling by bringing natural elements inside.</p>
+                    
+                    <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-9.jpg" alt="Interior corner with a large potted plant" class="article-image-inline gallery-img">
+                    
+                    <ul>
+                        <li><strong>Houseplants:</strong> This is the perfect environment for a thriving indoor garden. Load the space with plants that love bright, indirect light, like ferns, snake plants, and fiddle-leaf figs.</li>
+                        <li><strong>Natural Materials:</strong> Incorporate wood, stone, and natural fibers. Think a live-edge wood coffee table, a jute rug, or stone-topped side tables.</li>
+                    </ul>
+
+                    <h3>5. Layer Your Lighting</h3>
+                    <p>Don't rely just on the sun! On a dark December afternoon, you'll need more. A good lighting plan is crucial.</p>
+                    <ul>
+                        <li><strong>Ambient:</strong> A stylish ceiling fan with a light, or a beautiful pendant light.</li>
+                        <li><strong>Task:</strong> Place floor lamps and table lamps next to seating areas for reading.</li>
+                        <li><strong>Accent:</strong> Use dimmers on all your lights to transition the room from a bright morning coffee spot to a cozy evening retreat.</li>
+                    </ul>
+                    
+                    <p>A well-designed sunroom can be the most-used room in your Washington home. By balancing light, warmth, and nature, you can create a year-round oasis.</p>
+                    
+                    <p><strong>Ready to "Kreate" your perfect sunroom? <a href="mailto:contact@kreate.com">Contact us today for a consultation.</a></strong></p>
+
+                </article>
+                
+                <aside class="blog-sidebar">
+                    <div class="sidebar-widget">
+                        <h4>Recent Posts</h4>
+                        <ul>
+                            <li class="recent-post-item">
+                                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-2.jpg" alt="Sunroom post thumbnail">
+                                <div><a href="blog.html">Embracing the Light: How to Design a Sunroom in WA State</a></div>
+                            </li>
+                            <li class="recent-post-item">
+                                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-6.jpg" alt="Kitchen post thumbnail">
+                                <div><a href="#">5 Kitchen Trends We Love for 2026</a></div>
+                            </li>
+                            <li class="recent-post-item">
+                                <img src="https://storage.googleapis.com/imagesu/interior-design/interior-design-8.jpg" alt="Bedroom post thumbnail">
+                                <div><a href="#">Creating a Serene Bedroom Retreat</a></div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h4>Categories</h4>
+                        <ul>
+                            <li><a href="#">Design Tips</a></li>
+                            <li><a href="#">PNW Living</a></li>
+                            <li><a href="#">Project Spotlights</a></li>
+                            <li><a href="#">Inspiration</a></li>
+                            <li><a href="#">Materials & Finishes</a></li>
+                        </ul>
+                    </div>
+                </aside>
+                
+            </div>
+        </div>
+    </main>
+    
+    <div id="lightbox-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="lightbox-img">
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">KREATE</a>
+            <nav class="footer-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <p class="copyright">
+                © 2025 Kreate Interior Design | interior-design.kreate.com
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal = document.getElementById("lightbox-modal");
+            var modalImg = document.getElementById("lightbox-img");
+            var galleryImages = document.querySelectorAll(".gallery-img"); // Use same class as gallery
+            var closeBtn = document.querySelector(".close-btn");
+
+            galleryImages.forEach(function(img) {
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                }
+            });
+
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            modal.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

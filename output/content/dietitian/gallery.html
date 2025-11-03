@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - NourishWell Nutrition | Healthy Food Photos</title>
+
+    <meta name="description" content="Explore the NourishWell Nutrition gallery. See photos of vibrant, healthy foods, meal prep ideas, and what a wellness journey looks like.">
+    <meta name="keywords" content="dietitian gallery, healthy food photos, nutrition photos, wellness gallery, healthy meal prep, nourishwell nutrition">
+
+    <meta property="og:title" content="Gallery - NourishWell Nutrition | Healthy & Vibrant Foods">
+    <meta property="og:description" content="Explore photos of vibrant, healthy foods, meal prep ideas, and what a wellness journey looks like.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://business.kreate.com/dietitian/gallery"> <meta property="og:image" content="https://storage.googleapis.com/imagesu/diet/diet-2.jpg"> <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "NourishWell Nutrition Gallery",
+      "description": "Photos of healthy, nourishing foods and wellness concepts from NourishWell Nutrition.",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://business.kreate.com/dietitian/gallery"
+      },
+      "creator": {
+        "@type": "MedicalBusiness",
+        "name": "NourishWell Nutrition",
+        "url": "https://business.kreate.com/dietitian"
+      },
+      "image": [
+        "https://storage.googleapis.com/imagesu/diet/diet-1.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-2.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-3.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-4.jpg",
+        "https://storage.googleapis.com/imagesu/diet/diet-5.jpg"
+      ]
+    }
+    </script>
+
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f_f_ff; /* Clean white background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #006A4E; /* Deep Green */
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #006A4E;
+            font-weight: 500;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff; /* Solid white header */
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #006A4E; /* Green */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #000;
+            font-weight: 600;
+        }
+        
+        /* --- Gallery Page Styles --- */
+        .gallery-main {
+            padding: 60px 0;
+        }
+        
+        .gallery-intro {
+            text-align: center;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            color: #555;
+        }
+        
+        .gallery-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-page-grid .gallery-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+        }
+        
+        .gallery-page-grid .gallery-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- Lightbox Modal Styles --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 4px;
+            animation: zoomIn 0.3s;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        
+        @keyframes zoomIn {
+            from {transform: scale(0.8)}
+            to {transform: scale(1)}
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f_f_ff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .gallery-page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">NOURISHWELL</a> <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="gallery.html" class="active">Gallery</a></li> <li><a href="index.html#contact">Contact</a></li> </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="gallery-main">
+        <div class="container">
+            <h2>Our Wellness Gallery</h2>
+            <p class="gallery-intro">
+                See what a healthy, balanced life can look like. This is not about restriction—it's about vibrant, delicious food that makes you feel good.
+            </p>
+            
+            <div class="gallery-page-grid">
+                <img src="https://storage.googleapis.com/imagesu/diet/diet-1.jpg" alt="A vibrant, healthy salad bowl" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/diet/diet-2.jpg" alt="Fresh vegetables including carrots and broccoli" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/diet/diet-3.jpg" alt="Dietitian in consultation with a client" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/diet/diet-4.jpg" alt="A healthy yogurt bowl with fruit for gut health" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/diet/diet-5.jpg" alt="Healthy meal prep containers" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/diet/diet-6.jpg" alt="A person writing in a food journal" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/diet/diet-7.jpg" alt="A spread of fresh, colorful fruits and vegetables" class="gallery-img">
+            </div>
+        </div>
+    </main>
+    
+    <div id="lightbox-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="lightbox-img">
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">NOURISHWELL</a>
+            <div class="footer-contact">
+                <p>Phone: 425-341-1111 | Email: contact@kreate.com</p>
+                <p>https://business.kreate.com/dietitian</p>
+            </div>
+            <p class="copyright">
+                © 2025 NourishWell Nutrition
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal = document.getElementById("lightbox-modal");
+            var modalImg = document.getElementById("lightbox-img");
+            var galleryImages = document.querySelectorAll(".gallery-img");
+            var closeBtn = document.querySelector(".close-btn");
+
+            // Loop through all gallery images and add click event
+            galleryImages.forEach(function(img) {
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                }
+            });
+
+            // When the user clicks on <span> (x), close the modal
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Also close modal when clicking outside the image
+            modal.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

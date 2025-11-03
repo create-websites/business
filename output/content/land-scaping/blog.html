@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Care for Grass in Summer in WA State - KreateWebsites Landscaping</title>
+    <meta name="description" content="Learn the key tips for watering, mowing, and fertilizing your lawn during the dry summers in Western Washington.">
+    
+    <style>
+        /* --- Root Variables (Theme Colors) --- */
+        :root {
+            --primary-green: #2a6b2c; /* Deep forest green */
+            --secondary-green: #5d9c5d; /* Lighter, friendly green */
+            --text-dark: #333333;
+            --text-light: #fefefe;
+            --bg-light: #ffffff;
+            --bg-accent: #f9f7f0; /* Light cream/beige */
+            --border-light: #e0e0e0;
+        }
+
+        /* --- Global Styles --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-green);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.2rem; margin-top: 40px; margin-bottom: 20px; }
+        h3 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem; /* Slightly larger text for readability */
+        }
+        
+        ul {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            padding-left: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-light);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin-left: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover, .quick-contact {
+            color: var(--secondary-green);
+        }
+        
+        /* Style for the current, active page's section (Blog) */
+        nav a[href="index.html#blog"] {
+            color: var(--primary-green);
+            border-bottom: 2px solid var(--primary-green);
+            padding-bottom: 4px;
+        }
+
+        .quick-contact {
+            font-weight: bold;
+            display: block;
+            margin-left: 25px;
+        }
+        
+        /* --- NEW: Article Styles --- */
+        
+        /* Constrain the width of the article text for easier reading */
+        #article .container {
+            max-width: 800px; 
+        }
+        
+        #article h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            line-height: 1.3;
+            margin-bottom: 20px;
+        }
+        
+        .article-meta {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+            margin-bottom: 30px;
+        }
+        
+        .article-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            margin-bottom: 40px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--secondary-green);
+        }
+
+        /* --- Footer (Copied from other pages) --- */
+        footer {
+            background: #333;
+            color: #ccc;
+            padding: 50px 0 20px 0;
+            border-top: 1px solid var(--border-light); 
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: #ccc;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .footer-col a:hover {
+            color: var(--text-light);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            h1, #article h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+
+            nav ul { display: none; } /* Simplifies mobile header */
+            
+            .article-image {
+                height: 250px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">KreateWebsites Landscaping</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#why-us">Why Us</a></li>
+                    <li><a href="index.html#blog">Blog</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+                <a href="tel:4253411111" class="quick-contact">Call: 425-341-1111</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="article">
+        <div class="container">
+        
+            <h1>How to Take Care of Grass in Summer in WA State</h1>
+            
+            <p class="article-meta">
+                Posted on November 2, 2025 | By: KreateWebsites Landscaping | Category: Lawn Care
+            </p>
+            
+            <img src="https://storage.googleapis.com/imagesu/garden/landscaping-3.jpg" alt="A healthy green lawn being mowed in summer" class="article-image">
+
+            <p>Here in Western Washington, we're known for our rain. But come July, the script flips, and we often face eight weeks or more of dry, warm weather. This can be a major shock to our cool-season grasses, like the ryegrass and fescues common in Redmond. Without the right care, your lush green lawn can quickly turn brown and dormant.</p>
+
+            <p>The good news? You can keep your lawn healthy all summer long. Here’s our guide to essential summer lawn care in WA state.</p>
+
+            <h2>1. Water Deeply, Not Daily</h2>
+            <p>This is the most important rule. Frequent, shallow watering encourages weak roots that stay near the surface. Instead, you want to train your lawn's roots to grow deep to find moisture.</p>
+            <ul>
+                <li><strong>How Much:</strong> Aim for 1 to 1.5 inches of water per week, applied all at once or split into two sessions.</li>
+                <li><strong>How to Measure:</strong> Place a few empty tuna cans on your lawn while the sprinkler is on. When they are full, you've applied about 1 inch of water.</li>
+                <li><strong>Best Time:</strong> Water early in the morning (between 4 a.m. and 9 a.m.) to minimize evaporation and prevent fungus.</li>
+            </ul>
+            <p><strong>Pro-Tip:</strong> Letting your lawn go dormant (brown) is also an option. It's not dead! It's just sleeping. It will green up again with the first fall rains. If you choose this path, water it just once every 3-4 weeks to keep the crown alive.</p>
+
+            <h2>2. Mow High, Mow Sharp</h2>
+            <p>Your mower settings are critical in summer. Longer grass blades provide shade for the soil, which reduces water evaporation and helps prevent weeds from germinating.</p>
+            <ul>
+                <li><strong>Mower Height:</strong> Set your mower to one of its highest settings, aiming to cut at 3 to 3.5 inches.</li>
+                <li><strong>The 1/3 Rule:</strong> Never cut off more than one-third of the grass blade at a time. This may mean mowing more frequently if the grass is growing fast.</li>
+                <li><strong>"Grasscycle":</strong> Leave the clippings on the lawn (as long as they aren't in big clumps). They act as a natural, nitrogen-rich fertilizer and help retain moisture.</li>
+            </ul>
+
+            <h2>3. Fertilize (But Be Careful)</h2>
+            <p>If you fertilized in the spring, your lawn should have plenty of nutrients. Applying a high-nitrogen fertilizer in the middle of a dry summer can "burn" your lawn and encourage weak growth. If you must fertilize, use a slow-release or organic fertilizer very lightly, and be sure to water it in well.</p>
+
+            <h2>4. Manage Weeds and Pests</h2>
+            <p>A healthy, thick lawn is the best defense against weeds. Hand-pull any broadleaf weeds like dandelions or clover as they appear. Avoid using herbicides on a hot, sunny day, as this can stress your lawn. The best time to manage weeds is in the spring and fall, but spot-treating in the summer is okay if done carefully in the morning.</p>
+
+            <p>By following these steps, you'll give your lawn the best chance to not only survive the dry Redmond summer but to thrive. If you have any questions or need a hand, don't hesitate to call us!</p>
+            
+            <a href="index.html#blog" class="back-link">&laquo; Back to All Blog Articles</a>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>KreateWebsites Landscaping</h4>
+                    <p>Your local Redmond experts in garden design, maintenance, and landscaping. Let's build your perfect outdoor space.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#services">Services</a>
+                    <a href="gallery.html">Gallery</a>
+                    <a href="index.html#blog">Blog</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Service Area</h4>
+                    <p>Proudly serving Redmond, Bellevue, Kirkland, Sammamish, and Woodinville, WA.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <p>
+                        <strong>Phone:</strong> <a href="tel:4253411111">425-341-1111</a><br>
+                        <strong>Email:</strong> <a href="mailto:contact@kreatewebsites.com">contact@kreatewebsites.com</a>
+                    </p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2025 KreateWebsites Landscaping | All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
