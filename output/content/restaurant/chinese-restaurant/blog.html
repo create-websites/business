@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - The Golden Wok</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fcfaf5;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: #b42c2c;
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+            color: #b42c2c;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #b42c2c;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        a:hover {
+            color: #9a2525;
+        }
+        
+        ul {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+        
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #444;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #f0e1c0; /* Gold color */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #f0e1c0;
+        }
+
+        /* --- Blog Page Layout --- */
+        .blog-page {
+            padding: 40px 0;
+        }
+        
+        .blog-layout {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .blog-article {
+            flex: 3; /* Article takes up 3/4 of the space */
+        }
+        
+        .blog-sidebar {
+            flex: 1; /* Sidebar takes up 1/4 of the space */
+            padding-top: 20px;
+        }
+        
+        /* --- Article Styles --- */
+        .article-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .article-meta {
+            font-size: 0.95rem;
+            color: #777;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+        
+        .article-image-main {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            border: 1px solid #eee;
+        }
+        
+        .article-image-inline {
+             width: 100%;
+             margin: 1.5rem 0;
+             cursor: pointer;
+             border: 1px solid #eee;
+        }
+
+        /* --- Sidebar Styles --- */
+        .sidebar-widget {
+            background-color: #fff;
+            border: 1px solid #eee;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-widget ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-widget li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-widget a {
+            font-weight: 400;
+        }
+        
+        .sidebar-widget img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        
+        .recent-post-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .recent-post-item a {
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f0e1c0;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Lightbox Modal Styles (Copied from Gallery) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 4px;
+            animation: zoomIn 0.3s;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        
+        @keyframes zoomIn {
+            from {transform: scale(0.8)}
+            to {transform: scale(1)}
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .blog-layout {
+                flex-direction: column-reverse; /* Sidebar on top on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">THE GOLDEN WOK</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="blog.html" class="active">Blog</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="blog-page">
+        <div class="container">
+            <div class="blog-layout">
+            
+                <article class="blog-article">
+                    <div class="article-header">
+                        <h1>Beyond the Great Wall: The Spicy, Tangy World of Indian Chinese Food</h1>
+                        <p class="article-meta">By The Golden Wok Team | November 2, 2025 | In: Food Culture, Global Cuisine</p>
+                    </div>
+                    
+                    <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-2.jpg" alt="A vibrant bowl of Hakka noodles" class="article-image-main gallery-img">
+                    
+                    <p>When you walk into a Chinese restaurant in India, you're stepping into a unique culinary world. The air is thick with the scent of ginger, garlic, soy sauce, and... chili! This is "Indo-Chinese" cuisine, a vibrant and beloved food category that has evolved over a century to become one of India's most popular. </p>
+                    
+                    <p>It’s a fascinating story of culinary adaptation, blending the wok-frying techniques of China with the bold spices and flavor profiles of India. But how did this come to be, and how is it different from the food you might find in Beijing or Shanghai?</p>
+
+                    <h3>The Birth of Indo-Chinese Cuisine</h3>
+                    <p>The story begins in Kolkata (Calcutta) in the late 18th century, with the arrival of Chinese immigrants, primarily of Hakka descent. They settled, built temples, and opened restaurants. To appeal to the local Indian palate, these pioneering chefs began "Indianizing" their dishes. They added local ingredients like hot chilies, garlic, ginger, and cumin, creating a flavor profile that was both new and comfortingly familiar to Indians.</p>
+                    <p>Today, Chinese restaurants are everywhere in India, from high-end dining rooms in luxury hotels to tiny street-food carts (called "Chinese vans") that serve up fiery noodles and "Manchurian" dishes to eager crowds.</p>
+                    
+                    <h3>Popular Dishes You'll Only Find in India</h3>
+                    <p>While you might find dumplings and lo mein, the most popular dishes are uniquely Indian inventions:</p>
+                    <ul>
+                        <li><strong>Gobi Manchurian:</strong> The undisputed king of Indo-Chinese food. Crispy fried cauliflower florets are tossed in a sweet, spicy, and tangy sauce. There is no "Manchurian" dish in traditional Chinese cuisine; it's a purely Indian creation.</li>
+                        <li><strong>Chilli Chicken (or Paneer/Mushroom):</strong> A fiery stir-fry where chunks of chicken (or its vegetarian counterparts) are batter-fried and then tossed in a thick, spicy sauce made with soy sauce, vinegar, and a heavy dose of green chilies.</li>
+                        <li><strong>Hakka Noodles:</strong> While noodle stir-fries are globally Chinese, Indian "Hakka Noodles" are distinct. They are heavy on vegetables like julienned carrots, cabbage, and bell peppers, and often have a pronounced "smoky" flavor from the high-heat wok, with a spicy kick.</li>
+                        <li><strong>American Chop Suey:</strong> Another dish you won't find in America or China. This consists of crispy fried noodles topped with a sweet and sour sauce, vegetables, and often a fried egg on top.</li>
+                    </ul>
+                    
+                    <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-5.jpg" alt="A spicy stir-fry similar to Chilli Chicken" class="article-image-inline gallery-img">
+
+                    <h3>How is it Different from Traditional Chinese Food?</h3>
+                    <p>The differences are significant and center on the flavor base.</p>
+                    <ol>
+                        <li><strong>The Spice Level:</strong> Traditional Chinese cuisine balances flavors (sweet, sour, salty, bitter, umami) with subtlety. Indo-Chinese food, by contrast, is bold, pungent, and spicy. The use of fresh green chilies and red chili paste is fundamental.</li>
+                        <li><strong>Core Ingredients:</strong> Indo-Chinese cooking relies heavily on a "holy trinity" of ginger, garlic, and green chilies, often used in much larger quantities than in mainland Chinese cooking. You'll also find liberal use of ingredients like paneer (Indian cottage cheese) and cauliflower, which are not common in China.</li>
+                        <li><strong>Sauces:</strong> Traditional Chinese sauces are complex and varied (hoisin, oyster, black bean). Indo-Chinese sauces are typically built on a base of soy sauce, vinegar, and chili sauce, often thickened with cornstarch to create a thick, glossy "gravy" that Indians love to eat with rice or noodles.</li>
+                    </ol>
+                    
+                    <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-3.jpg" alt="Dumplings, which are popular in both cultures as momos" class="article-image-inline gallery-img">
+                    
+                    <h3>A Cuisine in its Own Right</h3>
+                    <p>Indo-Chinese food isn't an "inauthentic" version of Chinese food; it's a completely separate and authentic cuisine that tells the story of cultural migration and adaptation. It’s a delicious testament to how food evolves, taking on new life as it crosses borders. </p>
+                    
+                    <p>So, the next time you see "Manchurian" or "Hakka" on a menu, you'll know you're not just ordering Chinese food—you're ordering a taste of India, too.</p>
+
+                </article>
+                
+                <aside class="blog-sidebar">
+                    <div class="sidebar-widget">
+                        <h4>Recent Posts</h4>
+                        <ul>
+                            <li class="recent-post-item">
+                                <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-2.jpg" alt="Noodles post thumbnail">
+                                <div><a href="blog.html">Beyond the Great Wall: The Spicy, Tangy World of Indian Chinese Food</a></div>
+                            </li>
+                            <li class="recent-post-item">
+                                <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-4.jpg" alt="Duck post thumbnail">
+                                <div><a href="#">The Art of Peking Duck: A Quick Guide</a></div>
+                            </li>
+                            <li class="recent-post-item">
+                                <img src="https://storage.googleapis.com/imagesu/food/chinese-restaurant-1.jpg" alt="Dumpling post thumbnail">
+                                <div><a href="#">A Beginner's Guide to Dim Sum</a></div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h4>Categories</h4>
+                        <ul>
+                            <li><a href="#">Food Culture</a></li>
+                            <li><a href="#">Global Cuisine</a></li>
+                            <li><a href="#">Restaurant News</a></li>
+                            <li><a href="#">Recipes</a></li>
+                            <li><a href="#">Chef's Corner</a></li>
+                        </ul>
+                    </div>
+                </aside>
+                
+            </div>
+        </div>
+    </main>
+    
+    <div id="lightbox-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="lightbox-img">
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">THE GOLDEN WOK</a>
+            <div class="footer-contact">
+                <p>Phone: 425-341-1111 | Email: contact@kreate.com</p>
+                <p>interior-design.kreate.com</p> 
+            </div>
+            <p class="copyright">
+                © 2025 The Golden Wok
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal = document.getElementById("lightbox-modal");
+            var modalImg = document.getElementById("lightbox-img");
+            var galleryImages = document.querySelectorAll(".gallery-img"); // Use same class as gallery
+            var closeBtn = document.querySelector(".close-btn");
+
+            galleryImages.forEach(function(img) {
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                }
+            });
+
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            modal.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

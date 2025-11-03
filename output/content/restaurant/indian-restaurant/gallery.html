@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - The Crimson Saffron | Authentic Indian Cuisine Photos</title>
+
+    <meta name="description" content="Explore the vibrant gallery of The Crimson Saffron. See photos of our authentic Indian dishes like Butter Chicken, Biryani, Dosa, and our beautiful restaurant interior.">
+    <meta name="keywords" content="indian restaurant gallery, indian food photos, butter chicken photo, dosa photo, biryani photo, tandoori photos, The Crimson Saffron gallery">
+
+    <meta property="og:title" content="Gallery - The Crimson Saffron | Authentic Indian Cuisine">
+    <meta property="og:description" content="Explore photos of our authentic Indian dishes like Butter Chicken, Masala Dosa, Biryani, and our beautiful restaurant.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.thecrimsonsaffron.com/gallery"> 
+    <meta property="og:image" content="https://storage.googleapis.com/imagesu/food/indian-food-1.jpg"> <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "The Crimson Saffron Gallery",
+      "description": "Photos of authentic Indian dishes and restaurant ambiance at The Crimson Saffron.",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.thecrimsonsaffron.com/gallery"
+      },
+      "creator": {
+        "@type": "Restaurant",
+        "name": "The Crimson Saffron",
+        "url": "https://www.thecrimsonsaffron.com"
+      },
+      "image": [
+        "https://storage.googleapis.com/imagesu/food/indian-restaurant-1.jpg",
+        "https://storage.googleapis.com/imagesu/food/indian-food-1.jpg",
+        "https://storage.googleapis.com/imagesu/food/dosa-1.jpg",
+        "https://storage.googleapis.com/imagesu/food/indian-restaurant-3.jpg",
+        "https://storage.googleapis.com/imagesu/food/indian-food-2.jpg",
+        "https://storage.googleapis.com/imagesu/food/indian-restaurant-5.jpg"
+      ]
+    }
+    </script>
+
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff8f0; /* Light cream background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #D9531E; /* Saffron/Orange color */
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #D9531E;
+            font-weight: 500;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #1a1a1a; /* Solid dark header for internal pages */
+            border-bottom: 1px solid #444;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #f7d9a1; /* Light gold color */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #f7d9a1;
+        }
+        
+        /* --- Gallery Page Styles --- */
+        .gallery-main {
+            padding: 60px 0;
+        }
+        
+        .gallery-intro {
+            text-align: center;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            color: #555;
+        }
+        
+        .gallery-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-page-grid .gallery-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+        }
+        
+        .gallery-page-grid .gallery-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- Lightbox Modal Styles --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 4px;
+            animation: zoomIn 0.3s;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        
+        @keyframes zoomIn {
+            from {transform: scale(0.8)}
+            to {transform: scale(1)}
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f7d9a1;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .gallery-page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">THE CRIMSON SAFFRON</a> <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="gallery.html" class="active">Gallery</a></li> <li><a href="index.html#contact">Contact</a></li> </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="gallery-main">
+        <div class="container">
+            <h2>Our Gallery</h2>
+            <p class="gallery-intro">
+                A visual journey through the flavors and ambiance of The Crimson Saffron. Explore our dishes, from vibrant curries to tandoori classics, and our warm, inviting space.
+            </p>
+            
+            <div class="gallery-page-grid">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-1.jpg" alt="A vibrant spread of Indian dishes" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-food-1.jpg" alt="Close-up of creamy Butter Chicken" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/dosa-1.jpg" alt="Crispy Masala Dosa with chutneys" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-3.jpg" alt="Interior of The Crimson Saffron restaurant" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-food-2.jpg" alt="Aromatic Lamb Biryani with herbs" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-5.jpg" alt="Freshly made Tandoori platter" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-food-3.jpg" alt="South Indian thali with multiple dishes" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/dosa-2.jpg" alt="Rolling a Masala Dosa" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-2.jpg" alt="A table set for a fine dining experience" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-4.jpg" alt="Colorful Indian spices in bowls" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-6.jpg" alt="Assortment of Indian breads like Naan" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-7.jpg" alt="Chef preparing food in a tandoor oven" class="gallery-img">
+            </div>
+        </div>
+    </main>
+    
+    <div id="lightbox-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="lightbox-img">
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">THE CRIMSON SAFFRON</a>
+            <div class="footer-contact">
+                <p>Phone: 4253411111 | Email: contact@kreate.com</p>
+                <p>interior-design.kreate.com</p> 
+            </div>
+            <p class="copyright">
+                © 2025 The Crimson Saffron
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal = document.getElementById("lightbox-modal");
+            var modalImg = document.getElementById("lightbox-img");
+            var galleryImages = document.querySelectorAll(".gallery-img");
+            var closeBtn = document.querySelector(".close-btn");
+
+            // Loop through all gallery images and add click event
+            galleryImages.forEach(function(img) {
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                }
+            });
+
+            // When the user clicks on <span> (x), close the modal
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Also close modal when clicking outside the image
+            modal.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

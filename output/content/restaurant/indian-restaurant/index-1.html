@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Crimson Saffron - Authentic Indian Cuisine</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff8f0; /* Light cream background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: #D9531E; /* Saffron/Orange color */
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #D9531E;
+            font-weight: 500;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            background-color: #D9531E; /* Saffron/Orange */
+            color: #fff;
+            padding: 14px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #b94619;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #006A4E; /* Deep Green */
+        }
+        
+        .btn-secondary:hover {
+            background-color: #005a41;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: rgba(26, 26, 26, 0.8);
+            border-bottom: 1px solid #444;
+            padding: 10px 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #f7d9a1; /* Light gold color */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: #f7d9a1;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://storage.googleapis.com/imagesu/food/indian-restaurant-1.jpg'); /* [cite: 37] */
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 200px 0 160px 0;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* --- Welcome Section --- */
+        .welcome {
+            padding: 60px 0;
+            background: #fff;
+        }
+
+        .welcome .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .welcome-content, .welcome-image {
+            flex: 1;
+        }
+        
+        .welcome-image img {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* --- Signature Dishes Section --- */
+        .dishes {
+            padding: 60px 0;
+            background-color: #fff8f0;
+        }
+
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .dish-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .dish-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dish-card-content {
+            padding: 25px;
+        }
+        
+        .dishes-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* --- CTA Section --- */
+        .cta {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://storage.googleapis.com/imagesu/food/indian-restaurant-2.jpg'); /* [cite: 38] */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta h2 {
+            color: #fff;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f7d9a1;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            .header {
+                position: relative;
+                background-color: #1a1a1a;
+            }
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .welcome .container {
+                flex-direction: column;
+            }
+            .hero {
+                padding: 100px 0;
+            }
+            .cta {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">THE CRIMSON SAFFRON</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>A Symphony of Spice</h1>
+            <p>Welcome to The Crimson Saffron. Discover the rich, complex, and vibrant flavors of authentic Indian cuisine, crafted with passion.</p>
+            <a href="#menu" class="btn">Order Online Now</a>
+        </div>
+    </section>
+
+    <section class="welcome">
+        <div class="container">
+            <div class="welcome-content">
+                <h2>Our Culinary Heritage</h2>
+                <p>At The Crimson Saffron, we celebrate the diverse culinary traditions of India. Our chefs draw inspiration from every region, blending traditional recipes with modern techniques.</p>
+                <p>We are dedicated to using the freshest ingredients and house-ground spices to create a dining experience that is both authentic and unforgettable. Join us and embark on a flavorful journey.</p>
+            </div>
+            <div class="welcome-image">
+                <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-3.jpg" alt="Elegant interior of The Crimson Saffron restaurant"> </div>
+        </div>
+    </section>
+
+    <section class="dishes" id="menu">
+        <div class="container">
+            <h2>From Our Kitchen</h2>
+            <div class="dishes-grid">
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/indian-food-1.jpg" alt="Rich and creamy Butter Chicken"> <div class="dish-card-content">
+                        <h3>Butter Chicken</h3>
+                        <p>Our signature creamy tomato curry with tender tandoori chicken.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/dosa-1.jpg" alt="Crispy golden Masala Dosa"> <div class="dish-card-content">
+                        <h3>Masala Dosa</h3>
+                        <p>A crispy rice and lentil crepe filled with spiced potato masala.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/indian-food-2.jpg" alt="Aromatic Lamb Biryani"> <div class="dish-card-content">
+                        <h3>Lamb Biryani</h3>
+                        <p>Slow-cooked lamb layered with fragrant basmati rice and saffron.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/indian-restaurant-5.jpg" alt="Assorted Tandoori Platter"> <div class="dish-card-content">
+                        <h3>Tandoori Platter</h3>
+                        <p>An assortment of kebabs and tikkas, freshly baked in our clay oven.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dishes-cta">
+                <a href="#" class="btn btn-secondary">View Full Menu</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>Reserve Your Table</h2>
+            <p>Experience the warmth of Indian hospitality. Call us to book your table or for catering and private event inquiries.</p>
+            <p><strong>Phone:</strong> 4253411111</p> <p><strong>Email:</strong> contact@kreate.com</p> <a href="tel:4253411111" class="btn">Call to Reserve</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="#" class="logo">THE CRIMSON SAFFRON</a>
+            <div class="footer-contact">
+                <p>Phone: 4253411111 | Email: contact@kreate.com</p> <p>interior-design.kreate.com</p> </div>
+            <p class="copyright">
+                © 2025 The Crimson Saffron
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

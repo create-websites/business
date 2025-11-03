@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacienda del Sabor - Authentic Mexican Cuisine</title>
+    
+    <meta name="description" content="Experience the vibrant, authentic flavors of Mexico at Hacienda del Sabor. From sizzling fajitas to fresh guacamole and tacos. Order online or book your table today.">
+    <meta name="keywords" content="mexican restaurant, authentic mexican cuisine, tacos, guacamole, fajitas, enchiladas, mexican food near me, order mexican online, book table, cantina">
+
+    <meta property="og:title" content="Hacienda del Sabor - Authentic Mexican Cuisine">
+    <meta property="og:description" content="Experience a fiesta of authentic flavor. Discover our signature tacos, fresh guacamole, and sizzling fajitas.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://business.kreate.com/mexican-restaurant"> <meta property="og:image" content="https://storage.googleapis.com/imagesu/food/mexican-restaurant-1.jpg"> <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Hacienda del Sabor",
+      "description": "Authentic Mexican cuisine celebrating the rich, vibrant, and diverse culinary traditions of Mexico.",
+      "telephone": "+1-425-341-1111", "email": "contact@kreate.com", "url": "https://business.kreate.com/mexican-restaurant", "image": "https://storage.googleapis.com/imagesu/food/mexican-restaurant-1.jpg", "servesCuisine": "Mexican",
+      "priceRange": "$$",
+      "acceptsReservations": "True"
+    }
+    </script>
+    
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fefaf5; /* Light warm background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: #D92027; /* Vibrant Red */
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #D92027;
+            font-weight: 500;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            background-color: #D92027; /* Red */
+            color: #fff;
+            padding: 14px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #b21a20;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #006A4E; /* Green */
+        }
+        
+        .btn-secondary:hover {
+            background-color: #005a41;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: rgba(26, 26, 26, 0.8);
+            border-bottom: 1px solid #444;
+            padding: 10px 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #f7d9a1; /* Light gold color */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover {
+            color: #f7d9a1;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://storage.googleapis.com/imagesu/food/mexican-restaurant-1.jpg'); /* [cite: 57] */
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 200px 0 160px 0;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* --- Welcome Section --- */
+        .welcome {
+            padding: 60px 0;
+            background: #fff;
+        }
+
+        .welcome .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .welcome-content, .welcome-image {
+            flex: 1;
+        }
+        
+        .welcome-image img {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* --- Signature Dishes Section --- */
+        .dishes {
+            padding: 60px 0;
+            background-color: #fefaf5;
+        }
+
+        .dishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .dish-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .dish-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dish-card-content {
+            padding: 25px;
+        }
+        
+        .dishes-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* --- CTA Section --- */
+        .cta {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://storage.googleapis.com/imagesu/food/mexican-restaurant-4.jpg'); /* [cite: 60] */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta h2 {
+            color: #fff;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f7d9a1;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            .header {
+                position: relative;
+                background-color: #1a1a1a;
+            }
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .welcome .container {
+                flex-direction: column;
+            }
+            .hero {
+                padding: 100px 0;
+            }
+            .cta {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">HACIENDA DEL SABOR</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Menu</a></li>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>A Fiesta of Authentic Flavor</h1>
+            <p>Welcome to Hacienda del Sabor. Discover the vibrant tastes of Mexico, made from scratch with passion and fresh ingredients.</p>
+            <a href="#menu" class="btn">Order Online Now</a>
+        </div>
+    </section>
+
+    <section class="welcome">
+        <div class="container">
+            <div class="welcome-content">
+                <h2>Welcome to the Hacienda</h2>
+                <p>For us, food is a celebration. Hacienda del Sabor was born from a passion to share the rich, diverse, and vibrant culinary traditions of our homeland. Every dish is a piece of our history.</p>
+                <p>We are dedicated to using the freshest local ingredients, from our hand-pressed tortillas to our slow-simmered salsas. Join us, share a meal, and become part of our family.</p>
+            </div>
+            <div class="welcome-image">
+                <img src="https://storage.googleapis.com/imagesu/food/mexican-restaurant-2.jpg" alt="The warm, inviting interior of Hacienda del Sabor"> </div>
+        </div>
+    </section>
+
+    <section class="dishes" id="menu">
+        <div class="container">
+            <h2>Nuestros Sabores</h2>
+            <div class="dishes-grid">
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/mexican-food-1.jpg" alt="Authentic Carne Asada Tacos"> <div class="dish-card-content">
+                        <h3>Carne Asada Tacos</h3>
+                        <p>Grilled steak on fresh corn tortillas with cilantro, onion, and salsa.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/mexican-food-2.jpg" alt="Cheesy Enchiladas Rojas"> <div class="dish-card-content">
+                        <h3>Enchiladas Rojas</h3>
+                        <p>Corn tortillas rolled with chicken, smothered in red chili sauce and cheese.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/mexican-food-4.jpg" alt="Freshly made Guacamole"> <div class="dish-card-content">
+                        <h3>Fresh Guacamole</h3>
+                        <p>Made tableside with ripe avocados, lime, onion, and cilantro.</p>
+                    </div>
+                </div>
+                <div class="dish-card">
+                    <img src="https://storage.googleapis.com/imagesu/food/mexican-food-5.jpg" alt="Loaded Fiesta Nachos"> <div class="dish-card-content">
+                        <h3>Fiesta Nachos</h3>
+                        <p>Crispy chips topped with beans, cheese, jalapeños, and pico de gallo.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dishes-cta">
+                <a href="#" class="btn btn-secondary">View Full Menu</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>Book Your Fiesta</h2>
+            <p>Join us for an unforgettable dining experience. Call to book your table or for catering and private event inquiries.</p>
+            <p><strong>Phone:</strong> 4253411111</p> <p><strong>Email:</strong> contact@kreate.com</p> <a href="tel:4253411111" class="btn">Call to Reserve</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="#" class="logo">HACIENDA DEL SABOR</a>
+            <div class="footer-contact">
+                <p>Phone: 4253411111 | Email: contact@kreate.com</p> <p>business.kreate.com/mexican-restaurant</p> </div>
+            <p class="copyright">
+                © 2025 Hacienda del Sabor
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
