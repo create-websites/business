@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow - Veritas Financial | Tax & Finance</title>
+
+    <meta name="description" content="Watch a slideshow of tax planning, financial consulting, and retirement strategy concepts from Veritas Financial.">
+    <meta name="keywords" content="financial planning slideshow, tax consultant photos, retirement planning slideshow, wealth management, veritas financial">
+
+    <meta property="og:title" content="Slideshow - Veritas Financial | Tax & Financial Planning">
+    <meta property="og:description" content="A visual presentation of our tax, finance, and retirement planning services.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://business.kreate.com/tax-filing/slideshow">
+    <meta property="og:image" content="https://storage.googleapis.com/imagesu/business/finance-1.jpg">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "Veritas Financial Slideshow",
+      "description": "A slideshow related to tax, finance, and retirement planning services.",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://business.kreate.com/tax-filing/slideshow"
+      },
+      "image": [
+        "https://storage.googleapis.com/imagesu/education/tax-1.jpg",
+        "https://storage.googleapis.com/imagesu/business/tax-2.jpg",
+        "https://storage.googleapis.com/imagesu/business/tax-3.jpg",
+        "https://storage.googleapis.com/imagesu/business/tax-4.jpg",
+        "https://storage.googleapis.com/imagesu/business/tax-5.jpg",
+        "https://storage.googleapis.com/imagesu/business/finance-1.jpg",
+        "https://storage.googleapis.com/imagesu/business/finance-2.jpg",
+        "https://storage.googleapis.com/imagesu/business/finance-3.jpg",
+        "https://storage.googleapis.com/imagesu/business/finance-4.jpg",
+        "https://storage.googleapis.com/imagesu/business/finance-5.jpg",
+        "https://storage.googleapis.com/imagesu/business/finance-6.jpg",
+        "https://storage.googleapis.com/imagesu/business/finance-7.jpg",
+        "https://storage.googleapis.com/imagesu/business/retirement-1.jpg",
+        "https://storage.googleapis.com/imagesu/business/retirement-2.jpg",
+        "https://storage.googleapis.com/imagesu/business/retirement-3.jpg",
+        "https://storage.googleapis.com/imagesu/business/retirement-4.jpg",
+        "https://storage.googleapis.com/imagesu/business/retirement-5.jpg",
+        "https://storage.googleapis.com/imagesu/business/retirement-6.jpg",
+        "https://storage.googleapis.com/imagesu/business/retirement-7.jpg"
+      ]
+    }
+    </script>
+
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9; /* Light grey background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: #004a9c; /* Professional Blue */
+            font-family: "Georgia", "Times New Roman", serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: #005A9C;
+            font-weight: 500;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #004a9c; /* Blue */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #333;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #000;
+            font-weight: 600;
+        }
+        
+        /* --- Slideshow Page Styles --- */
+        .slideshow-main {
+            padding: 40px 0 60px 0;
+        }
+        
+        /* Slideshow container */
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        /* Hide the images by default */
+        .mySlides {
+            display: none;
+        }
+        
+        .mySlides img {
+            width: 100%;
+            height: 550px; /* Taller height for a slideshow */
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Next & previous buttons */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Position the "next button" to the right */
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Caption text */
+        .slide-caption {
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-family: "Georgia", "Times New Roman", serif;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* The dots/bullets/indicators */
+        .dot-container {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f1f1f1;
+            border-radius: 0 0 8px 8px;
+            /* Allow horizontal scrolling for many dots */
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active-dot, .dot:hover {
+            background-color: #005A9C; /* Blue color */
+        }
+
+        /* Fading animation */
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f_f_ff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .mySlides img {
+                height: 300px;
+            }
+            .prev, .next {
+                font-size: 18px;
+                padding: 12px;
+            }
+            .dot {
+                height: 12px;
+                width: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">VERITAS FINANCIAL</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="slideshow.html" class="active">Slideshow</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="slideshow-main">
+        <div class="container">
+            <h2>Our Focus Areas</h2>
+
+            <div class="slideshow-container">
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/education/tax-1.jpg" alt="Tax forms and calculator">
+                    <div class="slide-caption">Tax Season Clarity</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/tax-3.jpg" alt="Close-up of tax filing">
+                    <div class="slide-caption">Meticulous Preparation</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/finance-1.jpg" alt="Financial advisor with clients">
+                    <div class="slide-caption">Personalized Financial Planning</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/retirement-2.jpg" alt="Happy couple planning retirement">
+                    <div class="slide-caption">Securing Your Retirement</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/finance-7.jpg" alt="Financial growth charts">
+                    <div class="slide-caption">Strategies for Growth</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/tax-2.jpg" alt="Person working on tax documents">
+                    <div class="slide-caption">Handling Complex Filings</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/retirement-1.jpg" alt="Retirement planning concept">
+                    <div class="slide-caption">Building Your Nest Egg</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/finance-2.jpg" alt="Financial planning meeting">
+                    <div class="slide-caption">Collaborative Strategy Sessions</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/tax-4.jpg" alt="Digital tax preparation">
+                    <div class="slide-caption">Modern, Digital-First Service</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/retirement-3.jpg" alt="Saving for retirement">
+                    <div class="slide-caption">Consistent Savings Plans</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/finance-4.jpg" alt="Investment chart analysis">
+                    <div class="slide-caption">In-Depth Market Analysis</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/tax-5.jpg" alt="Tax consultation">
+                    <div class="slide-caption">Year-Round Tax Consultation</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/retirement-4.jpg" alt="Retirement on the beach">
+                    <div class="slide-caption">Working Towards Your Dream Retirement</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/finance-3.jpg" alt="Analyzing financial data">
+                    <div class="slide-caption">Data-Driven Insights</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/retirement-5.jpg" alt="Senior couple enjoying retirement">
+                    <div class="slide-caption">Enjoying a Secure Future</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/finance-5.jpg" alt="Business finance strategy">
+                    <div class="slide-caption">Strategic Business Finance</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/retirement-6.jpg" alt="Retirement savings jar">
+                    <div class="slide-caption">Small Steps to Big Goals</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/finance-6.jpg" alt="Financial discussion">
+                    <div class="slide-caption">Your Trusted Advisors</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/retirement-7.jpg" alt="Planning retirement finances">
+                    <div class="slide-caption">Detailed Retirement Planning</div>
+                </div>
+
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                
+                <div class="dot-container">
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                    <span class="dot" onclick="currentSlide(5)"></span>
+                    <span class="dot" onclick="currentSlide(6)"></span>
+                    <span class="dot" onclick="currentSlide(7)"></span>
+                    <span class="dot" onclick="currentSlide(8)"></span>
+                    <span class="dot" onclick="currentSlide(9)"></span>
+                    <span class="dot" onclick="currentSlide(10)"></span>
+                    <span class="dot" onclick="currentSlide(11)"></span>
+                    <span class="dot" onclick="currentSlide(12)"></span>
+                    <span class="dot" onclick="currentSlide(13)"></span>
+                    <span class="dot" onclick="currentSlide(14)"></span>
+                    <span class="dot" onclick="currentSlide(15)"></span>
+                    <span class="dot" onclick="currentSlide(16)"></span>
+                    <span class="dot" onclick="currentSlide(17)"></span>
+                    <span class="dot" onclick="currentSlide(18)"></span>
+                    <span class="dot" onclick="currentSlide(19)"></span>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">VERITAS FINANCIAL</a>
+            <div class="footer-contact">
+                <p>Phone: 425-341-1111 | Email: contact@kreate.com</p>
+                <p>https://business.kreate.com/tax-filing</p>
+            </div>
+            <p class="copyright">
+                © 2025 Veritas Financial
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        // Next/previous controls
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        // Thumbnail image controls
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            
+            // Hide all slides
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            // Remove "active-dot" class from all dots
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", "");
+            }
+            
+            // Show the current slide and add "active-dot" to the corresponding dot
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active-dot";
+        }
+    </script>
+
+</body>
+</html>
