@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow - Apex Learning Center | Coaching & Tutoring</title>
+
+    <meta name="description" content="Watch a beautiful slideshow of Apex Learning Center. See our students in action, our expert tutors, coding classes, and modern learning environment.">
+    <meta name="keywords" content="education slideshow, tutoring photos, coding class slideshow, student learning, coaching center, Apex Learning Center slideshow">
+
+    <meta property="og:title" content="Slideshow - Apex Learning Center | Coaching & Tutoring">
+    <meta property="og:description" content="Watch a beautiful slideshow of our students, expert tutors, coding classes, and modern learning environment.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://business.kreate.com/education-coaching/slideshow"> <meta property="og:image" content="https://storage.googleapis.com/imagesu/business/education-9.jpg"> <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "Apex Learning Center Slideshow",
+      "description": "A slideshow of students, tutors, and learning environments at Apex Learning Center.",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://business.kreate.com/education-coaching/slideshow"
+      },
+      "image": [
+        "https://storage.googleapis.com/imagesu/education/education-1.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-2.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-3.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-4.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-5.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-6.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-7.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-8.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-9.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-1.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-2.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-3.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-4.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-5.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-6.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-7.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-8.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-9.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach10.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-11.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach12.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach13.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach14.jpg"
+      ]
+    }
+    </script>
+
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f_f_ff; /* Clean white background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: #005A9C; /* Professional Blue */
+            font-family: "Georgia", "Times New Roman", serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: #005A9C;
+            font-weight: 500;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #005A9C; /* Blue */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #000;
+            font-weight: 600;
+        }
+        
+        /* --- Slideshow Page Styles --- */
+        .slideshow-main {
+            padding: 40px 0 60px 0;
+        }
+        
+        /* Slideshow container */
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        /* Hide the images by default */
+        .mySlides {
+            display: none;
+        }
+        
+        .mySlides img {
+            width: 100%;
+            height: 550px; /* Taller height for a slideshow */
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* Next & previous buttons */
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Position the "next button" to the right */
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Caption text */
+        .slide-caption {
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-family: "Georgia", "Times New Roman", serif;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* The dots/bullets/indicators */
+        .dot-container {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f1f1f1;
+            border-radius: 0 0 8px 8px;
+            /* Allow horizontal scrolling for many dots */
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active-dot, .dot:hover {
+            background-color: #005A9C; /* Blue color */
+        }
+
+        /* Fading animation */
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes fade {
+            from {opacity: .4}
+            to {opacity: 1}
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f_f_ff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .mySlides img {
+                height: 300px;
+            }
+            .prev, .next {
+                font-size: 18px;
+                padding: 12px;
+            }
+            .dot {
+                height: 12px;
+                width: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">APEX LEARNING</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#programs">Our Programs</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="slideshow.html" class="active">Slideshow</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="slideshow-main">
+        <div class="container">
+            <h2>Our Learning Journey</h2>
+
+            <div class="slideshow-container">
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/education/education-1.jpg" alt="University lecture hall">
+                    <div class="slide-caption">A Foundation for Success</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-2.jpg" alt="Student writing on a whiteboard">
+                    <div class="slide-caption">Interactive Learning</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-4.jpg" alt="One-on-one tutoring session">
+                    <div class="slide-caption">Personalized 1-on-1 Tuition</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-5.jpg" alt="Student learning computer programming">
+                    <div class="slide-caption">Hands-On Coding & Programming</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-9.jpg" alt="Students in a modern classroom">
+                    <div class="slide-caption">Collaborative Classrooms</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-1.jpg" alt="Professional coach in a session">
+                    <div class="slide-caption">Expert Coaching</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-6.jpg" alt="Coach working with a client">
+                    <div class="slide-caption">Guidance and Support</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-3.jpg" alt="Online learning session">
+                    <div class="slide-caption">Flexible Online Learning</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-4.jpg" alt="Life coach in a virtual meeting">
+                    <div class="slide-caption">Virtual Coaching Available</div>
+                </div>
+                
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-12.jpg" alt="Online coaching call">
+                    <div class="slide-caption">Remote Sessions</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-6.jpg" alt="Student in a library studying">
+                    <div class="slide-caption">Dedicated Study & Test Prep</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-7.jpg" alt="Hands-on science class">
+                    <div class="slide-caption">Hands-On STEM Tuition</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/business/education-8.jpg" alt="Collaborative student project">
+                    <div class="slide-caption">Team Projects</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-2.jpg" alt="Team coaching huddle">
+                    <div class="slide-caption">Group Coaching</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-3.jpg" alt="Coach speaking at a seminar">
+                    <div class="slide-caption">Expert-Led Seminars</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-5.jpg" alt="Business coaching and strategy">
+                    <div class="slide-caption">Professional & Business Coaching</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-7.jpg" alt="Personal development coaching">
+                    <div class="slide-caption">Personal Development</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-8.jpg" alt="Group coaching session">
+                    <div class="slide-caption">Workshops and Group Learning</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-9.jpg" alt="Coach planning a session">
+                    <div class="slide-caption">Strategic Planning</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach10.jpg" alt="Executive coaching">
+                    <div class="slide-caption">Executive & Career Coaching</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach-11.jpg" alt="Wellness coach">
+                    <div class="slide-caption">Holistic & Wellness Coaching</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach13.jpg" alt="Coaching workshop">
+                    <div class="slide-caption">Engaging Workshops</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="https://storage.googleapis.com/imagesu/coach/coach14.jpg" alt="Career coaching">
+                    <div class="slide-caption">Building Your Future Career</div>
+                </div>
+
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                
+                <div class="dot-container">
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                    <span class="dot" onclick="currentSlide(5)"></span>
+                    <span class="dot" onclick="currentSlide(6)"></span>
+                    <span class="dot" onclick="currentSlide(7)"></span>
+                    <span class="dot" onclick="currentSlide(8)"></span>
+                    <span class="dot" onclick="currentSlide(9)"></span>
+                    <span class="dot" onclick="currentSlide(10)"></span>
+                    <span class="dot" onclick="currentSlide(11)"></span>
+                    <span class="dot" onclick="currentSlide(12)"></span>
+                    <span class="dot" onclick="currentSlide(13)"></span>
+                    <span class="dot" onclick="currentSlide(14)"></span>
+                    <span class="dot" onclick="currentSlide(15)"></span>
+                    <span class="dot" onclick="currentSlide(16)"></span>
+                    <span class="dot" onclick="currentSlide(17)"></span>
+                    <span class="dot" onclick="currentSlide(18)"></span>
+                    <span class="dot" onclick="currentSlide(19)"></span>
+                    <span class="dot" onclick="currentSlide(20)"></span>
+                    <span class="dot" onclick="currentSlide(21)"></span>
+                    <span class="dot" onclick="currentSlide(22)"></span>
+                    <span class="dot" onclick="currentSlide(23)"></span>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">APEX LEARNING</a>
+            <div class="footer-contact">
+                <p>Phone: 425-341-1111 | Email: contact@kreate.com</p>
+                <p>https://business.kreate.com/education-coaching</p>
+            </div>
+            <p class="copyright">
+                © 2025 Apex Learning Center
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        // Next/previous controls
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        // Thumbnail image controls
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            
+            // Hide all slides
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            // Remove "active-dot" class from all dots
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", "");
+            }
+            
+            // Show the current slide and add "active-dot" to the corresponding dot
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active-dot";
+        }
+    </script>
+
+</body>
+</html>

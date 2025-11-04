@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Apex Learning Center | Coaching & Tutoring Photos</title>
+
+    <meta name="description" content="Explore the Apex Learning Center gallery. See photos of our students, expert tutors, coding classes, and our modern learning environment.">
+    <meta name="keywords" content="education gallery, tutoring photos, coding class photos, student learning, coaching center, Apex Learning Center gallery">
+
+    <meta property="og:title" content="Gallery - Apex Learning Center | Coaching & Tutoring">
+    <meta property="og:description" content="Explore photos of our students, expert tutors, coding classes, and our modern learning environment.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://business.kreate.com/education-coaching/gallery"> <meta property="og:image" content="https://storage.googleapis.com/imagesu/business/education-9.jpg"> <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "Apex Learning Center Gallery",
+      "description": "Photos of students, tutors, and learning environments at Apex Learning Center.",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://business.kreate.com/education-coaching/gallery"
+      },
+      "creator": {
+        "@type": "EducationalOrganization",
+        "name": "Apex Learning Center",
+        "url": "https://business.kreate.com/education-coaching"
+      },
+      "image": [
+        "https://storage.googleapis.com/imagesu/education/education-1.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-2.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-4.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-5.jpg",
+        "https://storage.googleapis.com/imagesu/business/education-9.jpg",
+        "https://storage.googleapis.com/imagesu/coach/coach-1.jpg"
+      ]
+    }
+    </script>
+
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f_f_ff; /* Clean white background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            color: #2a2a2a;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #005A9C; /* Professional Blue */
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #005A9C;
+            font-weight: 500;
+        }
+
+        /* --- Header & Navigation --- */
+        .header {
+            background-color: #fff; /* Solid white header */
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: "Georgia", serif;
+            color: #005A9C; /* Blue */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .main-nav li {
+            margin-left: 30px;
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: #000;
+            font-weight: 600;
+        }
+        
+        /* --- Gallery Page Styles --- */
+        .gallery-main {
+            padding: 60px 0;
+        }
+        
+        .gallery-intro {
+            text-align: center;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            color: #555;
+        }
+        
+        .gallery-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-page-grid .gallery-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+        }
+        
+        .gallery-page-grid .gallery-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- Lightbox Modal Styles --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 4px;
+            animation: zoomIn 0.3s;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+        
+        @keyframes zoomIn {
+            from {transform: scale(0.8)}
+            to {transform: scale(1)}
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 40px 0 20px 0;
+            margin-top: 60px;
+        }
+
+        .footer .container {
+            text-align: center;
+        }
+        
+        .footer .logo {
+            color: #f_f_ff;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-contact p {
+            font-size: 1.1rem;
+            margin: 5px 0;
+            color: #fff;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .main-nav li {
+                margin-left: 15px;
+            }
+            .gallery-page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">APEX LEARNING</a> <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#programs">Our Programs</a></li>
+                    <li><a href="gallery.html" class="active">Gallery</a></li> <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="gallery-main">
+        <div class="container">
+            <h2>Our Learning Environment</h2>
+            <p class="gallery-intro">
+                Take a look inside Apex Learning Center. See our students, our expert coaches, and the collaborative spaces where learning comes to life.
+            </p>
+            
+            <div class="gallery-page-grid">
+                <img src="https://storage.googleapis.com/imagesu/business/education-1.jpg" alt="University lecture hall" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-2.jpg" alt="Student writing on a whiteboard" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-3.jpg" alt="Online learning session" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-4.jpg" alt="One-on-one tutoring session" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-5.jpg" alt="Student learning computer programming" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-6.jpg" alt="Student in a library studying" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-7.jpg" alt="Hands-on science class" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-8.jpg" alt="Collaborative student project" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/business/education-9.jpg" alt="Students in a modern classroom" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-1.jpg" alt="Professional coach in a session" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-2.jpg" alt="Team coaching huddle" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-3.jpg" alt="Coach speaking at a seminar" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-4.jpg" alt="Life coach in a virtual meeting" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-5.jpg" alt="Business coaching and strategy" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-6.jpg" alt="Coach working with a client" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-7.jpg" alt="Personal development coaching" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-8.jpg" alt="Group coaching session" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-9.jpg" alt="Coach planning a session" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-10.jpg" alt="Executive coaching" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach-11.jpg" alt="Wellness coach" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach12.jpg" alt="Online coaching call" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach13.jpg" alt="Coaching workshop" class="gallery-img">
+                <img src="https://storage.googleapis.com/imagesu/coach/coach14.jpg" alt="Career coaching" class="gallery-img">
+            </div>
+        </div>
+    </main>
+    
+    <div id="lightbox-modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="lightbox-img">
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="index.html" class="logo">APEX LEARNING</a>
+            <div class="footer-contact">
+                <p>Phone: 425-341-1111 | Email: contact@kreate.com</p>
+                <p>https://business.kreate.com/education-coaching</p>
+            </div>
+            <p class="copyright">
+                © 2025 Apex Learning Center
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal = document.getElementById("lightbox-modal");
+            var modalImg = document.getElementById("lightbox-img");
+            var galleryImages = document.querySelectorAll(".gallery-img");
+            var closeBtn = document.querySelector(".close-btn");
+
+            // Loop through all gallery images and add click event
+            galleryImages.forEach(function(img) {
+                img.onclick = function() {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                }
+            });
+
+            // When the user clicks on <span> (x), close the modal
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Also close modal when clicking outside the image
+            modal.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
