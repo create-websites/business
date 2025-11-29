@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LocalTaxPros - Expert Tax Planning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom styles for smooth transitions if needed */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        .fade-in.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 py-4 bg-transparent" id="navbar">
+        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-2 font-bold text-2xl text-emerald-800">
+                <i class="w-8 h-8" data-lucide="trending-up"></i>
+                <span>LocalTax<span class="text-emerald-600">Pros</span></span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a class="hover:text-emerald-600 font-medium transition-colors" href="#home">Home</a>
+                <a class="hover:text-emerald-600 font-medium transition-colors" href="#services">Services</a>
+                <a class="hover:text-emerald-600 font-medium transition-colors" href="#gallery">Gallery</a>
+                <a class="px-5 py-2.5 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200" href="#contact">
+                    Free Consultation
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-slate-700" id="mobile-menu-btn">
+                <i class="w-7 h-7" data-lucide="menu"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="hidden md:hidden bg-white shadow-xl absolute top-full left-0 w-full border-t border-slate-100" id="mobile-menu">
+            <div class="flex flex-col p-4 space-y-4">
+                <a class="mobile-link text-lg font-medium p-2 hover:bg-slate-50 rounded" href="#home">Home</a>
+                <a class="mobile-link text-lg font-medium p-2 hover:bg-slate-50 rounded" href="#services">Services</a>
+                <a class="mobile-link text-lg font-medium p-2 hover:bg-slate-50 rounded" href="#gallery">Gallery</a>
+                <a class="mobile-link text-lg font-medium p-2 bg-emerald-50 text-emerald-700 rounded" href="#contact">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden" id="home">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-slate-800/80 z-10"></div>
+            <img alt="Tax Planning Office" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/tax-planner/tax-planner1.jpg"/>
+        </div>
+        
+        <div class="container mx-auto px-4 md:px-6 relative z-20 text-white">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center space-x-2 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-sm font-medium text-emerald-100">Accepting New Clients for 2024</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                    Expert Tax Planning for <span class="text-emerald-400">Local Growth</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-200 mb-8 leading-relaxed">
+                    We don't just prepare your taxes; we help you plan for a prosperous future. 
+                    Personalized service right here in your community.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a class="inline-flex justify-center items-center px-8 py-4 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-all shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1" href="#contact">
+                        Schedule Consultation
+                        <i class="ml-2 w-5 h-5" data-lucide="arrow-right"></i>
+                    </a>
+                    <a class="inline-flex justify-center items-center px-8 py-4 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 transition-all backdrop-blur-sm border border-white/20" href="#services">
+                        Our Services
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="bg-white py-12 border-b border-slate-100">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-emerald-600 mb-2">15+</div>
+                    <div class="text-slate-500 font-medium">Years Experience</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-emerald-600 mb-2">500+</div>
+                    <div class="text-slate-500 font-medium">Happy Clients</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-emerald-600 mb-2">100%</div>
+                    <div class="text-slate-500 font-medium">Audit Accuracy</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl font-bold text-emerald-600 mb-2">24/7</div>
+                    <div class="text-slate-500 font-medium">Support Access</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-20 bg-slate-50" id="services">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-800">Comprehensive Tax Solutions</h2>
+                <p class="text-lg text-slate-600">
+                    Whether you're an individual or a small business owner, we provide tailored strategies to help you keep more of what you earn.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:-translate-y-1 group">
+                    <div class="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-100 transition-colors">
+                        <i class="w-8 h-8 text-emerald-600" data-lucide="calculator"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-800">Personal Tax Planning</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Proactive strategies to minimize your liability and maximize your returns specifically tailored for individuals and families.
+                    </p>
+                    <a class="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700" href="#contact">
+                        Learn more <i class="w-4 h-4 ml-1" data-lucide="chevron-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:-translate-y-1 group">
+                    <div class="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-100 transition-colors">
+                        <i class="w-8 h-8 text-emerald-600" data-lucide="trending-up"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-800">Small Business Tax</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Comprehensive tax solutions for local businesses, including bookkeeping, payroll, and quarterly filing assistance.
+                    </p>
+                    <a class="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700" href="#contact">
+                        Learn more <i class="w-4 h-4 ml-1" data-lucide="chevron-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:-translate-y-1 group">
+                    <div class="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-100 transition-colors">
+                        <i class="w-8 h-8 text-emerald-600" data-lucide="file-text"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-800">IRS Representation</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Professional representation and audit support to give you peace of mind when dealing with tax authorities.
+                    </p>
+                    <a class="inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700" href="#contact">
+                        Learn more <i class="w-4 h-4 ml-1" data-lucide="chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us / About -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="w-full md:w-1/2 relative">
+                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-emerald-100 rounded-full z-0"></div>
+                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-slate-100 rounded-full z-0"></div>
+                    <img alt="Meeting with clients" class="relative z-10 w-full h-auto rounded-2xl shadow-2xl object-cover aspect-[4/3]" src="https://storage.googleapis.com/imagesu/tax-planner/tax-planner2.jpg"/>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-slate-800">Why Local Businesses Trust Us</h2>
+                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                        We understand the unique challenges of our local economy. Unlike national chains, we take the time to learn your story and tailor our advice to your specific goals.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="w-6 h-6 text-emerald-500 mr-3 flex-shrink-0 mt-0.5" data-lucide="check-circle-2"></i>
+                            <span class="text-slate-700 font-medium">Personalized, one-on-one attention</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="w-6 h-6 text-emerald-500 mr-3 flex-shrink-0 mt-0.5" data-lucide="check-circle-2"></i>
+                            <span class="text-slate-700 font-medium">Year-round support, not just during tax season</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="w-6 h-6 text-emerald-500 mr-3 flex-shrink-0 mt-0.5" data-lucide="check-circle-2"></i>
+                            <span class="text-slate-700 font-medium">Strategic planning to prevent surprises</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="w-6 h-6 text-emerald-500 mr-3 flex-shrink-0 mt-0.5" data-lucide="check-circle-2"></i>
+                            <span class="text-slate-700 font-medium">Deep knowledge of local and state tax codes</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-8 border-t border-slate-100">
+                        <div class="flex items-center gap-4">
+                            <img alt="Founder" class="w-12 h-12 rounded-full object-cover" src="https://storage.googleapis.com/imagesu/tax-planner/tax-planner5.jpg"/>
+                            <div>
+                                <p class="font-bold text-slate-800">Expert Team</p>
+                                <p class="text-sm text-slate-500">Dedicated to your success</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-20 bg-slate-900 text-white" id="gallery">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div class="max-w-xl">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Office &amp; Team</h2>
+                    <p class="text-slate-400">
+                        A look inside our workspace where we help you build a better financial future.
+                    </p>
+                </div>
+                <a class="hidden md:inline-flex items-center text-emerald-400 hover:text-emerald-300 font-medium mt-4 md:mt-0 transition-colors" href="#contact">
+                    Visit our office <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Gallery 1 -->
+                <div class="group relative overflow-hidden rounded-xl aspect-[4/3]">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300 z-10"></div>
+                    <img alt="Gallery image 1" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" src="https://storage.googleapis.com/imagesu/tax-planner/tax-planner3.jpg"/>
+                    <div class="absolute bottom-0 left-0 p-6 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <span class="inline-block px-3 py-1 bg-emerald-600 text-xs font-bold uppercase tracking-wider rounded-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                            Inside Kreate
+                        </span>
+                    </div>
+                </div>
+                <!-- Gallery 2 -->
+                <div class="group relative overflow-hidden rounded-xl aspect-[4/3]">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300 z-10"></div>
+                    <img alt="Gallery image 2" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" src="https://storage.googleapis.com/imagesu/tax-planner/tax-planner4.jpg"/>
+                    <div class="absolute bottom-0 left-0 p-6 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <span class="inline-block px-3 py-1 bg-emerald-600 text-xs font-bold uppercase tracking-wider rounded-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                            Inside Kreate
+                        </span>
+                    </div>
+                </div>
+                 <!-- Gallery 3 -->
+                 <div class="group relative overflow-hidden rounded-xl aspect-[4/3]">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300 z-10"></div>
+                    <img alt="Gallery image 3" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" src="https://storage.googleapis.com/imagesu/tax-planner/tax-planner5.jpg"/>
+                    <div class="absolute bottom-0 left-0 p-6 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <span class="inline-block px-3 py-1 bg-emerald-600 text-xs font-bold uppercase tracking-wider rounded-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                            Inside Kreate
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-emerald-50">
+        <div class="container mx-auto px-4 md:px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-slate-800">Client Stories</h2>
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl p-8 md:p-12 shadow-xl shadow-emerald-100/50 relative">
+                <div class="text-6xl text-emerald-200 absolute top-8 left-8 font-serif leading-none">"</div>
+                <div class="relative z-10" id="testimonial-container">
+                    <!-- Content injected by JS -->
+                    <p class="text-xl md:text-2xl text-slate-700 font-medium italic mb-8 leading-relaxed" id="t-text"></p>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-lg" id="t-author"></h4>
+                        <p class="text-emerald-600" id="t-role"></p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center gap-2 mt-8" id="testimonial-dots">
+                    <!-- Dots injected by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Contact Section -->
+    <section class="py-20 bg-white" id="contact">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid md:grid-cols-2 gap-12 lg:gap-20">
+                <div>
+                    <div class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 font-semibold rounded-full text-sm mb-4">
+                        Get in Touch
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-slate-800">
+                        Ready to optimize your taxes?
+                    </h2>
+                    <p class="text-lg text-slate-600 mb-8">
+                        Schedule a free 15-minute consultation to discuss your situation and see how we can help you achieve your financial goals.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center group">
+                            <div class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                                <i class="w-5 h-5" data-lucide="phone"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-slate-500 font-medium uppercase tracking-wide">Call Us</p>
+                                <a class="text-lg font-bold text-slate-800 hover:text-emerald-600" href="tel:4253411111">
+                                    425-341-1111
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center group">
+                            <div class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                                <i class="w-5 h-5" data-lucide="mail"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-slate-500 font-medium uppercase tracking-wide">Email Us</p>
+                                <a class="text-lg font-bold text-slate-800 hover:text-emerald-600" href="mailto:contact@kreate.com">
+                                    contact@kreate.com
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center group">
+                            <div class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                                <i class="w-5 h-5" data-lucide="map-pin"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-slate-500 font-medium uppercase tracking-wide">Visit Us</p>
+                                <p class="text-lg font-bold text-slate-800">
+                                    Serving Your Local Community
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-slate-800">Send us a message</h3>
+                    <form class="space-y-4" onsubmit="event.preventDefault(); alert('Message sent! (Demo)');">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">First Name</label>
+                                <input class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="John" required="" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
+                                <input class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="Doe" type="text"/>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+                            <input class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="john@example.com" required="" type="email"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Service Interested In</label>
+                            <select class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white">
+                                <option>Personal Tax Planning</option>
+                                <option>Small Business Tax</option>
+                                <option>Bookkeeping</option>
+                                <option>Audit Support</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Message</label>
+                            <textarea class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all bg-slate-50 focus:bg-white" placeholder="How can we help you today?" rows="4"></textarea>
+                        </div>
+
+                        <button class="w-full py-4 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            const icon = btn.querySelector('i');
+            // Toggle icon visual logic roughly by checking class/data attr if needed, 
+            // but for simplicity we rely on the menu visibility.
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white', 'shadow-md', 'py-2');
+                navbar.classList.remove('bg-transparent', 'py-4');
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-md', 'py-2');
+                navbar.classList.add('bg-transparent', 'py-4');
+            }
+        });
+
+        // Testimonial Data & Logic
+        const testimonials = [
+            {
+                text: "They completely transformed how I handle my small business finances. Highly recommended for anyone in the local area!",
+                author: "Sarah J.",
+                role: "Local Business Owner"
+            },
+            {
+                text: "Finally, a tax planner who actually answers the phone and takes the time to explain things. 5 stars.",
+                author: "Michael R.",
+                role: "Freelance Designer"
+            },
+            {
+                text: "Saved me thousands this year with their strategic planning. The best investment I made all year.",
+                author: "David L.",
+                role: "Real Estate Agent"
+            }
+        ];
+
+        let currentTestimonial = 0;
+        const tText = document.getElementById('t-text');
+        const tAuthor = document.getElementById('t-author');
+        const tRole = document.getElementById('t-role');
+        const dotContainer = document.getElementById('testimonial-dots');
+
+        function renderTestimonial(index) {
+            const t = testimonials[index];
+            
+            // Simple fade effect
+            const container = document.getElementById('testimonial-container');
+            container.style.opacity = 0;
+            
+            setTimeout(() => {
+                tText.innerText = t.text;
+                tAuthor.innerText = t.author;
+                tRole.innerText = t.role;
+                container.style.opacity = 1;
+                updateDots(index);
+            }, 200);
+        }
+
+        function updateDots(activeIdx) {
+            dotContainer.innerHTML = '';
+            testimonials.forEach((_, idx) => {
+                const dot = document.createElement('button');
+                dot.onclick = () => {
+                    currentTestimonial = idx;
+                    renderTestimonial(idx);
+                };
+                
+                // Tailwind classes for active vs inactive
+                const baseClasses = "w-3 h-3 rounded-full transition-all duration-300";
+                const activeClasses = "bg-emerald-600 w-8";
+                const inactiveClasses = "bg-slate-300 hover:bg-emerald-400";
+                
+                dot.className = `${baseClasses} ${idx === activeIdx ? activeClasses : inactiveClasses}`;
+                dot.ariaLabel = `Go to testimonial ${idx + 1}`;
+                dotContainer.appendChild(dot);
+            });
+        }
+
+        // Initialize Testimonials
+        renderTestimonial(0);
+
+    </script>
+
+</body></html>

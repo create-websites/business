@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kreate Design Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom Animation for Hero Text */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        /* Navbar Transition */
+        .nav-scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+
+        .nav-scrolled .nav-text {
+            color: #111827 !important; /* gray-900 */
+        }
+        
+        .nav-transparent {
+            background-color: transparent;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-900 bg-white antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 nav-transparent" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold tracking-tighter text-gray-900 md:text-white transition-colors duration-300" id="brand-logo">
+                        KREATE<span class="text-orange-500">.</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" href="#home">Home</a>
+                    <a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" href="#services">Services</a>
+                    <a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" href="#portfolio">Portfolio</a>
+                    <a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" href="#contact">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button class="p-2 rounded-md text-white transition-colors" id="mobile-menu-btn">
+                        <i class="w-6 h-6" data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="hidden md:hidden bg-white absolute top-full left-0 w-full shadow-lg py-4 px-4 flex flex-col space-y-4" id="mobile-menu">
+            <a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" href="#home">Home</a>
+            <a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" href="#services">Services</a>
+            <a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" href="#portfolio">Portfolio</a>
+            <a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden" id="home">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img alt="Designer Workspace" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80'" src="https://storage.googleapis.com/imagesu/freelancers/designer/desginer1.jpg"/>
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left w-full">
+            <div class="md:w-2/3">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 animate-fade-in-up">
+                    Crafting Digital <br/>
+                    <span class="text-orange-500">Masterpieces</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-lg leading-relaxed">
+                    Elevate your brand with bespoke website design, captivating landing pages, and visual storytelling that resonates.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a class="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition-all transform hover:scale-105 shadow-lg shadow-orange-500/30 inline-block text-center" href="#contact">
+                        Start a Project
+                    </a>
+                    <a class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-bold rounded-full transition-all inline-block text-center" href="#portfolio">
+                        View Gallery
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-24 bg-gray-50" id="services">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-orange-500 font-semibold tracking-wide uppercase text-sm mb-2">My Expertise</h2>
+                <h3 class="text-3xl md:text-4xl font-bold text-gray-900">Services Offered</h3>
+                <div class="w-20 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-lucide="globe"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Website Design</h4>
+                    <p class="text-gray-600 leading-relaxed">Full-scale, responsive websites tailored to your brand identity.</p>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-lucide="layout"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Landing Pages</h4>
+                    <p class="text-gray-600 leading-relaxed">High-converting landing pages designed to capture leads.</p>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-lucide="pen-tool"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Blog Pages</h4>
+                    <p class="text-gray-600 leading-relaxed">Beautifully typographed blog layouts for content creators.</p>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-lucide="image"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Gallery Pages</h4>
+                    <p class="text-gray-600 leading-relaxed">Immersive image galleries to showcase your portfolio.</p>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-lucide="arrow-right"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Slideshows</h4>
+                    <p class="text-gray-600 leading-relaxed">Dynamic and engaging slideshow presentations.</p>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group">
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300">
+                        <i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-lucide="external-link"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Other Creative</h4>
+                    <p class="text-gray-600 leading-relaxed">Custom design solutions for unique digital needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio / Gallery Section -->
+    <section class="py-24 bg-white" id="portfolio">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-orange-500 font-semibold tracking-wide uppercase text-sm mb-2">Portfolio</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-900">Featured Work</h3>
+                </div>
+                <button class="hidden md:flex items-center text-gray-600 hover:text-orange-500 font-medium transition-colors">
+                    View All Projects <i class="ml-2 w-5 h-5" data-lucide="arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Masonry-style Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
+                <!-- Main Feature Image -->
+                <div class="md:col-span-8 md:row-span-2 relative group overflow-hidden rounded-2xl h-64 md:h-full cursor-pointer">
+                    <img alt="Featured Design" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1558655146-d09347e0d7a8?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80'" src="https://storage.googleapis.com/imagesu/freelancers/designer/desginer2.jpg"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
+                        <div>
+                            <h4 class="text-white text-2xl font-bold">Brand Identity Project</h4>
+                            <p class="text-gray-300">Web Design &amp; Branding</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smaller Images -->
+                <div class="md:col-span-4 md:row-span-1 relative group overflow-hidden rounded-2xl h-64 md:h-full cursor-pointer">
+                    <img alt="Design Work" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80'" src="https://storage.googleapis.com/imagesu/freelancers/designer/desginer3.jpg"/>
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-bold border border-white px-4 py-2 rounded-full">View Details</span>
+                    </div>
+                </div>
+
+                <div class="md:col-span-4 md:row-span-1 relative group overflow-hidden rounded-2xl h-64 md:h-full cursor-pointer">
+                    <img alt="Design Work" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1586717791821-3f44a5638d0f?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80'" src="https://storage.googleapis.com/imagesu/freelancers/designer/desginer4.jpg"/>
+                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-bold border border-white px-4 py-2 rounded-full">View Details</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                 <div class="relative group overflow-hidden rounded-2xl h-64 cursor-pointer">
+                    <img alt="Design Work" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80'" src="https://storage.googleapis.com/imagesu/freelancers/designer/desginer5.jpg"/>
+                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span class="text-white font-bold border border-white px-4 py-2 rounded-full">View Details</span>
+                    </div>
+                </div>
+                 <div class="bg-gray-100 rounded-2xl h-64 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-gray-300 hover:border-orange-500 transition-colors cursor-pointer group">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                        <i class="text-orange-500 w-8 h-8" data-lucide="arrow-right"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900">See More Work</h4>
+                    <p class="text-gray-500 text-sm mt-2">Check out the full archive</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center md:hidden">
+                <button class="px-6 py-3 border border-gray-300 rounded-full font-medium text-gray-700 hover:border-orange-500 hover:text-orange-500 transition-colors">
+                    View All Projects
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats/Experience Section -->
+    <section class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="p-4">
+                    <div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2">50+</div>
+                    <div class="text-gray-400 font-medium">Projects Completed</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2">30+</div>
+                    <div class="text-gray-400 font-medium">Happy Clients</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2">5+</div>
+                    <div class="text-gray-400 font-medium">Years Experience</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2">24/7</div>
+                    <div class="text-gray-400 font-medium">Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-24 bg-gray-50" id="contact">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-orange-500 font-semibold tracking-wide uppercase text-sm mb-2">Get in Touch</h2>
+            <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Let's Create Something Amazing</h3>
+            <p class="text-gray-600 mb-12 text-lg">
+                Ready to start your next project? Whether it's a new website, a landing page, or a complete rebrand, I'm here to help.
+            </p>
+
+            <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <a class="flex flex-col items-center group hover:-translate-y-2 transition-transform duration-300" href="tel:425-341-1111">
+                        <div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                            <i class="w-7 h-7" data-lucide="phone"></i>
+                        </div>
+                        <span class="font-bold text-gray-900 mb-1">Call Me</span>
+                        <span class="text-gray-500 text-sm">425-341-1111</span>
+                    </a>
+
+                    <a class="flex flex-col items-center group hover:-translate-y-2 transition-transform duration-300" href="mailto:contact@kreate.com">
+                        <div class="w-16 h-16 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mb-4 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                            <i class="w-7 h-7" data-lucide="mail"></i>
+                        </div>
+                        <span class="font-bold text-gray-900 mb-1">Email Me</span>
+                        <span class="text-gray-500 text-sm">contact@kreate.com</span>
+                    </a>
+
+                    <a class="flex flex-col items-center group hover:-translate-y-2 transition-transform duration-300" href="https://business.kreate.com/education-coaching" rel="noopener noreferrer" target="_blank">
+                        <div class="w-16 h-16 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center mb-4 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                            <i class="w-7 h-7" data-lucide="globe"></i>
+                        </div>
+                        <span class="font-bold text-gray-900 mb-1">Visit Website</span>
+                        <span class="text-gray-500 text-sm truncate w-full px-2">Kreate Education</span>
+                    </a>
+                </div>
+
+                <div class="mt-12 pt-12 border-t border-gray-100">
+                    <form class="space-y-4 text-left" onsubmit="event.preventDefault();">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all" placeholder="Your Name" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all" placeholder="your@email.com" type="email"/>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all" placeholder="Tell me about your project..." rows="4"></textarea>
+                        </div>
+                        <button class="w-full py-4 bg-gray-900 text-white font-bold rounded-lg hover:bg-gray-800 transition-colors" type="submit">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        const logo = document.getElementById('brand-logo');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const desktopLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+                navbar.classList.remove('nav-transparent');
+                
+                logo.classList.remove('md:text-white');
+                logo.classList.add('text-gray-900');
+                
+                mobileMenuBtn.classList.remove('text-white');
+                mobileMenuBtn.classList.add('text-gray-900');
+
+                desktopLinks.forEach(link => {
+                    link.classList.remove('text-gray-200');
+                    link.classList.add('nav-text');
+                });
+            } else {
+                navbar.classList.remove('nav-scrolled');
+                navbar.classList.add('nav-transparent');
+                
+                logo.classList.add('md:text-white');
+                logo.classList.remove('text-gray-900');
+                
+                mobileMenuBtn.classList.add('text-white');
+                mobileMenuBtn.classList.remove('text-gray-900');
+
+                desktopLinks.forEach(link => {
+                    link.classList.add('text-gray-200');
+                    link.classList.remove('nav-text');
+                });
+            }
+        });
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileIcon = menuBtn.querySelector('svg'); // The lucide icon svg
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            
+            // Note: Lucide replaces <i> tags with <svg>, so we can't easily toggle class on the i tag anymore.
+            // Simple logic: if menu is visible, user might want to close it.
+            // For simplicity in vanilla HTML/Lucide without re-rendering, we just toggle visibility.
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+
+</body></html>

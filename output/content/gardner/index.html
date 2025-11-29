@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>King County Premium Landscaping &amp; Gardening</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#2F855A', // Green-700
+                        'secondary': '#C6F6D5', // Green-100
+                        'accent': '#D69E2E', // Yellow-600
+                        'dark': '#1A202C',
+                        'light': '#F7FAFC'
+                    },
+                    fontFamily: {
+                        'heading': ['Montserrat', 'sans-serif'],
+                        'body': ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="font-body text-gray-700 smooth-scroll">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a class="text-2xl font-bold font-heading text-primary flex items-center gap-2" href="#">
+                    <i class="fas fa-leaf"></i> Kreate Landscapes
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a class="hover:text-primary font-medium transition" href="#home">Home</a>
+                    <a class="hover:text-primary font-medium transition" href="#services">Services</a>
+                    <a class="hover:text-primary font-medium transition" href="#gallery">Gallery</a>
+                    <a class="hover:text-primary font-medium transition" href="#testimonials">Testimonials</a>
+                    <a class="bg-primary text-white px-5 py-2 rounded-full hover:bg-green-800 transition shadow-lg transform hover:-translate-y-0.5" href="#contact">
+                        Get a Quote
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="text-gray-600 hover:text-primary focus:outline-none" id="mobile-menu-btn">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-white border-t border-gray-100" id="mobile-menu">
+            <div class="flex flex-col px-6 py-4 space-y-4">
+                <a class="block hover:text-primary font-medium mobile-link" href="#home">Home</a>
+                <a class="block hover:text-primary font-medium mobile-link" href="#services">Services</a>
+                <a class="block hover:text-primary font-medium mobile-link" href="#gallery">Gallery</a>
+                <a class="block text-primary font-bold mobile-link" href="#contact">Get a Quote</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg h-screen flex items-center justify-center text-center text-white px-6" id="home">
+        <div class="max-w-4xl mx-auto mt-16">
+            <h1 class="text-4xl md:text-6xl font-bold font-heading mb-6 leading-tight">
+                Transforming Outdoor Spaces in <span class="text-secondary">King County, WA</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 text-gray-200">
+                Professional landscaping, gardening, and maintenance services tailored to the Pacific Northwest climate.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="bg-primary hover:bg-green-800 text-white text-lg font-semibold px-8 py-4 rounded-full transition shadow-xl" href="#contact">
+                    Schedule Consultation
+                </a>
+                <a class="bg-white hover:bg-gray-100 text-primary text-lg font-semibold px-8 py-4 rounded-full transition shadow-xl flex items-center justify-center gap-2" href="tel:4253411111">
+                    <i class="fas fa-phone"></i> (425) 341-1111
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / Why Choose Us -->
+    <section class="py-20 bg-light">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-heading text-dark mb-4">Why Choose Kreate Landscapes?</h2>
+                <div class="w-20 h-1 bg-primary mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition text-center group">
+                    <div class="w-16 h-16 bg-green-100 text-primary rounded-full flex items-center justify-center text-2xl mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">Local Experts</h3>
+                    <p class="text-gray-600">Serving King County with deep knowledge of local soil, plants, and weather patterns.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition text-center group">
+                    <div class="w-16 h-16 bg-green-100 text-primary rounded-full flex items-center justify-center text-2xl mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">Comprehensive Care</h3>
+                    <p class="text-gray-600">From design and installation to weekly maintenance, we handle it all.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition text-center group">
+                    <div class="w-16 h-16 bg-green-100 text-primary rounded-full flex items-center justify-center text-2xl mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">Satisfaction Guaranteed</h3>
+                    <p class="text-gray-600">We take pride in our work. Your satisfaction is our top priority.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-20 bg-white" id="services">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <img alt="Garden Maintenance" class="rounded-lg shadow-2xl w-full h-96 object-cover" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper2.jpg"/>
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading text-dark mb-6">Our Services</h2>
+                    <p class="text-lg text-gray-600 mb-8">We offer a full range of landscaping services designed to keep your property looking its best year-round.</p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-dark">Lawn Care &amp; Mowing</h4>
+                                <p class="text-gray-500 text-sm">Weekly or bi-weekly mowing, edging, and fertilization.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-dark">Landscape Design &amp; Installation</h4>
+                                <p class="text-gray-500 text-sm">Custom designs, planting, sod installation, and hardscapes.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-dark">Pruning &amp; Trimming</h4>
+                                <p class="text-gray-500 text-sm">Expert care for hedges, shrubs, and small trees.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-bold text-dark">Seasonal Cleanup</h4>
+                                <p class="text-gray-500 text-sm">Leaf removal, spring preparation, and winterization.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-20 bg-light" id="gallery">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-heading text-dark mb-4">Our Work</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Explore some of our recent projects across King County.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Gallery Item 1 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper1.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Backyard Oasis</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 2 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper2.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Garden Path</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 3 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper3.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Lawn Maintenance</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 4 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper4.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Patio Design</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 5 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper5.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Floral Arrangement</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 6 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper6.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Hedge Trimming</p>
+                    </div>
+                </div>
+                 <!-- Gallery Item 7 -->
+                 <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper7.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Stone Walkway</p>
+                    </div>
+                </div>
+                 <!-- Gallery Item 8 -->
+                 <div class="relative group overflow-hidden rounded-lg shadow-lg h-64">
+                    <img alt="Landscape Project" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/landscaper-gardener/landscaper8.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold text-lg">Commercial Landscape</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-white" id="testimonials">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold font-heading text-center text-dark mb-12">What Our Clients Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-light p-6 rounded-xl border border-gray-100 relative">
+                    <i class="fas fa-quote-left text-4xl text-green-200 absolute top-4 left-4"></i>
+                    <p class="text-gray-600 mt-8 mb-4 relative z-10 italic">"Absolutely transformed our backyard in Redmond. The team was professional, punctual, and the design exceeded our expectations."</p>
+                    <div class="font-bold text-dark">- Sarah J., Redmond</div>
+                </div>
+                <div class="bg-light p-6 rounded-xl border border-gray-100 relative">
+                    <i class="fas fa-quote-left text-4xl text-green-200 absolute top-4 left-4"></i>
+                    <p class="text-gray-600 mt-8 mb-4 relative z-10 italic">"We've used Kreate Landscapes for our weekly maintenance in Bellevue for two years. Our lawn has never looked better."</p>
+                    <div class="font-bold text-dark">- Michael T., Bellevue</div>
+                </div>
+                <div class="bg-light p-6 rounded-xl border border-gray-100 relative">
+                    <i class="fas fa-quote-left text-4xl text-green-200 absolute top-4 left-4"></i>
+                    <p class="text-gray-600 mt-8 mb-4 relative z-10 italic">"Great communication and fair pricing. They handled our fall cleanup efficiently. Highly recommend!"</p>
+                    <div class="font-bold text-dark">- Emily R., Kirkland</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action / Contact -->
+    <section class="py-20 bg-primary text-white" id="contact">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-12">
+                <!-- Contact Info -->
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold font-heading mb-6">Ready to Transform Your Outdoor Space?</h2>
+                    <p class="text-lg text-green-100 mb-8">Contact us today for a free consultation and estimate. We proudly serve King County and surrounding areas.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Call Us</h4>
+                                <a class="text-green-100 hover:text-white transition" href="tel:4253411111">(425) 341-1111</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Email Us</h4>
+                                <a class="text-green-100 hover:text-white transition" href="mailto:contact@kreate.com">contact@kreate.com</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Service Area</h4>
+                                <p class="text-green-100">King County, WA (Bellevue, Redmond, Kirkland, Seattle, and more)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="md:w-1/2 bg-white rounded-xl shadow-2xl p-8 text-gray-700">
+                    <h3 class="text-2xl font-bold font-heading text-dark mb-6">Request a Quote</h3>
+                    <form onsubmit="event.preventDefault(); alert('Thank you! We will contact you shortly.');">
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-2" for="name">Name</label>
+                            <input class="w-full px-4 py-3 rounded-lg bg-gray-100 border-transparent focus:bg-white focus:ring-2 focus:ring-primary outline-none transition" id="name" placeholder="John Doe" required="" type="text"/>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-2" for="email">Email</label>
+                            <input class="w-full px-4 py-3 rounded-lg bg-gray-100 border-transparent focus:bg-white focus:ring-2 focus:ring-primary outline-none transition" id="email" placeholder="john@example.com" required="" type="email"/>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-2" for="service">Service Interested In</label>
+                            <select class="w-full px-4 py-3 rounded-lg bg-gray-100 border-transparent focus:bg-white focus:ring-2 focus:ring-primary outline-none transition" id="service">
+                                <option>General Maintenance</option>
+                                <option>Landscape Design</option>
+                                <option>Lawn Care</option>
+                                <option>Cleanup</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold mb-2" for="message">Message</label>
+                            <textarea class="w-full px-4 py-3 rounded-lg bg-gray-100 border-transparent focus:bg-white focus:ring-2 focus:ring-primary outline-none transition" id="message" placeholder="Tell us about your project..." rows="4"></textarea>
+                        </div>
+                        <button class="w-full bg-primary hover:bg-green-800 text-white font-bold py-3 rounded-lg transition shadow-lg transform active:scale-95">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+    </script>
+
+</body></html>
