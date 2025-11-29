@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- Requested Meta Tags for SEO -->
+    <meta content="KreateWebsites.com is an AI-powered website builder designed for local businesses. Create professional, SEO-optimized, and mobile-responsive websites in minutes without coding. Features AI maintenance, cloud hosting, and transparent pricing." name="description"/>
+    <meta content="AI website builder, local business website, no code website builder, SEO optimization, AI web design, small business website, KreateWebsites, automatic website generator, generative engine optimization, business website maintenance" name="keywords"/>
+    <meta content="KreateWebsites" name="author"/>
+
+    <title>KreateWebsites - AI Website Builder for Local Businesses</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3730a3 100%);
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 bg-white min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-transparent py-5" id="navbar">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <!-- Globe Icon -->
+                    <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
+                <span class="text-2xl font-bold text-slate-900 lg:text-white transition-colors duration-300" id="nav-logo-text">
+                    KreateWebsites
+                </span>
+            </div>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a class="nav-link font-medium text-white/90 hover:text-white hover:text-blue-500 transition-colors" href="#features">Features</a>
+                <a class="nav-link font-medium text-white/90 hover:text-white hover:text-blue-500 transition-colors" href="#benefits">Benefits</a>
+                <a class="nav-link font-medium text-white/90 hover:text-white hover:text-blue-500 transition-colors" href="#seo">SEO</a>
+                <a class="nav-link font-medium text-white/90 hover:text-white hover:text-blue-500 transition-colors" href="#maintenance">Maintenance</a>
+                <a class="nav-link font-medium text-white/90 hover:text-white hover:text-blue-500 transition-colors" href="#pricing">Pricing</a>
+                
+                <button class="px-6 py-2 rounded-full font-semibold transition-all bg-white text-blue-600 hover:bg-slate-100" id="nav-btn">
+                    Get Started
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-slate-700 focus:outline-none z-50 relative" id="mobile-menu-btn">
+                <!-- Menu Icon -->
+                <svg class="block text-slate-800 lg:text-white" fill="none" height="28" id="menu-icon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+                <!-- Close Icon (Hidden by default) -->
+                <svg class="hidden text-slate-800" fill="none" height="28" id="close-icon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Dropdown -->
+        <div class="hidden md:hidden bg-white shadow-xl absolute top-full left-0 w-full py-4 px-6 flex-col space-y-4 border-t border-slate-100" id="mobile-menu">
+            <a class="text-slate-600 font-medium py-2 border-b border-slate-100 hover:text-blue-600 mobile-link" href="#features">Features</a>
+            <a class="text-slate-600 font-medium py-2 border-b border-slate-100 hover:text-blue-600 mobile-link" href="#benefits">Benefits</a>
+            <a class="text-slate-600 font-medium py-2 border-b border-slate-100 hover:text-blue-600 mobile-link" href="#seo">SEO</a>
+            <a class="text-slate-600 font-medium py-2 border-b border-slate-100 hover:text-blue-600 mobile-link" href="#maintenance">Maintenance</a>
+            <a class="text-slate-600 font-medium py-2 border-b border-slate-100 hover:text-blue-600 mobile-link" href="#pricing">Pricing</a>
+            <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold mt-2">
+                Get Started
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative hero-bg text-white pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden">
+        <!-- Background Shapes -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+            <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+            <div class="absolute bottom-0 left-20 w-64 h-64 rounded-full bg-purple-500 blur-3xl"></div>
+        </div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="inline-block py-1 px-3 rounded-full bg-blue-500/30 border border-blue-400/30 text-blue-100 text-sm font-semibold mb-6">
+                    AI-Powered Website Builder
+                </span>
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                    Professional Websites for Local Businesses in Minutes
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-100 mb-10 leading-relaxed">
+                    Turn your photos, text, or existing documents into a polished, SEO-optimized website automatically. No coding skills required.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button class="px-8 py-4 bg-white text-blue-700 rounded-lg font-bold text-lg hover:bg-slate-100 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group">
+                        Start Building Free 
+                        <svg class="group-hover:translate-x-1 transition-transform" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </button>
+                    <button class="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        View Examples
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Features Grid -->
+    <section class="py-20 bg-slate-50" id="features">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Everything You Need to Succeed Online</h2>
+                <p class="text-lg text-slate-600">
+                    Our platform handles the heavy lifting so you can focus on running your business.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                    <div class="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center mb-6 text-blue-600">
+                        <svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">AI-Generated Creation</h3>
+                    <p class="text-slate-600 leading-relaxed">Upload your business info, PDFs, or slides, and our AI automatically designs pages around your story. No templates needed.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                    <div class="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center mb-6 text-blue-600">
+                        <svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">No Coding Required</h3>
+                    <p class="text-slate-600 leading-relaxed">Built for non-technical users. Get a custom look for your cafe, clinic, or shop without writing a single line of code.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                    <div class="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center mb-6 text-blue-600">
+                        <svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Built-In SEO</h3>
+                    <p class="text-slate-600 leading-relaxed">AI automatically enriches pages with meta tags, keywords, and structured data to help you rank higher on Google.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                    <div class="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center mb-6 text-blue-600">
+                        <svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V4H8"></path><rect height="12" rx="2" width="16" x="4" y="8"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">AI Maintenance Agent</h3>
+                    <p class="text-slate-600 leading-relaxed">A smart assistant that fixes broken links, suggests new content, and keeps your site error-free 24/7.</p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                    <div class="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center mb-6 text-blue-600">
+                        <svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 19c0-1.7-1.3-3-3-3h-1.1c-.1-2.9-2.4-5.2-5.3-5.3-2.7 0-5 2-5.4 4.7H2.5C1.1 15.4 0 16.5 0 17.9c0 1.5 1.1 2.6 2.5 2.6h15c1.7 0 3-1.3 3-3z"></path><path d="M20 16v6"></path><path d="M23 19h-6"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Cloud Hosting &amp; Speed</h3>
+                    <p class="text-slate-600 leading-relaxed">Fast, secure cloud hosting with a built-in CDN ensures your site loads instantly on all devices globally.</p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-slate-100">
+                    <div class="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center mb-6 text-blue-600">
+                        <svg fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><rect height="20" rx="2" ry="2" width="14" x="5" y="2"></rect><path d="M12 18h.01"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Mobile Responsive</h3>
+                    <p class="text-slate-600 leading-relaxed">Every site is automatically optimized for mobile devices, ensuring a perfect experience for customers on the go.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="py-20 bg-white" id="benefits">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <div class="bg-gradient-to-tr from-slate-100 to-slate-200 rounded-2xl p-8 relative overflow-hidden h-96 flex items-center justify-center">
+                        <div class="text-center z-10">
+                            <svg class="text-blue-600/20 mx-auto mb-4" fill="none" height="120" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="120" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            <p class="text-slate-400 font-bold text-xl">Your Business Online</p>
+                        </div>
+                        <!-- Decorative UI Elements -->
+                        <div class="absolute top-10 left-10 bg-white p-4 rounded-lg shadow-lg w-48 animate-pulse">
+                            <div class="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
+                            <div class="h-3 bg-slate-100 rounded w-1/2"></div>
+                        </div>
+                        <div class="absolute bottom-10 right-10 bg-white p-4 rounded-lg shadow-lg w-48">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                                    <svg class="text-green-600" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                </div>
+                                <div class="text-sm font-medium text-slate-700">SEO Optimized</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                        Why Local Businesses Choose KreateWebsites
+                    </h2>
+                    <p class="text-lg text-slate-600 mb-8">
+                        Traditional web development is costly and slow. We enable one-person shops to compete with large companies by turning content into fast, professional websites in minutes.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="mt-1 bg-blue-100 p-1.5 rounded-full h-fit">
+                                <svg class="text-blue-600" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 mb-1">Quick &amp; Affordable</h4>
+                                <p class="text-slate-600">Go from zero to a full website in hours, not weeks. Professional quality at a fraction of the cost of an agency.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="mt-1 bg-blue-100 p-1.5 rounded-full h-fit">
+                                <svg class="text-blue-600" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 mb-1">Industry Specific Designs</h4>
+                                <p class="text-slate-600">Whether you run a bakery, gym, law office, or plumbing service, our AI tailors the structure to fit your niche.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="mt-1 bg-blue-100 p-1.5 rounded-full h-fit">
+                                <svg class="text-blue-600" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 mb-1">Ongoing Content Freshness</h4>
+                                <p class="text-slate-600">Easily update promotions or events. Our AI detects outdated content and auto-suggests updates for SEO gains.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEO Deep Dive -->
+    <section class="py-20 bg-slate-900 text-white" id="seo">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <span class="text-blue-400 font-bold tracking-wide uppercase text-sm">Dominate Local Search</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-6">Generative Engine Optimization (GEO)</h2>
+                    <p class="text-slate-300 text-lg">
+                        We don't just sprinkle keywords. We use "adaptive SEO" to ensure your business gets found by people searching in your area.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-slate-800 p-8 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="bg-blue-600/20 p-3 rounded-lg text-blue-400">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            </div>
+                            <h3 class="text-xl font-bold">Technical SEO Built-In</h3>
+                        </div>
+                        <p class="text-slate-400">
+                            Clean semantic HTML, structured meta tags, XML sitemaps, and Core Web Vitals optimization happen automatically in the background.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-800 p-8 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="bg-purple-600/20 p-3 rounded-lg text-purple-400">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold">Contextual Keywords</h3>
+                        </div>
+                        <p class="text-slate-400">
+                            The AI understands your content context, dynamically adjusting titles and summaries based on current search trends and user intent.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Maintenance Section -->
+    <section class="py-20 bg-blue-50" id="maintenance">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white rounded-full inline-flex items-center gap-2 px-4 py-2 shadow-sm mb-6 border border-blue-100">
+                    <svg class="text-blue-600" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V4H8"></path><rect height="12" rx="2" width="16" x="4" y="8"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
+                    <span class="text-slate-700 font-medium text-sm">Meet Your Virtual Webmaster</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+                    Never Worry About Maintenance Again
+                </h2>
+                <p class="text-lg text-slate-600 mb-10">
+                    Our unique AI Agent monitors your site 24/7. It scans for broken links, fixes errors automatically, and even suggests new blog posts or service pages to keep your business relevant.
+                </p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-100 max-w-lg mx-auto text-left">
+                    <div class="flex items-start gap-4 border-b border-slate-100 pb-4 mb-4">
+                        <div class="bg-green-100 p-2 rounded-full">
+                            <svg class="text-green-600" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">Broken Link Fixed</h4>
+                            <p class="text-sm text-slate-500">The AI detected a dead link on your 'Services' page and automatically redirected it.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 p-2 rounded-full">
+                            <svg class="text-blue-600" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800">Content Refresh Suggestion</h4>
+                            <p class="text-sm text-slate-500">"It's been 6 months since you updated your menu. Shall we create a seasonal specials page?"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="py-20 bg-white" id="pricing">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Transparent, Flexible Pricing</h2>
+                <p class="text-lg text-slate-600">No hidden fees. No long-term contracts. Cancel anytime.</p>
+            </div>
+
+            <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden relative">
+                <div class="bg-blue-600 text-white text-center py-2 text-sm font-semibold uppercase tracking-wider">
+                    Most Popular
+                </div>
+                <div class="p-8">
+                    <h3 class="text-2xl font-bold text-slate-900 text-center mb-2">Local Business Plan</h3>
+                    <div class="text-center mb-8">
+                        <span class="text-5xl font-bold text-slate-900">$49</span>
+                        <span class="text-slate-500 font-medium">/month</span>
+                    </div>
+
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3">
+                            <svg class="text-green-500 flex-shrink-0" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span class="text-slate-700">AI Website Builder &amp; Editor</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <svg class="text-green-500 flex-shrink-0" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span class="text-slate-700">Cloud Hosting Included</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <svg class="text-green-500 flex-shrink-0" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span class="text-slate-700">AI SEO Tools &amp; Blog Capability</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <svg class="text-green-500 flex-shrink-0" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span class="text-slate-700">Up to 100 Pages</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <svg class="text-green-500 flex-shrink-0" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span class="text-slate-700">SSL Security Certificate</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <svg class="text-green-500 flex-shrink-0" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span class="text-slate-700">Standard Customer Support</span>
+                        </li>
+                    </ul>
+
+                    <button class="w-full bg-slate-900 text-white py-4 rounded-lg font-bold hover:bg-slate-800 transition-colors">
+                        Start Free Trial
+                    </button>
+                    <p class="text-xs text-center text-slate-500 mt-4">
+                        Includes all essential features. Upgrade or downgrade anytime.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-slate-900 mb-6">Ready to grow your local business?</h2>
+            <p class="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+                Join thousands of local businesses using KreateWebsites to save time and get found online.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button class="px-8 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-lg">
+                    Create Your Website
+                </button>
+                <button class="px-8 py-3 bg-white text-slate-700 border border-slate-300 rounded-lg font-bold hover:bg-slate-50 transition-colors">
+                    Contact Support
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navbar Scroll Effect
+            const navbar = document.getElementById('navbar');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const navLogoText = document.getElementById('nav-logo-text');
+            const navBtn = document.getElementById('nav-btn');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('bg-white', 'shadow-md', 'py-3');
+                    navbar.classList.remove('bg-transparent', 'py-5');
+                    
+                    // Update Text Colors for White Background
+                    navLogoText.classList.remove('lg:text-white');
+                    navLogoText.classList.add('text-slate-900');
+                    
+                    navLinks.forEach(link => {
+                        link.classList.remove('text-white/90', 'hover:text-white');
+                        link.classList.add('text-slate-600');
+                    });
+
+                    // Button Style
+                    navBtn.classList.remove('bg-white', 'text-blue-600');
+                    navBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                    
+                    // Mobile Icon Color
+                    menuIcon.classList.remove('lg:text-white');
+                } else {
+                    navbar.classList.remove('bg-white', 'shadow-md', 'py-3');
+                    navbar.classList.add('bg-transparent', 'py-5');
+
+                    // Revert Text Colors for Dark/Transparent Background
+                    navLogoText.classList.add('lg:text-white');
+                    navLogoText.classList.remove('text-slate-900');
+                    
+                    navLinks.forEach(link => {
+                        link.classList.add('text-white/90', 'hover:text-white');
+                        link.classList.remove('text-slate-600');
+                    });
+
+                    // Button Style
+                    navBtn.classList.add('bg-white', 'text-blue-600');
+                    navBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+
+                    // Mobile Icon Color
+                    menuIcon.classList.add('lg:text-white');
+                }
+            });
+
+            // Mobile Menu Toggle
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            let isMenuOpen = false;
+
+            menuBtn.addEventListener('click', () => {
+                isMenuOpen = !isMenuOpen;
+                if (isMenuOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('flex');
+                    menuIcon.classList.add('hidden');
+                    closeIcon.classList.remove('hidden');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                    menuIcon.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                }
+            });
+
+            // Close mobile menu when clicking a link
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    isMenuOpen = false;
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                    menuIcon.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+
+</body></html>

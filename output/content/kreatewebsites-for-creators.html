@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- SEO Meta Tags -->
+    <meta content="KreateWebsites is an AI-powered website builder that transforms raw content into polished, SEO-optimized webpages instantly. Features include Generative Engine Optimization (GEO), automated content ladders, and instant cloud hosting." name="description"/>
+    <meta content="AI website builder, KreateWebsites, Generative Engine Optimization, GEO, no-code web design, content ladder, automated SEO, cloud hosting, AI web agent" name="keywords"/>
+    <meta content="KreateWebsites" name="author"/>
+    <meta content="index, follow" name="robots"/>
+
+    <!-- Open Graph / Facebook -->
+    <meta content="website" property="og:type"/>
+    <meta content="https://www.kreatewebsites.com/" property="og:url"/>
+    <meta content="KreateWebsites - AI-Powered Web Design for Creators" property="og:title"/>
+    <meta content="Transform raw content into polished webpages instantly. No coding required. Powered by GEO and AI agents." property="og:description"/>
+    <meta content="https://www.kreatewebsites.com/assets/images/og-share-image.jpg" property="og:image"/>
+
+    <!-- Twitter -->
+    <meta content="summary_large_image" property="twitter:card"/>
+    <meta content="https://www.kreatewebsites.com/" property="twitter:url"/>
+    <meta content="KreateWebsites - AI-Powered Web Design for Creators" property="twitter:title"/>
+    <meta content="Transform raw content into polished webpages instantly. No coding required. Powered by GEO and AI agents." property="twitter:description"/>
+    <meta content="https://www.kreatewebsites.com/assets/images/og-share-image.jpg" property="twitter:image"/>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "KreateWebsites",
+      "applicationCategory": "Website Builder",
+      "operatingSystem": "Cloud",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Start Building Free"
+      },
+      "description": "An AI-driven website builder that simplifies web design for creators. It transforms raw content into polished webpages without requiring any coding.",
+      "featureList": [
+        "Generative Engine Optimization (GEO)",
+        "Content Ladder Structure",
+        "Instant Cloud Deployment",
+        "AI Maintenance Agents",
+        "Multi-LLM Integration"
+      ],
+      "url": "https://www.kreatewebsites.com/"
+    }
+    </script>
+
+    <title>KreateWebsites - AI-Powered Web Design for Creators</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4F46E5 0%, #9333EA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-bg {
+            background-image: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, rgba(147, 51, 234, 0.05) 0%, transparent 20%);
+        }
+
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Smooth reveal animation classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">K</div>
+                    <span class="font-bold text-xl tracking-tight text-gray-900">KreateWebsites</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-gray-600 hover:text-indigo-600 transition-colors" href="#features">Features</a>
+                    <a class="text-gray-600 hover:text-indigo-600 transition-colors" href="#geo">AI SEO</a>
+                    <a class="text-gray-600 hover:text-indigo-600 transition-colors" href="#automation">Automation</a>
+                    <a class="text-gray-600 hover:text-indigo-600 transition-colors" href="#deployment">Cloud</a>
+                </div>
+                <div>
+                    <a class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full font-medium transition-colors shadow-md hover:shadow-lg" href="#">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative hero-bg pt-20 pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-sm font-semibold mb-6 border border-indigo-100">
+                AI-Powered Website Building for All Creators
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+                Transform Raw Content into <br class="hidden md:block"/>
+                <span class="gradient-text">Polished Webpages Instantly</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-600 mb-10">
+                No coding. No design teams. Just upload your content, and let our AI build, optimize, and launch your site in minutes.
+            </p>
+            <div class="flex justify-center gap-4">
+                <button class="bg-indigo-600 text-white px-8 py-3.5 rounded-lg font-bold text-lg shadow-lg hover:bg-indigo-700 transition-all transform hover:scale-105">
+                    Start Building Free
+                </button>
+                <button class="bg-white text-gray-700 border border-gray-300 px-8 py-3.5 rounded-lg font-bold text-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-play text-indigo-500"></i> See How It Works
+                </button>
+            </div>
+        </div>
+        
+        <!-- Decorative bg elements -->
+        <div class="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div class="absolute top-1/2 right-0 -translate-y-1/2 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+    </section>
+
+    <!-- Core Value Proposition -->
+    <section class="py-20 bg-white" id="features">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-bold text-gray-900">Why Creators Choose KreateWebsites</h2>
+                <p class="mt-4 text-lg text-gray-600">We handle the technical heavy lifting so you can focus on your message.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl border border-gray-100 reveal">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-wand-magic-sparkles text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Content-First Design</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Don't squeeze your work into rigid templates. We build the site <em>around</em> your content. Upload a doc, slide deck, or CSV, and watch it transform into an immersive webpage.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl border border-gray-100 reveal">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-rocket text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Instant Cloud Deployment</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Forget server configuration. Your site is hosted on a high-performance cloud infrastructure with a global CDN, ensuring lightning-fast load times worldwide.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl border border-gray-100 reveal">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-robot text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Virtual Webmaster</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Our AI agents monitor your site 24/7. Update your source file? The site updates. Google changes algorithms? We re-optimize your pages automatically.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deep Dive: GEO -->
+    <section class="py-20 bg-gray-900 text-white overflow-hidden relative" id="geo">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2 reveal">
+                    <div class="inline-block px-3 py-1 rounded border border-indigo-400 text-indigo-300 text-xs font-bold tracking-wider uppercase mb-4">
+                        Next-Gen Discovery
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+                        Generative Engine Optimization (GEO)
+                    </h2>
+                    <p class="text-gray-400 text-lg mb-6">
+                        Traditional SEO isn't enough anymore. KreateWebsites ensures your content is discoverable by both search engines <em>and</em> AI chat assistants.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check-circle text-indigo-400 mt-1"></i>
+                            <span class="text-gray-300">Auto-generated meta-data, titles, and image alt text.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check-circle text-indigo-400 mt-1"></i>
+                            <span class="text-gray-300">Optimized for Google, ChatGPT, and Gemini discovery.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check-circle text-indigo-400 mt-1"></i>
+                            <span class="text-gray-300">Dynamic content adjustments based on real-time engagement.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:w-1/2 w-full reveal">
+                    <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-2xl">
+                        <!-- Mockup of AI analysis -->
+                        <div class="flex items-center gap-2 mb-4 border-b border-gray-700 pb-4">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="ml-auto text-xs text-gray-500">AI Analysis Module</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="h-2 bg-gray-700 rounded w-3/4 animate-pulse"></div>
+                            <div class="h-2 bg-gray-700 rounded w-1/2 animate-pulse"></div>
+                            <div class="p-4 bg-gray-700/50 rounded-lg border border-indigo-500/30 mt-4">
+                                <p class="text-indigo-300 text-sm font-mono">&gt; Optimizing for Search Intent...</p>
+                                <p class="text-green-400 text-sm font-mono mt-2">&gt; Generating Alt Tags: "Modern web dashboard on laptop screen"</p>
+                                <p class="text-green-400 text-sm font-mono mt-1">&gt; Indexing for AI Models: OpenAI, Gemini... [Done]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deep Dive: Automation & Content Ladder -->
+    <section class="py-24 bg-white" id="automation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col-reverse lg:flex-row items-center gap-16">
+                <!-- Visual Side -->
+                <div class="lg:w-1/2 w-full reveal">
+                    <div class="relative">
+                        <!-- Card Stack Effect -->
+                        <div class="absolute top-0 left-8 right-8 h-full bg-indigo-100 rounded-2xl transform -translate-y-4 -z-10"></div>
+                        <div class="absolute top-0 left-4 right-4 h-full bg-indigo-50 rounded-2xl transform -translate-y-2 -z-10"></div>
+                        
+                        <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-8">
+                            <div class="flex items-center justify-between mb-6">
+                                <h4 class="font-bold text-gray-800">Content Ladder Structure</h4>
+                                <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded">Auto-Generated</span>
+                            </div>
+                            <!-- Diagram Representation -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-full p-4 bg-indigo-600 text-white rounded-lg text-center font-semibold shadow-md mb-2">
+                                    Summary / Story Page
+                                </div>
+                                <div class="h-6 w-0.5 bg-gray-300"></div>
+                                <div class="grid grid-cols-2 gap-4 w-full">
+                                    <div class="p-3 bg-white border border-gray-200 rounded text-center text-sm text-gray-600 shadow-sm">
+                                        Detailed Insight A
+                                    </div>
+                                    <div class="p-3 bg-white border border-gray-200 rounded text-center text-sm text-gray-600 shadow-sm">
+                                        Detailed Insight B
+                                    </div>
+                                </div>
+                                <div class="h-6 w-0.5 bg-gray-300"></div>
+                                <div class="grid grid-cols-3 gap-2 w-full">
+                                    <div class="h-2 bg-gray-100 rounded"></div>
+                                    <div class="h-2 bg-gray-100 rounded"></div>
+                                    <div class="h-2 bg-gray-100 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Side -->
+                <div class="lg:w-1/2 reveal">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">
+                        Scale Your Content with <br/><span class="text-indigo-600">Smart Automation</span>
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Generating consistent content is hard. We make it effortless. Provide a prompt, CSV, or slide deck, and KreateWebsites builds a comprehensive content hierarchy.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                                <i class="fa-solid fa-layer-group text-orange-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">The "Content Ladder"</h4>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    Automatically links high-level summaries to detailed sub-pages, creating a rich, interconnected web of content that users and search engines love.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
+                                <i class="fa-solid fa-image text-pink-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Intelligent Image Ops</h4>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    We generate multiple sizes for every device and use AI to write descriptive Alt Text, boosting accessibility and SEO instantly.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center">
+                                <i class="fa-solid fa-microchip text-teal-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Multi-Model AI Integration</h4>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    Built to work with OpenAI, Google Gemini, and HuggingFace. Switch models to find the perfect creative partner for your copy.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials / Social Proof -->
+    <section class="py-20 bg-indigo-900 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div class="max-w-4xl mx-auto px-4 relative z-10 reveal">
+            <i class="fa-solid fa-quote-left text-4xl text-indigo-400 mb-6 block opacity-50"></i>
+            <h2 class="text-2xl md:text-3xl font-medium text-white italic leading-relaxed">
+                "KreateWebsites eliminates the need for large teams by automating content creation, design, and intelligent search. It allows solo creators to compete at scale."
+            </h2>
+            <div class="mt-8 flex items-center justify-center gap-4">
+                <div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    DS
+                </div>
+                <div class="text-left">
+                    <p class="text-white font-bold">DataKnobs Product Overview</p>
+                    <p class="text-indigo-300 text-sm">Official Documentation</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Simple Scroll Animation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+
+            const revealOnScroll = () => {
+                const windowHeight = window.innerHeight;
+                const elementVisible = 150;
+
+                reveals.forEach((reveal) => {
+                    const elementTop = reveal.getBoundingClientRect().top;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveal.classList.add('active');
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', revealOnScroll);
+            // Trigger once on load
+            revealOnScroll();
+        });
+    </script>
+
+</body></html>
