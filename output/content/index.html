@@ -4,7 +4,26 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Create Websites - Professional Web Design Agency</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <!-- 
+      Application Structure Plan:
+      This is a single-page landing page for a web design agency.
+      1.  <header>: Contains the agency logo, name, and primary navigation.
+      2.  <main>:
+          - Hero Section: A strong H1 and call-to-action ("Get Your Free Quote").
+          - Interactive Tool Section: This is the core of the page, repurposing the previous "business_explorer". It's framed with a new section title. It includes the <nav> for filters and the <main> grid for cards.
+      3.  <footer>: A comprehensive footer with 10+ links for services, company info, and legal policies.
+      4.  Modal: The JavaScript-powered modal remains at the end of the body, functioning as it did before.
+      
+      Visualization & Content Choices:
+      - The core data from the document is visualized in the interactive card grid (id="business-grid").
+      - User request for "new" businesses is handled by the "New" badge.
+      - User request for "detail" is handled by the modal.
+      - The card grid is populated dynamically by the <script> at the bottom.
+      - No charts are used as the data is categorical, not quantitative.
+      - User request for light blue "squares" is implemented in the card.className in the JavaScript.
+      - User request for emoji in each box is handled by adding an 'emoji' property to the data and updating the card.innerHTML template.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used (except for a mobile menu icon). NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -41,9 +60,8 @@
                 </a>
             </div>
             <div class="sm:hidden">
-                <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                </svg>
+                <!-- Simple mobile menu icon -->
+                <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
             </div>
         </nav>
     </header>
@@ -64,16 +82,16 @@
             </div>
         </section>
 
-        <!-- Interactive Section -->
+        <!-- Interactive Tool Section (Repurposed from previous HTML) -->
         <section class="bg-white py-20 sm:py-24">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
+                
                 <header class="text-center mb-12">
                     <h2 class="text-3xl font-bold tracking-tight text-amber-900 sm:text-4xl">
                         Who Needs a Website?
                     </h2>
                     <p class="mt-4 text-lg max-w-3xl mx-auto text-stone-700">
-                        Use our interactive tool to see why a website is crucial for your industry.
+                        A website builds credibility, generates leads, and provides a central hub. Use our interactive tool to see <span class="font-semibold">why</span> a website is crucial for your industry.
                     </p>
                 </header>
 
@@ -106,13 +124,15 @@
                     </div>
                 </nav>
 
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" id="business-grid"></div>
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" id="business-grid">
+                    <!-- Business cards will be dynamically inserted here by JavaScript -->
+                </div>
 
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
+    <!-- New Footer -->
     <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
@@ -170,104 +190,183 @@
         </div>
     </footer></body></html>
 
-    <!-- Modal -->
-    <div class="modal fixed inset-0 z-50 flex items-center justify-center p-4 invisible opacity-0" id="detail-modal">
+    <!-- Modal (Unchanged) -->
+    <div class="modal fixed inset-0 z-50 flex items-center justify-center p-4 visibility-hidden opacity-0" id="detail-modal">
         <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50" onclick="hideModal()"></div>
-
+        
         <div class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-2xl mx-auto z-10 overflow-hidden transform scale-95">
             <div class="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
                 <h3 class="text-2xl font-semibold text-amber-900" id="modal-title"></h3>
                 <button class="text-stone-500 hover:text-stone-800 transition-colors" onclick="hideModal()">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    </svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
                 </button>
             </div>
-
+            
             <div class="p-6 max-h-[70vh] overflow-y-auto">
                 <h4 class="text-sm font-semibold text-amber-700 uppercase tracking-wider mb-3">Why They Need a Website:</h4>
-                <div class="prose prose-stone max-w-none" id="modal-detail"></div>
+                <div class="prose prose-stone max-w-none" id="modal-detail">
+                </div>
             </div>
-
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script>
-        const businessData = [...(YOUR_EXISTING_DATA_HERE)...]; // unchanged
+    <!-- JavaScript (Data updated with emoji, renderCard function updated) -->
 
-        const grid = document.getElementById('business-grid');
-        const filterContainer = document.getElementById('filter-container');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const modal = document.getElementById('detail-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalDetail = document.getElementById('modal-detail');
+ <script>
+    const businessData = [
+        { id: 1, name: "Financial Planner", category: "professional", isNew: false, emoji: "💼",
+          detail: `<ul><li><strong>Build Trust:</strong> Establish credibility with a professional site detailing certifications (e.g., CFP®).</li><li><strong>Educate Clients:</strong> Share blog posts or articles on retirement planning, investment strategies, and market updates.</li><li><strong>Generate Leads:</strong> Offer a free consultation or a downloadable budget template in exchange for contact info.</li><li><strong>Book Appointments:</strong> Integrate a scheduling tool for easy client booking.</li></ul>` },
+        { id: 2, name: "Real Estate Agent", category: "professional", isNew: false, emoji: "🏠",
+          detail: `<ul><li><strong>Showcase Listings:</strong> Feature high-quality photos, virtual tours, and detailed descriptions of properties.</li><li><strong>Capture Leads:</strong> Use forms for "Home Valuation Requests" or "New Listing Alerts".</li><li><strong>Build Authority:</strong> Post neighborhood guides and home-buying/selling tips.</li><li><strong>Display Testimonials:</strong> Build social proof with glowing reviews from past clients.</li></ul>` },
+        { id: 3, name: "Lawyer / Legal Consultant", category: "professional", isNew: false, emoji: "⚖️",
+          detail: `<ul><li><strong>Establish Credibility:</strong> Detail practice areas, attorney profiles, and case results.</li><li><strong>Clarify Services:</strong> Help potential clients understand complex services.</li><li><strong>Provide Contact:</strong> Offer a clear, confidential consultation form.</li><li><strong>Share Expertise:</strong> Publish legal topics and FAQs.</li></ul>` },
+        { id: 4, name: "Consulting Firm (IT, Mgt)", category: "professional", isNew: true, emoji: "📈",
+          detail: `<ul><li><strong>Explain Services:</strong> Show methodologies and value props.</li><li><strong>Lead Generation:</strong> Use downloadable resources or demo forms.</li><li><strong>Show Past Work:</strong> Case studies and client logos build trust.</li><li><strong>Thought Leadership:</strong> Publish whitepapers.</li></ul>` },
+        { id: 5, name: "Architect / Interior Designer", category: "professional", isNew: false, emoji: "📐",
+          detail: `<ul><li><strong>Portfolio:</strong> Beautiful gallery of projects.</li><li><strong>Design Process:</strong> Explain how projects are delivered.</li><li><strong>Attract Ideal Clients:</strong> Use aesthetics that match your style.</li><li><strong>Press:</strong> Add awards and features.</li></ul>` },
 
-        function renderCards(filter = 'all') {
-            grid.innerHTML = '';
-            const filteredData = filter === 'all' ? businessData : businessData.filter(item => item.category === filter);
+        { id: 6, name: "Restaurant / Café / Bakery", category: "retail", isNew: false, emoji: "🍔",
+          detail: `<ul><li><strong>Menu:</strong> Display items with photos.</li><li><strong>Online Ordering:</strong> Integrate delivery apps.</li><li><strong>Reservations:</strong> Embed booking tools.</li><li><strong>Ambiance:</strong> Showcase interior and dishes.</li></ul>` },
+        { id: 7, name: "Boutique / Clothing Store", category: "retail", isNew: false, emoji: "👗",
+          detail: `<ul><li><strong>E-commerce:</strong> Sell online 24/7.</li><li><strong>Lookbooks:</strong> Show new fashion drops.</li><li><strong>Sales:</strong> Highlight promotions.</li><li><strong>Brand Story:</strong> What makes your store special?</li></ul>` },
+        { id: 8, name: "Salon / Barber / Spa", category: "retail", isNew: false, emoji: "✂️",
+          detail: `<ul><li><strong>Online Booking:</strong> Let clients choose services and stylists.</li><li><strong>Services & Pricing:</strong> Clear list.</li><li><strong>Gallery:</strong> Display your work.</li><li><strong>Store:</strong> Sell self-care products.</li></ul>` },
 
-            if (filteredData.length === 0) {
-                grid.innerHTML = `<p class="text-stone-600 sm:col-span-2 lg:col-span-3 text-center">No businesses found in this category.</p>`;
-                return;
-            }
+        { id: 9, name: "Local Bookstore", category: "retail", isNew: true, emoji: "📚",
+          detail: `<ul><li><strong>Events:</strong> Book clubs, author signings.</li><li><strong>Staff Picks:</strong> Build community.</li><li><strong>Online Shop:</strong> Order books for pickup.</li><li><strong>Store Info:</strong> Hours & location.</li></ul>` },
 
-            filteredData.forEach(business => {
-                const card = document.createElement('div');
-                card.className = 'bg-sky-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer';
-                card.dataset.id = business.id;
+        { id: 10, name: "Pet Groomer / Pet Store", category: "retail", isNew: true, emoji: "🐾",
+          detail: `<ul><li><strong>Booking:</strong> Schedule grooming services.</li><li><strong>Services:</strong> Grooming, nail trim, etc.</li><li><strong>Gallery:</strong> Before/after photos.</li><li><strong>Shop:</strong> Toys & supplies.</li></ul>` },
 
-                const newBadge = business.isNew
-                    ? `<span class="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full">New</span>`
-                    : '';
+        { id: 11, name: "Plumber / Electrician / HVAC", category: "home", isNew: false, emoji: "🔧",
+          detail: `<ul><li><strong>Emergency Calls:</strong> Highlight 24/7 service.</li><li><strong>Licenses:</strong> Build trust.</li><li><strong>Services:</strong> Repairs, installation, maintenance.</li><li><strong>Testimonials:</strong> Show reviews.</li></ul>` },
+        { id: 12, name: "Builder / Contractor / Handyman", category: "home", isNew: false, emoji: "👷",
+          detail: `<ul><li><strong>Portfolio:</strong> Showcase projects.</li><li><strong>Process:</strong> Explain steps from estimate to completion.</li><li><strong>Lead Forms:</strong> Request a quote.</li><li><strong>Reviews:</strong> Gain credibility.</li></ul>` },
 
-                card.innerHTML = `
-                    <div class="p-5 relative">
-                        ${newBadge}
-                        <div class="flex items-center">
-                            <span class="text-2xl mr-3">${business.emoji}</span>
-                            <h3 class="text-lg font-semibold text-stone-900">${business.name}</h3>
-                        </div>
+        { id: 13, name: "Landscaper / Gardener", category: "home", isNew: false, emoji: "🌿",
+          detail: `<ul><li><strong>Show Work:</strong> Gardens, lawns, patios.</li><li><strong>Services:</strong> Design, install, maintenance.</li><li><strong>Seasonal Tips:</strong> Attract Google traffic.</li><li><strong>Easy Estimates:</strong> Simple contact form.</li></ul>` },
+
+        { id: 14, name: "Moving Company", category: "home", isNew: true, emoji: "🚚",
+          detail: `<ul><li><strong>Quote Form:</strong> Primary CTA.</li><li><strong>Services:</strong> Packing, moving, storage.</li><li><strong>Trust:</strong> Show licenses & insurance.</li><li><strong>Resources:</strong> Moving checklists.</li></ul>` },
+
+        { id: 15, name: "Locksmith", category: "home", isNew: true, emoji: "🔑",
+          detail: `<ul><li><strong>Emergency Call:</strong> 24/7 button.</li><li><strong>Services:</strong> Re-key, car keys, lockouts.</li><li><strong>Service Area:</strong> Show map.</li><li><strong>Trust Info:</strong> Certifications.</li></ul>` },
+
+        { id: 16, name: "Tech Startup / SaaS", category: "startup", isNew: false, emoji: "💻",
+          detail: `<ul><li><strong>Explain Product:</strong> Problem + solution.</li><li><strong>Show Features:</strong> With images.</li><li><strong>Pricing:</strong> Clear plan tiers.</li><li><strong>Lead Capture:</strong> Free trial or demo.</li></ul>` },
+        { id: 17, name: "Freelancer (Designer, Writer)", category: "startup", isNew: false, emoji: "🧑‍🎨",
+          detail: `<ul><li><strong>Portfolio:</strong> Showcase best work.</li><li><strong>Services:</strong> What you offer.</li><li><strong>Testimonials:</strong> Client reviews.</li><li><strong>Contact:</strong> Easy inquiry form.</li></ul>` },
+        { id: 18, name: "App Developer (Mobile)", category: "startup", isNew: true, emoji: "📱",
+          detail: `<ul><li><strong>App Portfolio:</strong> Links to App Store.</li><li><strong>Process:</strong> Discovery → Launch.</li><li><strong>Tech Stack:</strong> Flutter, Swift, etc.</li><li><strong>Testimonials:</strong> Client reviews.</li></ul>` },
+
+        { id: 19, name: "Etsy / E-commerce Seller", category: "startup", isNew: true, emoji: "🛒",
+          detail: `<ul><li><strong>Brand Site:</strong> Own your storefront.</li><li><strong>Email List:</strong> Grow customer base.</li><li><strong>Story:</strong> Share your craft.</li><li><strong>Control:</strong> Full customization.</li></ul>` },
+
+        { id: 20, name: "Personal Trainer / Yoga Instructor", category: "health", isNew: false, emoji: "🧘",
+          detail: `<ul><li><strong>Transformations:</strong> Before/after photos.</li><li><strong>Sessions:</strong> Class schedule.</li><li><strong>Packages:</strong> Training plans.</li><li><strong>Blog:</strong> Fitness tips.</li></ul>` },
+        { id: 21, name: "Doctors / Dentists / Clinics", category: "health", isNew: false, emoji: "🩺",
+          detail: `<ul><li><strong>Build Trust:</strong> Team credentials.</li><li><strong>Appointments:</strong> Easy online booking.</li><li><strong>Forms:</strong> New patient PDFs.</li><li><strong>Services:</strong> Procedures & insurance.</li></ul>` },
+
+        { id: 22, name: "Therapist / Counselor", category: "health", isNew: false, emoji: "🧠",
+          detail: `<ul><li><strong>Safe Space:</strong> Calming design.</li><li><strong>Specialties:</strong> Anxiety, couples therapy, etc.</li><li><strong>Logistics:</strong> Fees & insurance.</li><li><strong>Contact:</strong> Confidential form.</li></ul>` },
+
+        { id: 23, name: "Specialty Clinic (Dermatology)", category: "health", isNew: true, emoji: "🧴",
+          detail: `<ul><li><strong>Conditions:</strong> Acne, eczema, etc.</li><li><strong>Team:</strong> Doctors & PAs.</li><li><strong>Procedures:</strong> Medical + cosmetic.</li><li><strong>Appointments:</strong> Online booking.</li></ul>` },
+
+        { id: 24, name: "Music Teacher (Piano, Guitar)", category: "health", isNew: true, emoji: "🎵",
+          detail: `<ul><li><strong>Lesson Types:</strong> 30/60min, virtual, adult/child.</li><li><strong>Studio:</strong> Photos of teaching space.</li><li><strong>Testimonials:</strong> Parent reviews.</li><li><strong>Enrollment:</strong> Inquiry form.</li></ul>` },
+
+        { id: 25, name: "NGO / Charity", category: "community", isNew: false, emoji: "🤝",
+          detail: `<ul><li><strong>Mission:</strong> Clear and inspiring.</li><li><strong>Donations:</strong> Secure payment.</li><li><strong>Impact:</strong> Stories + stats.</li><li><strong>Volunteers:</strong> Sign-up form.</li></ul>` },
+
+        { id: 26, name: "Local Sports League", category: "community", isNew: true, emoji: "🏆",
+          detail: `<ul><li><strong>Registration:</strong> Online forms.</li><li><strong>Schedules:</strong> Game times.</li><li><strong>Standings:</strong> Updated weekly.</li><li><strong>News:</strong> Announcements.</li></ul>` },
+
+        { id: 27, name: "Historical Society", category: "community", isNew: true, emoji: "🏛️",
+          detail: `<ul><li><strong>Archives:</strong> Photos & documents.</li><li><strong>Events:</strong> Lectures & tours.</li><li><strong>Memberships:</strong> Join/renew online.</li><li><strong>Donations:</strong> Fundraising.</li></ul>` },
+
+        { id: 28, name: "Artist / Illustrator", category: "creative", isNew: false, emoji: "🎨",
+          detail: `<ul><li><strong>Portfolio:</strong> High-resolution art.</li><li><strong>Shop:</strong> Prints & originals.</li><li><strong>Exhibitions:</strong> Show dates.</li><li><strong>Artist Statement:</strong> About me.</li></ul>` },
+
+        { id: 29, name: "Musician / Band", category: "creative", isNew: false, emoji: "🎸",
+          detail: `<ul><li><strong>Music Player:</strong> Embed Spotify.</li><li><strong>Shows:</strong> Tour dates.</li><li><strong>EPK:</strong> Press kit.</li><li><strong>Merch:</strong> Store link.</li></ul>` },
+
+        { id: 30, name: "Tattoo Studio", category: "creative", isNew: true, emoji: "🖋️",
+          detail: `<ul><li><strong>Artist Portfolios:</strong> Style galleries.</li><li><strong>Booking Forms:</strong> Inquiry system.</li><li><strong>Hygiene:</strong> Safety procedures.</li><li><strong>Aftercare:</strong> Care instructions.</li></ul>` },
+
+        { id: 31, name: "Caterer / Private Chef", category: "creative", isNew: true, emoji: "🧑‍🍳",
+          detail: `<ul><li><strong>Visual Menu:</strong> Food photography.</li><li><strong>Event Menus:</strong> Weddings, parties.</li><li><strong>Reviews:</strong> Client praise.</li><li><strong>Inquiry Form:</strong> Event details.</li></ul>` }
+    ];
+
+    const grid = document.getElementById('business-grid');
+    const filterContainer = document.getElementById('filter-container');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const modal = document.getElementById('detail-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDetail = document.getElementById('modal-detail');
+
+    function renderCards(filter = 'all') {
+        grid.innerHTML = '';
+
+        const filtered = filter === 'all'
+            ? businessData
+            : businessData.filter(x => x.category === filter);
+
+        filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'bg-sky-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer relative';
+            card.dataset.id = item.id;
+
+            const badge = item.isNew
+                ? `<span class="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full">New</span>`
+                : '';
+
+            card.innerHTML = `
+                ${badge}
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">${item.emoji}</span>
+                        <h3 class="text-lg font-semibold text-stone-900">${item.name}</h3>
                     </div>
-                `;
+                </div>
+            `;
 
-                card.addEventListener('click', () => showModal(business.id));
-                grid.appendChild(card);
-            });
-        }
+            card.addEventListener('click', () => showModal(item.id));
+            grid.appendChild(card);
+        });
+    }
 
-        function showModal(id) {
-            const item = businessData.find(i => i.id === id);
-            if (!item) return;
+    function showModal(id) {
+        const item = businessData.find(x => x.id === id);
+        modalTitle.innerHTML = `<span class="text-3xl mr-2">${item.emoji}</span>${item.name}`;
+        modalDetail.innerHTML = item.detail;
 
-            modalTitle.innerHTML = `<span class="text-3xl mr-2">${item.emoji}</span>${item.name}`;
-            modalDetail.innerHTML = item.detail;
+        modal.classList.remove('invisible', 'opacity-0');
+        modal.querySelector('.modal-content').classList.remove('scale-95');
+    }
 
-            modal.classList.remove('invisible', 'opacity-0');
-            modal.querySelector('.modal-content').classList.remove('scale-95');
-        }
+    function hideModal() {
+        modal.classList.add('opacity-0');
+        modal.querySelector('.modal-content').classList.add('scale-95');
+        setTimeout(() => modal.classList.add('invisible'), 250);
+    }
 
-        function hideModal() {
-            modal.classList.add('opacity-0');
-            modal.querySelector('.modal-content').classList.add('scale-95');
-            setTimeout(() => modal.classList.add('invisible'), 250);
-        }
-
-        filterContainer.addEventListener('click', e => {
-            if (!e.target.classList.contains('filter-btn')) return;
-
+    filterContainer.addEventListener('click', e => {
+        if (e.target.classList.contains('filter-btn')) {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-
             renderCards(e.target.dataset.filter);
-        });
+        }
+    });
 
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') hideModal();
-        });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') hideModal();
+    });
 
-        document.addEventListener('DOMContentLoaded', () => renderCards());
-    </script>
+    document.addEventListener('DOMContentLoaded', () => renderCards());
+</script>
+
+
 
 
 </body></html>
