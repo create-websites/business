@@ -190,8 +190,8 @@
         </div>
     </footer></body></html>
 
-    <!-- Modal (Fixed: 'visibility-hidden' -> 'invisible') -->
-    <div class="modal fixed inset-0 z-50 flex items-center justify-center p-4 invisible opacity-0" id="detail-modal">
+    <!-- Modal (Unchanged) -->
+    <div class="modal fixed inset-0 z-50 flex items-center justify-center p-4 visibility-hidden opacity-0" id="detail-modal">
         <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50" onclick="hideModal()"></div>
         
         <div class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-2xl mx-auto z-10 overflow-hidden transform scale-95">
@@ -213,90 +213,76 @@
     <!-- JavaScript (Data updated with emoji, renderCard function updated) -->
 
  <script>
-    const businessData = [
-        { id: 1, name: "Financial Planner", category: "professional", isNew: false, emoji: "💼",
-          detail: `<ul><li><strong>Build Trust:</strong> Establish credibility with a professional site detailing certifications (e.g., CFP®).</li><li><strong>Educate Clients:</strong> Share blog posts or articles on retirement planning, investment strategies, and market updates.</li><li><strong>Generate Leads:</strong> Offer a free consultation or a downloadable budget template in exchange for contact info.</li><li><strong>Book Appointments:</strong> Integrate a scheduling tool for easy client booking.</li></ul>` },
-        { id: 2, name: "Real Estate Agent", category: "professional", isNew: false, emoji: "🏠",
-          detail: `<ul><li><strong>Showcase Listings:</strong> Feature high-quality photos, virtual tours, and detailed descriptions of properties.</li><li><strong>Capture Leads:</strong> Use forms for "Home Valuation Requests" or "New Listing Alerts".</li><li><strong>Build Authority:</strong> Post neighborhood guides and home-buying/selling tips.</li><li><strong>Display Testimonials:</strong> Build social proof with glowing reviews from past clients.</li></ul>` },
-        { id: 3, name: "Lawyer / Legal Consultant", category: "professional", isNew: false, emoji: "⚖️",
-          detail: `<ul><li><strong>Establish Credibility:</strong> Detail practice areas, attorney profiles, and case results.</li><li><strong>Clarify Services:</strong> Help potential clients understand complex services.</li><li><strong>Provide Contact:</strong> Offer a clear, confidential consultation form.</li><li><strong>Share Expertise:</strong> Publish legal topics and FAQs.</li></ul>` },
-        { id: 4, name: "Consulting Firm (IT, Mgt)", category: "professional", isNew: true, emoji: "📈",
-          detail: `<ul><li><strong>Explain Services:</strong> Show methodologies and value props.</li><li><strong>Lead Generation:</strong> Use downloadable resources or demo forms.</li><li><strong>Show Past Work:</strong> Case studies and client logos build trust.</li><li><strong>Thought Leadership:</strong> Publish whitepapers.</li></ul>` },
-        { id: 5, name: "Architect / Interior Designer", category: "professional", isNew: false, emoji: "📐",
-          detail: `<ul><li><strong>Portfolio:</strong> Beautiful gallery of projects.</li><li><strong>Design Process:</strong> Explain how projects are delivered.</li><li><strong>Attract Ideal Clients:</strong> Use aesthetics that match your style.</li><li><strong>Press:</strong> Add awards and features.</li></ul>` },
+   const businessData = [
+    { id: 1, name: "Financial Planner", category: "professional", isNew: false, emoji: "💼", url: "/financial-planner/",
+      detail: `...` },
+    { id: 2, name: "Real Estate Agent", category: "professional", isNew: false, emoji: "🏠", url: "/real-estate-agent/",
+      detail: `...` },
+    { id: 3, name: "Lawyer / Legal Consultant", category: "professional", isNew: false, emoji: "⚖️", url: "/lawyer-legal-consultant/",
+      detail: `...` },
+    { id: 4, name: "Consulting Firm (IT, Mgt)", category: "professional", isNew: true, emoji: "📈", url: "/consulting-firm/",
+      detail: `...` },
+    { id: 5, name: "Architect / Interior Designer", category: "professional", isNew: false, emoji: "📐", url: "/architect-interior-designer/",
+      detail: `...` },
 
-        { id: 6, name: "Restaurant / Café / Bakery", category: "retail", isNew: false, emoji: "🍔",
-          detail: `<ul><li><strong>Menu:</strong> Display items with photos.</li><li><strong>Online Ordering:</strong> Integrate delivery apps.</li><li><strong>Reservations:</strong> Embed booking tools.</li><li><strong>Ambiance:</strong> Showcase interior and dishes.</li></ul>` },
-        { id: 7, name: "Boutique / Clothing Store", category: "retail", isNew: false, emoji: "👗",
-          detail: `<ul><li><strong>E-commerce:</strong> Sell online 24/7.</li><li><strong>Lookbooks:</strong> Show new fashion drops.</li><li><strong>Sales:</strong> Highlight promotions.</li><li><strong>Brand Story:</strong> What makes your store special?</li></ul>` },
-        { id: 8, name: "Salon / Barber / Spa", category: "retail", isNew: false, emoji: "✂️",
-          detail: `<ul><li><strong>Online Booking:</strong> Let clients choose services and stylists.</li><li><strong>Services:</strong> Clear list.</li><li><strong>Gallery:</strong> Display your work.</li><li><strong>Store:</strong> Sell self-care products.</li></ul>` },
+    { id: 6, name: "Restaurant / Café / Bakery", category: "retail", isNew: false, emoji: "🍔", url: "/restaurant-cafe-bakery/",
+      detail: `...` },
+    { id: 7, name: "Boutique / Clothing Store", category: "retail", isNew: false, emoji: "👗", url: "/boutique-clothing-store/",
+      detail: `...` },
+    { id: 8, name: "Salon / Barber / Spa", category: "retail", isNew: false, emoji: "✂️", url: "/salon-barber-spa/",
+      detail: `...` },
+    { id: 9, name: "Local Bookstore", category: "retail", isNew: true, emoji: "📚", url: "/local-bookstore/",
+      detail: `...` },
+    { id: 10, name: "Pet Groomer / Pet Store", category: "retail", isNew: true, emoji: "🐾", url: "/pet-groomer-pet-store/",
+      detail: `...` },
 
-        { id: 9, name: "Local Bookstore", category: "retail", isNew: true, emoji: "📚",
-          detail: `<ul><li><strong>Events:</strong> Book clubs, author signings.</li><li><strong>Staff Picks:</strong> Build community.</li><li><strong>Online Shop:</strong> Order books for pickup.</li><li><strong>Store Info:</strong> Hours & location.</li></ul>` },
+    { id: 11, name: "Plumber / Electrician / HVAC", category: "home", isNew: false, emoji: "🔧", url: "/plumber-electrician-hvac/",
+      detail: `...` },
+    { id: 12, name: "Builder / Contractor / Handyman", category: "home", isNew: false, emoji: "👷", url: "/builder-contractor-handyman/",
+      detail: `...` },
+    { id: 13, name: "Landscaper / Gardener", category: "home", isNew: false, emoji: "🌿", url: "/landscaper-gardener/",
+      detail: `...` },
+    { id: 14, name: "Moving Company", category: "home", isNew: true, emoji: "🚚", url: "/moving-company/",
+      detail: `...` },
+    { id: 15, name: "Locksmith", category: "home", isNew: true, emoji: "🔑", url: "/locksmith/",
+      detail: `...` },
 
-        { id: 10, name: "Pet Groomer / Pet Store", category: "retail", isNew: true, emoji: "🐾",
-          detail: `<ul><li><strong>Booking:</strong> Schedule grooming services.</li><li><strong>Services:</strong> Grooming, nail trim, etc.</li><li><strong>Gallery:</strong> Before/after photos.</li><li><strong>Shop:</strong> Toys & supplies.</li></ul>` },
+    { id: 16, name: "Tech Startup / SaaS", category: "startup", isNew: false, emoji: "💻", url: "/tech-startup-saas/",
+      detail: `...` },
+    { id: 17, name: "Freelancer (Designer, Writer)", category: "startup", isNew: false, emoji: "🧑‍🎨", url: "/freelancer/",
+      detail: `...` },
+    { id: 18, name: "App Developer (Mobile)", category: "startup", isNew: true, emoji: "📱", url: "/app-developer/",
+      detail: `...` },
+    { id: 19, name: "Etsy / E-commerce Seller", category: "startup", isNew: true, emoji: "🛒", url: "/etsy-ecommerce-seller/",
+      detail: `...` },
 
-        { id: 11, name: "Plumber / Electrician / HVAC", category: "home", isNew: false, emoji: "🔧",
-          detail: `<ul><li><strong>Emergency Calls:</strong> Highlight 24/7 service.</li><li><strong>Licenses:</strong> Build trust.</li><li><strong>Services:</strong> Repairs, installation, maintenance.</li><li><strong>Testimonials:</strong> Show reviews.</li></ul>` },
-        { id: 12, name: "Builder / Contractor / Handyman", category: "home", isNew: false, emoji: "👷",
-          detail: `<ul><li><strong>Portfolio:</strong> Showcase projects.</li><li><strong>Process:</strong> Explain steps from estimate to completion.</li><li><strong>Lead Forms:</strong> Request a quote.</li><li><strong>Reviews:</strong> Gain credibility.</li></ul>` },
+    { id: 20, name: "Personal Trainer / Yoga Instructor", category: "health", isNew: false, emoji: "🧘", url: "/personal-trainer-yoga/",
+      detail: `...` },
+    { id: 21, name: "Doctors / Dentists / Clinics", category: "health", isNew: false, emoji: "🩺", url: "/doctors-dentists-clinics/",
+      detail: `...` },
+    { id: 22, name: "Therapist / Counselor", category: "health", isNew: false, emoji: "🧠", url: "/therapist-counselor/",
+      detail: `...` },
+    { id: 23, name: "Specialty Clinic (Dermatology)", category: "health", isNew: true, emoji: "🧴", url: "/specialty-clinic-dermatology/",
+      detail: `...` },
+    { id: 24, name: "Music Teacher (Piano, Guitar)", category: "health", isNew: true, emoji: "🎵", url: "/music-teacher/",
+      detail: `...` },
 
-        { id: 13, name: "Landscaper / Gardener", category: "home", isNew: false, emoji: "🌿",
-          detail: `<ul><li><strong>Show Work:</strong> Gardens, lawns, patios.</li><li><strong>Services:</strong> Design, install, maintenance.</li><li><strong>Seasonal Tips:</strong> Attract Google traffic.</li><li><strong>Easy Estimates:</strong> Simple contact form.</li></ul>` },
+    { id: 25, name: "NGO / Charity", category: "community", isNew: false, emoji: "🤝", url: "/ngo-charity/",
+      detail: `...` },
+    { id: 26, name: "Local Sports League", category: "community", isNew: true, emoji: "🏆", url: "/local-sports-league/",
+      detail: `...` },
+    { id: 27, name: "Historical Society", category: "community", isNew: true, emoji: "🏛️", url: "/historical-society/",
+      detail: `...` },
 
-        { id: 14, name: "Moving Company", category: "home", isNew: true, emoji: "🚚",
-          detail: `<ul><li><strong>Quote Form:</strong> Primary CTA.</li><li><strong>Services:</strong> Packing, moving, storage.</li><li><strong>Trust:</strong> Show licenses & insurance.</li><li><strong>Resources:</strong> Moving checklists.</li></ul>` },
-
-        { id: 15, name: "Locksmith", category: "home", isNew: true, emoji: "🔑",
-          detail: `<ul><li><strong>Emergency Call:</strong> 24/7 button.</li><li><strong>Services:</strong> Re-key, car keys, lockouts.</li><li><strong>Service Area:</strong> Show map.</li><li><strong>Trust Info:</strong> Certifications.</li></ul>` },
-
-        { id: 16, name: "Tech Startup / SaaS", category: "startup", isNew: false, emoji: "💻",
-          detail: `<ul><li><strong>Explain Product:</strong> Problem + solution.</li><li><strong>Show Features:</strong> With images.</li><li><strong>Pricing:</strong> Clear plan tiers.</li><li><strong>Lead Capture:</strong> Free trial or demo.</li></ul>` },
-        { id: 17, name: "Freelancer (Designer, Writer)", category: "startup", isNew: false, emoji: "🧑‍🎨",
-          detail: `<ul><li><strong>Portfolio:</strong> Showcase best work.</li><li><strong>Services:</strong> What you offer.</li><li><strong>Testimonials:</strong> Client reviews.</li><li><strong>Contact:</strong> Easy inquiry form.</li></ul>` },
-        { id: 18, name: "App Developer (Mobile)", category: "startup", isNew: true, emoji: "📱",
-          detail: `<ul><li><strong>App Portfolio:</strong> Links to App Store.</li><li><strong>Process:</strong> Discovery → Launch.</li><li><strong>Tech Stack:</strong> Flutter, Swift, etc.</li><li><strong>Testimonials:</strong> Client reviews.</li></ul>` },
-
-        { id: 19, name: "Etsy / E-commerce Seller", category: "startup", isNew: true, emoji: "🛒",
-          detail: `<ul><li><strong>Brand Site:</strong> Own your storefront.</li><li><strong>Email List:</strong> Grow customer base.</li><li><strong>Story:</strong> Share your craft.</li><li><strong>Control:</strong> Full customization.</li></ul>` },
-
-        { id: 20, name: "Personal Trainer / Yoga Instructor", category: "health", isNew: false, emoji: "🧘",
-          detail: `<ul><li><strong>Transformations:</strong> Before/after photos.</li><li><strong>Sessions:</strong> Class schedule.</li><li><strong>Packages:</strong> Training plans.</li><li><strong>Blog:</strong> Fitness tips.</li></ul>` },
-        { id: 21, name: "Doctors / Dentists / Clinics", category: "health", isNew: false, emoji: "🩺",
-          detail: `<ul><li><strong>Build Trust:</strong> Team credentials.</li><li><strong>Appointments:</strong> Easy online booking.</li><li><strong>Forms:</strong> New patient PDFs.</li><li><strong>Services:</strong> Procedures & insurance.</li></ul>` },
-
-        { id: 22, name: "Therapist / Counselor", category: "health", isNew: false, emoji: "🧠",
-          detail: `<ul><li><strong>Safe Space:</strong> Calming design.</li><li><strong>Specialties:</strong> Anxiety, couples therapy, etc.</li><li><strong>Logistics:</strong> Fees & insurance.</li><li><strong>Contact:</strong> Confidential form.</li></ul>` },
-
-        { id: 23, name: "Specialty Clinic (Dermatology)", category: "health", isNew: true, emoji: "🧴",
-          detail: `<ul><li><strong>Conditions:</strong> Acne, eczema, etc.</li><li><strong>Team:</strong> Doctors & PAs.</li><li><strong>Procedures:</strong> Medical + cosmetic.</li><li><strong>Appointments:</strong> Online booking.</li></ul>` },
-
-        { id: 24, name: "Music Teacher (Piano, Guitar)", category: "health", isNew: true, emoji: "🎵",
-          detail: `<ul><li><strong>Lesson Types:</strong> 30/60min, virtual, adult/child.</li><li><strong>Studio:</strong> Photos of teaching space.</li><li><strong>Testimonials:</strong> Parent reviews.</li><li><strong>Enrollment:</strong> Inquiry form.</li></ul>` },
-
-        { id: 25, name: "NGO / Charity", category: "community", isNew: false, emoji: "🤝",
-          detail: `<ul><li><strong>Mission:</strong> Clear and inspiring.</li><li><strong>Donations:</strong> Secure payment.</li><li><strong>Impact:</strong> Stories + stats.</li><li><strong>Volunteers:</strong> Sign-up form.</li></ul>` },
-
-        { id: 26, name: "Local Sports League", category: "community", isNew: true, emoji: "🏆",
-          detail: `<ul><li><strong>Registration:</strong> Online forms.</li><li><strong>Schedules:</strong> Game times.</li><li><strong>Standings:</strong> Updated weekly.</li><li><strong>News:</strong> Announcements.</li></ul>` },
-
-        { id: 27, name: "Historical Society", category: "community", isNew: true, emoji: "🏛️",
-          detail: `<ul><li><strong>Archives:</strong> Photos & documents.</li><li><strong>Events:</strong> Lectures & tours.</li><li><strong>Memberships:</strong> Join/renew online.</li><li><strong>Donations:</strong> Fundraising.</li></ul>` },
-
-        { id: 28, name: "Artist / Illustrator", category: "creative", isNew: false, emoji: "🎨",
-          detail: `<ul><li><strong>Portfolio:</strong> High-resolution art.</li><li><strong>Shop:</strong> Prints & originals.</li><li><strong>Exhibitions:</strong> Show dates.</li><li><strong>Artist Statement:</strong> About me.</li></ul>` },
-
-        { id: 29, name: "Musician / Band", category: "creative", isNew: false, emoji: "🎸",
-          detail: `<ul><li><strong>Music Player:</strong> Embed Spotify.</li><li><strong>Shows:</strong> Tour dates.</li><li><strong>EPK:</strong> Press kit.</li><li><strong>Merch:</strong> Store link.</li></ul>` },
-
-        { id: 30, name: "Tattoo Studio", category: "creative", isNew: true, emoji: "🖋️",
-          detail: `<ul><li><strong>Artist Portfolios:</strong> Style galleries.</li><li><strong>Booking Forms:</strong> Inquiry system.</li><li><strong>Hygiene:</strong> Safety procedures.</li><li><strong>Aftercare:</strong> Care instructions.</li></ul>` },
-
-        { id: 31, name: "Caterer / Private Chef", category: "creative", isNew: true, emoji: "🧑‍🍳",
-          detail: `<ul><li><strong>Visual Menu:</strong> Food photography.</li><li><strong>Event Menus:</strong> Weddings, parties.</li><li><strong>Reviews:</strong> Client praise.</li><li><strong>Inquiry Form:</strong> Event details.</li></ul>` }
-    ];
+    { id: 28, name: "Artist / Illustrator", category: "creative", isNew: false, emoji: "🎨", url: "/artist-illustrator/",
+      detail: `...` },
+    { id: 29, name: "Musician / Band", category: "creative", isNew: false, emoji: "🎸", url: "/musician-band/",
+      detail: `...` },
+    { id: 30, name: "Tattoo Studio", category: "creative", isNew: true, emoji: "🖋️", url: "/tattoo-studio/",
+      detail: `...` },
+    { id: 31, name: "Caterer / Private Chef", category: "creative", isNew: true, emoji: "🧑‍🍳", url: "/caterer-private-chef/",
+      detail: `...` }
+];
 
     const grid = document.getElementById('business-grid');
     const filterContainer = document.getElementById('filter-container');
@@ -365,6 +351,8 @@
 
     document.addEventListener('DOMContentLoaded', () => renderCards());
 </script>
+
+
 
 
 </body></html>
