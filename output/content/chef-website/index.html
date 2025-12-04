@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- SEO Meta Tags -->
+    <meta content="Experience world-class culinary artistry with Kreate Chef. Exploring modern gastronomy, private dining, and the fusion of taste and visual elegance. Book your exclusive culinary experience today." name="description"/>
+    <meta content="Chef, Fine Dining, Culinary Art, Private Chef, Gastronomy, Food Gallery, Kreate Chef, Gourmet Catering, Food Styling" name="keywords"/>
+    <meta content="Kreate Chef" name="author"/>
+
+    <title>Kreate Chef | Culinary Artistry &amp; Fine Dining</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --text-gold: #D4AF37;
+            --text-white: #f5f5f5;
+            --text-gray: #a0a0a0;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Lato', sans-serif;
+        }
+
+        /* --- Global Reset --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* --- Navigation --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: var(--text-gold);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-white);
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-gold);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            color: var(--text-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* --- Hero Slideshow --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 1;
+        }
+
+        .slide.active { opacity: 1; }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Darken images for text readability */
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+            padding: 0 20px;
+            animation: fadeUp 1s ease-out 0.5s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            color: var(--text-gold);
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #e0e0e0;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            background-color: transparent;
+            border: 1px solid var(--text-gold);
+            color: var(--text-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--text-gold);
+            color: var(--bg-dark);
+        }
+
+        /* --- About Section --- */
+        .section { padding: 100px 10%; }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--text-gold);
+            margin-bottom: 15px;
+        }
+        .section-header p { color: var(--text-gray); max-width: 600px; margin: 0 auto; }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .about-text p { color: var(--text-gray); margin-bottom: 20px; }
+
+        /* --- Gallery Grid --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 350px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+        /* --- Blog Preview --- */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: var(--bg-card);
+            border: 1px solid #333;
+            transition: transform 0.3s;
+        }
+
+        .blog-card:hover { transform: translateY(-5px); }
+
+        .blog-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .blog-content { padding: 25px; }
+        .blog-date { color: var(--text-gold); font-size: 0.8rem; margin-bottom: 10px; display: block; }
+        .blog-title { font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 15px; }
+        .blog-excerpt { color: var(--text-gray); font-size: 0.95rem; margin-bottom: 20px; }
+        .read-more { color: var(--text-white); font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
+
+        /* --- Contact --- */
+        .contact-section { background-color: #0a0a0a; border-top: 1px solid #333; }
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            text-align: center;
+            gap: 40px;
+        }
+
+        .contact-box i {
+            font-size: 2rem;
+            color: var(--text-gold);
+            margin-bottom: 20px;
+        }
+        .contact-box h4 { margin-bottom: 10px; font-family: var(--font-serif); }
+        .contact-box p, .contact-box a { color: var(--text-gray); }
+        .contact-box a:hover { color: var(--text-gold); }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #000;
+            color: #555;
+            font-size: 0.8rem;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; right: 0; background: #1a1a1a; width: 100%; padding: 20px; text-align: center; }
+            .nav-links.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            .about-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">KREATE CHEF</div>
+        <div class="mobile-menu-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#blog">Journal</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Slideshow -->
+    <section class="hero" id="home">
+        <!-- Slideshow Images -->
+        <div class="slide active" style="background-image: url('https://storage.googleapis.com/imagesu/chef/chef1.jpg');"></div>
+        <div class="slide" style="background-image: url('https://storage.googleapis.com/imagesu/chef/chef2.jpg');"></div>
+        <div class="slide" style="background-image: url('https://storage.googleapis.com/imagesu/chef/chef4.jpg');"></div>
+        
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+            <h1>Taste the Essence <br/>of Modern Art</h1>
+            <p>Curating unforgettable dining experiences through passion, precision, and flavor.</p>
+            <a class="btn" href="#contact">Reserve a Table</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="about-grid">
+            <div class="about-img">
+                <img alt="Chef at work" src="https://storage.googleapis.com/imagesu/chef/chef6.jpg" style="border-radius: 4px; border: 1px solid #333;"/>
+            </div>
+            <div class="about-text">
+                <h3>Philosophy of Flavor</h3>
+                <p>Food is not just sustenance; it is a narrative. Every dish I create tells a story of origin, tradition, and modern innovation.</p>
+                <p>We believe in sourcing the finest local ingredients and treating them with the respect they deserve to create textures and flavors that linger in memory.</p>
+                <br/>
+                <a href="#gallery" style="color: var(--text-gold); border-bottom: 1px solid var(--text-gold);">View My Work</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="section" id="gallery" style="background-color: #151515;">
+        <div class="section-header">
+            <h2>Culinary Gallery</h2>
+            <p>A visual journey through our latest creations.</p>
+        </div>
+        <div class="gallery-grid">
+            <!-- Using provided images -->
+            <div class="gallery-item">
+                <img alt="Fine Dining Dish" src="https://storage.googleapis.com/imagesu/chef/chef2.jpg"/>
+                <div class="gallery-overlay"><p style="color:white">Signature Entree</p></div>
+            </div>
+            <div class="gallery-item">
+                <img alt="Plating" src="https://storage.googleapis.com/imagesu/chef/chef3.jpg"/>
+                <div class="gallery-overlay"><p style="color:white">Preparation</p></div>
+            </div>
+            <div class="gallery-item">
+                <img alt="Ingredients" src="https://storage.googleapis.com/imagesu/chef/chef5.jpg"/>
+                <div class="gallery-overlay"><p style="color:white">Fresh Ingredients</p></div>
+            </div>
+            <div class="gallery-item">
+                <img alt="Dessert" src="https://storage.googleapis.com/imagesu/chef/chef7.jpg"/>
+                <div class="gallery-overlay"><p style="color:white">Sweet Finish</p></div>
+            </div>
+            <div class="gallery-item">
+                <img alt="Chef Detail" src="https://storage.googleapis.com/imagesu/chef/chef8.jpg"/>
+                <div class="gallery-overlay"><p style="color:white">The Craft</p></div>
+            </div>
+            <div class="gallery-item">
+                <img alt="Final Plate" src="https://storage.googleapis.com/imagesu/chef/chef4.jpg"/>
+                <div class="gallery-overlay"><p style="color:white">Presentation</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="section" id="blog">
+        <div class="section-header">
+            <h2>The Journal</h2>
+            <p>Insights into techniques, seasonal ingredients, and chef's life.</p>
+        </div>
+        <div class="blog-grid">
+            <article class="blog-card">
+                <img alt="Blog Post 1" class="blog-img" src="https://storage.googleapis.com/imagesu/chef/chef3.jpg"/>
+                <div class="blog-content">
+                    <span class="blog-date">OCTOBER 12, 2023</span>
+                    <h3 class="blog-title">The Art of Plating</h3>
+                    <p class="blog-excerpt">Why visual presentation is just as critical as taste in modern gastronomy.</p>
+                    <a class="read-more" href="#">Read Story</a>
+                </div>
+            </article>
+            <article class="blog-card">
+                <img alt="Blog Post 2" class="blog-img" src="https://storage.googleapis.com/imagesu/chef/chef5.jpg"/>
+                <div class="blog-content">
+                    <span class="blog-date">SEPTEMBER 28, 2023</span>
+                    <h3 class="blog-title">Sourcing Local</h3>
+                    <p class="blog-excerpt">Visiting local farms to find the perfect organic roots for our autumn menu.</p>
+                    <a class="read-more" href="#">Read Story</a>
+                </div>
+            </article>
+            <article class="blog-card">
+                <img alt="Blog Post 3" class="blog-img" src="https://storage.googleapis.com/imagesu/chef/chef7.jpg"/>
+                <div class="blog-content">
+                    <span class="blog-date">AUGUST 15, 2023</span>
+                    <h3 class="blog-title">Summer Sweets</h3>
+                    <p class="blog-excerpt">Balancing acidity and sweetness in our new signature berry dessert.</p>
+                    <a class="read-more" href="#">Read Story</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact-section" id="contact">
+        <div class="section-header">
+            <h2>Get In Touch</h2>
+            <p>For private events, collaborations, or reservations.</p>
+        </div>
+        <div class="contact-container">
+            <div class="contact-box">
+                <i class="fas fa-phone-alt"></i>
+                <h4>Phone</h4>
+                <p>425-341-1111</p>
+            </div>
+            <div class="contact-box">
+                <i class="fas fa-envelope"></i>
+                <h4>Email</h4>
+                <p><a href="mailto:contact@kreate.com">contact@kreate.com</a></p>
+            </div>
+            <div class="contact-box">
+                <i class="fas fa-globe"></i>
+                <h4>Website</h4>
+                <p><a href="https://business.kreate.com/electrician" target="_blank">business.kreate.com</a></p>
+            </div>
+        </div>
+    </section>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Simple Slideshow Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function nextSlide() {
+            // Remove active class from current
+            slides[currentSlide].classList.remove('active');
+            
+            // Calculate next
+            currentSlide = (currentSlide + 1) % totalSlides;
+            
+            // Add active class to next
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+    </script>
+
+</body></html>
