@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>The Shift to Generative Engine Optimization (GEO)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals & Subtle Tech -->
+    <!-- Application Structure Plan: The application is structured as a narrative journey, starting with a high-level introduction, moving to foundational definitions (GEO & AI Crawlers) in an interactive tabbed section, then visually comparing SEO vs. GEO with a chart, and culminating in an actionable, multi-step guide on how to implement GEO. This top-down, progressively detailed structure was chosen to guide the user from understanding the "what" and "why" to mastering the "how," making a complex topic digestible and engaging. The user flow is linear but allows for focused exploration within each section. -->
+    <!-- Visualization & Content Choices: 
+        1. Definitions (GEO/AI Crawler): Report Info -> Goal: Inform -> Viz/Presentation: Interactive tabs -> Interaction: Click to switch content -> Justification: Separates core concepts for clarity without clutter. Library/Method: Vanilla JS, HTML/CSS.
+        2. SEO vs. GEO Shift: Report Info -> Goal: Compare -> Viz/Presentation: Bar Chart -> Interaction: Tooltips on chart segments provide detailed focus areas -> Justification: Visually quantifies the strategic shift from tactical keywords to holistic authority. Library/Method: Chart.js (Canvas).
+        3. GEO Implementation Steps: Report Info -> Goal: Organize/Instruct -> Viz/Presentation: Numbered, expandable accordion sections -> Interaction: Click to reveal detailed strategies for each step -> Justification: Breaks a complex process into a manageable, step-by-step guide, encouraging user engagement. Library/Method: Vanilla JS, HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f3f1;
+            color: #1c1917;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .step-content.open {
+            max-height: 500px;
+        }
+        .tab-button.active {
+            border-color: #2563eb;
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-stone-800 tracking-tight">The Next Evolution of Search</h1>
+            <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">Here are a few options, all aiming for a similar length and conveying a similar meaning:
+
+*   **Beyond Keywords: The GEO Revolution in Dialogue.**
+*   **Conversations Take Over: The Rise of GEO Over SEO.**
+*   **Keywords' Demise: Embracing GEO for Real Dialogue.**
+*   **From Search to Synthesis: GEO's Impact on the Future.**</p>
+        </header>
+
+        <main>
+            <section class="mb-16" id="definitions">
+                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto">
+                    <h2 class="text-2xl md:text-3xl font-bold text-center text-stone-800 mb-6">Understanding the New Landscape</h2>
+                    <p class="text-center text-stone-600 mb-8">Information discovery and consumption are shifting. Generative AI redefines search, synthesizing knowledge, not just listing it. This section explores these key concepts.</p>
+                    <div class="flex justify-center border-b border-stone-200 mb-6">
+                        <button class="tab-button px-4 py-2 font-semibold border-b-2 border-transparent transition-colors duration-300 active" id="tab-geo">What is GEO?</button>
+                        <button class="tab-button px-4 py-2 font-semibold border-b-2 border-transparent transition-colors duration-300" id="tab-crawler">What is an AI Crawler?</button>
+                    </div>
+
+                    <div class="tab-content" id="content-geo">
+                        <h3 class="text-xl font-semibold text-blue-700 mb-2">Generative Engine Optimization (GEO)</h3>
+                        <p class="text-stone-600 mb-4">Here's a rewritten version of similar length:
+
+GEO optimizes content so Generative AI models can readily grasp, condense, and accurately present it in search. Unlike traditional SEO focused on website ranking, GEO aims for your content to be the AI's source for direct answers. The objective: become part of the AI-generated response, positioning your brand as an authoritative voice.</p>
+                        <div class="mt-4 p-4 border border-stone-200 rounded-lg bg-stone-50">
+                             <div class="flex items-center justify-center space-x-4">
+                                <div class="text-center">
+                                    <div class="p-2 bg-blue-100 rounded-full inline-block">🌐</div>
+                                    <p class="text-xs mt-1">Your Website</p>
+                                </div>
+                                <div class="text-5xl text-blue-300 font-thin">→</div>
+                                 <div class="text-center">
+                                    <div class="p-2 bg-blue-200 rounded-full inline-block">🧠</div>
+                                    <p class="text-xs mt-1">AI Engine</p>
+                                </div>
+                                <div class="text-5xl text-blue-300 font-thin">→</div>
+                                <div class="text-center">
+                                    <div class="p-4 bg-blue-500 text-white rounded-lg shadow-md">
+                                        <p class="text-sm font-semibold">AI Generated Answer</p>
+                                        <p class="text-xs opacity-80">"According to [Your Brand]..."</p>
+                                    </div>
+                                    <p class="text-xs mt-1">User's Answer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content hidden" id="content-crawler">
+                        <h3 class="text-xl font-semibold text-blue-700 mb-2">AI Crawler</h3>
+                        <p class="text-stone-600 mb-4">Here's a rewritten line of similar length, focusing on the core differences:
+
+**Unlike standard web crawlers, AI crawlers delve deeper: they analyze meaning, recognize connections, and grasp the context within your data. This enables the training of LLMs for sophisticated, generative search.**</p>
+                        <div class="mt-4 p-4 border border-stone-200 rounded-lg bg-stone-50">
+                           <div class="grid grid-cols-2 gap-4">
+                                <div class="text-center p-4 border-2 border-dashed border-stone-300 rounded-lg">
+                                    <h4 class="font-semibold mb-2">Traditional Crawler</h4>
+                                    <p class="text-sm text-stone-600">Indexes keywords, metadata, and links.</p>
+                                    <div class="mt-2 flex flex-wrap justify-center gap-2">
+                                        <span class="bg-stone-200 text-stone-700 px-2 py-1 text-xs rounded">keyword</span>
+                                        <span class="bg-stone-200 text-stone-700 px-2 py-1 text-xs rounded">backlink</span>
+                                        <span class="bg-stone-200 text-stone-700 px-2 py-1 text-xs rounded">H1 tag</span>
+                                    </div>
+                                </div>
+                                <div class="text-center p-4 border-2 border-solid border-blue-500 rounded-lg bg-blue-50">
+                                    <h4 class="font-semibold text-blue-800 mb-2">AI Crawler</h4>
+                                    <p class="text-sm text-blue-700">Understands concepts, relationships, and trust signals.</p>
+                                    <div class="mt-2 flex flex-wrap justify-center gap-2">
+                                        <span class="bg-blue-200 text-blue-800 px-2 py-1 text-xs rounded">Author Expertise</span>
+                                        <span class="bg-blue-200 text-blue-800 px-2 py-1 text-xs rounded">Data-backed Claims</span>
+                                        <span class="bg-blue-200 text-blue-800 px-2 py-1 text-xs rounded">Problem Solving</span>
+                                    </div>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="comparison">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-stone-800">The Shift in Strategy: SEO vs. GEO</h2>
+                    <p class="mt-2 text-stone-600 max-w-3xl mx-auto">Succeeding with generative AI demands a pivot: prioritize holistic site authority and clear, concise content over technical SEO. This chart highlights the crucial areas website owners must address in the age of AI search.</p>
+                </div>
+                 <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                    <div class="chart-container">
+                        <canvas id="seoVsGeoChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="how-to">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-stone-800">Your GEO Playbook: How to Adapt</h2>
+                    <p class="mt-2 text-stone-600 max-w-3xl mx-auto">Here are a few options, keeping the size roughly similar:
+
+**Option 1 (Concise):**
+
+Adapting SEO for GEO is strategic. Restructure your digital strategy in 5 key steps, aligning with AI learning. Click each to explore actionable advice.
+
+**Option 2 (Action-Oriented):**
+
+From SEO to GEO: a strategic shift. Revamp your digital presence with these 5 steps, mirroring AI's learning. Actionable advice inside; click to learn more.
+
+**Option 3 (Emphasis on AI):**
+
+Moving from SEO to GEO requires strategy. Leverage these 5 steps to align your digital presence with AI's approach. Click each step for actionable insights.</p>
+                </div>
+                <div class="space-y-4 max-w-4xl mx-auto">
+                    <!-- Step 1 -->
+                    <div class="step-container bg-white rounded-xl shadow-lg overflow-hidden">
+                        <button class="step-toggle w-full text-left p-6 flex justify-between items-center">
+                            <span class="text-lg font-semibold text-stone-800"><span class="text-blue-600 mr-2">1.</span> Build Foundational Trust with E-E-A-T</span>
+                            <span class="step-arrow text-2xl text-blue-600 transform transition-transform duration-300">›</span>
+                        </button>
+                        <div class="step-content px-6 pb-6">
+                            <p class="text-stone-600">GEO's foundation is E-E-A-T: Experience, Expertise, Authoritativeness, Trustworthiness. AI models are built to value information from sources with demonstrable, strong credibility.</p>
+                            <ul class="list-disc list-inside mt-4 space-y-2 text-stone-600">
+                                <li><strong>Author Bios:</strong> Here are a few options, all similar in length and meaning:
+
+*   Build author profiles with credentials, publications, and social links.
+*   Develop comprehensive author pages showcasing credentials, work, and social media.
+*   Design author pages, integrating credentials, publications, and social media links.
+*   Construct detailed author pages, linking to expertise, works, and social presence.</li>
+                                <li><strong>Cite Sources:</strong> Provide citations from credible studies, data, and research to support arguments.</li>
+                                <li><strong>Show, Don't Just Tell:</strong> Here are a few options, all similar in length and emphasizing real-world experience:
+
+*   Show practical application with case studies, research, and personal stories.
+*   Support your claims with case studies, original findings, and personal narratives.
+*   Prove your points with real-world examples: case studies, research, and stories.
+*   Illustrate practicality using case studies, research results, and personal insights.
+*   Ground the argument in reality: case studies, original work, and personal experience.</li>
+                                <li><strong>Maintain Accuracy:</strong> Here are a few options, all similar in length and meaning:
+
+*   Keep content current by updating it often.
+*   Maintain accuracy and relevance through regular updates.
+*   Update frequently to preserve content's accuracy.
+*   Regularly refresh content for ongoing validity.
+*   Ensure accuracy; update content consistently.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="step-container bg-white rounded-xl shadow-lg overflow-hidden">
+                        <button class="step-toggle w-full text-left p-6 flex justify-between items-center">
+                            <span class="text-lg font-semibold text-stone-800"><span class="text-blue-600 mr-2">2.</span> Create Conversational &amp; Conceptual Content</span>
+                            <span class="step-arrow text-2xl text-blue-600 transform transition-transform duration-300">›</span>
+                        </button>
+                        <div class="step-content px-6 pb-6">
+                            <p class="text-stone-600">Focus on building in-depth, helpful content that flows naturally and addresses user needs by answering questions and solving problems. Consider the full user experience, beyond just initial search terms.</p>
+                             <ul class="list-disc list-inside mt-4 space-y-2 text-stone-600">
+                                <li><strong>Use Natural Language:</strong> Okay, let's break down this idea like we're having a chat. We'll explore it using plain language, common questions, and maybe even a little "how-to" action. Think of it as a friendly guide.</li>
+                                <li><strong>Address Follow-up Questions:</strong> Address potential user queries proactively, integrating answers seamlessly.</li>
+                                <li><strong>Define Entities:</strong> Establish a glossary: Clarify core terms, individuals, and ideas integral to your subject. Aim to create a concise, niche-specific encyclopedia.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="step-container bg-white rounded-xl shadow-lg overflow-hidden">
+                        <button class="step-toggle w-full text-left p-6 flex justify-between items-center">
+                            <span class="text-lg font-semibold text-stone-800"><span class="text-blue-600 mr-2">3.</span> Implement Advanced Structured Data</span>
+                            <span class="step-arrow text-2xl text-blue-600 transform transition-transform duration-300">›</span>
+                        </button>
+                        <div class="step-content px-6 pb-6">
+                            <p class="text-stone-600">Schema.org's structured data is essential for search engines, especially for GEO. It speaks directly to AI crawlers, clarifying content meaning beyond mere keywords.</p>
+                             <ul class="list-disc list-inside mt-4 space-y-2 text-stone-600">
+                                <li><strong>Be Hyper-Specific:</strong> Employ precise schema types like `Person`, `Organization`, `FAQPage`, or `HowTo`.</li>
+                                <li><strong>Interlink Entities:</strong> Link your data using schema properties such as `author`, `publisher`, and `about`.</li>
+                                <li><strong>Validate Everything:</strong> Employ tools such as Google's Rich Results Test to validate your structured data's accuracy and deployment.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                     <div class="step-container bg-white rounded-xl shadow-lg overflow-hidden">
+                        <button class="step-toggle w-full text-left p-6 flex justify-between items-center">
+                            <span class="text-lg font-semibold text-stone-800"><span class="text-blue-600 mr-2">4.</span> Build an Internal Knowledge Graph</span>
+                            <span class="step-arrow text-2xl text-blue-600 transform transition-transform duration-300">›</span>
+                        </button>
+                        <div class="step-content px-6 pb-6">
+                            <p class="text-stone-600">Here are a few options, all similar in length and conveying the same core idea:
+
+*   **Your website's knowledge graph visualizes connections between entities (topics, users, items). Strategic internal links are key to building this for AI.**
+
+*   **Internal linking is crucial to building a knowledge graph, showing the links between elements (subjects, individuals, goods) on your site, which aids AI crawlers.**
+
+*   **A knowledge graph outlines connections of site entities (subjects, folks, things). Internal linking is the crucial method to constructing it, making this index easier for AI.**</p>
+                             <ul class="list-disc list-inside mt-4 space-y-2 text-stone-600">
+                                <li><strong>Create Topic Clusters:</strong> Here are a few options, all of similar length and conveying the same idea:
+
+*   **Create pillar pages for major themes, linked to cluster pages on specific sub-topics.**
+*   **Structure content with pillar pages on top-level themes, connecting to clusters on sub-themes.**
+*   **Establish pillar pages around key subjects, interwoven with cluster pages that delve deeper.**
+*   **Build a content hub: Pillar pages for main areas, linked to clusters on related details.**</li>
+                                <li><strong>Use Descriptive Anchor Text:</strong> **Here are a few options, all keeping a similar length:**
+
+*   **Use descriptive link text for the linked page's content.**
+*   **The link text must accurately reflect the target page's topic.**
+*   **Provide link text that directly explains the destination's purpose.**
+*   **Avoid vague link phrases; instead, specify the page's subject.**</li>
+                                <li><strong>Link Key Entities:</strong> When referencing a core concept you've defined, link to its dedicated page.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Step 5 -->
+                     <div class="step-container bg-white rounded-xl shadow-lg overflow-hidden">
+                        <button class="step-toggle w-full text-left p-6 flex justify-between items-center">
+                            <span class="text-lg font-semibold text-stone-800"><span class="text-blue-600 mr-2">5.</span> Diversify Content Formats</span>
+                            <span class="step-arrow text-2xl text-blue-600 transform transition-transform duration-300">›</span>
+                        </button>
+                        <div class="step-content px-6 pb-6">
+                            <p class="text-stone-600">To be AI-friendly, offer content in varied formats. This signals comprehensiveness, as AI models draw from diverse sources.</p>
+                             <ul class="list-disc list-inside mt-4 space-y-2 text-stone-600">
+                                <li><strong>Video &amp; Audio:</strong> Here are a few options, all similar in length and capturing the intent:
+
+*   **Produce video/podcast content; offer complete transcripts.**
+*   **Develop videos and podcasts, with transcripts included.**
+*   **Craft video/podcast media; furnish full text transcripts.**
+*   **Create video/podcast episodes; provide transcripts for indexing.**</li>
+                                <li><strong>Data Visualizations:</strong> Employ labeled charts, graphs, and diagrams with comprehensive alt text.</li>
+                                <li><strong>Interactive Tools:</strong> Create interactive tools like calculators or quizzes to let users solve problems directly on your platform.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('seoVsGeoChart').getContext('2d');
+            
+            const chartData = {
+                labels: ['Traditional SEO', 'Generative Engine Optimization (GEO)'],
+                datasets: [
+                    {
+                        label: 'Technical & On-Page',
+                        data: [40, 15],
+                        backgroundColor: '#60a5fa',
+                        borderColor: '#3b82f6',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Keyword & Link Building',
+                        data: [45, 10],
+                        backgroundColor: '#93c5fd',
+                        borderColor: '#60a5fa',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Authority & Trust (E-E-A-T)',
+                        data: [15, 45],
+                        backgroundColor: '#2563eb',
+                        borderColor: '#1d4ed8',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Content Structure & Semantics',
+                        data: [0, 30],
+                        backgroundColor: '#1e40af',
+                        borderColor: '#1e3a8a',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            const seoVsGeoChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribution of Effort: SEO vs. GEO',
+                            font: { size: 16, weight: 'bold' },
+                            color: '#1c1917',
+                            padding: { bottom: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += context.parsed.x + '% of total effort';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Percentage of Effort'
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                        }
+                    }
+                }
+            });
+
+            const stepToggles = document.querySelectorAll('.step-toggle');
+            stepToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    const arrow = button.querySelector('.step-arrow');
+                    
+                    document.querySelectorAll('.step-content.open').forEach(openContent => {
+                        if (openContent !== content) {
+                            openContent.classList.remove('open');
+                            openContent.previousElementSibling.querySelector('.step-arrow').classList.remove('rotate-90');
+                        }
+                    });
+
+                    content.classList.toggle('open');
+                    arrow.classList.toggle('rotate-90');
+                });
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.id.replace('tab-', 'content-');
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        if (content.id === targetId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+        });
+    </script>
+
+
+</body></html>

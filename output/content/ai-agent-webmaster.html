@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AI Agent Webmaster Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard with thematic sections (modules). This structure was chosen because a dashboard is the most intuitive metaphor for a tool that monitors and manages a complex system like a website. It allows users to quickly grasp the overall status in the overview section, and then dive deep into specific areas of interest (Performance, SEO, Content, Security) at their own pace. This non-linear exploration is more user-friendly and effective for understanding the AI's capabilities than a static, linear report. A live activity log is included to dynamically showcase the AI's autonomous nature. -->
+    <!-- Visualization & Content Choices: 
+    - Overview KPIs: Goal=Inform. Method=Dynamic stats in cards. Interaction=Hover effects. Justification=Provides a high-impact, immediate summary of website health.
+    - Health Score: Goal=Inform. Method=Canvas radial progress bar. Justification=A visually engaging way to represent an overall score.
+    - Performance Vitals: Goal=Compare. Method=Grouped Bar Chart (Chart.js). Interaction=Buttons to toggle between Mobile/Desktop data. Justification=Bar charts are ideal for direct comparison, and the toggle interaction allows for a clean UI while presenting multiple data views.
+    - SEO Distribution: Goal=Inform (Proportions). Method=Donut Chart (Chart.js). Justification=Clearly shows the parts of a whole for keyword rankings.
+    - SEO Breakdown: Goal=Compare. Method=Radar Chart (Chart.js). Justification=Perfect for comparing performance across multiple fixed categories (SEO pillars).
+    - Content & Security: Goal=Organize/Inform. Method=Styled interactive lists. Interaction=Hover effects/details. Justification=Presents actionable items clearly and concisely.
+    - Activity Log: Goal=Show autonomy. Method=Scrolling text area. Interaction=Auto-updating text. Justification=Creates a dynamic "live" feel, reinforcing the AI agent concept.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #292524; /* stone-800 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            background-color: #F5F5F4; /* stone-100 */
+            color: #0D9488; /* teal-600 */
+        }
+        .nav-link.active {
+            background-color: #0D9488; /* teal-600 */
+            color: white;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .activity-log {
+            background-color: #1c1917; /* stone-900 */
+            color: #a8a29e; /* stone-400 */
+            font-family: monospace;
+            height: 300px;
+            overflow-y: scroll;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .activity-log-entry {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        .activity-log-entry .time {
+            color: #5eead4; /* teal-300 */
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .activity-log-entry .message {
+            color: #e7e5e4; /* stone-200 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8" id="app">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-stone-900">AI Agent Webmaster</h1>
+            <p class="text-lg text-stone-600 mt-2">Your autonomous partner for website optimization and health.</p>
+        </header>
+
+        <nav class="bg-white/70 backdrop-blur-md sticky top-4 z-50 rounded-full shadow-md max-w-lg mx-auto mb-12 p-2 flex justify-center items-center">
+            <a class="nav-link active" href="#overview">Overview</a>
+            <a class="nav-link" href="#performance">Performance</a>
+            <a class="nav-link" href="#seo">SEO</a>
+            <a class="nav-link" href="#activity">Activity</a>
+        </nav>
+
+        <main class="space-y-16">
+            
+            <section class="scroll-mt-24" id="overview">
+                <h2 class="text-2xl font-bold mb-1 text-stone-800">Dashboard Overview</h2>
+                <p class="text-stone-600 mb-6 max-w-3xl">Here's a rewritten version of similar length:
+
+This dashboard presents an AI-driven overview of your website's performance. Key indicators are displayed concisely, offering a rapid assessment of its health and operational state.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card md:col-span-2 lg:col-span-1 flex flex-col items-center justify-center text-center">
+                        <h3 class="font-semibold text-stone-600 mb-2">Overall Health Score</h3>
+                        <canvas height="160" id="healthScoreCanvas" width="160"></canvas>
+                    </div>
+
+                    <div class="card flex flex-col justify-center">
+                        <h3 class="font-semibold text-stone-600 mb-2">Uptime (Last 30d)</h3>
+                        <p class="text-4xl font-bold text-teal-600">99.98%</p>
+                        <p class="text-sm text-stone-500 mt-1">Target: &gt;99.9%</p>
+                    </div>
+
+                    <div class="card flex flex-col justify-center">
+                        <h3 class="font-semibold text-stone-600 mb-2">Avg. Page Speed</h3>
+                        <p class="text-4xl font-bold text-teal-600">1.2s</p>
+                        <p class="text-sm text-stone-500 mt-1">Excellent performance</p>
+                    </div>
+
+                    <div class="card flex flex-col justify-center">
+                        <h3 class="font-semibold text-stone-600 mb-2">Critical Issues</h3>
+                        <p class="text-4xl font-bold text-amber-500">3</p>
+                        <p class="text-sm text-stone-500 mt-1">2 SEO, 1 Security</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="scroll-mt-24" id="performance">
+                <h2 class="text-2xl font-bold mb-1 text-stone-800">Site Health &amp; Performance</h2>
+                <p class="text-stone-600 mb-6 max-w-3xl">Here, the AI analyzes your site's tech performance. Core Web Vitals, vital for user experience &amp; SEO, are detailed. Switch between mobile &amp; desktop views with the buttons to compare performance.</p>
+                
+                <div class="card">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                        <h3 class="font-semibold text-xl text-stone-700 mb-2 md:mb-0">Core Web Vitals Analysis</h3>
+                        <div class="flex space-x-2 bg-stone-100 p-1 rounded-full" id="performance-controls">
+                            <button class="px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-teal-700 shadow" data-view="mobile">Mobile</button>
+                            <button class="px-4 py-1.5 text-sm font-semibold rounded-full text-stone-600" data-view="desktop">Desktop</button>
+                        </div>
+                    </div>
+                    <div class="chart-container h-80 md:h-96">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="scroll-mt-24" id="seo">
+                <h2 class="text-2xl font-bold mb-1 text-stone-800">SEO Hub</h2>
+                <p class="text-stone-600 mb-6 max-w-3xl">Here are a few options, all similar in length and meaning:
+
+*   This module demonstrates AI's role in boosting your site's search engine presence. It examines keyword performance, technical SEO, and content quality for an SEO score.
+*   See how AI enhances your website's search visibility with this module. It assesses keyword positions, technical SEO, and content, providing an overall SEO grade.
+*   This module explains how AI monitors and optimizes your site's SEO. It evaluates keyword rankings, technical elements, and content factors for your SEO rating.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="font-semibold text-xl text-stone-700 mb-4">Keyword Ranking Distribution</h3>
+                        <p class="text-stone-500 text-sm mb-4">Distribution of your tracked keywords across search engine result pages.</p>
+                        <div class="chart-container h-80">
+                            <canvas id="seoKeywordsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="font-semibold text-xl text-stone-700 mb-4">On-Page SEO Score Breakdown</h3>
+                        <p class="text-stone-500 text-sm mb-4">Analysis of on-page elements across three core pillars of SEO.</p>
+                        <div class="chart-container h-80">
+                            <canvas id="seoScoreChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="scroll-mt-24" id="activity">
+                <h2 class="text-2xl font-bold mb-1 text-stone-800">Live AI Activity Log</h2>
+                <p class="text-stone-600 mb-6 max-w-3xl">Here are a few options, all similar in length:
+
+*   **This log displays the AI Webmaster's live, simulated actions and site observations. It shows continuous background efforts for protection, monitoring, and optimization.**
+
+*   **See the AI Webmaster in action! This log simulates its real-time decisions and observations, showcasing ongoing site protection, monitoring, and optimization.**
+
+*   **A simulated feed, this log reveals the AI Webmaster's real-time actions and observations. Watch it work constantly to protect, monitor, and improve your site.**</p>
+                
+                <div class="activity-log" id="activity-log-container">
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const mockData = {
+                performance: {
+                    mobile: {
+                        labels: ['LCP', 'FID', 'CLS'],
+                        datasets: [{
+                            label: 'Score (lower is better)',
+                            data: [2.1, 25, 0.12],
+                            backgroundColor: ['#14B8A6', '#F59E0B', '#EF4444'],
+                        }]
+                    },
+                    desktop: {
+                        labels: ['LCP', 'FID', 'CLS'],
+                        datasets: [{
+                            label: 'Score (lower is better)',
+                            data: [1.3, 10, 0.05],
+                            backgroundColor: ['#14B8A6', '#F59E0B', '#EF4444'],
+                        }]
+                    }
+                },
+                seoKeywords: {
+                    labels: ['Top 3 Positions', 'Positions 4-10', 'Positions 11+'],
+                    datasets: [{
+                        data: [18, 45, 37],
+                        backgroundColor: ['#0D9488', '#2DD4BF', '#99F6E4'],
+                        hoverOffset: 4
+                    }]
+                },
+                seoScore: {
+                    labels: ['Content Quality', 'Technical SEO', 'User Experience', 'Backlinks', 'Schema Markup'],
+                    datasets: [{
+                        label: 'Score (out of 100)',
+                        data: [88, 92, 78, 70, 95],
+                        backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                        borderColor: '#0D9488',
+                        pointBackgroundColor: '#0D9488',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#0D9488'
+                    }]
+                }
+            };
+
+            let performanceChart, seoKeywordsChart, seoScoreChart;
+            
+            const chartTooltip = {
+                bodyFont: {
+                    size: 14,
+                    weight: 'bold'
+                },
+                titleFont: {
+                    size: 12
+                },
+                padding: 12,
+                cornerRadius: 4,
+                displayColors: false,
+            };
+
+            function createPerformanceChart() {
+                const ctx = document.getElementById('performanceChart').getContext('2d');
+                performanceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: mockData.performance.mobile,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: chartTooltip
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#e7e5e4'
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createSeoKeywordsChart() {
+                const ctx = document.getElementById('seoKeywordsChart').getContext('2d');
+                seoKeywordsChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: mockData.seoKeywords,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                            tooltip: chartTooltip
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            function createSeoScoreChart() {
+                const ctx = document.getElementById('seoScoreChart').getContext('2d');
+                seoScoreChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: mockData.seoScore,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: chartTooltip
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: '#e7e5e4' },
+                                pointLabels: { font: { size: 13 } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const performanceControls = document.getElementById('performance-controls');
+            performanceControls.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    const view = e.target.dataset.view;
+                    performanceChart.data = mockData.performance[view];
+                    performanceChart.update();
+                    
+                    performanceControls.querySelectorAll('button').forEach(btn => {
+                        btn.classList.remove('bg-white', 'text-teal-700', 'shadow');
+                        btn.classList.add('text-stone-600');
+                    });
+                    e.target.classList.add('bg-white', 'text-teal-700', 'shadow');
+                    e.target.classList.remove('text-stone-600');
+                }
+            });
+
+            function drawHealthScore() {
+                const canvas = document.getElementById('healthScoreCanvas');
+                const ctx = canvas.getContext('2d');
+                const score = 92; 
+                const endAngle = (Math.PI / 180) * (score / 100 * 360 - 90);
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const radius = 70;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 18;
+                ctx.strokeStyle = '#E7E5E4';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, -Math.PI / 2, endAngle, false);
+                ctx.lineWidth = 18;
+                ctx.strokeStyle = '#0D9488';
+                ctx.lineCap = 'round';
+                ctx.stroke();
+                
+                ctx.fillStyle = '#1C1917';
+                ctx.font = 'bold 40px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(score, centerX, centerY);
+            }
+
+            const activityLogContainer = document.getElementById('activity-log-container');
+            const activities = [
+                "Fixed 3 broken links on /blog.",
+                "Optimized 5 images on homepage, saving 250KB.",
+                "Detected and blocked suspicious IP: 203.0.113.75.",
+                "Updated meta description for /services page.",
+                "A/B test on CTA button started.",
+                "Noticed keyword 'AI webmaster' trending up.",
+                "Cleared stale cache, improving TTFB by 50ms.",
+                "Submitted updated sitemap to Google.",
+                "Found 1 new unlinked backlink opportunity.",
+                "Security scan complete. 0 new vulnerabilities."
+            ];
+            let activityIndex = 0;
+            function addActivityLog() {
+                const now = new Date();
+                const time = now.toTimeString().split(' ')[0];
+                const message = activities[activityIndex % activities.length];
+                activityIndex++;
+
+                const entry = document.createElement('div');
+                entry.className = 'activity-log-entry';
+                entry.innerHTML = `<span class="time">${time}</span><span class="message">${message}</span>`;
+                
+                activityLogContainer.appendChild(entry);
+                activityLogContainer.scrollTop = activityLogContainer.scrollHeight;
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '-30% 0px -70% 0px' });
+
+            sections.forEach(section => observer.observe(section));
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            createPerformanceChart();
+            createSeoKeywordsChart();
+            createSeoScoreChart();
+            drawHealthScore();
+            setInterval(addActivityLog, 3000);
+            addActivityLog(); 
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

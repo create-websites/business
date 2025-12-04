@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Evolution of the Web</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The application uses a single-page, reverse-chronological vertical scrolling narrative structure to guide the user from the future of the web (4.0) back to its origins (1.0). A sticky top navigation allows for quick access to each era. This future-first approach is chosen to immediately capture interest with forward-looking concepts before providing historical context. The core interactive element remains a central comparison chart, allowing users to actively explore specific differences between eras, reinforcing the information presented. -->
+    <!-- Visualization & Content Choices: 
+        - Hero Section: Inform -> Static Text -> None -> Simple intro to set context.
+        - Era Sections (4.0-1.0): Inform -> Text + Diagrams/Chart -> Scrolling -> Guide user through history in reverse.
+        - Web 3.0 Tech: Organize -> Donut Chart (Chart.js) -> Hover Tooltips -> Visually break down key components of Web 3.0.
+        - Cross-Era Comparison: Compare/Analyze -> Interactive Bar Chart (Chart.js) -> Dropdown filter -> Allows user-driven comparison of key concepts across all eras.
+        - Company Advice: Inform -> Interactive Cards -> Click to expand -> Presents actionable advice in a digestible, organized format.
+        - Justification: This mix of static narrative content and focused interactive elements provides both a clear educational path and an engaging tool for exploration. Chart.js is used for dynamic data visualization. HTML/CSS diagrams are used for simple concepts to avoid library overhead. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfdfc;
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #a37f5b;
+            transition: width 0.3s ease;
+        }
+        .nav-link.active::after, .nav-link:hover::after {
+            width: 100%;
+        }
+        .era-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .era-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .advice-card {
+            cursor: pointer;
+        }
+        .advice-card .advice-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .advice-card.open .advice-content {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
+        .advice-card.open .chevron {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-[#4a4a4a]">Web Evolution</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#web4" class="nav-link text-gray-600 hover:text-[#a37f5b]">Web 4.0</a>
+                <a href="#web3" class="nav-link text-gray-600 hover:text-[#a37f5b]">Web 3.0</a>
+                <a href="#web2" class="nav-link text-gray-600 hover:text-[#a37f5b]">Web 2.0</a>
+                <a href="#web1" class="nav-link text-gray-600 hover:text-[#a37f5b]">Web 1.0</a>
+                <a href="#compare" class="nav-link text-gray-600 hover:text-[#a37f5b]">Compare</a>
+                <a href="#evolve" class="nav-link text-gray-600 hover:text-[#a37f5b]">Evolve</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32 bg-[#faf8f5]">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-6xl font-bold text-[#3d3d3d] mb-4">The Journey of the Web</h2>
+                <div class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+  <p class="mb-6">Here are a few rewritten options of similar length, focusing on different aspects:</p>
+
+  <div class="space-y-6 text-left">
+    <div>
+      <p class="font-semibold text-gray-700">Option 1 (Focus on transformation):</p>
+      <blockquote class="mt-2 border-l-4 border-[#a37f5b]/40 pl-4 italic text-gray-600">
+        Constantly reshaping connection, creation, and commerce, the web has evolved from symbiotic futures to static roots. Journey through its four pivotal eras.
+      </blockquote>
+    </div>
+
+    <div>
+      <p class="font-semibold text-gray-700">Option 2 (Focus on eras):</p>
+      <blockquote class="mt-2 border-l-4 border-[#a37f5b]/40 pl-4 italic text-gray-600">
+        Witness the web's transformative journey – four eras that reshaped connection, creation, and business, from dynamic growth to early structures.
+      </blockquote>
+    </div>
+
+    <div>
+      <p class="font-semibold text-gray-700">Option 3 (More concise):</p>
+      <blockquote class="mt-2 border-l-4 border-[#a37f5b]/40 pl-4 italic text-gray-600">
+        The web's evolution: a journey from static beginnings to a symbiotic future, forever changing connection, creation, and business. Explore its four key eras.
+      </blockquote>
+    </div>
+
+    <div>
+      <p class="font-semibold text-gray-700">Option 4 (Emphasis on impact):</p>
+      <blockquote class="mt-2 border-l-4 border-[#a37f5b]/40 pl-4 italic text-gray-600">
+        From early stability to a symbiotic future, the web's evolution has irrevocably changed connection, creation, and business. Discover its four defining eras.
+      </blockquote>
+    </div>
+  </div>
+</div>
+            </div>
+        </section>
+
+        <section id="web4" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                     <div class="text-center md:text-left">
+                        <span class="text-sm font-semibold text-[#a37f5b]">FUTURE</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mt-2 mb-4">Web 4.0: The Symbiotic Web</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Here's a rewritten version of similar length:
+
+Envision a future of blended existence, where humans and AI intertwine.  The web transforms into a smart, pervasive network of AI, understanding and anticipating our desires. This fosters a proactive, collaborative partnership.</p>
+                        <div class="bg-[#faf8f5] p-6 rounded-lg">
+                            <h4 class="font-semibold mb-2">For Companies:</h4>
+                            <p class="text-gray-700">Companies must design for intelligent agents, crafting experiences that go beyond personalization, focusing on prediction and automation. This involves seamless integration into users' lives, providing intuitive services that feel inherent to the user.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center">
+                         <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg border border-gray-100">
+                           <p class="text-center font-semibold mb-4">Interaction Model: Symbiotic</p>
+                            <div class="flex items-center justify-around">
+                                <div class="text-center">
+                                    <div class="text-4xl">🧠</div>
+                                    <p class="font-medium mt-2">Human Mind</p>
+                                </div>
+                                <div class="text-5xl text-gray-400 font-light">🤝</div>
+                                <div class="text-center">
+                                    <div class="text-4xl">🤖</div>
+                                    <p class="font-medium mt-2">Intelligent Agents</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-gray-500 mt-6">A seamless, ambient connection between humans and AI.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="web3" class="py-16 md:py-24 bg-[#faf8f5]">
+            <div class="container mx-auto px-6">
+                 <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="flex flex-col justify-center items-center md:order-2">
+                        <p class="text-center font-semibold mb-4">Key Technologies of Web 3.0</p>
+                        <div class="chart-container h-64 md:h-80">
+                            <canvas id="web3Chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-left md:order-1">
+                        <span class="text-sm font-semibold text-[#a37f5b]">2016 - PRESENT</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mt-2 mb-4">Web 3.0: The Semantic Web</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Here's a rewritten version of similar length:
+
+This new "read-write-own" web prioritizes decentralization, intelligence, and user control.  AI, machine learning, and blockchain drive this shift. The web evolves, grasping context to deliver customized and smarter experiences.</p>
+                        <div class="bg-white p-6 rounded-lg">
+  <h4 class="font-semibold mb-2">For Companies:</h4>
+  <div class="text-gray-700">
+    <p class="mb-4">Here are a few options, all similar in length:</p>
+    <ul class="list-disc list-inside space-y-3">
+      <li><strong>Goal:</strong> Craft intelligent, tailored user experiences. This involves AI-powered recommendations from data, plus exploring user-centric dApps. Token-based ownership fosters new business models.</li>
+      <li><strong>Focus:</strong> Deliver smarter, custom user experiences. Data fuels AI recommendations; dApps empower users. This paves the way for new token-driven models and digital ownership.</li>
+      <li><strong>Objective:</strong> Develop more intelligent, customized user paths. AI-enhanced recommendations leverage data, while dApps promote user control. Token-based models and digital ownership become key.</li>
+    </ul>
+  </div>
+</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="web2" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-center md:text-left">
+                        <span class="text-sm font-semibold text-[#a37f5b]">2004 - 2016</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mt-2 mb-4">Web 2.0: The Social Web</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Here's a rewritten version of similar length:
+
+The interactive web arose, shifting users to active creators. This fostered user content on social media, blogs, and wikis. Interaction, teamwork, and mobile platforms became key features.</p>
+                        <div class="bg-[#faf8f5] p-6 rounded-lg">
+  <h4 class="font-semibold mb-2">For Companies:</h4>
+  <div class="text-gray-700">
+    <p class="mb-4">Here are a few options, all aiming for a similar length and meaning:</p>
+
+    <div class="space-y-4">
+      <div>
+        <p class="font-semibold">Option 1 (Concise):</p>
+        <p class="mt-1">Websites evolved into interactive platforms. Businesses embraced customer feedback via reviews and social media. Dialogue replaced one-way messaging, fostering brand communities.</p>
+      </div>
+
+      <div>
+        <p class="font-semibold">Option 2 (Emphasizing Change):</p>
+        <p class="mt-1">The internet transformed websites into engagement centers. Businesses prioritized customer interaction, using reviews and social media. Conversations eclipsed broadcasts, cultivating brand loyalty.</p>
+      </div>
+
+      <div>
+        <p class="font-semibold">Option 3 (Focus on Relationship):</p>
+        <p class="mt-1">Websites became vibrant community spaces. Companies actively engaged customers through reviews and social channels. The emphasis moved to dialogue and building brand relationships.</p>
+      </div>
+    </div>
+  </div>
+</div>
+                    </div>
+                    <div class="flex justify-center items-center">
+                        <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg border border-gray-100">
+                           <p class="text-center font-semibold mb-4">Information Flow: Two-Way</p>
+                            <div class="flex items-center justify-around">
+                                <div class="text-center">
+                                    <div class="text-4xl">🏢</div>
+                                    <p class="font-medium mt-2">Platform</p>
+                                </div>
+                                <div class="text-5xl text-gray-400 font-light">↔</div>
+                                <div class="text-center">
+                                    <div class="text-4xl">👥</div>
+                                    <p class="font-medium mt-2">Users/Creators</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-gray-500 mt-6">Users became active participants, creating and sharing content.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="web1" class="py-16 md:py-24 bg-[#faf8f5]">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                     <div class="flex justify-center items-center md:order-2">
+                        <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-lg border border-gray-100">
+                            <p class="text-center font-semibold mb-4">Information Flow: One-Way</p>
+                            <div class="flex items-center justify-around">
+                                <div class="text-center">
+                                    <div class="text-4xl">🏢</div>
+                                    <p class="font-medium mt-2">Company/Creator</p>
+                                </div>
+                                <div class="text-5xl text-gray-400 font-light">→</div>
+                                <div class="text-center">
+                                    <div class="text-4xl">👤</div>
+                                    <p class="font-medium mt-2">User/Consumer</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center text-gray-500 mt-6">Users could only consume the information presented to them.</p>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-left md:order-1">
+                        <span class="text-sm font-semibold text-[#a37f5b]">1990 - 2004</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mt-2 mb-4">Web 1.0: The Static Web</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">Back then, it was the "read-only" age. Websites resembled brochures: static content crafted by a handful, viewed by many. Information moved one-way, with hyperlinks as the only real engagement.</p>
+                        <div class="bg-white p-6 rounded-lg">
+                            <h4 class="font-semibold mb-2">For Companies:</h4>
+                            <p class="text-gray-700">The objective was clear: get online. Early websites, Web 1.0, functioned like digital brochures, offering core company details, contact info, and product listings. This was a novel marketing outlet, though not interactive for users.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="compare" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Comparing the Eras</h3>
+                    <div class="text-gray-600 mb-8">
+  <p class="mb-4">Here are a few options, all keeping the size roughly similar and following your instructions:</p>
+  <ul class="list-disc list-inside space-y-2 text-left">
+    <li>The internet's growth mirrors tech, user habits, and commerce changes. Explore key characteristics below to see their era-by-era evolution.</li>
+    <li>Web development shows major shifts in tech, usage, and industry trends. Choose a defining feature to see its transformation over time.</li>
+    <li>The online world's journey reveals tech, user, and market shifts. Select a characteristic below and chart its evolution through each period.</li>
+  </ul>
+</div>
+                </div>
+
+                <div class="max-w-xs mx-auto mb-8">
+                     <label for="comparison-metric" class="block text-sm font-medium text-gray-700 mb-2">Select a characteristic to compare:</label>
+                     <select id="comparison-metric" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#a37f5b] focus:border-[#a37f5b]">
+                         <option value="userRole">User Role</option>
+                         <option value="content">Content</option>
+                         <option value="technology">Key Technology</option>
+                         <option value="interaction">Interaction</option>
+                     </select>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="evolve" class="py-16 md:py-24 bg-[#faf8f5]">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">How Should Companies Evolve?</h3>
+                    <p class="text-gray-600 mb-12">Adapting to the web's changes demands a proactive approach. Businesses need to evolve their online presence to satisfy users and embrace new tech. This guide offers a streamlined plan for website and strategy growth.</p>
+                </div>
+                <div class="max-w-4xl mx-auto space-y-4">
+                    <div class="advice-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-6 flex justify-between items-center">
+                            <h4 class="text-lg font-semibold text-gray-800">Phase 1: Master the Interactive Web (Web 2.0)</h4>
+                            <span class="chevron text-2xl text-[#a37f5b] transform transition-transform duration-300">▼</span>
+                        </div>
+                        <div class="advice-content px-6 pb-6">
+                            <p class="text-gray-600">Ditch the digital brochure; it's time to evolve! Create a vibrant, engaging website. Incorporate elements like user reviews, social media links, and a blog. Foster dialogue with your audience, act on their input, and cultivate a brand community. Your site should be a platform for interaction.</p>
+                        </div>
+                    </div>
+                     <div class="advice-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-6 flex justify-between items-center">
+                            <h4 class="text-lg font-semibold text-gray-800">Phase 2: Leverage Intelligence (Web 3.0)</h4>
+                             <span class="chevron text-2xl text-[#a37f5b] transform transition-transform duration-300">▼</span>
+                        </div>
+                        <div class="advice-content px-6 pb-6">
+                            <p class="text-gray-600">Leverage data to personalize experiences. Deploy AI chatbots for service, recommendation engines for product discovery. Analyze user behavior to optimize the customer journey. Consider blockchain for secure transactions and loyalty programs.</p>
+                        </div>
+                    </div>
+                     <div class="advice-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-6 flex justify-between items-center">
+                            <h4 class="text-lg font-semibold text-gray-800">Phase 3: Prepare for the Symbiotic Future (Web 4.0)</h4>
+                             <span class="chevron text-2xl text-[#a37f5b] transform transition-transform duration-300">▼</span>
+                        </div>
+                        <div class="advice-content px-6 pb-6">
+                            <p class="text-gray-600">Focus on long-term resilience. Fortify data foundations & AI. Consider intelligent agent, voice, and ambient interfaces. Aim for predictive, proactive, seamless user experiences. Develop machine-readable APIs for an agent-powered future.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
+            <p>&copy; 2025 Web Evolution Insights. An interactive exploration of the digital ages.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const sections = document.querySelectorAll('main section');
+    const navLinks = document.querySelectorAll('header nav a');
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.6
+    };
+
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        sectionObserver.observe(section);
+    });
+    
+    const web3Ctx = document.getElementById('web3Chart').getContext('2d');
+    new Chart(web3Ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Artificial Intelligence', 'Blockchain / Decentralization', 'Semantic Web', 'Internet of Things (IoT)'],
+            datasets: [{
+                label: 'Web 3.0 Technologies',
+                data: [35, 30, 20, 15],
+                backgroundColor: ['#a37f5b', '#c1a58b', '#e0cbb8', '#f0e6db'],
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        boxWidth: 12
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                label += context.parsed + '%';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const comparisonData = {
+        labels: ['Web 1.0', 'Web 2.0', 'Web 3.0', 'Web 4.0'],
+        userRole: {
+            title: 'Evolution of the User Role',
+            data: [
+                { value: 1, label: 'Consumer' },
+                { value: 2, label: 'Creator / Participant' },
+                { value: 3, label: 'Owner / Verifier' },
+                { value: 4, label: 'Symbiont / Co-creator' }
+            ]
+        },
+        content: {
+            title: 'Evolution of Content',
+            data: [
+                { value: 1, label: 'Static & Curated' },
+                { value: 2, label: 'User-Generated & Dynamic' },
+                { value: 3, label: 'AI-Generated & Verifiable' },
+                { value: 4, label: 'Agent-Driven & Predictive' }
+            ]
+        },
+        technology: {
+            title: 'Evolution of Key Technology',
+            data: [
+                { value: 1, label: 'HTML, HTTP' },
+                { value: 2, label: 'Social, Mobile, Cloud' },
+                { value: 3, label: 'AI, Blockchain, IoT' },
+                { value: 4, label: 'Neuro-interfaces, AI Agents' }
+            ]
+        },
+        interaction: {
+            title: 'Evolution of Interaction',
+            data: [
+                { value: 1, label: 'Read-Only' },
+                { value: 2, label: 'Read-Write' },
+                { value: 3, label: 'Read-Write-Own' },
+                { value: 4, label: 'Proactive Symbiosis' }
+            ]
+        }
+    };
+    
+    let comparisonChart;
+    const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+    const metricSelector = document.getElementById('comparison-metric');
+
+    function createComparisonChart(metric) {
+        const metricData = comparisonData[metric];
+        if (comparisonChart) {
+            comparisonChart.destroy();
+        }
+        comparisonChart = new Chart(comparisonCtx, {
+            type: 'bar',
+            data: {
+                labels: comparisonData.labels,
+                datasets: [{
+                    label: 'Maturity Level',
+                    data: metricData.data.map(d => d.value),
+                    backgroundColor: ['#e0cbb8', '#c1a58b', '#a37f5b', '#6b533a'],
+                    borderColor: '#fff',
+                    borderWidth: 1,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        display: false
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: metricData.title,
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        },
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return metricData.data[context.dataIndex].label || '';
+                            },
+                            title: function() {
+                                return '';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    metricSelector.addEventListener('change', (e) => {
+        createComparisonChart(e.target.value);
+    });
+
+    createComparisonChart('userRole');
+    
+    const adviceCards = document.querySelectorAll('.advice-card');
+    adviceCards.forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.toggle('open');
+        });
+    });
+});
+</script>
+</body>
+</html>

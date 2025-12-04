@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kreatewebsites: The AI-First Website Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Calm Tech -->
+    <!-- Application Structure Plan: The application is structured as a single-page, vertical narrative that guides the user through a logical story: Problem, Solution, Mechanism, Differentiation, and Value. This top-down approach is chosen for maximum clarity and persuasive impact. It starts with a shared problem (the changing sales funnel) to build rapport, introduces Kreatewebsites as the specific solution, explains how it works through an interactive diagram, contrasts it with the old way, and concludes with tangible business benefits. This flow is more intuitive and engaging than a simple dashboard or a direct replica of the report's structure, turning a document into a compelling pitch. -->
+    <!-- Visualization & Content Choices: 
+        1. Funnel Shift: Report Info -> Old vs. New Funnels. Goal -> Compare. Viz/Method -> Interactive two-column HTML/CSS diagram. Interaction -> Click on funnel stages to reveal details. Justification -> Visually dramatizes the market shift and makes an abstract concept tangible and interactive.
+        2. How It Works: Report Info -> 4-step process (Ingestion, Optimization, etc.). Goal -> Organize/Explain. Viz/Method -> Interactive HTML/CSS process flow diagram with a content pane. Interaction -> Click on a step to see its description. Justification -> Breaks down a complex system into digestible, self-paced steps, enhancing user understanding.
+        3. Differentiators: Report Info -> Static vs. Living, SEO vs. AIO, etc. Goal -> Compare. Viz/Method -> JS-powered content switcher showing side-by-side text comparisons. Interaction -> Click on buttons to change the comparison topic. Justification -> Provides a direct, clear contrast that highlights the product's unique advantages.
+        4. Business Value: Report Info -> Speed, Adaptability, etc. Goal -> Inform. Viz/Method -> HTML/CSS card grid. Interaction -> Subtle hover effects. Justification -> Presents the key benefits in a clean, scannable, and visually appealing format. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #1a202c;
+        }
+        .active-nav {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        .nav-link {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #2563eb;
+        }
+        .section {
+            scroll-margin-top: 80px;
+        }
+        .funnel-stage, .process-step, .diff-button {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .funnel-stage.active {
+            background-color: #DBEAFE;
+            border-color: #2563EB;
+            transform: translateY(-4px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .process-step.active {
+            background-color: #2563EB;
+            color: white;
+        }
+        .diff-button.active {
+            background-color: #2563EB;
+            color: white;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-FDFBF8/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800">🚀 Kreatewebsites</h1>
+            <div class="hidden md:flex space-x-8 text-lg font-medium text-gray-600">
+                <a class="nav-link" href="#problem">The Problem</a>
+                <a class="nav-link" href="#solution">The Solution</a>
+                <a class="nav-link" href="#how">How It Works</a>
+                <a class="nav-link" href="#value">Value</a>
+            </div>
+            <a class="hidden md:inline-block bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors" href="#cta">Learn More</a>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 md:py-20">
+
+        <section class="text-center mb-24 md:mb-32" id="hero">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+                Your Website is Static. <br class="hidden md:block"/>
+                Your Customers Have Moved On.
+            </h1>
+            <p class="max-w-3xl mx-auto text-lg md:text-xl text-gray-600 mb-8">
+                Here are a few options, all similar in length:
+
+*   Kreatewebsites builds dynamic websites, converting static assets into AI-powered, data-driven experiences that adapt with you.
+
+*   Kreatewebsites turns websites into evolving data products. They're AI-enhanced and adapt in real time to your data and users.
+
+*   Moving beyond static, Kreatewebsites crafts AI-driven websites that evolve with your data and customers, becoming living data products.
+            </p>
+        </section>
+
+        <section class="section mb-24 md:mb-32" id="problem">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">The Funnel Has Fundamentally Changed</h2>
+                <p class="max-w-2xl mx-auto mt-4 text-lg text-gray-600">
+                    The customer journey, once a straight path, is now AI-powered and dynamic. This section explores the transition from traditional search to AI-driven experiences, exposing the weaknesses of old-school websites. Explore each funnel to visualize the key stages.
+                </p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200" id="old-funnel">
+                    <h3 class="text-2xl font-bold text-center mb-2 text-gray-500">OLD FUNNEL</h3>
+                    <p class="text-center text-lg font-bold mb-8 text-red-500">Search-First World</p>
+                    <div class="space-y-4">
+                        <div class="funnel-stage border-2 border-gray-300 rounded-lg p-4" data-funnel="old" data-stage="1">
+                            <h4 class="font-bold text-lg">1. Drive Traffic</h4>
+                            <p class="text-gray-600">Here are a few options, all similar in length and emphasizing attracting users:
+
+*   Drive traffic to your site through SEO &amp; clicks.
+*   Optimize for SEO &amp; clicks to attract site visitors.
+*   Get users to your site: focus on SEO and clicks.
+*   Maximize SEO &amp; clicks for website user acquisition.</p>
+                        </div>
+                        <div class="text-center text-2xl text-gray-400">▼</div>
+                        <div class="funnel-stage border-2 border-gray-300 rounded-lg p-4" data-funnel="old" data-stage="2">
+                            <h4 class="font-bold text-lg">2. Persuade</h4>
+                            <p class="text-gray-600">Use design &amp; heavy content to convince visitors.</p>
+                        </div>
+                         <div class="text-center text-2xl text-gray-400">▼</div>
+                        <div class="funnel-stage border-2 border-gray-300 rounded-lg p-4" data-funnel="old" data-stage="3">
+                            <h4 class="font-bold text-lg">3. Convert</h4>
+                            <p class="text-gray-600">Guide users through a long buyer journey to a sale.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border-2 border-blue-500" id="new-funnel">
+                    <h3 class="text-2xl font-bold text-center mb-2 text-gray-700">NEW FUNNEL</h3>
+                    <p class="text-center text-lg font-bold mb-8 text-green-500">AI-First World</p>
+                     <div class="space-y-4">
+                        <div class="funnel-stage border-2 border-gray-300 rounded-lg p-4" data-funnel="new" data-stage="1">
+                            <h4 class="font-bold text-lg">1. Be Discoverable by AI</h4>
+                            <p class="text-gray-600">Buyers ask AI, which filters products for them.</p>
+                        </div>
+                        <div class="text-center text-2xl text-gray-400">▼</div>
+                        <div class="funnel-stage border-2 border-gray-300 rounded-lg p-4" data-funnel="new" data-stage="2">
+                            <h4 class="font-bold text-lg">2. Validate Trust</h4>
+                            <p class="text-gray-600">AI delivers 2-3 options. Trust must be instant.</p>
+                        </div>
+                        <div class="text-center text-2xl text-gray-400">▼</div>
+                        <div class="funnel-stage border-2 border-gray-300 rounded-lg p-4" data-funnel="new" data-stage="3">
+                            <h4 class="font-bold text-lg">3. Close Fast</h4>
+                            <p class="text-gray-600">Funnels are compressed. Conversion is immediate.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section bg-blue-50 py-20 my-24 md:my-32 rounded-xl" id="solution">
+             <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">The Solution: Websites as Living Data Products</h2>
+                <p class="max-w-3xl mx-auto mt-4 text-lg text-gray-700">
+                    Here's a rewritten version of the line, similar in length and meaning:
+
+In the AI age, websites must evolve beyond static displays. They need to be dynamic data hubs, actively powering AI, learning user preferences, and earning immediate credibility. Kreatewebsites is the key to unlocking this transformation.
+                </p>
+            </div>
+        </section>
+
+        <section class="section mb-24 md:mb-32" id="how">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">How It Works: The Dataknobs Engine</h2>
+                <p class="max-w-2xl mx-auto mt-4 text-lg text-gray-600">
+                    Here's a rewrite of the line, aiming for a similar length and conveying a similar message:
+
+**Our platform builds dynamic, AI-powered websites using a constant, data-guided flow. This section details that workflow. Explore each stage to see how your business data becomes a thriving, high-performing website.**
+                </p>
+            </div>
+            <div class="flex flex-col md:flex-row items-start gap-8">
+                <div class="w-full md:w-1/3 flex flex-col space-y-2">
+                    <div class="process-step text-lg font-bold p-4 border-2 border-gray-300 rounded-lg text-left" data-step="1" id="step-1">1. Data Ingestion</div>
+                    <div class="pl-6 text-2xl text-gray-400 self-start">↓</div>
+                    <div class="process-step text-lg font-bold p-4 border-2 border-gray-300 rounded-lg text-left" data-step="2" id="step-2">2. AI Optimization</div>
+                    <div class="pl-6 text-2xl text-gray-400 self-start">↓</div>
+                    <div class="process-step text-lg font-bold p-4 border-2 border-gray-300 rounded-lg text-left" data-step="3" id="step-3">3. Dynamic Website Generation</div>
+                    <div class="pl-6 text-2xl text-gray-400 self-start">↓</div>
+                    <div class="process-step text-lg font-bold p-4 border-2 border-gray-300 rounded-lg text-left" data-step="4" id="step-4">4. Continuous Evolution</div>
+                </div>
+                <div class="w-full md:w-2/3 bg-white p-8 rounded-xl shadow-lg border border-gray-200 min-h-[300px]">
+                    <div id="process-content">
+                        <h3 class="text-2xl font-bold mb-4" id="process-title">Select a step to see details</h3>
+                        <p class="text-lg text-gray-700" id="process-description">Learn how Kreatewebsites transforms your data into a living website.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section mb-24 md:mb-32" id="differentiators">
+             <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">From Static to Living</h2>
+                <p class="max-w-2xl mx-auto mt-4 text-lg text-gray-600">
+                    Here are a few options, aiming for a similar length and tone:
+
+*   Kreatewebsites revolutionizes website creation and management. Explore our interactive comparison to see how we differ from the traditional approach, using the buttons below to investigate.
+
+*   Discover the evolution of website building with Kreatewebsites. This interactive guide contrasts traditional methods with our data-focused approach. Use the buttons to delve into the key distinctions.
+
+*   Kreatewebsites offers a new paradigm for websites. Compare our data-driven model to the conventional method with this interactive guide, using the buttons to learn more about each difference.
+                </p>
+            </div>
+            <div class="flex justify-center flex-wrap gap-4 mb-8">
+                <button class="diff-button font-bold py-2 px-5 rounded-full border-2 border-gray-300" data-diff="1">Static vs Living</button>
+                <button class="diff-button font-bold py-2 px-5 rounded-full border-2 border-gray-300" data-diff="2">Manual vs Automated</button>
+                <button class="diff-button font-bold py-2 px-5 rounded-full border-2 border-gray-300" data-diff="3">SEO vs AIO</button>
+                <button class="diff-button font-bold py-2 px-5 rounded-full border-2 border-gray-300" data-diff="4">UI vs UX Evolution</button>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-500 mb-4">Traditional Websites</h3>
+                    <p class="text-lg text-gray-700" id="diff-traditional">A static creation, swiftly decaying. Information ages, demanding expensive and slow manual overhauls to remain current.</p>
+                </div>
+                 <div>
+                    <h3 class="text-2xl font-bold text-blue-600 mb-4">Kreatewebsites</h3>
+                    <p class="text-lg text-gray-700" id="diff-kreate">Here are a few options, all similar in length and capturing the essence of the original:
+
+*   A dynamic data product, constantly evolving and adapting. The site's always in flux, mirroring your business data.
+*   A living website, fueled by real-time data and perpetual growth. It continuously refines itself as your business changes.
+*   Your website: a data product that lives and breathes. Always evolving, always adapting to your business insights.
+*   Powered by live data, the website continuously grows and learns. Never static, it transforms with your business.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section mb-16 md:mb-24" id="value">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Unlocking Business Value</h2>
+                <p class="max-w-2xl mx-auto mt-4 text-lg text-gray-600">
+                    Focusing on your website as a data asset, Kreatewebsites provides measurable results that fuel expansion. This section emphasizes the core value we deliver: business impact over mere technology.
+                </p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-xl font-bold mb-2">Speed</h3>
+                    <p class="text-gray-600">Build complete, data-driven sites in minutes, transforming them from lengthy projects to instant data products.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                    <div class="text-4xl mb-4">🔄</div>
+                    <h3 class="text-xl font-bold mb-2">Adaptability</h3>
+                    <p class="text-gray-600">Here are a few options, all similar in length and conveying the same meaning:
+
+*   **Your site stays updated with the latest brand and product changes, automatically.**
+*   **No manual updates needed: Your site reflects the evolving brand and products.**
+*   **Automatically keep your site aligned with brand and product developments.**
+*   **Stay current on brand and product updates; no manual effort required.**</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-xl font-bold mb-2">AI Visibility</h3>
+                    <p class="text-gray-600">Here are a few options, all similar in length and focusing on AI discoverability:
+
+*   **Content designed for AI search and surfacing tools like ChatGPT and Gemini.**
+*   **AI-optimized content, readily found by engines like ChatGPT and Gemini.**
+*   **Content engineered for AI platforms (e.g., ChatGPT, Gemini) to enhance discoverability.**
+*   **Content structured for AI-powered discovery via tools such as ChatGPT and Gemini.**</p>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                    <div class="text-4xl mb-4">📈</div>
+                    <h3 class="text-xl font-bold mb-2">Conversion</h3>
+                    <p class="text-gray-600">Here are a few options, aiming for a similar length and meaning:
+
+*   **Data-driven insights constantly improve the user experience, boosting engagement and driving revenue.**
+*   **Real-world data fuels ongoing UX improvements, resulting in increased user interaction and sales.**
+*   **User experience evolves through data analysis, ultimately fostering greater user involvement and sales.**
+*   **Fueled by real data, the user experience is constantly optimized, improving engagement and sales.**</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section bg-gray-800 text-white text-center py-20 rounded-xl" id="cta">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready for an AI-First Website?</h2>
+            <p class="max-w-2xl mx-auto text-lg text-gray-300 mb-8">
+                Ditch the static assets, cultivate a dynamic data product, and dominate the AI-powered sales pipeline.
+            </p>
+            <button class="bg-blue-600 text-white font-bold py-4 px-10 rounded-lg text-lg hover:bg-blue-700 transition-colors">
+                Request a Demo
+            </button>
+        </section>
+
+    </main>
+    
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const funnelStages = document.querySelectorAll('.funnel-stage');
+    const processSteps = document.querySelectorAll('.process-step');
+    const diffButtons = document.querySelectorAll('.diff-button');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
+
+    const processData = {
+        1: {
+            title: "1. Data Ingestion",
+            description: "We connect to all your raw business data sources: product catalogs, analytics, customer stories, FAQs, and usage patterns. This creates a centralized, comprehensive view of your business reality."
+        },
+        2: {
+            title: "2. AI Optimization",
+            description: "Our engine structures your raw data, applies schema markup, and performs SEO/AIO tuning. This translates your information into a language that AI platforms like ChatGPT and Gemini can easily discover, understand, and trust."
+        },
+        3: {
+            title: "3. Dynamic Website Generation",
+            description: "From the optimized data, we automatically generate the entire site structure, landing pages, and calls-to-action. The website is built from the ground up to be a direct reflection of your data."
+        },
+        4: {
+            title: "4. Continuous Evolution",
+            description: "This is not a one-time build. As new data flows in—new products, reviews, or user behavior signals from heatmaps—the website reshapes itself. Pages update, UX adapts, and navigation reorganizes automatically."
+        }
+    };
+
+    const diffData = {
+        1: {
+            traditional: "A static creation, swiftly decaying. Information ages, demanding expensive and slow manual overhauls to remain current.",
+            kreate: "A living data product that grows and adapts in real-time. The website is never 'done'—it continuously reshapes itself as your business data evolves."
+        },
+        2: {
+            traditional: "Relies on constant manual redesigns, content updates, and developer intervention to implement changes. This process is slow, expensive, and prone to human error.",
+            kreate: "Changes are driven automatically by data and AI. New product launches or updated FAQs can trigger website updates without any manual effort, ensuring consistency and speed."
+        },
+        3: {
+            traditional: "Optimized for keywords to rank in Google search results. This legacy approach misses the new wave of conversational AI discovery.",
+            kreate: "Optimized for AI discovery (AIO). We structure content so it's not just found by Google, but understood and recommended by AI assistants like ChatGPT and Gemini."
+        },
+        4: {
+            traditional: "User interface (UI) is designed based on assumptions and best practices at a single point in time. It rarely changes without a full redesign project.",
+            kreate: "User experience (UX) patterns emerge from real usage data. The platform analyzes heatmaps and user journeys to automatically adjust layout, copy, and storytelling for maximum impact."
+        }
+    };
+
+    function handleFunnelClick(e) {
+        const stage = e.currentTarget;
+        const funnel = stage.dataset.funnel;
+        const currentlyActive = document.querySelector(`.funnel-stage.active[data-funnel="${funnel}"]`);
+        
+        if (currentlyActive && currentlyActive !== stage) {
+            currentlyActive.classList.remove('active');
+        }
+        stage.classList.toggle('active');
+    }
+
+    function handleProcessClick(e) {
+        const step = e.currentTarget;
+        const stepId = step.dataset.step;
+        
+        document.querySelector('.process-step.active')?.classList.remove('active');
+        step.classList.add('active');
+        
+        const data = processData[stepId];
+        document.getElementById('process-title').textContent = data.title;
+        document.getElementById('process-description').textContent = data.description;
+    }
+
+    function handleDiffClick(e) {
+        const button = e.currentTarget;
+        const diffId = button.dataset.diff;
+        
+        document.querySelector('.diff-button.active')?.classList.remove('active');
+        button.classList.add('active');
+        
+        const data = diffData[diffId];
+        document.getElementById('diff-traditional').textContent = data.traditional;
+        document.getElementById('diff-kreate').textContent = data.kreate;
+    }
+
+    funnelStages.forEach(stage => stage.addEventListener('click', handleFunnelClick));
+    processSteps.forEach(step => step.addEventListener('click', handleProcessClick));
+    diffButtons.forEach(button => button.addEventListener('click', handleDiffClick));
+
+    if (processSteps.length > 0) {
+        processSteps[0].click();
+    }
+    if (diffButtons.length > 0) {
+        diffButtons[0].click();
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            document.querySelector(targetId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active-nav');
+                    if (link.getAttribute('href').substring(1) === entry.target.id) {
+                        link.classList.add('active-nav');
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.5 }); 
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+});
+</script>
+
+
+</body></html>
