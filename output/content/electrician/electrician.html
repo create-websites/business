@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="VoltMaster provides expert residential and commercial electrical services. Available 24/7 for emergency repairs, wiring, lighting, and panel upgrades. Call (425) 341-1111 for a free quote." name="description"/>
+    <meta content="electrician, electrical contractor, residential wiring, commercial electrician, emergency electrical service, lighting installation, panel upgrades, generator installation, home safety inspection, VoltMaster" name="keywords"/>
+    <title>Professional Electrician Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://storage.googleapis.com/imagesu/electrician/electrician1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .gallery-img {
+            transition: transform 0.3s ease-in-out;
+        }
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <i class="fas fa-bolt text-yellow-500 text-3xl"></i>
+                        <span class="font-bold text-2xl tracking-tight text-gray-900">VoltMaster</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="text-gray-600 hover:text-yellow-600 font-medium transition" href="#home">Home</a>
+                    <a class="text-gray-600 hover:text-yellow-600 font-medium transition" href="#services">Services</a>
+                    <a class="text-gray-600 hover:text-yellow-600 font-medium transition" href="#gallery">Gallery</a>
+                    <a class="text-gray-600 hover:text-yellow-600 font-medium transition" href="#contact">Contact</a>
+                    <a class="bg-yellow-500 hover:bg-yellow-400 text-white px-5 py-2 rounded-full font-bold transition shadow-lg transform hover:-translate-y-0.5" href="tel:4253411111">
+                        <i class="fas fa-phone-alt mr-2"></i> (425) 341-1111
+                    </a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-600 hover:text-gray-900 focus:outline-none" id="mobile-menu-btn">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-white border-t border-gray-100" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-600 hover:bg-gray-50 rounded-md" href="#home">Home</a>
+                <a class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-600 hover:bg-gray-50 rounded-md" href="#services">Services</a>
+                <a class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-600 hover:bg-gray-50 rounded-md" href="#gallery">Gallery</a>
+                <a class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-yellow-600 hover:bg-gray-50 rounded-md" href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg h-screen flex items-center justify-center text-center px-4 pt-20" id="home">
+        <div class="max-w-4xl mx-auto text-white">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Expert Electrical Solutions for Your Home &amp; Business</h1>
+            <p class="text-xl md:text-2xl mb-10 text-gray-200">Safe, reliable, and efficient electrical services available 24/7.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="bg-yellow-500 hover:bg-yellow-400 text-white text-lg font-bold py-4 px-8 rounded-lg transition shadow-lg" href="#contact">
+                    Get a Free Quote
+                </a>
+                <a class="bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 text-white text-lg font-bold py-4 px-8 rounded-lg transition" href="#services">
+                    Our Services
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / Why Choose Us -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-6 rounded-xl bg-gray-50 hover:shadow-xl transition duration-300">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Licensed &amp; Insured</h3>
+                    <p class="text-gray-600">Fully certified professionals ensuring safety and compliance with all local codes.</p>
+                </div>
+                <div class="p-6 rounded-xl bg-gray-50 hover:shadow-xl transition duration-300">
+                    <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">24/7 Emergency Service</h3>
+                    <p class="text-gray-600">Electrical problems don't wait. Neither do we. Available around the clock.</p>
+                </div>
+                <div class="p-6 rounded-xl bg-gray-50 hover:shadow-xl transition duration-300">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                        <i class="fas fa-thumbs-up"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Satisfaction Guaranteed</h3>
+                    <p class="text-gray-600">We stand by our work. Quality craftsmanship and excellent customer service.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-20 bg-gray-100" id="services">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+                <div class="w-20 h-1 bg-yellow-500 mx-auto rounded"></div>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">From minor repairs to major installations, we handle it all with precision and care.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Residential Wiring" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician2.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Residential Wiring</h3>
+                        <p class="text-gray-600 mb-4">Complete home wiring, rewiring, and electrical upgrades for new and existing homes.</p>
+                        <a class="text-yellow-600 font-semibold hover:text-yellow-700" href="#contact">Learn More <i class="fas fa-arrow-right text-sm ml-1"></i></a>
+                    </div>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Commercial Electrical" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician3.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Commercial Services</h3>
+                        <p class="text-gray-600 mb-4">Reliable power solutions for offices, retail spaces, and industrial facilities.</p>
+                        <a class="text-yellow-600 font-semibold hover:text-yellow-700" href="#contact">Learn More <i class="fas fa-arrow-right text-sm ml-1"></i></a>
+                    </div>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Panel Upgrades" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician4.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Panel Upgrades</h3>
+                        <p class="text-gray-600 mb-4">Modernize your electrical panel to handle today's high-tech power demands safely.</p>
+                        <a class="text-yellow-600 font-semibold hover:text-yellow-700" href="#contact">Learn More <i class="fas fa-arrow-right text-sm ml-1"></i></a>
+                    </div>
+                </div>
+                
+                 <!-- Service Card 4 -->
+                 <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Lighting Installation" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician5.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Lighting Installation</h3>
+                        <p class="text-gray-600 mb-4">Interior and exterior lighting design and installation, including LED retrofits.</p>
+                        <a class="text-yellow-600 font-semibold hover:text-yellow-700" href="#contact">Learn More <i class="fas fa-arrow-right text-sm ml-1"></i></a>
+                    </div>
+                </div>
+
+                 <!-- Service Card 5 -->
+                 <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Safety Inspections" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician6.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Safety Inspections</h3>
+                        <p class="text-gray-600 mb-4">Thorough electrical safety audits to identify hazards and ensure peace of mind.</p>
+                        <a class="text-yellow-600 font-semibold hover:text-yellow-700" href="#contact">Learn More <i class="fas fa-arrow-right text-sm ml-1"></i></a>
+                    </div>
+                </div>
+
+                 <!-- Service Card 6 -->
+                 <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Generator Installation" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician7.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2">Generator Install</h3>
+                        <p class="text-gray-600 mb-4">Keep your power running during outages with professional backup generator installation.</p>
+                        <a class="text-yellow-600 font-semibold hover:text-yellow-700" href="#contact">Learn More <i class="fas fa-arrow-right text-sm ml-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-20 bg-white" id="gallery">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Project Gallery</h2>
+                <div class="w-20 h-1 bg-yellow-500 mx-auto rounded"></div>
+                <p class="mt-4 text-gray-600">See our team in action and the quality of our recent work.</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[200px]">
+                <!-- Using provided images in a masonry-style grid -->
+                <div class="col-span-2 row-span-2 relative overflow-hidden rounded-lg group">
+                    <img alt="Work 1" class="w-full h-full object-cover gallery-img" src="https://storage.googleapis.com/imagesu/electrician/electrician1.jpg"/>
+                    <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-0 transition duration-300"></div>
+                </div>
+                <div class="relative overflow-hidden rounded-lg group">
+                    <img alt="Work 2" class="w-full h-full object-cover gallery-img" src="https://storage.googleapis.com/imagesu/electrician/electrician2.jpg"/>
+                </div>
+                <div class="relative overflow-hidden rounded-lg group">
+                    <img alt="Work 3" class="w-full h-full object-cover gallery-img" src="https://storage.googleapis.com/imagesu/electrician/electrician3.jpg"/>
+                </div>
+                <div class="relative overflow-hidden rounded-lg group">
+                    <img alt="Work 4" class="w-full h-full object-cover gallery-img" src="https://storage.googleapis.com/imagesu/electrician/electrician4.jpg"/>
+                </div>
+                <div class="col-span-2 relative overflow-hidden rounded-lg group">
+                    <img alt="Work 5" class="w-full h-full object-cover gallery-img" src="https://storage.googleapis.com/imagesu/electrician/electrician5.jpg"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Strip -->
+    <section class="bg-yellow-500 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+            <div class="text-center md:text-left mb-6 md:mb-0">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Need an electrician urgently?</h2>
+                <p class="text-yellow-100 text-lg">Our expert team is ready to help you with your electrical needs.</p>
+            </div>
+            <a class="bg-white text-yellow-600 hover:bg-gray-100 text-lg font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:-translate-y-1" href="tel:4253411111">
+                Call (425) 341-1111
+            </a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-20 bg-gray-900 text-white" id="contact">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Contact Us</h2>
+                    <p class="text-gray-400 mb-8">Have a question or need a quote? Reach out to us directly or fill out the form, and we'll get back to you as soon as possible.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-gray-800 p-3 rounded-lg text-yellow-500">
+                                <i class="fas fa-phone-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Phone</h3>
+                                <p class="text-gray-400 hover:text-white transition"><a href="tel:4253411111">(425) 341-1111</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-gray-800 p-3 rounded-lg text-yellow-500">
+                                <i class="fas fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Email</h3>
+                                <p class="text-gray-400 hover:text-white transition"><a href="mailto:contact@kreate.com">contact@kreate.com</a></p>
+                            </div>
+                        </div>
+
+                         <div class="flex items-start space-x-4">
+                            <div class="bg-gray-800 p-3 rounded-lg text-yellow-500">
+                                <i class="fas fa-globe text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Website</h3>
+                                <p class="text-gray-400 hover:text-white transition"><a href="https://business.kreate.com/education-coaching" target="_blank">business.kreate.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 text-gray-800">
+                    <form onsubmit="event.preventDefault(); alert('Thank you! We will contact you shortly.');">
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Full Name</label>
+                                <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition" placeholder="John Doe" required="" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Email Address</label>
+                                <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition" placeholder="john@example.com" required="" type="email"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Service Needed</label>
+                                <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition">
+                                    <option>General Repair</option>
+                                    <option>Installation</option>
+                                    <option>Wiring / Rewiring</option>
+                                    <option>Emergency Service</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Message</label>
+                                <textarea class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition" placeholder="How can we help you?" required="" rows="4"></textarea>
+                            </div>
+                            <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300" type="submit">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                menu.classList.add('hidden'); // Close mobile menu on click
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+</body></html>

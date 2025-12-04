@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <title>KREATE | Official Band Website</title>
+    <meta content="Official landing page for KREATE. Listen to the latest tracks, view the exclusive photo gallery, and book the band for live performances." name="description"/>
+    <meta content="KREATE band, live music, musician portfolio, rock band, music gallery, concert dates, booking" name="keywords"/>
+
+    <style>
+        /* --- CSS VARIABLES (LIGHT THEME) --- */
+        :root {
+            --primary-bg: #ffffff;       /* Pure white background */
+            --secondary-bg: #f9f9f9;     /* Light grey for footer */
+            --text-main: #222222;        /* Dark grey for high contrast text */
+            --text-muted: #666666;
+            --accent-color: #000000;     /* Stark black for buttons/accents */
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+            /* Gradient to ensure nav text is readable over hero image */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fff; /* Logo always white over hero */
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff; /* Links white over hero */
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh; /* Slightly shorter to tease the white content below */
+            /* Source 3: musician-band1.jpg */
+            background-image: url('https://storage.googleapis.com/imagesu/musician-band/musician-band1.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            color: #ffffff;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 1rem;
+            font-weight: 900;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .btn {
+            padding: 1rem 3rem;
+            background-color: #fff;
+            color: #000;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* --- GALLERY SECTION --- */
+        .gallery-section {
+            padding: 5rem 5%;
+            background-color: var(--primary-bg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .section-header span {
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 0 auto;
+        }
+
+        /* Grid Layout */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            height: 350px;
+            background-color: #eee;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* Subtle shadow for light theme */
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            filter: saturate(0.8); /* Slight desaturation for modern look */
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.03);
+            filter: saturate(1.1);
+        }
+
+        /* --- FOOTER / CONTACT --- */
+        footer {
+            background-color: var(--secondary-bg);
+            padding: 4rem 5%;
+            text-align: center;
+            color: var(--text-main);
+            border-top: 1px solid #eaeaea;
+        }
+
+        footer h3 {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info p {
+            margin: 0.8rem 0;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .contact-link {
+            color: var(--text-main);
+            font-weight: bold;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; } 
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">KREATE</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#gallery">Visuals</a></li>
+            <li><a href="#contact">Bookings</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="home">
+        <h1>Kreate</h1>
+        <p>New Album Out Now</p>
+        <a class="btn" href="#gallery">Explore</a>
+    </header>
+
+    <section class="gallery-section" id="gallery">
+        <div class="section-header">
+            <h2>The Band</h2>
+            <span></span>
+        </div>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img alt="Band Live 1" src="https://storage.googleapis.com/imagesu/musician-band/musician-band2.jpg"/>
+            </div>
+            <div class="gallery-item">
+                <img alt="Band Live 2" src="https://storage.googleapis.com/imagesu/musician-band/musician-band3.jpg"/>
+            </div>
+            <div class="gallery-item">
+                <img alt="Band Live 3" src="https://storage.googleapis.com/imagesu/musician-band/musician-band4.jpg"/>
+            </div>
+            <div class="gallery-item">
+                <img alt="Band Live 4" src="https://storage.googleapis.com/imagesu/musician-band/musician-band5.jpg"/>
+            </div>
+            <div class="gallery-item">
+                <img alt="Band Live 5" src="https://storage.googleapis.com/imagesu/musician-band/musician-band6.jpg"/>
+            </div>
+            <div class="gallery-item">
+                <img alt="Band Live 6" src="https://storage.googleapis.com/imagesu/musician-band/musician-band7.jpg"/>
+            </div>
+        </div>
+    </section>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+
+</body></html>

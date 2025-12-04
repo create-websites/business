@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- Meta Description and Keywords -->
+    <meta content="Kreate Pets - Your premier destination for premium pet care, quality products, and a loving community. We offer the best for your furry friends." name="description"/>
+    <meta content="pet store, pet supplies, dog food, cat toys, pet adoption, Kreate Pets, pet care, animal wellness, premium pet products" name="keywords"/>
+    
+    <title>Kreate Pets | Where Pets Find Happiness</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        .slide {
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+        }
+        .slide.active { opacity: 1; }
+        
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #e11d48; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #be123c; }
+    </style>
+</head>
+<body class="font-sans bg-white text-gray-900">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-md z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="h-8 w-8 text-rose-500 fill-current" data-lucide="heart"></i>
+                    <span class="ml-2 text-2xl font-bold text-gray-800">Kreate<span class="text-rose-500">Pets</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a class="text-sm font-medium text-gray-600 hover:text-rose-500 transition-colors duration-200" href="#home">Home</a>
+                    <a class="text-sm font-medium text-gray-600 hover:text-rose-500 transition-colors duration-200" href="#gallery">Gallery</a>
+                    <a class="text-sm font-medium text-gray-600 hover:text-rose-500 transition-colors duration-200" href="#blog">Blog</a>
+                    <a class="text-sm font-medium text-gray-600 hover:text-rose-500 transition-colors duration-200" href="#contact">Contact</a>
+                    <a class="bg-rose-500 text-white px-5 py-2 rounded-full font-medium hover:bg-rose-600 transition-all transform hover:scale-105 shadow-lg shadow-rose-500/30" href="tel:425-341-1111">
+                        Call Us
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="text-gray-600 hover:text-rose-500 p-2" id="mobile-menu-btn">
+                        <i class="w-6 h-6" data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-white border-t border-gray-100" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a class="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-rose-500 hover:bg-rose-50" href="#home">Home</a>
+                <a class="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-rose-500 hover:bg-rose-50" href="#gallery">Gallery</a>
+                <a class="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-rose-500 hover:bg-rose-50" href="#blog">Blog</a>
+                <a class="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-rose-500 hover:bg-rose-50" href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative h-[600px] w-full overflow-hidden mt-20" id="home">
+        <!-- Slides -->
+        <div id="slides-container">
+            <div class="slide active">
+                <div class="absolute inset-0 bg-black/40 z-10"></div>
+                <img alt="Pet Store 1" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/pet-store/pet-store1.jpg"/>
+            </div>
+            <div class="slide">
+                <div class="absolute inset-0 bg-black/40 z-10"></div>
+                <img alt="Pet Store 2" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/pet-store/pet-store2.jpg"/>
+            </div>
+            <div class="slide">
+                <div class="absolute inset-0 bg-black/40 z-10"></div>
+                <img alt="Pet Store 3" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/pet-store/pet-store3.jpg"/>
+            </div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg tracking-tight">
+                Where Pets Find <span class="text-rose-400">Happiness</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-100 mb-8 max-w-2xl drop-shadow-md">
+                Premium care, quality products, and a loving community for your furry friends.
+            </p>
+            <button class="bg-rose-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-rose-600 transition-all transform hover:scale-105 shadow-xl">
+                Shop Now
+            </button>
+        </div>
+
+        <!-- Controls -->
+        <button class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 p-2 rounded-full backdrop-blur-sm text-white transition-all" id="prev-slide">
+            <i class="w-8 h-8" data-lucide="chevron-left"></i>
+        </button>
+        <button class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 p-2 rounded-full backdrop-blur-sm text-white transition-all" id="next-slide">
+            <i class="w-8 h-8" data-lucide="chevron-right"></i>
+        </button>
+    </div>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose Kreate Pets?</h2>
+                <div class="w-20 h-1 bg-rose-500 mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Feature 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="w-10 h-10 text-rose-500" data-lucide="heart"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 text-center">Loving Care</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">We treat every pet that walks through our doors as if they were our own family.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="w-10 h-10 text-yellow-500" data-lucide="star"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 text-center">Premium Quality</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">Only the best food, toys, and accessories sourced from trusted manufacturers.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="w-10 h-10 text-blue-500" data-lucide="globe"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 text-center">Community Focused</h3>
+                    <p class="text-gray-600 text-center leading-relaxed">Hosting adoption events and training workshops to build a better pet community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-20 bg-white" id="gallery">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Happy Customers</h2>
+                <p class="text-lg text-gray-600">Snapshots from our store and events</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Image 1 (Large) -->
+                <div class="relative group overflow-hidden rounded-xl shadow-md col-span-2 row-span-2">
+                    <img alt="Gallery 1" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store1.jpg" style="min-height: 400px;"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                        <span class="text-white font-medium text-lg">Pawsome Moment #1</span>
+                    </div>
+                </div>
+                <!-- Other Images -->
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img alt="Gallery 2" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store2.jpg" style="min-height: 200px;"/>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img alt="Gallery 3" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store3.jpg" style="min-height: 200px;"/>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img alt="Gallery 4" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store4.jpg" style="min-height: 200px;"/>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img alt="Gallery 5" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store5.jpg" style="min-height: 200px;"/>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img alt="Gallery 6" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store6.jpg" style="min-height: 200px;"/>
+                </div>
+                <div class="relative group overflow-hidden rounded-xl shadow-md">
+                    <img alt="Gallery 7" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store7.jpg" style="min-height: 200px;"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="py-20 bg-rose-50/50" id="blog">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Latest from the Blog</h2>
+                    <p class="text-gray-600">Tips, tricks, and tails from our experts</p>
+                </div>
+                <button class="hidden md:block text-rose-500 font-semibold hover:text-rose-600 hover:underline">
+                    View all posts →
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Blog 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Blog 1" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store4.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-xs font-medium text-gray-500 mb-3">
+                            <span class="text-rose-500 bg-rose-50 px-2 py-1 rounded-full">Training</span>
+                            <span class="mx-2">•</span>
+                            <span>Oct 12, 2023</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-rose-500 transition-colors">10 Tips for New Puppy Owners</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Bringing a new puppy home is exciting, but it can also be overwhelming. Here's what you need to know...</p>
+                        <button class="text-sm font-semibold text-gray-900 hover:text-rose-500 transition-colors">Read More</button>
+                    </div>
+                </div>
+                <!-- Blog 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Blog 2" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store5.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-xs font-medium text-gray-500 mb-3">
+                            <span class="text-rose-500 bg-rose-50 px-2 py-1 rounded-full">Health</span>
+                            <span class="mx-2">•</span>
+                            <span>Nov 05, 2023</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-rose-500 transition-colors">Nutrition for Senior Cats</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">As cats age, their dietary needs change. Learn how to support your feline friend's golden years.</p>
+                        <button class="text-sm font-semibold text-gray-900 hover:text-rose-500 transition-colors">Read More</button>
+                    </div>
+                </div>
+                <!-- Blog 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Blog 3" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/pet-store/pet-store6.jpg"/>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-xs font-medium text-gray-500 mb-3">
+                            <span class="text-rose-500 bg-rose-50 px-2 py-1 rounded-full">Reviews</span>
+                            <span class="mx-2">•</span>
+                            <span>Dec 01, 2023</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-rose-500 transition-colors">Top 5 Durable Toys</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Tired of buying toys that last 5 minutes? We've tested the toughest toys on the market.</p>
+                        <button class="text-sm font-semibold text-gray-900 hover:text-rose-500 transition-colors">Read More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="bg-gray-900 text-white py-20" id="contact">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Get in Touch</h2>
+                    <p class="text-gray-400 mb-10 text-lg">
+                        Have questions about a product or need advice for your pet? 
+                        Our team is here to help!
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-gray-800 p-3 rounded-lg mr-4">
+                                <i class="w-6 h-6 text-rose-400" data-lucide="phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-200">Phone</h4>
+                                <p class="text-gray-400">425-341-1111</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-gray-800 p-3 rounded-lg mr-4">
+                                <i class="w-6 h-6 text-rose-400" data-lucide="mail"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-200">Email</h4>
+                                <p class="text-gray-400">contact@kreate.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="bg-gray-800 p-3 rounded-lg mr-4">
+                                <i class="w-6 h-6 text-rose-400" data-lucide="globe"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-200">Website</h4>
+                                <a class="text-gray-400 hover:text-rose-400 transition-colors break-all" href="https://business.kreate.com/education-coaching" target="_blank">
+                                    business.kreate.com/education-coaching
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 flex space-x-6">
+                        <a class="text-gray-400 hover:text-white transition-colors" href="#"><i class="w-6 h-6" data-lucide="facebook"></i></a>
+                        <a class="text-gray-400 hover:text-white transition-colors" href="#"><i class="w-6 h-6" data-lucide="instagram"></i></a>
+                        <a class="text-gray-400 hover:text-white transition-colors" href="#"><i class="w-6 h-6" data-lucide="twitter"></i></a>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 lg:p-10 text-gray-900 shadow-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Send us a Message</h3>
+                    <form class="space-y-5" onsubmit="event.preventDefault()">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <input class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all" placeholder="Name" type="text"/>
+                            <input class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all" placeholder="Email" type="email"/>
+                        </div>
+                        <input class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all" placeholder="Subject" type="text"/>
+                        <textarea class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all" placeholder="Your Message" rows="4"></textarea>
+                        <button class="w-full bg-rose-500 text-white font-bold py-4 rounded-lg hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/30">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        const menuIcon = mobileMenuBtn.querySelector('svg');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            // Toggle icon (optional enhancement would be swapping menu/x icons)
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Slideshow Logic
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-slide');
+        const nextBtn = document.getElementById('next-slide');
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            let nextIndex = (currentSlide + 1) % totalSlides;
+            showSlide(nextIndex);
+        }
+
+        function prevSlide() {
+            let prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(prevIndex);
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Auto advance slides
+        setInterval(nextSlide, 5000);
+    </script>
+
+</body></html>

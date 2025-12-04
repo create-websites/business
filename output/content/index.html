@@ -1,138 +1,450 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html class="scroll-smooth" lang="en"><head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Create Websites - Professional Web Design Agency</title>
+    <title>Kreate Digital | High-Converting Custom Web Solutions</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 
-      Application Structure Plan:
-      This is a single-page landing page for a web design agency.
-      1.  <header>: Contains the agency logo, name, and primary navigation.
-      2.  <main>:
-          - Hero Section: A strong H1 and call-to-action ("Get Your Free Quote").
-          - Interactive Tool Section: This is the core of the page, repurposing the previous "business_explorer". It's framed with a new section title. It includes the <nav> for filters and the <main> grid for cards.
-      3.  <footer>: A comprehensive footer with 10+ links for services, company info, and legal policies.
-      4.  Modal: The JavaScript-powered modal remains at the end of the body, functioning as it did before.
-      
-      Visualization & Content Choices:
-      - The core data from the document is visualized in the interactive card grid (id="business-grid").
-      - User request for "new" businesses is handled by the "New" badge.
-      - User request for "detail" is handled by the modal.
-      - The card grid is populated dynamically by the <script> at the bottom.
-      - No charts are used as the data is categorical, not quantitative.
-      - User request for light blue "squares" is implemented in the card.className in the JavaScript.
-      - User request for emoji in each box is handled by adding an 'emoji' property to the data and updating the card.innerHTML template.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used (except for a mobile menu icon). NO Mermaid JS used. -->
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            color: #1f2937; /* Gray 800 */
         }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        .filter-btn.active {
-            background-color: #d97706; 
-            color: #ffffff;
-            font-weight: 600;
+        .text-kreate-blue { color: #3b82f6; }
+        .bg-kreate-blue { background-color: #3b82f6; }
+        .hover-bg-kreate-blue:hover { background-color: #2563eb; }
+
+        /* Custom animation for the logo text reveal */
+        .logo-text span {
+            display: inline-block;
+            opacity: 0;
+            animation: text-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
-        .modal {
-            transition: opacity 0.25s ease, visibility 0.25s ease;
+
+        @keyframes text-in {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
-        .modal-content {
-            transition: transform 0.25s ease;
+        
+        .logo-text span:nth-child(1) { animation-delay: 0.1s; }
+        .logo-text span:nth-child(2) { animation-delay: 0.2s; }
+        .logo-text span:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Card Hover Effect */
+        .portfolio-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .portfolio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
-<body class="bg-white text-stone-800">
+<body class="antialiased">
 
-    <!-- New Page Header -->
-    <header class="bg-white border-b border-stone-200 sticky top-0 z-40">
-        <nav class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
-            <a class="flex items-center gap-3" href="#">
-                <img alt="Create Websites Logo" class="h-10 w-10" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
-                <span class="text-2xl font-bold text-amber-900">Create Websites</span>
-            </a>
-            <div class="hidden sm:flex items-center gap-6">
-                <a class="text-stone-700 hover:text-amber-700 transition-colors" href="#">Services</a>
-                <a class="text-stone-700 hover:text-amber-700 transition-colors" href="#">Our Work</a>
-                <a class="text-stone-700 hover:text-amber-700 transition-colors" href="#">About</a>
-                <a class="bg-amber-700 text-white px-4 py-2 rounded-full font-medium hover:bg-amber-800 transition-colors" href="#">
-                    Get a Quote
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a class="text-3xl font-extrabold tracking-tight logo-text" href="#">
+                    <span class="text-kreate-blue">K</span>
+                    <span class="text-gray-900">R</span>
+                    <span class="text-gray-900">EATE</span><span class="text-kreate-blue">.</span>
                 </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a class="text-gray-600 hover:text-kreate-blue font-medium transition-colors" href="#services">Services</a>
+                    <a class="text-gray-600 hover:text-kreate-blue font-medium transition-colors" href="#portfolio">Portfolio</a>
+                    <a class="text-gray-600 hover:text-kreate-blue font-medium transition-colors" href="#process">Process</a>
+                    <a class="bg-kreate-blue text-white px-6 py-3 rounded-lg font-bold hover-bg-kreate-blue transition-colors shadow-lg shadow-blue-200/50" href="#contact">
+                        Start Project
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="p-2 text-gray-700 hover:text-kreate-blue" id="mobile-menu-btn">
+                        <i class="w-6 h-6" data-lucide="menu"></i>
+                    </button>
+                </div>
             </div>
-            <div class="sm:hidden">
-                <!-- Simple mobile menu icon -->
-                <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+        </div>
+        <!-- Mobile Menu Dropdown -->
+        <div class="hidden md:hidden bg-white border-t border-gray-100" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a class="block py-2 text-lg font-medium text-gray-800 hover:bg-gray-50 mobile-link" href="#services">Services</a>
+                <a class="block py-2 text-lg font-medium text-gray-800 hover:bg-gray-50 mobile-link" href="#portfolio">Portfolio</a>
+                <a class="block py-2 text-lg font-medium text-gray-800 hover:bg-gray-50 mobile-link" href="#process">Process</a>
+                <a class="block py-2 text-lg font-bold text-kreate-blue hover:bg-gray-50 mobile-link" href="#contact">Start Project</a>
             </div>
-        </nav>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-16 pb-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-kreate-blue text-sm font-semibold mb-6 uppercase tracking-wider">
+                Digital Agency for Conversion
+            </span>
+            <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 leading-snug mb-6">
+                We Build Websites That <br class="hidden sm:inline"/><span class="text-kreate-blue">Work Harder</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
+                Stop losing leads. Kreate Digital designs and develops custom, responsive websites and high-converting landing pages focused purely on your business goals.
+            </p>
+            <a class="bg-kreate-blue text-white px-10 py-4 rounded-full font-bold text-lg hover-bg-kreate-blue transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5" href="#contact">
+                Get Your Free Quote
+            </a>
+        </div>
     </header>
 
-    <main>
-        <!-- New Hero Section -->
-        <section class="bg-white py-20 sm:py-28">
-            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="text-4xl font-bold tracking-tight text-amber-900 sm:text-6xl">
-                    Grow Your Business with a Professional Website.
-                </h1>
-                <p class="mt-6 text-lg max-w-3xl mx-auto text-stone-700">
-                    From local shops to tech startups, every business needs a powerful online presence. We build beautiful, effective websites that get results.
-                </p>
-                <a class="mt-10 inline-block bg-amber-700 text-white px-8 py-3 rounded-full text-lg font-medium hover:bg-amber-800 transition-colors" href="#">
-                    Get Your Free Quote
-                </a>
+    <!-- Services Section -->
+    <section class="py-24 bg-f7f7f7" id="services">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What We Deliver</h2>
+                <p class="text-lg text-gray-600">From concept to launch, we cover all your digital needs.</p>
             </div>
-        </section>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-kreate-blue/50 hover:border-kreate-blue transition-colors group">
+                    <i class="w-10 h-10 text-kreate-blue mb-4 group-hover:scale-110 transition-transform" data-lucide="layout-grid"></i>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Custom Web Design</h3>
+                    <p class="text-gray-600">Bespoke UI/UX design and stunning visuals that represent your brand and engage your audience.</p>
+                </div>
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-kreate-blue/50 hover:border-kreate-blue transition-colors group">
+                    <i class="w-10 h-10 text-kreate-blue mb-4 group-hover:scale-110 transition-transform" data-lucide="code"></i>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">High-Speed Development</h3>
+                    <p class="text-gray-600">Fast, SEO-friendly, and fully responsive development using modern frameworks like React, Angular, and Vanilla JS.</p>
+                </div>
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-kreate-blue/50 hover:border-kreate-blue transition-colors group">
+                    <i class="w-10 h-10 text-kreate-blue mb-4 group-hover:scale-110 transition-transform" data-lucide="trending-up"></i>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Conversion Optimization</h3>
+                    <p class="text-gray-600">We don't just build. We optimize. Implementing analytics and A/B testing to maximize lead generation and sales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <!-- Interactive Tool Section (Repurposed from previous HTML) -->
-        <section class="bg-white py-20 sm:py-24">
-            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Portfolio Section -->
+    <section class="py-24 bg-white" id="portfolio">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Featured Projects</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">See how we create diverse, high-quality digital experiences for various industries.</p>
+            </div>
+
+            <!-- Project Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
-                <header class="text-center mb-12">
-                    <h2 class="text-3xl font-bold tracking-tight text-amber-900 sm:text-4xl">
-                        Who Needs a Website?
-                    </h2>
-                    <p class="mt-4 text-lg max-w-3xl mx-auto text-stone-700">
-                        A website builds credibility, generates leads, and provides a central hub. Use our interactive tool to see <span class="font-semibold">why</span> a website is crucial for your industry.
-                    </p>
-                </header>
+                <!-- Card 1: Lawyer -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="lawyer/" target="_blank">
+                        <img alt="Law Firm Website" class="w-full h-56 object-cover object-top filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/lawyer/lawyer1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Justice &amp; Partners (Legal)</h3>
+                            <p class="text-gray-500 text-sm mb-4">A professional, trust-building site for a leading law firm.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
 
-                <nav class="mb-10">
-                    <div class="flex flex-wrap justify-center gap-2 sm:gap-3" id="filter-container">
-                        <button class="filter-btn active w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="all">
-                            All Categories
-                        </button>
-                        <button class="filter-btn w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="professional">
-                            🏢 Professional Services
-                        </button>
-                        <button class="filter-btn w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="retail">
-                            🍽️ Local &amp; Retail
-                        </button>
-                        <button class="filter-btn w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="home">
-                            🛠️ Home &amp; Maintenance
-                        </button>
-                        <button class="filter-btn w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="startup">
-                            🧑‍💻 Startups &amp; Creators
-                        </button>
-                        <button class="filter-btn w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="health">
-                            💪 Health &amp; Wellness
-                        </button>
-                        <button class="filter-btn w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="community">
-                            🚀 Community &amp; Nonprofit
-                        </button>
-                        <button class="filter-btn w-full sm:w-auto px-4 py-2 text-sm sm:text-base font-medium text-amber-800 bg-amber-50 rounded-full shadow-sm hover:bg-amber-100 transition-all" data-filter="creative">
-                            🎨 Creative &amp; Lifestyle
-                        </button>
-                    </div>
-                </nav>
+                <!-- Card 2: Real Estate -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="real-estate/" target="_blank">
+                        <img alt="Real Estate Website" class="w-full h-56 object-cover object-bottom filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/Real-Estate-Mortgage/cheerful-excited-couple-moving-into-new-house-standing-carton-box-hugging-looking-around.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Kreate Estates (Real Estate)</h3>
+                            <p class="text-gray-500 text-sm mb-4">Lead generation platform blending property search and mortgage advice.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
 
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" id="business-grid">
-                    <!-- Business cards will be dynamically inserted here by JavaScript -->
+                <!-- Card 3: Fintech -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="fintech-consulting/" target="_blank">
+                        <img alt="Fintech Consulting Website" class="w-full h-56 object-cover object-center filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/fintech/fintech1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">AI in FinTech (Consulting)</h3>
+                            <p class="text-gray-500 text-sm mb-4">Interactive strategy hub with data visualization for B2B financial services.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Card 4: Event Planner -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="event-planner/" target="_blank">
+                        <img alt="Event Planner Website" class="w-full h-56 object-cover object-center filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/event-planner/event-planner1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Kreate Events (Events)</h3>
+                            <p class="text-gray-500 text-sm mb-4">A high-end, visual portfolio site for an event planning firm.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Card 5: Clothing Store -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="clothng-store/" target="_blank">
+                        <img alt="Clothing Store Website" class="w-full h-56 object-cover object-top filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/clothing-store/clothing-store1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Kreate Fashion (eCommerce)</h3>
+                            <p class="text-gray-500 text-sm mb-4">Modern, visual eCommerce experience with strong product features.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                 <!-- Card 6: Tattoo Studio -->
+                 <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="tatto-studio/" target="_blank">
+                        <img alt="Tattoo Studio Website" class="w-full h-56 object-cover object-center filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/tatto-studio/tattosalon1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Ink &amp; Soul (Tattoo Studio)</h3>
+                            <p class="text-gray-500 text-sm mb-4">Dark, artistic, and immersive portfolio showcase for a creative business.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Card 7: Security Bouncer -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="security-bouncer/" target="_blank">
+                        <img alt="Security Company Website" class="w-full h-56 object-cover object-top filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/security-bouncers/security-bouncer1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Elite Guard (Security)</h3>
+                            <p class="text-gray-500 text-sm mb-4">A trust-focused, bold design for a premium security service.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Card 8: Moving Company -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="moving-company/" target="_blank">
+                        <img alt="Moving Company Website" class="w-full h-56 object-cover object-center filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/moving-company/moving-company1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Kreate Movers (Logistics)</h3>
+                            <p class="text-gray-500 text-sm mb-4">Service-oriented site with clear CTAs for quote requests.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Card 9: Pet Company -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="pet-company/" target="_blank">
+                        <img alt="Pet Store Website" class="w-full h-56 object-cover object-center filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/pet-store/pet-store1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Kreate Pets (Retail)</h3>
+                            <p class="text-gray-500 text-sm mb-4">Warm, friendly design for a premium pet supplies company.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Card 10: Designer Portfolio -->
+                <div class="portfolio-card bg-gray-50 rounded-xl overflow-hidden shadow-md border border-gray-100">
+                    <a class="block" href="designer-portfolio/" target="_blank">
+                        <img alt="Designer Portfolio Website" class="w-full h-56 object-cover object-center filter grayscale hover:grayscale-0 transition-all duration-700" src="https://storage.googleapis.com/imagesu/freelancers/designer/desginer1.jpg"/>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Kreate Design (Portfolio)</h3>
+                            <p class="text-gray-500 text-sm mb-4">Sleek portfolio showcasing creative and modern design skills.</p>
+                            <span class="inline-flex items-center text-kreate-blue font-semibold text-sm group">
+                                View Live Site →
+                            </span>
+                        </div>
+                    </a>
                 </div>
 
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+    
+    <!-- Process Section (Simple) -->
+    <section class="py-24 bg-f7f7f7" id="process">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Collaborative Process</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">We follow a proven four-step method to ensure stunning results and client satisfaction.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+                
+                <!-- Step 1 -->
+                <div class="flex-1 text-center">
+                    <div class="w-16 h-16 bg-kreate-blue/10 text-kreate-blue rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-kreate-blue">
+                        <span class="text-2xl font-bold">1</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Discovery &amp; Strategy</h3>
+                    <p class="text-gray-600 text-sm">Understanding your goals, audience, and defining project scope.</p>
+                </div>
 
-    <!-- New Footer -->
+                <!-- Arrow -->
+                <div class="hidden md:flex w-20 justify-center pt-8 text-gray-400">
+                    <i class="w-6 h-6" data-lucide="arrow-right"></i>
+                </div>
+                 <div class="flex md:hidden w-full justify-center text-gray-400">
+                    <i class="w-6 h-6" data-lucide="arrow-down"></i>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex-1 text-center">
+                    <div class="w-16 h-16 bg-kreate-blue/10 text-kreate-blue rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-kreate-blue">
+                        <span class="text-2xl font-bold">2</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Design &amp; UX/UI</h3>
+                    <p class="text-gray-600 text-sm">Wireframing, prototyping, and creating a beautiful, conversion-focused design.</p>
+                </div>
+
+                 <!-- Arrow -->
+                <div class="hidden md:flex w-20 justify-center pt-8 text-gray-400">
+                    <i class="w-6 h-6" data-lucide="arrow-right"></i>
+                </div>
+                 <div class="flex md:hidden w-full justify-center text-gray-400">
+                    <i class="w-6 h-6" data-lucide="arrow-down"></i>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex-1 text-center">
+                    <div class="w-16 h-16 bg-kreate-blue/10 text-kreate-blue rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-kreate-blue">
+                        <span class="text-2xl font-bold">3</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Development &amp; Testing</h3>
+                    <p class="text-gray-600 text-sm">Building the responsive, lightning-fast site and rigorous cross-browser testing.</p>
+                </div>
+
+                 <!-- Arrow -->
+                <div class="hidden md:flex w-20 justify-center pt-8 text-gray-400">
+                    <i class="w-6 h-6" data-lucide="arrow-right"></i>
+                </div>
+                 <div class="flex md:hidden w-full justify-center text-gray-400">
+                    <i class="w-6 h-6" data-lucide="arrow-down"></i>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="flex-1 text-center">
+                    <div class="w-16 h-16 bg-kreate-blue/10 text-kreate-blue rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-kreate-blue">
+                        <span class="text-2xl font-bold">4</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Launch &amp; Grow</h3>
+                    <p class="text-gray-600 text-sm">Deployment, post-launch support, and strategies for continued growth.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-24 bg-gray-900 text-white" id="contact">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                
+                <!-- Info Column -->
+                <div class="lg:col-span-1">
+                    <h2 class="text-kreate-blue font-bold tracking-widest uppercase mb-2">Start Your Project</h2>
+                    <h3 class="text-4xl font-bold mb-6">Let's Discuss Your Vision</h3>
+                    <p class="text-gray-400 mb-8">
+                        We are ready to transform your business. Tell us about your project, and we'll schedule a discovery call within 24 hours.
+                    </p>
+                    
+                    <div class="space-y-6">
+                         <div class="flex items-start space-x-4">
+                            <div class="p-3 bg-kreate-blue/20 text-kreate-blue rounded-full flex-shrink-0">
+                                <i class="w-5 h-5" data-lucide="mail"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-300">Email Us</p>
+                                <a class="text-lg hover:text-kreate-blue transition-colors" href="mailto:contact@kreate.com">contact@kreate.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="p-3 bg-kreate-blue/20 text-kreate-blue rounded-full flex-shrink-0">
+                                <i class="w-5 h-5" data-lucide="phone"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-300">Call Us</p>
+                                <a class="text-lg hover:text-kreate-blue transition-colors" href="tel:4253411111">425-341-1111</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="p-3 bg-kreate-blue/20 text-kreate-blue rounded-full flex-shrink-0">
+                                <i class="w-5 h-5" data-lucide="globe"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-300">Main Website</p>
+                                <a class="text-lg hover:text-kreate-blue transition-colors" href="https://business.kreate.com/education-coaching" target="_blank">kreate.com/education</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Column -->
+                <div class="lg:col-span-2 bg-white p-8 md:p-10 rounded-xl text-gray-900 shadow-2xl">
+                    <form class="space-y-6" onsubmit="event.preventDefault(); alert('Request submitted successfully! We will contact you shortly.');">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                <input class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kreate-blue focus:border-kreate-blue outline-none transition" placeholder="Your Name" required="" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kreate-blue focus:border-kreate-blue outline-none transition" placeholder="your@email.com" required="" type="email"/>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Project Budget (Optional)</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kreate-blue focus:border-kreate-blue outline-none transition bg-white">
+                                <option>Select Range</option>
+                                <option>$1,000 - $5,000</option>
+                                <option>$5,000 - $15,000</option>
+                                <option>$15,000+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tell Us About Your Project</label>
+                            <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-kreate-blue focus:border-kreate-blue outline-none transition" placeholder="I need a new website for my real estate business..." required="" rows="4"></textarea>
+                        </div>
+                        <button class="w-full bg-gray-900 text-white font-bold py-4 rounded-lg hover:bg-kreate-blue transition-colors text-lg shadow-md hover:shadow-xl" type="submit">
+                            Send Project Brief
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
@@ -190,181 +502,47 @@
         </div>
     </footer></body></html>
 
-    <!-- Modal (Fixed: 'visibility-hidden' -> 'invisible') -->
-    <div class="modal fixed inset-0 z-50 flex items-center justify-center p-4 invisible opacity-0" id="detail-modal">
-        <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50" onclick="hideModal()"></div>
-        
-        <div class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-2xl mx-auto z-10 overflow-hidden transform scale-95">
-            <div class="flex justify-between items-center p-5 bg-gray-50 border-b border-gray-200">
-                <h3 class="text-2xl font-semibold text-amber-900" id="modal-title"></h3>
-                <button class="text-stone-500 hover:text-stone-800 transition-colors" onclick="hideModal()">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-                </button>
-            </div>
-            
-            <div class="p-6 max-h-[70vh] overflow-y-auto">
-                <h4 class="text-sm font-semibold text-amber-700 uppercase tracking-wider mb-3">Why They Need a Website:</h4>
-                <div class="prose prose-stone max-w-none" id="modal-detail">
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Script for Lucide Icons and Mobile Menu -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
 
-    <!-- JavaScript (Data updated with emoji, renderCard function updated) -->
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMobileMenuOpen = false;
 
- <script>
-    const businessData = [
-        { id: 1, name: "Financial Planner", category: "professional", isNew: false, emoji: "💼",
-          detail: `<ul><li><strong>Build Trust:</strong> Establish credibility with a professional site detailing certifications (e.g., CFP®).</li><li><strong>Educate Clients:</strong> Share blog posts or articles on retirement planning, investment strategies, and market updates.</li><li><strong>Generate Leads:</strong> Offer a free consultation or a downloadable budget template in exchange for contact info.</li><li><strong>Book Appointments:</strong> Integrate a scheduling tool for easy client booking.</li></ul>` },
-        { id: 2, name: "Real Estate Agent", category: "professional", isNew: false, emoji: "🏠",
-          detail: `<ul><li><strong>Showcase Listings:</strong> Feature high-quality photos, virtual tours, and detailed descriptions of properties.</li><li><strong>Capture Leads:</strong> Use forms for "Home Valuation Requests" or "New Listing Alerts".</li><li><strong>Build Authority:</strong> Post neighborhood guides and home-buying/selling tips.</li><li><strong>Display Testimonials:</strong> Build social proof with glowing reviews from past clients.</li></ul>` },
-        { id: 3, name: "Lawyer / Legal Consultant", category: "professional", isNew: false, emoji: "⚖️",
-          detail: `<ul><li><strong>Establish Credibility:</strong> Detail practice areas, attorney profiles, and case results.</li><li><strong>Clarify Services:</strong> Help potential clients understand complex services.</li><li><strong>Provide Contact:</strong> Offer a clear, confidential consultation form.</li><li><strong>Share Expertise:</strong> Publish legal topics and FAQs.</li></ul>` },
-        { id: 4, name: "Consulting Firm (IT, Mgt)", category: "professional", isNew: true, emoji: "📈",
-          detail: `<ul><li><strong>Explain Services:</strong> Show methodologies and value props.</li><li><strong>Lead Generation:</strong> Use downloadable resources or demo forms.</li><li><strong>Show Past Work:</strong> Case studies and client logos build trust.</li><li><strong>Thought Leadership:</strong> Publish whitepapers.</li></ul>` },
-        { id: 5, name: "Architect / Interior Designer", category: "professional", isNew: false, emoji: "📐",
-          detail: `<ul><li><strong>Portfolio:</strong> Beautiful gallery of projects.</li><li><strong>Design Process:</strong> Explain how projects are delivered.</li><li><strong>Attract Ideal Clients:</strong> Use aesthetics that match your style.</li><li><strong>Press:</strong> Add awards and features.</li></ul>` },
-
-        { id: 6, name: "Restaurant / Café / Bakery", category: "retail", isNew: false, emoji: "🍔",
-          detail: `<ul><li><strong>Menu:</strong> Display items with photos.</li><li><strong>Online Ordering:</strong> Integrate delivery apps.</li><li><strong>Reservations:</strong> Embed booking tools.</li><li><strong>Ambiance:</strong> Showcase interior and dishes.</li></ul>` },
-        { id: 7, name: "Boutique / Clothing Store", category: "retail", isNew: false, emoji: "👗",
-          detail: `<ul><li><strong>E-commerce:</strong> Sell online 24/7.</li><li><strong>Lookbooks:</strong> Show new fashion drops.</li><li><strong>Sales:</strong> Highlight promotions.</li><li><strong>Brand Story:</strong> What makes your store special?</li></ul>` },
-        { id: 8, name: "Salon / Barber / Spa", category: "retail", isNew: false, emoji: "✂️",
-          detail: `<ul><li><strong>Online Booking:</strong> Let clients choose services and stylists.</li><li><strong>Services:</strong> Clear list.</li><li><strong>Gallery:</strong> Display your work.</li><li><strong>Store:</strong> Sell self-care products.</li></ul>` },
-
-        { id: 9, name: "Local Bookstore", category: "retail", isNew: true, emoji: "📚",
-          detail: `<ul><li><strong>Events:</strong> Book clubs, author signings.</li><li><strong>Staff Picks:</strong> Build community.</li><li><strong>Online Shop:</strong> Order books for pickup.</li><li><strong>Store Info:</strong> Hours & location.</li></ul>` },
-
-        { id: 10, name: "Pet Groomer / Pet Store", category: "retail", isNew: true, emoji: "🐾",
-          detail: `<ul><li><strong>Booking:</strong> Schedule grooming services.</li><li><strong>Services:</strong> Grooming, nail trim, etc.</li><li><strong>Gallery:</strong> Before/after photos.</li><li><strong>Shop:</strong> Toys & supplies.</li></ul>` },
-
-        { id: 11, name: "Plumber / Electrician / HVAC", category: "home", isNew: false, emoji: "🔧",
-          detail: `<ul><li><strong>Emergency Calls:</strong> Highlight 24/7 service.</li><li><strong>Licenses:</strong> Build trust.</li><li><strong>Services:</strong> Repairs, installation, maintenance.</li><li><strong>Testimonials:</strong> Show reviews.</li></ul>` },
-        { id: 12, name: "Builder / Contractor / Handyman", category: "home", isNew: false, emoji: "👷",
-          detail: `<ul><li><strong>Portfolio:</strong> Showcase projects.</li><li><strong>Process:</strong> Explain steps from estimate to completion.</li><li><strong>Lead Forms:</strong> Request a quote.</li><li><strong>Reviews:</strong> Gain credibility.</li></ul>` },
-
-        { id: 13, name: "Landscaper / Gardener", category: "home", isNew: false, emoji: "🌿",
-          detail: `<ul><li><strong>Show Work:</strong> Gardens, lawns, patios.</li><li><strong>Services:</strong> Design, install, maintenance.</li><li><strong>Seasonal Tips:</strong> Attract Google traffic.</li><li><strong>Easy Estimates:</strong> Simple contact form.</li></ul>` },
-
-        { id: 14, name: "Moving Company", category: "home", isNew: true, emoji: "🚚",
-          detail: `<ul><li><strong>Quote Form:</strong> Primary CTA.</li><li><strong>Services:</strong> Packing, moving, storage.</li><li><strong>Trust:</strong> Show licenses & insurance.</li><li><strong>Resources:</strong> Moving checklists.</li></ul>` },
-
-        { id: 15, name: "Locksmith", category: "home", isNew: true, emoji: "🔑",
-          detail: `<ul><li><strong>Emergency Call:</strong> 24/7 button.</li><li><strong>Services:</strong> Re-key, car keys, lockouts.</li><li><strong>Service Area:</strong> Show map.</li><li><strong>Trust Info:</strong> Certifications.</li></ul>` },
-
-        { id: 16, name: "Tech Startup / SaaS", category: "startup", isNew: false, emoji: "💻",
-          detail: `<ul><li><strong>Explain Product:</strong> Problem + solution.</li><li><strong>Show Features:</strong> With images.</li><li><strong>Pricing:</strong> Clear plan tiers.</li><li><strong>Lead Capture:</strong> Free trial or demo.</li></ul>` },
-        { id: 17, name: "Freelancer (Designer, Writer)", category: "startup", isNew: false, emoji: "🧑‍🎨",
-          detail: `<ul><li><strong>Portfolio:</strong> Showcase best work.</li><li><strong>Services:</strong> What you offer.</li><li><strong>Testimonials:</strong> Client reviews.</li><li><strong>Contact:</strong> Easy inquiry form.</li></ul>` },
-        { id: 18, name: "App Developer (Mobile)", category: "startup", isNew: true, emoji: "📱",
-          detail: `<ul><li><strong>App Portfolio:</strong> Links to App Store.</li><li><strong>Process:</strong> Discovery → Launch.</li><li><strong>Tech Stack:</strong> Flutter, Swift, etc.</li><li><strong>Testimonials:</strong> Client reviews.</li></ul>` },
-
-        { id: 19, name: "Etsy / E-commerce Seller", category: "startup", isNew: true, emoji: "🛒",
-          detail: `<ul><li><strong>Brand Site:</strong> Own your storefront.</li><li><strong>Email List:</strong> Grow customer base.</li><li><strong>Story:</strong> Share your craft.</li><li><strong>Control:</strong> Full customization.</li></ul>` },
-
-        { id: 20, name: "Personal Trainer / Yoga Instructor", category: "health", isNew: false, emoji: "🧘",
-          detail: `<ul><li><strong>Transformations:</strong> Before/after photos.</li><li><strong>Sessions:</strong> Class schedule.</li><li><strong>Packages:</strong> Training plans.</li><li><strong>Blog:</strong> Fitness tips.</li></ul>` },
-        { id: 21, name: "Doctors / Dentists / Clinics", category: "health", isNew: false, emoji: "🩺",
-          detail: `<ul><li><strong>Build Trust:</strong> Team credentials.</li><li><strong>Appointments:</strong> Easy online booking.</li><li><strong>Forms:</strong> New patient PDFs.</li><li><strong>Services:</strong> Procedures & insurance.</li></ul>` },
-
-        { id: 22, name: "Therapist / Counselor", category: "health", isNew: false, emoji: "🧠",
-          detail: `<ul><li><strong>Safe Space:</strong> Calming design.</li><li><strong>Specialties:</strong> Anxiety, couples therapy, etc.</li><li><strong>Logistics:</strong> Fees & insurance.</li><li><strong>Contact:</strong> Confidential form.</li></ul>` },
-
-        { id: 23, name: "Specialty Clinic (Dermatology)", category: "health", isNew: true, emoji: "🧴",
-          detail: `<ul><li><strong>Conditions:</strong> Acne, eczema, etc.</li><li><strong>Team:</strong> Doctors & PAs.</li><li><strong>Procedures:</strong> Medical + cosmetic.</li><li><strong>Appointments:</strong> Online booking.</li></ul>` },
-
-        { id: 24, name: "Music Teacher (Piano, Guitar)", category: "health", isNew: true, emoji: "🎵",
-          detail: `<ul><li><strong>Lesson Types:</strong> 30/60min, virtual, adult/child.</li><li><strong>Studio:</strong> Photos of teaching space.</li><li><strong>Testimonials:</strong> Parent reviews.</li><li><strong>Enrollment:</strong> Inquiry form.</li></ul>` },
-
-        { id: 25, name: "NGO / Charity", category: "community", isNew: false, emoji: "🤝",
-          detail: `<ul><li><strong>Mission:</strong> Clear and inspiring.</li><li><strong>Donations:</strong> Secure payment.</li><li><strong>Impact:</strong> Stories + stats.</li><li><strong>Volunteers:</strong> Sign-up form.</li></ul>` },
-
-        { id: 26, name: "Local Sports League", category: "community", isNew: true, emoji: "🏆",
-          detail: `<ul><li><strong>Registration:</strong> Online forms.</li><li><strong>Schedules:</strong> Game times.</li><li><strong>Standings:</strong> Updated weekly.</li><li><strong>News:</strong> Announcements.</li></ul>` },
-
-        { id: 27, name: "Historical Society", category: "community", isNew: true, emoji: "🏛️",
-          detail: `<ul><li><strong>Archives:</strong> Photos & documents.</li><li><strong>Events:</strong> Lectures & tours.</li><li><strong>Memberships:</strong> Join/renew online.</li><li><strong>Donations:</strong> Fundraising.</li></ul>` },
-
-        { id: 28, name: "Artist / Illustrator", category: "creative", isNew: false, emoji: "🎨",
-          detail: `<ul><li><strong>Portfolio:</strong> High-resolution art.</li><li><strong>Shop:</strong> Prints & originals.</li><li><strong>Exhibitions:</strong> Show dates.</li><li><strong>Artist Statement:</strong> About me.</li></ul>` },
-
-        { id: 29, name: "Musician / Band", category: "creative", isNew: false, emoji: "🎸",
-          detail: `<ul><li><strong>Music Player:</strong> Embed Spotify.</li><li><strong>Shows:</strong> Tour dates.</li><li><strong>EPK:</strong> Press kit.</li><li><strong>Merch:</strong> Store link.</li></ul>` },
-
-        { id: 30, name: "Tattoo Studio", category: "creative", isNew: true, emoji: "🖋️",
-          detail: `<ul><li><strong>Artist Portfolios:</strong> Style galleries.</li><li><strong>Booking Forms:</strong> Inquiry system.</li><li><strong>Hygiene:</strong> Safety procedures.</li><li><strong>Aftercare:</strong> Care instructions.</li></ul>` },
-
-        { id: 31, name: "Caterer / Private Chef", category: "creative", isNew: true, emoji: "🧑‍🍳",
-          detail: `<ul><li><strong>Visual Menu:</strong> Food photography.</li><li><strong>Event Menus:</strong> Weddings, parties.</li><li><strong>Reviews:</strong> Client praise.</li><li><strong>Inquiry Form:</strong> Event details.</li></ul>` }
-    ];
-
-    const grid = document.getElementById('business-grid');
-    const filterContainer = document.getElementById('filter-container');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const modal = document.getElementById('detail-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalDetail = document.getElementById('modal-detail');
-
-    function renderCards(filter = 'all') {
-        grid.innerHTML = '';
-
-        const filtered = filter === 'all'
-            ? businessData
-            : businessData.filter(x => x.category === filter);
-
-        filtered.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'bg-sky-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer relative';
-            card.dataset.id = item.id;
-
-            const badge = item.isNew
-                ? `<span class="absolute top-3 right-3 bg-amber-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full">New</span>`
-                : '';
-
-            card.innerHTML = `
-                ${badge}
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">${item.emoji}</span>
-                        <h3 class="text-lg font-semibold text-stone-900">${item.name}</h3>
-                    </div>
-                </div>
-            `;
-
-            card.addEventListener('click', () => showModal(item.id));
-            grid.appendChild(card);
+        mobileMenuBtn.addEventListener('click', () => {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+            // Toggle icon
+            mobileMenuBtn.innerHTML = isMobileMenuOpen ? '<i data-lucide="x" class="w-6 h-6"></i>' : '<i data-lucide="menu" class="w-6 h-6"></i>';
+            lucide.createIcons();
         });
-    }
 
-    function showModal(id) {
-        const item = businessData.find(x => x.id === id);
-        modalTitle.innerHTML = `<span class="text-3xl mr-2">${item.emoji}</span>${item.name}`;
-        modalDetail.innerHTML = item.detail;
+        // Close mobile menu on link click
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                isMobileMenuOpen = false;
+                mobileMenu.classList.add('hidden');
+                mobileMenuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                lucide.createIcons();
+            });
+        });
 
-        modal.classList.remove('invisible', 'opacity-0');
-        modal.querySelector('.modal-content').classList.remove('scale-95');
-    }
-
-    function hideModal() {
-        modal.classList.add('opacity-0');
-        modal.querySelector('.modal-content').classList.add('scale-95');
-        setTimeout(() => modal.classList.add('invisible'), 250);
-    }
-
-    filterContainer.addEventListener('click', e => {
-        if (e.target.classList.contains('filter-btn')) {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            renderCards(e.target.dataset.filter);
+        // Simple way to handle image fallback for the hero section
+        const heroImage = document.querySelector('.hero-bg img');
+        if (heroImage) {
+            heroImage.onerror = function() {
+                this.src = 'https://placehold.co/1920x1080/4f46e5/ffffff?text=Kreate+Digital+Agency';
+                this.onerror = null; // Prevent infinite loop
+            }
         }
-    });
-
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') hideModal();
-    });
-
-    document.addEventListener('DOMContentLoaded', () => renderCards());
-</script>
-
+    </script>
 
 </body></html>

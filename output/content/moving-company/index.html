@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- Meta Description & Keywords -->
+    <meta content="Kreate Movers offers professional residential and commercial moving services in the Greater Seattle Area. Expert packing, secure storage, and stress-free relocation. Get a free quote today!" name="description"/>
+    <meta content="moving company, Seattle movers, residential moving, commercial relocation, packing services, storage solutions, Kreate Movers, local movers, long distance moving" name="keywords"/>
+    <meta content="Kreate Movers" name="author"/>
+    
+    <title>Kreate Movers - Professional Moving Services</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom Styles for Slideshow Transitions */
+        .slide {
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .slide.active {
+            opacity: 1;
+            z-index: 10;
+        }
+        
+        /* Mobile Menu Transition */
+        #mobile-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #mobile-menu.open {
+            max-height: 400px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-900 antialiased bg-white selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 py-4 bg-transparent text-white" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="h-8 w-8 mr-2 nav-icon" data-lucide="truck"></i>
+                    <span class="font-bold text-2xl nav-text">
+                        Kreate<span class="text-blue-500">Movers</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a class="nav-link font-medium hover:text-blue-400 transition-colors" href="#hero">Home</a>
+                    <a class="nav-link font-medium hover:text-blue-400 transition-colors" href="#services">Services</a>
+                    <a class="nav-link font-medium hover:text-blue-400 transition-colors" href="#gallery">Gallery</a>
+                    <a class="nav-link font-medium hover:text-blue-400 transition-colors" href="#contact">Contact</a>
+                    <a class="flex items-center gap-2 font-bold nav-link hover:text-blue-400 transition-colors" href="tel:4253411111">
+                        <i data-lucide="phone" size="18"></i> (425) 341-1111
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-white hover:text-blue-400 focus:outline-none" id="mobile-menu-btn">
+                        <i class="h-7 w-7" data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="md:hidden bg-white shadow-xl absolute w-full top-full left-0" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 mobile-link" href="#hero">Home</a>
+                <a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 mobile-link" href="#services">Services</a>
+                <a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 mobile-link" href="#gallery">Gallery</a>
+                <a class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 mobile-link" href="#contact">Contact</a>
+                <a class="block px-3 py-2 text-base font-bold text-blue-600" href="tel:4253411111">Call Now: (425) 341-1111</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden" id="hero">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img alt="Moving Company Truck" class="w-full h-full object-cover" src="https://storage.googleapis.com/imagesu/moving-company/moving-company1.jpg"/>
+            <div class="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-gray-900/40"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left w-full">
+            <div class="md:max-w-2xl">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+                    Seamless Moves,<br/>
+                    <span class="text-blue-400">Stress-Free</span> Starts.
+                </h1>
+                <p class="text-xl text-gray-200 mb-8 font-light">
+                    Whether it's residential, commercial, or specialized packing, we handle your belongings with the care they deserve. Start your new chapter with Kreate Movers.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a class="px-6 py-3 rounded-md font-semibold transition-all duration-300 flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl" href="#contact">
+                        Get a Free Quote
+                    </a>
+                    <a class="px-6 py-3 rounded-md font-semibold transition-all duration-300 flex items-center justify-center bg-white text-blue-900 border-2 border-transparent hover:border-blue-100 hover:bg-gray-50" href="#services">
+                        View Our Services
+                    </a>
+                </div>
+                <div class="mt-8 flex items-center gap-4 text-white/80 justify-center md:justify-start">
+                    <div class="flex items-center gap-1">
+                        <i class="h-4 w-4 text-yellow-400 fill-current" data-lucide="star"></i> 4.9/5 Rating
+                    </div>
+                    <span>•</span>
+                    <div>Licensed &amp; Insured</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-20 bg-gray-50" id="services">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Premium Services</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">We offer comprehensive moving solutions tailored to your specific needs.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                    <div class="mb-6 bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center text-blue-600">
+                        <i class="w-10 h-10" data-lucide="home"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Residential Moving</h3>
+                    <p class="text-gray-600 leading-relaxed">From studio apartments to multi-story estates, we ensure your household goods arrive safely.</p>
+                    <a class="inline-flex items-center mt-4 text-blue-600 font-semibold hover:text-blue-800" href="#contact">
+                        Learn more <i class="w-4 h-4 ml-1" data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                    <div class="mb-6 bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center text-blue-600">
+                        <i class="w-10 h-10" data-lucide="truck"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Commercial Relocation</h3>
+                    <p class="text-gray-600 leading-relaxed">Minimize downtime with our efficient office moving services. We handle electronics and furniture with care.</p>
+                    <a class="inline-flex items-center mt-4 text-blue-600 font-semibold hover:text-blue-800" href="#contact">
+                        Learn more <i class="w-4 h-4 ml-1" data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                    <div class="mb-6 bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center text-blue-600">
+                        <i class="w-10 h-10" data-lucide="box"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Packing Services</h3>
+                    <p class="text-gray-600 leading-relaxed">Don’t lift a finger. Our professional packers bring the materials and expertise to box everything up.</p>
+                    <a class="inline-flex items-center mt-4 text-blue-600 font-semibold hover:text-blue-800" href="#contact">
+                        Learn more <i class="w-4 h-4 ml-1" data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                    <div class="mb-6 bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center text-blue-600">
+                        <i class="w-10 h-10" data-lucide="calendar"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Storage Solutions</h3>
+                    <p class="text-gray-600 leading-relaxed">Need temporary space? Our secure, climate-controlled facilities are ready for your belongings.</p>
+                    <a class="inline-flex items-center mt-4 text-blue-600 font-semibold hover:text-blue-800" href="#contact">
+                        Learn more <i class="w-4 h-4 ml-1" data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slideshow Section -->
+    <section class="py-20 bg-white" id="gallery">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">See Us In Action</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Browse our gallery to see how we handle your valuables with care.</p>
+            </div>
+
+            <div class="relative w-full max-w-4xl mx-auto h-[400px] md:h-[600px] rounded-2xl overflow-hidden shadow-2xl group bg-gray-100">
+                <!-- Slides Container -->
+                <div class="w-full h-full relative" id="slides-container">
+                    <!-- Slides will be inserted here by JS -->
+                </div>
+
+                <!-- Controls -->
+                <button class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-opacity opacity-0 group-hover:opacity-100" id="prev-btn">
+                    <i class="w-6 h-6" data-lucide="chevron-left"></i>
+                </button>
+                <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-lg text-gray-800 hover:bg-white transition-opacity opacity-0 group-hover:opacity-100" id="next-btn">
+                    <i class="w-6 h-6" data-lucide="chevron-right"></i>
+                </button>
+                
+                <!-- Dots -->
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2" id="dots-container">
+                    <!-- Dots inserted by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-20 bg-blue-900 text-white" id="contact">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to make your move?</h2>
+                    <p class="text-blue-200 text-lg mb-8">
+                        Get a free, no-obligation quote today. Contact us via phone, email, or fill out the form and our team will get back to you within 24 hours.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-800 p-3 rounded-full">
+                                <i class="text-blue-300" data-lucide="phone"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-blue-300">Call Us Anytime</p>
+                                <a class="text-xl font-bold hover:text-white transition-colors" href="tel:4253411111">
+                                    (425) 341-1111
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-800 p-3 rounded-full">
+                                <i class="text-blue-300" data-lucide="mail"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-blue-300">Email Us</p>
+                                <a class="text-xl font-bold hover:text-white transition-colors" href="mailto:contact@kreate.com">
+                                    contact@kreate.com
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-800 p-3 rounded-full">
+                                <i class="text-blue-300" data-lucide="map-pin"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-blue-300">Service Area</p>
+                                <p class="text-xl font-bold">Greater Seattle Area</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white text-gray-900 rounded-2xl p-8 shadow-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Request a Quote</h3>
+                    <form class="space-y-4" id="quote-form">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" name="name" placeholder="John Doe" required="" type="text"/>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" name="phone" placeholder="(555) 123-4567" required="" type="tel"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" name="email" placeholder="john@example.com" required="" type="email"/>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Target Move Date</label>
+                            <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" name="date" type="date"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Move Details</label>
+                            <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" name="message" placeholder="Tell us about your move (e.g. 2 bedroom apartment to house, piano, stairs...)" rows="3"></textarea>
+                        </div>
+                        <button class="w-full px-6 py-3 rounded-md font-semibold transition-all duration-300 flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl" type="submit">
+                            Get Estimate
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Professionals</a></li> <!-- 6 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="#">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="#">About Us</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Our Work</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Blog</a></li> <!-- 11 -->
+                        <li><a class="hover:text-white transition-colors" href="#">Contact Us</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="#">Privacy Policy</a> <!-- 13 -->
+                    <a class="text-stone-400 hover:text-white" href="#">Terms of Service</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // --- Icons Initialization ---
+        lucide.createIcons();
+
+        // --- Data ---
+        const galleryImages = [
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company2.jpg",
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company3.jpg",
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company4.jpg",
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company5.jpg",
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company6.jpg",
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company7.jpg",
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company8.jpg",
+            "https://storage.googleapis.com/imagesu/moving-company/moving-company9.jpg"
+        ];
+
+        // --- Navbar Scroll Effect ---
+        const navbar = document.getElementById('navbar');
+        const navText = document.querySelectorAll('.nav-link'); // Note: This grabs the links
+        const navTitle = document.querySelector('.nav-text');
+        const navIcon = document.querySelector('.nav-icon');
+        const mobileMenuBtn = document.querySelector('#mobile-menu-btn');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white', 'shadow-md', 'py-2');
+                navbar.classList.remove('bg-transparent', 'py-4', 'text-white');
+                navbar.classList.add('text-gray-900');
+                
+                // Update links/icons to dark
+                navText.forEach(el => {
+                    el.classList.remove('text-gray-100', 'hover:text-white');
+                    el.classList.add('text-gray-600', 'hover:text-blue-600');
+                });
+                
+                mobileMenuBtn.classList.remove('text-white');
+                mobileMenuBtn.classList.add('text-gray-900');
+                
+                navIcon.classList.remove('text-white');
+                navIcon.classList.add('text-blue-600');
+                
+                navTitle.classList.remove('text-white');
+                navTitle.classList.add('text-gray-900');
+
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-md', 'py-2', 'text-gray-900');
+                navbar.classList.add('bg-transparent', 'py-4', 'text-white');
+                
+                // Revert links/icons to white
+                navText.forEach(el => {
+                    el.classList.add('text-gray-100', 'hover:text-white');
+                    el.classList.remove('text-gray-600', 'hover:text-blue-600');
+                });
+                
+                mobileMenuBtn.classList.add('text-white');
+                mobileMenuBtn.classList.remove('text-gray-900');
+
+                navIcon.classList.add('text-white');
+                navIcon.classList.remove('text-blue-600');
+                
+                navTitle.classList.add('text-white');
+                navTitle.classList.remove('text-gray-900');
+            }
+        });
+
+        // --- Mobile Menu Toggle ---
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+            // Toggle icon from Menu to X (simple implementation)
+        });
+
+        // Close menu when a link is clicked
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+            });
+        });
+
+        // --- Slideshow Logic ---
+        let currentSlide = 0;
+        const slidesContainer = document.getElementById('slides-container');
+        const dotsContainer = document.getElementById('dots-container');
+
+        // Initial Render of Slides and Dots
+        galleryImages.forEach((img, idx) => {
+            // Create Slide Div
+            const slideDiv = document.createElement('div');
+            slideDiv.className = `slide ${idx === 0 ? 'active' : ''}`;
+            slideDiv.innerHTML = `
+                <img src="${img}" alt="Gallery ${idx}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
+                    <p class="text-white font-medium text-lg">Professional moving in action</p>
+                </div>
+            `;
+            slidesContainer.appendChild(slideDiv);
+
+            // Create Dot
+            const dot = document.createElement('button');
+            dot.className = `w-2 h-2 rounded-full transition-all ${idx === 0 ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'}`;
+            dot.onclick = () => goToSlide(idx);
+            dotsContainer.appendChild(dot);
+        });
+
+        const slides = document.querySelectorAll('.slide');
+        const dots = dotsContainer.querySelectorAll('button');
+
+        function updateSlides() {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === currentSlide);
+            });
+            dots.forEach((dot, idx) => {
+                dot.className = `w-2 h-2 rounded-full transition-all ${idx === currentSlide ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'}`;
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % galleryImages.length;
+            updateSlides();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + galleryImages.length) % galleryImages.length;
+            updateSlides();
+        }
+
+        function goToSlide(idx) {
+            currentSlide = idx;
+            updateSlides();
+        }
+
+        // Event Listeners for Controls
+        document.getElementById('next-btn').addEventListener('click', () => {
+            nextSlide();
+            resetTimer();
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            prevSlide();
+            resetTimer();
+        });
+
+        // Auto Advance
+        let slideTimer = setInterval(nextSlide, 5000);
+
+        function resetTimer() {
+            clearInterval(slideTimer);
+            slideTimer = setInterval(nextSlide, 5000);
+        }
+
+        // --- Form Submission ---
+        document.getElementById('quote-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Thank you! We have received your request and will call you shortly.");
+            e.target.reset();
+        });
+
+    </script>
+
+</body></html>
