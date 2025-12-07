@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gemini Model Pricing &amp; Strategy Guide</title>
+    <meta content="Interactive guide and cost calculator for Google Gemini models. Compare pricing between Gemini 1.5 Flash and Pro, analyze capabilities, and get usage recommendations." name="description"/>
+    <meta content="Gemini pricing, Google Gemini models, Gemini 1.5 Flash vs Pro, LLM cost calculator, AI model comparison, generative AI pricing, token costs" name="keywords"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: 
+         1. Hero Section: Immediate value proposition with a "Scenario Simulator" (Calculator) to drive engagement.
+         2. Comparative Visuals: Side-by-side cost analysis using Bar Charts to show the magnitude of difference between Flash and Pro.
+         3. Capability Map: A qualitative Radar Chart comparing Speed, Cost, and Intelligence.
+         4. Strategic Breakdown: Textual cards explaining the "Why" and "When" for each model.
+         5. Recommendation Engine: A simplified interactive decision tree.
+         This structure moves from "How much?" (Quantitative) to "Which one?" (Qualitative/Strategic).
+    -->
+    
+    <!-- Visualization & Content Choices:
+         - Cost Simulator: Input fields + Real-time text updates. Goal: Inform/Change. Allows users to see impact of volume on wallet.
+         - Price Comparison Chart: Chart.js Bar Chart. Goal: Compare. Visualizes the significant price gap per 1M tokens.
+         - Model Attributes Radar: Chart.js Radar Chart. Goal: Relationships. Shows the trade-off between Speed/Cost and Reasoning.
+         - Decision Tree: Interactive buttons. Goal: Organize. Directs users to a conclusion based on constraints.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcf8; /* Warm off-white */
+            color: #2d2a26; /* Soft charcoal */
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e5e5e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+        }
+
+        /* Custom Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #d97706; /* Amber-600 */
+            margin-top: -8px; 
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+        }
+
+        .btn-primary {
+            background-color: #2d2a26;
+            color: #ffffff;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #4b4844;
+        }
+
+        .nav-link {
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .nav-link.active {
+            border-bottom-color: #d97706;
+            color: #d97706;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold tracking-tight text-gray-900">Gemini<span class="text-amber-600">Planner</span></span>
+                </div>
+                <div class="hidden sm:flex space-x-8 items-center">
+                    <button class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 active" onclick="scrollToSection('calculator')">Calculator</button>
+                    <button class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900" onclick="scrollToSection('comparison')">Compare Prices</button>
+                    <button class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900" onclick="scrollToSection('strategy')">Strategy</button>
+                    <button class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900" onclick="scrollToSection('recommendation')">Recommendation</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-12">
+
+        <!-- Header -->
+        <div class="text-center space-y-4">
+            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">Model Pricing &amp; Selection</h1>
+            <p class="max-w-2xl mx-auto text-lg text-gray-600">
+                Navigate the trade-offs between Gemini 1.5 Flash and Gemini 1.5 Pro. 
+                Calculate costs, compare capabilities, and choose the right engine for your application.
+            </p>
+        </div>
+
+        <!-- Section 1: Interactive Cost Calculator -->
+        <section class="space-y-6" id="calculator">
+            <div class="bg-amber-50 rounded-xl p-6 border border-amber-100">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Real-Time Cost Simulator</h2>
+                <p class="text-gray-600 mb-6">Estimate your monthly spend based on traffic volume. See how the price gap widens at scale.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Controls -->
+                    <div class="space-y-6 bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                        
+                        <!-- Input Tokens -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium text-gray-700">Avg. Input Tokens / Request</label>
+                                <span class="text-sm font-bold text-amber-600" id="val-input">1,000</span>
+                            </div>
+                            <input class="w-full" id="slider-input" max="50000" min="100" step="100" type="range" value="1000"/>
+                        </div>
+
+                        <!-- Output Tokens -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium text-gray-700">Avg. Output Tokens / Request</label>
+                                <span class="text-sm font-bold text-amber-600" id="val-output">500</span>
+                            </div>
+                            <input class="w-full" id="slider-output" max="8000" min="50" step="50" type="range" value="500"/>
+                        </div>
+
+                        <!-- Requests per Month -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium text-gray-700">Requests per Month</label>
+                                <span class="text-sm font-bold text-amber-600" id="val-req">10,000</span>
+                            </div>
+                            <input class="w-full" id="slider-req" max="1000000" min="1000" step="1000" type="range" value="10000"/>
+                        </div>
+
+                        <!-- Context Toggle -->
+                        <div class="flex items-center space-x-3 pt-4 border-t border-gray-100">
+                            <input class="h-4 w-4 text-amber-600 rounded border-gray-300 focus:ring-amber-500" id="long-context" type="checkbox"/>
+                            <label class="text-sm text-gray-700" for="long-context">Simulate Long Context (&gt;128k tokens window)</label>
+                        </div>
+                        <p class="text-xs text-gray-500 italic">Long context triggers higher tier pricing for both models.</p>
+
+                    </div>
+
+                    <!-- Results Display -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Flash Card -->
+                        <div class="card p-6 flex flex-col justify-between border-l-4 border-l-green-500">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                                    <span class="text-2xl mr-2">⚡</span> Gemini 1.5 Flash
+                                </h3>
+                                <p class="text-sm text-gray-500 mt-1">High-volume, low-latency, cost-efficient.</p>
+                            </div>
+                            <div class="mt-6">
+                                <span class="text-sm text-gray-500 uppercase tracking-wide">Est. Monthly Cost</span>
+                                <div class="text-4xl font-bold text-green-600" id="cost-flash">$0.00</div>
+                            </div>
+                        </div>
+
+                        <!-- Pro Card -->
+                        <div class="card p-6 flex flex-col justify-between border-l-4 border-l-purple-600">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                                    <span class="text-2xl mr-2">🧠</span> Gemini 1.5 Pro
+                                </h3>
+                                <p class="text-sm text-gray-500 mt-1">Complex reasoning, nuanced analysis, research.</p>
+                            </div>
+                            <div class="mt-6">
+                                <span class="text-sm text-gray-500 uppercase tracking-wide">Est. Monthly Cost</span>
+                                <div class="text-4xl font-bold text-purple-700" id="cost-pro">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Comparative Charts -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="comparison">
+            <!-- Price Per Million Chart -->
+            <div class="card p-6">
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-gray-900">Price per Million Tokens</h3>
+                    <p class="text-sm text-gray-600">Base tier (&lt; 128k context). Pro is significantly more expensive per unit.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Attributes Radar -->
+            <div class="card p-6">
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-gray-900">Capability Profile</h3>
+                    <p class="text-sm text-gray-600">Comparing relative strengths. Flash prioritizes speed; Pro prioritizes reasoning.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Strategic Breakdown -->
+        <section id="strategy">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Strategic Analysis</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Flash Strategy -->
+                <div class="card p-6">
+                    <div class="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xl font-bold mb-4">⚡</div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">When to use Flash</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start"><span class="mr-2 text-green-500">✓</span>High-volume tasks (e.g., chatbots).</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-500">✓</span>Summarizing simple documents.</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-500">✓</span>Data extraction at scale.</li>
+                        <li class="flex items-start"><span class="mr-2 text-green-500">✓</span>Real-time latency requirements.</li>
+                    </ul>
+                </div>
+
+                <!-- Pro Strategy -->
+                <div class="card p-6">
+                    <div class="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 text-xl font-bold mb-4">🧠</div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">When to use Pro</h3>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start"><span class="mr-2 text-purple-500">✓</span>Complex reasoning &amp; logic.</li>
+                        <li class="flex items-start"><span class="mr-2 text-purple-500">✓</span>Nuanced creative writing.</li>
+                        <li class="flex items-start"><span class="mr-2 text-purple-500">✓</span>Coding complex architectures.</li>
+                        <li class="flex items-start"><span class="mr-2 text-purple-500">✓</span>Analysis of massive context (&gt;1M).</li>
+                    </ul>
+                </div>
+
+                <!-- Cost Dynamics -->
+                <div class="card p-6">
+                    <div class="h-10 w-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 text-xl font-bold mb-4">💰</div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">The Price Multiplier</h3>
+                    <p class="text-sm text-gray-600 mb-3">
+                        Gemini 1.5 Pro is approximately <span class="font-bold text-gray-900">20x - 30x more expensive</span> per output token than Flash.
+                    </p>
+                    <p class="text-sm text-gray-600">
+                        <strong>Recommendation:</strong> Use Flash as your "default" router. Only escalate to Pro if Flash fails the specific prompt evaluation.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Recommendation Engine -->
+        <section class="bg-gray-900 text-white rounded-2xl p-8 md:p-12" id="recommendation">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-6">Which model fits your specific use case?</h2>
+                <p class="text-gray-400 mb-8">Select the primary constraint for your project.</p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition border border-gray-700 focus:ring-2 focus:ring-amber-500" onclick="setRecommendation('budget')">Strict Budget</button>
+                    <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition border border-gray-700 focus:ring-2 focus:ring-amber-500" onclick="setRecommendation('speed')">Lowest Latency</button>
+                    <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition border border-gray-700 focus:ring-2 focus:ring-amber-500" onclick="setRecommendation('quality')">Highest Quality</button>
+                    <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium transition border border-gray-700 focus:ring-2 focus:ring-amber-500" onclick="setRecommendation('multimodal')">Heavy Video/Audio</button>
+                </div>
+
+                <div class="bg-gray-800/50 p-6 rounded-xl border border-gray-700 hidden" id="rec-output">
+                    <h3 class="text-2xl font-bold text-amber-400 mb-2" id="rec-title">Recommended: Gemini 1.5 Flash</h3>
+                    <p class="text-gray-300" id="rec-desc">Description goes here.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- State Management ---
+        const prices = {
+            flash: {
+                input: 0.075, // per 1M
+                output: 0.30, // per 1M
+                input_long: 0.15,
+                output_long: 0.60
+            },
+            pro: {
+                input: 3.50,
+                output: 10.50,
+                input_long: 7.00,
+                output_long: 21.00
+            }
+        };
+
+        const state = {
+            inputTokens: 1000,
+            outputTokens: 500,
+            requests: 10000,
+            isLongContext: false
+        };
+
+        // --- DOM Elements ---
+        const sliderInput = document.getElementById('slider-input');
+        const sliderOutput = document.getElementById('slider-output');
+        const sliderReq = document.getElementById('slider-req');
+        const checkContext = document.getElementById('long-context');
+        
+        const valInput = document.getElementById('val-input');
+        const valOutput = document.getElementById('val-output');
+        const valReq = document.getElementById('val-req');
+        
+        const costFlashDisplay = document.getElementById('cost-flash');
+        const costProDisplay = document.getElementById('cost-pro');
+        
+        const recOutput = document.getElementById('rec-output');
+        const recTitle = document.getElementById('rec-title');
+        const recDesc = document.getElementById('rec-desc');
+
+        // --- Core Functions ---
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-US').format(num);
+        }
+
+        function calculateCosts() {
+            // Update Text Labels
+            valInput.innerText = formatNumber(state.inputTokens);
+            valOutput.innerText = formatNumber(state.outputTokens);
+            valReq.innerText = formatNumber(state.requests);
+
+            // Calculate Monthly Totals in Millions of Tokens
+            const monthlyInputMillions = (state.inputTokens * state.requests) / 1000000;
+            const monthlyOutputMillions = (state.outputTokens * state.requests) / 1000000;
+
+            // Determine Rates based on context window
+            const flashInputRate = state.isLongContext ? prices.flash.input_long : prices.flash.input;
+            const flashOutputRate = state.isLongContext ? prices.flash.output_long : prices.flash.output;
+            
+            const proInputRate = state.isLongContext ? prices.pro.input_long : prices.pro.input;
+            const proOutputRate = state.isLongContext ? prices.pro.output_long : prices.pro.output;
+
+            // Compute Totals
+            const flashTotal = (monthlyInputMillions * flashInputRate) + (monthlyOutputMillions * flashOutputRate);
+            const proTotal = (monthlyInputMillions * proInputRate) + (monthlyOutputMillions * proOutputRate);
+
+            // Render
+            costFlashDisplay.innerText = formatCurrency(flashTotal);
+            costProDisplay.innerText = formatCurrency(proTotal);
+        }
+
+        function updateState(key, value) {
+            state[key] = value;
+            calculateCosts();
+        }
+
+        // --- Event Listeners ---
+        sliderInput.addEventListener('input', (e) => updateState('inputTokens', parseInt(e.target.value)));
+        sliderOutput.addEventListener('input', (e) => updateState('outputTokens', parseInt(e.target.value)));
+        sliderReq.addEventListener('input', (e) => updateState('requests', parseInt(e.target.value)));
+        checkContext.addEventListener('change', (e) => updateState('isLongContext', e.target.checked));
+
+        // --- Navigation Scroll ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            // Update active state simplified
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // --- Recommendation Engine ---
+        const recommendations = {
+            budget: {
+                title: "Recommended: Gemini 1.5 Flash",
+                desc: "If budget is your primary constraint, Flash is the clear winner. It is roughly 20-30x cheaper than Pro while maintaining excellent performance for most standard tasks."
+            },
+            speed: {
+                title: "Recommended: Gemini 1.5 Flash",
+                desc: "Flash is optimized for low-latency responses. It is the best choice for user-facing chatbots or real-time applications where every millisecond counts."
+            },
+            quality: {
+                title: "Recommended: Gemini 1.5 Pro",
+                desc: "For the highest quality output, complex instruction following, and nuanced reasoning, Pro is superior. Use it for offline analysis, content generation, or coding tasks."
+            },
+            multimodal: {
+                title: "Recommended: Gemini 1.5 Flash (Start Here)",
+                desc: "Flash handles video and audio input very efficiently. Unless you need deep semantic analysis of the media content, start with Flash to keep costs manageable."
+            }
+        };
+
+        function setRecommendation(type) {
+            const rec = recommendations[type];
+            recTitle.innerText = rec.title;
+            recDesc.innerText = rec.desc;
+            
+            // Visual feedback
+            if (rec.title.includes('Pro')) {
+                recTitle.classList.remove('text-amber-400', 'text-green-400');
+                recTitle.classList.add('text-purple-400');
+            } else {
+                recTitle.classList.remove('text-purple-400', 'text-amber-400');
+                recTitle.classList.add('text-green-400');
+            }
+
+            recOutput.classList.remove('hidden');
+            recOutput.classList.add('block', 'animate-fade-in');
+        }
+
+        // --- Charts Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateCosts(); // Initial Calculation
+
+            // Bar Chart: Price Comparison
+            const ctxPrice = document.getElementById('priceChart').getContext('2d');
+            new Chart(ctxPrice, {
+                type: 'bar',
+                data: {
+                    labels: ['Input (Per 1M)', 'Output (Per 1M)'],
+                    datasets: [
+                        {
+                            label: 'Gemini 1.5 Flash',
+                            data: [prices.flash.input, prices.flash.output],
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)', // Green
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Gemini 1.5 Pro',
+                            data: [prices.pro.input, prices.pro.output],
+                            backgroundColor: 'rgba(147, 51, 234, 0.7)', // Purple
+                            borderColor: 'rgba(147, 51, 234, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Price ($)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Radar Chart: Capabilities
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Cost Efficiency', 'Inference Speed', 'Reasoning Depth', 'Context Size', 'Coding Ability'],
+                    datasets: [
+                        {
+                            label: 'Gemini 1.5 Flash',
+                            data: [95, 90, 70, 85, 75], // High efficiency/speed, moderate reasoning
+                            backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            pointBackgroundColor: 'rgba(34, 197, 94, 1)',
+                        },
+                        {
+                            label: 'Gemini 1.5 Pro',
+                            data: [40, 60, 95, 95, 95], // Low efficiency (expensive), high reasoning
+                            backgroundColor: 'rgba(147, 51, 234, 0.2)',
+                            borderColor: 'rgba(147, 51, 234, 1)',
+                            pointBackgroundColor: 'rgba(147, 51, 234, 1)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+
+</body></html>

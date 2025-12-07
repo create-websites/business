@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="Privacy Policy for KREATEWEBSITE" name="description"/>
+  <title>Privacy Policy • KREATEWEBSITES.com</title>
+
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.88);
+      --muted: rgba(255,255,255,.68);
+      --faint: rgba(255,255,255,.45);
+      --line: rgba(255,255,255,.12);
+      --accent: #7c3aed; /* violet */
+      --accent2: #22c55e; /* green */
+      --shadow: 0 20px 70px rgba(0,0,0,.45);
+      --radius: 18px;
+      --max: 980px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{ box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(124,58,237,.25), transparent 55%),
+        radial-gradient(900px 650px at 85% 25%, rgba(34,197,94,.16), transparent 55%),
+        radial-gradient(900px 650px at 45% 100%, rgba(59,130,246,.14), transparent 60%),
+        linear-gradient(180deg, #070b14 0%, #0b1220 100%);
+      line-height: 1.55;
+      letter-spacing: .2px;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+
+    /* Top bar */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(7,11,20,.55);
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      gap: 16px;
+    }
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 220px;
+    }
+    .logo{
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background:
+        linear-gradient(135deg, rgba(124,58,237,1), rgba(34,197,94,1));
+      box-shadow: 0 10px 30px rgba(124,58,237,.28);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute;
+      inset:-30%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 55%);
+      transform: rotate(25deg);
+    }
+    .brand-title{
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+    .brand-title strong{ font-size: 14px; letter-spacing: .4px; }
+    .brand-title span{ font-size: 12px; color: var(--muted); }
+
+    nav{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .navlink{
+      font-size: 13px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+    .navlink:hover{
+      color: var(--text);
+      text-decoration: none;
+      border-color: var(--line);
+      background: rgba(255,255,255,.04);
+    }
+    .button{
+      font-size: 13px;
+      color: white;
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(124,58,237,1), rgba(59,130,246,1));
+      box-shadow: 0 14px 35px rgba(124,58,237,.22);
+      border: 1px solid rgba(255,255,255,.12);
+      white-space: nowrap;
+    }
+    .button:hover{ text-decoration: none; filter: brightness(1.06); }
+
+    /* Hero */
+    .hero{
+      padding: 46px 0 18px;
+    }
+    .hero-grid{
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    @media (max-width: 860px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .brand{ min-width: unset; }
+    }
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .panel-inner{ padding: 22px; }
+    .kicker{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,.03);
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: var(--accent2);
+      box-shadow: 0 0 0 5px rgba(34,197,94,.12);
+    }
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.1;
+      letter-spacing: .3px;
+    }
+    .sub{
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 62ch;
+    }
+    .meta{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .pill{
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      padding: 8px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pill code{
+      font-family: var(--mono);
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+      background: rgba(255,255,255,.05);
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    /* Sidebar card */
+    .side{
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+    }
+    .side .box{
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.15);
+      padding: 14px;
+    }
+    .side h3{
+      margin: 0 0 8px;
+      font-size: 13px;
+      letter-spacing: .35px;
+      color: rgba(255,255,255,.82);
+      text-transform: uppercase;
+    }
+    .side p{ margin: 0; color: var(--muted); font-size: 13px; }
+    .list{
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .list li{
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .check{
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      background: rgba(124,58,237,.18);
+      border: 1px solid rgba(124,58,237,.35);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+    .check svg{ width: 12px; height: 12px; opacity: .95; }
+
+    /* Main content */
+    main{ padding: 12px 0 64px; }
+    .content{
+      padding: 18px 22px 20px;
+      border-top: 1px solid var(--line);
+      background: rgba(0,0,0,.08);
+    }
+
+    h2{
+      margin: 18px 0 8px;
+      font-size: 16px;
+      letter-spacing: .25px;
+    }
+    h2:first-child{ margin-top: 0; }
+    p{ margin: 0 0 12px; color: var(--muted); }
+    ul{
+      margin: 8px 0 14px;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+    li{ margin: 6px 0; }
+    .callout{
+      margin: 14px 0 18px;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(34,197,94,.30);
+      background: linear-gradient(180deg, rgba(34,197,94,.10), rgba(34,197,94,.05));
+      color: rgba(255,255,255,.80);
+    }
+    .callout strong{ color: rgba(255,255,255,.92); }
+
+    .toc{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 10px 0 0;
+    }
+    @media (max-width: 680px){ .toc{ grid-template-columns: 1fr; } }
+    .toc a{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .toc a:hover{
+      text-decoration: none;
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      border-color: rgba(255,255,255,.18);
+    }
+
+    footer{
+      border-top: 1px solid var(--line);
+      padding: 22px 0;
+      color: var(--faint);
+      font-size: 12px;
+    }
+    .footer-row{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* print */
+    @media print{
+      header{ position: static; background: white; color: black; }
+      body{ background: white; color: black; }
+      .panel, .content{ box-shadow: none; background: white; border-color: #ddd; }
+      .navlink, .button{ display:none; }
+      .pill, .kicker, .side{ display:none; }
+      a{ color: black; text-decoration: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <div class="top">
+        <a aria-label="[Website Name] home" class="brand" href="/">
+          <div aria-hidden="true" class="logo"></div>
+          <div class="brand-title">
+            <strong>[Website Name]</strong>
+            <span>Privacy Policy</span>
+          </div>
+        </a>
+
+        <nav aria-label="Primary">
+          <a class="navlink" href="#policy">Policy</a>
+          <a class="navlink" href="#analytics">Google Analytics</a>
+          <a class="navlink" href="#contact">Contact</a>
+          <a class="button" href="mailto:[contact@yourdomain.com]">Email us</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid panel">
+        <div class="panel-inner">
+          <div class="kicker"><span aria-hidden="true" class="dot"></span> Informational website • No newsletter</div>
+          <h1>Privacy Policy</h1>
+          <p class="sub">
+            This page explains what information we collect, why we collect it, and the choices you have when visiting
+            <strong>[yourdomain.com]</strong>.
+          </p>
+
+          <div aria-label="Policy metadata" class="meta">
+            <div class="pill">Effective: <code>[Month Day, Year]</code></div>
+            <div class="pill">Updated: <code>[Month Day, Year]</code></div>
+            <div class="pill">Contact: <code>[contact@yourdomain.com]</code></div>
+          </div>
+
+          <div class="callout" role="note">
+            <strong>Quick summary:</strong> We use <strong>Google Analytics</strong> to understand Site usage. We don’t offer
+            newsletter signup, and we don’t use cookies for advertising or marketing.
+          </div>
+
+          <div aria-label="Table of contents" class="toc">
+            <a href="#collect">What we collect <span aria-hidden="true">→</span></a>
+            <a href="#use">How we use it <span aria-hidden="true">→</span></a>
+            <a href="#share">How we share it <span aria-hidden="true">→</span></a>
+            <a href="#rights">Your choices <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+
+        <aside aria-label="Highlights" class="side">
+          <div class="box">
+            <h3>What we don’t do</h3>
+            <ul class="list">
+              <li>
+                <span aria-hidden="true" class="check">
+                  <svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                </span>
+                No newsletter signup
+              </li>
+              <li>
+                <span aria-hidden="true" class="check">
+                  <svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                </span>
+                No ad tracking / marketing pixels
+              </li>
+              <li>
+                <span aria-hidden="true" class="check">
+                  <svg fill="none" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                </span>
+                No account creation
+              </li>
+            </ul>
+          </div>
+
+          <div class="box">
+            <h3>Primary tools</h3>
+            <p>We use Google Analytics to understand how visitors use the Site and improve content and performance.</p>
+          </div>
+
+          <div class="box">
+            <h3>Need help?</h3>
+            <p>Questions about this policy? Email us at <a href="mailto:[contact@yourdomain.com]">[contact@yourdomain.com]</a>.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <main id="policy">
+    <div class="wrap">
+      <article class="panel">
+        <div class="content">
+          <section id="collect">
+            <h2>1) Information We Collect</h2>
+            <p><strong>Information you provide:</strong> If you contact us using the email link on the Site, we receive the information you choose to include in your message (such as your name, email address, and the message content).</p>
+            <p><strong>Information collected automatically:</strong> When you visit the Site, information may be collected automatically through standard server logs and Google Analytics, such as:</p>
+            <ul>
+              <li>IP address</li>
+              <li>Device and browser type</li>
+              <li>Approximate location (derived from IP)</li>
+              <li>Pages viewed, time spent on pages, referring/exit pages</li>
+              <li>General diagnostic and security-related data</li>
+            </ul>
+          </section>
+
+          <section id="analytics">
+            <h2>2) Google Analytics</h2>
+            <p>
+              We use <strong>Google Analytics</strong> to understand how visitors use the Site (for example, which pages are visited most)
+              so we can improve content and site performance. Google Analytics may use cookies or similar technologies and collect
+              information such as IP address and information about your device/browser and activity on the Site.
+            </p>
+            <p>
+              Google may process this information according to its own policies. You can control cookies through your browser settings,
+              and you may also be able to manage certain privacy settings in your Google account.
+            </p>
+          </section>
+
+          <section id="cookies">
+            <h2>3) Cookies and Tracking</h2>
+            <p>
+              We do not use cookies for advertising or marketing, and we do not use tracking pixels for cross-site behavioral advertising.
+              However, <strong>Google Analytics may use cookies or similar technologies</strong> to measure and report usage statistics.
+            </p>
+          </section>
+
+          <section id="use">
+            <h2>4) How We Use Information</h2>
+            <ul>
+              <li>Operate and maintain the Site</li>
+              <li>Respond to emails you send us</li>
+              <li>Understand Site usage and improve the Site (via Google Analytics)</li>
+              <li>Monitor for security issues and prevent abuse</li>
+            </ul>
+          </section>
+
+          <section id="share">
+            <h2>5) How We Share Information</h2>
+            <p>We do <strong>not</strong> sell your personal information. We may share information:</p>
+            <ul>
+              <li><strong>With service providers</strong> that help us run the Site (for example, web hosting and analytics providers like Google Analytics), only as needed to provide services</li>
+              <li><strong>For legal and safety reasons</strong> (to comply with applicable law or protect rights, safety, and security)</li>
+              <li><strong>In connection with a business transfer</strong> (e.g., merger, acquisition, or asset sale)</li>
+            </ul>
+          </section>
+
+          <section id="retention">
+            <h2>6) Data Retention</h2>
+            <p>
+              We retain information only as long as needed for the purposes described above. Emails you send us may be retained to respond
+              and keep appropriate records. Google Analytics data is retained according to the settings configured in our Google Analytics account.
+            </p>
+          </section>
+
+          <section id="security">
+            <h2>7) Security</h2>
+            <p>
+              We use reasonable safeguards designed to protect information. However, no method of transmission or storage is completely secure.
+            </p>
+          </section>
+
+          <section id="children">
+            <h2>8) Children’s Privacy</h2>
+            <p>
+              The Site is not intended for children under 13, and we do not knowingly collect personal information from children.
+              If you believe a child has provided personal information, contact us to request deletion.
+            </p>
+          </section>
+
+          <section id="links">
+            <h2>9) Third-Party Links</h2>
+            <p>
+              The Site may contain links to third-party websites. We are not responsible for their privacy practices. Please review their privacy policies.
+            </p>
+          </section>
+
+          <section id="changes">
+            <h2>10) Changes to This Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. The updated version will be posted on this page with a revised “Last updated” date.
+            </p>
+          </section>
+
+          <section id="rights">
+            <h2>11) Your Choices</h2>
+            <ul>
+              <li>You can control or delete cookies through your browser settings (this may affect Google Analytics measurement).</li>
+              <li>You can contact us anytime with questions via email.</li>
+            </ul>
+          </section>
+
+          <section id="contact">
+            <h2>12) Contact Us</h2>
+            <p>
+              Email: <a href="mailto:[contact@yourdomain.com]">[contact@yourdomain.com]</a><br/>
+              Owner/Company: <strong>[Company/Owner Name]</strong>
+            </p>
+          </section>
+        </div>
+      </article>
+
+      <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+    </div>
+  </main>
+
+  <script>
+    // Set current year in footer (client-side only)
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+
+</body></html>

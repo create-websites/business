@@ -1,5 +1,5 @@
 original_path,output_path,articleurl,status
-ai-agent-webmaster.html,ai-agent-webmaster.html,no,merged
+ai-agent-webmaster.html,ai-agent-webmaster.html,yes,merged
 ai-crawler-visibility.html,geo-for-chatgpt-gemini-ai-crawler.html,yes,merged
 business.kreatewebsite-landing-emoji-org.html,business-kreatewebsite-landing-emoji-org.html,yes,merged
 business.kreatewebsites.html,example-business-websites-ai-assistants.html,yes,merged
@@ -13,6 +13,13 @@ kreatewebsites-for-creators.html,kreatewebsites-for-creators.html,yes,merged
 kreatewebsites-for-freelancers.html,kreatewebsites-for-freelancers.html,yes,merged
 kreatewebsites-for-local-business.html,kreatewebsites-for-local-business.html,yes,merged
 modern-versatile-websites.html,fast-and-effective-websites.html,yes,merged
+privacypolicy.html,privacypolicy.html,no,merged
+ab-testing\ab-test-overview-of-test.html,ab-testing\index.html,yes,merged
+ab-testing\ab-test-sample-size-calculator.html,ab-testing\ab-test-sample-size-calculator.html,yes,merged
+ab-testing\ab-testing-for-ai.html,ab-testing\ab-testing-for-ai.html,yes,merged
+ab-testing\ab-testing-stats-guide.html,ab-testing\ab-testing-stats-guide.html,yes,merged
+ab-testing\chi-squared-test-calculator.html,ab-testing\chi-squared-test-calculator.html,yes,merged
+ab-testing\two-sample-t-test-analyzer.html,ab-testing\two-sample-t-test-analyzer.html,yes,merged
 band-website\music-band.html,band-website\music-band.html,yes,merged
 band-website\musician.html,band-website\index.html,yes,merged
 chef-website\chef-website.html,chef-website\index.html,yes,merged
@@ -23,6 +30,8 @@ designer-portfolio\designer-portfolio.html,designer-portfolio\index.html,yes,mer
 electrician\electrician.html,electrician\electrician.html,yes,merged
 games-pages\casino-games-guide.html,games-pages\index.html,yes,merged
 gardner\gardner-landscaper.html,gardner\index.html,yes,merged
+genai-cost-calculation\gemini-model-pricing-calculator-multi-modal.html,genai-cost-calculation\gemini-model-pricing-calculator-multi-modal.html,yes,merged
+genai-cost-calculation\gemini-model-pricing-calculator.html,genai-cost-calculation\index.html,yes,merged
 lawyer\lawyer.html,lawyer\index.html,yes,merged
 moving-company\moving-company.html,moving-company\index.html,yes,merged
 personal-trainer\personal-trainer.html,personal-trainer\index.html,yes,merged
