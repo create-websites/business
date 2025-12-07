@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Emergency &amp; Crisis Response Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Calm Neutral Harmony -->
+    <!-- Application Structure Plan: The application is designed as a multi-section, single-page dashboard to guide users from high-level awareness to specific actions. The structure flows logically: 1) An 'Overview' dashboard provides immediate context with key stats and a disaster distribution chart. 2) An 'Incident Types' explorer allows users to filter and drill down into specific natural or man-made events to understand signals and actions. 3) A 'Response Cycle' section interactively explains the four phases of emergency management (Mitigation, Preparedness, Response, Recovery) to build process knowledge. 4) A 'Preparedness Checklist' provides an actionable tool for personal readiness. This thematic, task-oriented structure was chosen over a linear report format to enhance usability, allowing users to explore content based on their immediate needs (e.g., learn about a specific threat or build a personal plan) in an engaging, non-linear way. -->
+    <!-- Visualization & Content Choices: 
+    - Report Info: Global Disaster Event Distribution -> Goal: Inform/Compare -> Viz: Donut Chart -> Interaction: Hover tooltips for details -> Justification: Quickly shows proportions of different disaster types. -> Library: Chart.js/Canvas.
+    - Report Info: Disaster Frequency (Simulated) -> Goal: Show Change -> Viz: Bar Chart -> Interaction: Hover tooltips -> Justification: Visualizes trends in event frequency over time. -> Library: Chart.js/Canvas.
+    - Report Info: Specific Incident Details (e.g., Earthquake signals) -> Goal: Organize/Inform -> Viz: Filterable Card Grid -> Interaction: Click filters to show/hide card categories; click cards to expand details. -> Justification: Manages complexity by allowing users to focus on specific information subsets. -> Library: Vanilla JS/HTML/CSS.
+    - Report Info: Emergency Management Phases -> Goal: Organize/Inform -> Viz: Interactive Diagram -> Interaction: Click on a phase to display its detailed description. -> Justification: More engaging and space-efficient than a static list or graphic. -> Library: HTML/CSS/JS.
+    - Report Info: Personal Preparedness Actions -> Goal: Engage/Action -> Viz: Interactive Checklist -> Interaction: Users can check items, progress bar updates. -> Justification: Transforms passive information into an active, practical tool. -> Library: HTML/CSS/JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333333;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #4A90E2;
+            border-bottom-color: #4A90E2;
+        }
+        .btn {
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background-color: #4A90E2;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #357ABD;
+        }
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+        .btn-secondary.active {
+            background-color: #4A90E2;
+            color: white;
+        }
+        .incident-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .incident-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .response-phase {
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+            border-left-width: 4px;
+            border-color: transparent;
+            cursor: pointer;
+        }
+        .response-phase.active {
+            background-color: #EBF5FF;
+            border-color: #4A90E2;
+            color: #333;
+        }
+        .response-phase:not(.active):hover {
+            background-color: #f0f0f0;
+        }
+        .checklist-item input:checked + label .checkbox-icon {
+            background-color: #7ED321;
+            border-color: #7ED321;
+        }
+        .checklist-item input:checked + label .checkbox-icon-tick {
+            display: block;
+        }
+        .checklist-item input:checked + label .item-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-gray-800">🚨 Crisis Response Hub</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a class="nav-link active px-3 py-2 rounded-md text-sm font-medium" href="#overview">Overview</a>
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium" href="#incidents">Incident Types</a>
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium" href="#cycle">Response Cycle</a>
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium" href="#preparedness">Preparedness</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+
+        <section class="mb-16 scroll-mt-20" id="overview">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Emergency Response Framework</h1>
+            <p class="text-lg text-gray-600 mb-8">An interactive dashboard for understanding data signals, response methods, and preparedness for major incidents.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Global Disaster Events (2023)</p>
+                        <p class="text-4xl font-bold text-blue-600" id="stat-total-events">398</p>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Source: EM-DAT</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">People Affected</p>
+                        <p class="text-4xl font-bold text-yellow-600" id="stat-people-affected">~86.4M</p>
+                    </div>
+                     <p class="text-xs text-gray-400 mt-2">Excluding epidemics</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Estimated Economic Damage</p>
+                        <p class="text-4xl font-bold text-red-600" id="stat-economic-damage">$250B+</p>
+                    </div>
+                     <p class="text-xs text-gray-400 mt-2">Source: AON</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md flex flex-col justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Most Frequent Type</p>
+                        <p class="text-4xl font-bold text-green-600" id="stat-most-frequent">Floods</p>
+                    </div>
+                     <p class="text-xs text-gray-400 mt-2">Globally in 2023</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">Disaster Event Frequency (Simulated Data)</h3>
+                    <div class="chart-container h-80 md:h-96 w-full max-w-full">
+                        <canvas id="disasterFrequencyChart"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">Global Disaster Types Distribution (2023)</h3>
+                     <div class="chart-container h-80 md:h-96">
+                        <canvas id="disasterTypesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 scroll-mt-20" id="incidents">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Interactive Incident Explorer</h2>
+            <p class="text-md text-gray-600 mb-6">Filter by category and select an incident to learn about its key signals and recommended initial actions. This section helps you recognize early warnings and understand immediate response priorities for various types of emergencies.</p>
+            <div class="flex space-x-2 mb-6">
+                <button class="btn btn-secondary active filter-btn" data-filter="all">All</button>
+                <button class="btn btn-secondary filter-btn" data-filter="natural">Natural</button>
+                <button class="btn btn-secondary filter-btn" data-filter="man-made">Man-Made</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="incident-grid">
+            </div>
+        </section>
+
+        <section class="mb-16 scroll-mt-20" id="cycle">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">The Emergency Response Cycle</h2>
+            <p class="text-md text-gray-600 mb-6">Emergency management is a continuous cycle of four key phases. Understanding this process is crucial for communities and organizations to build resilience and effectively manage crises. Click on each phase to explore its objectives and typical activities.</p>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="md:flex">
+                    <div class="md:w-1/3">
+                        <div class="p-4 space-y-2" id="response-phases-container">
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 p-8 bg-gray-50">
+                        <div id="response-phase-details">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="scroll-mt-20" id="preparedness">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Personal &amp; Family Preparedness</h2>
+            <p class="text-md text-gray-600 mb-6">Proactive preparation is the most effective way to mitigate the impact of an emergency. Use this checklist to ensure you have the essential supplies, plans, and information ready. Completing these steps can significantly improve your safety and well-being during a crisis.</p>
+             <div class="bg-white p-6 rounded-xl shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Preparedness Checklist</h3>
+                    <div class="text-sm font-medium">
+                        <span id="progress-text">0/12</span> Completed
+                    </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                    <div class="bg-blue-600 h-2.5 rounded-full" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="space-y-4" id="checklist-container">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const incidentData = [
+                { type: 'natural', name: 'Earthquake', icon: '🌍', signals: ['Sudden ground shaking', 'Unusual animal behavior', 'Shifting ground'], actions: 'Drop, Cover, and Hold On. Stay away from windows and heavy objects.' },
+                { type: 'natural', name: 'Hurricane', icon: '🌀', signals: ['Weather alerts', 'High winds, heavy rain', 'Storm surge warnings'], actions: 'Evacuate if ordered. Secure property. Have an emergency kit ready.' },
+                { type: 'natural', name: 'Flood', icon: '💧', signals: ['Heavy rainfall', 'Rising water levels', 'Flash flood warnings'], actions: 'Move to higher ground immediately. Do not walk or drive through floodwaters.' },
+                { type: 'natural', name: 'Wildfire', icon: '🔥', signals: ['Smoke plumes', 'Red flag warnings', 'Evacuation notices'], actions: 'Evacuate immediately when told. Follow designated routes. Stay informed.' },
+                { type: 'man-made', name: 'Cyber Attack', icon: '💻', signals: ['Phishing emails', 'Unusual network traffic', 'System slowdowns'], actions: 'Disconnect from the network. Do not click suspicious links. Report the incident.' },
+                { type: 'man-made', name: 'Power Outage', icon: '💡', signals: ['Sudden loss of electricity', 'Utility alerts'], actions: 'Use flashlights, not candles. Keep freezers closed. Unplug sensitive electronics.' },
+                { type: 'man-made', name: 'HazMat Spill', icon: '☣️', signals: ['Visible chemical clouds', 'Strange odors', 'Official warnings'], actions: 'Evacuate the area. Follow shelter-in-place orders if given. Avoid contact.' },
+                { type: 'man-made', name: 'Civil Unrest', icon: '👥', signals: ['Large public gatherings', 'Police activity', 'Social media chatter'], actions: 'Avoid the area. Stay indoors. Monitor reliable news sources.' },
+            ];
+
+            const responseCycleData = [
+                { id: 'mitigation', name: 'Mitigation', title: 'Phase 1: Mitigation - Reducing Future Impact', content: 'Mitigation involves actions taken to prevent or reduce the long-term risk to life and property from hazards. This proactive phase focuses on addressing the root causes of potential disasters. Activities include enforcing stricter building codes, constructing flood barriers, creating defensible spaces around properties in wildfire-prone areas, and public education campaigns.' },
+                { id: 'preparedness', name: 'Preparedness', title: 'Phase 2: Preparedness - Getting Ready to Respond', content: 'Preparedness focuses on developing the plans and capabilities needed to effectively respond to an emergency. It is about being ready before a disaster strikes. Key activities include creating emergency response plans, training responders, conducting drills and exercises, establishing warning systems, and encouraging individuals and families to create their own emergency kits and plans.' },
+                { id: 'response', name: 'Response', title: 'Phase 3: Response - Immediate Action During a Crisis', content: 'The Response phase includes the immediate actions taken to save lives, protect property, and meet basic human needs during and immediately after a disaster. This is the most visible phase of emergency management. Activities involve search and rescue, providing emergency medical care, firefighting, evacuating affected populations, and setting up temporary shelters.' },
+                { id: 'recovery', name: 'Recovery', title: 'Phase 4: Recovery - Rebuilding and Restoring Communities', content: 'Recovery actions begin after the immediate threat has passed and focus on restoring the community to a normal, or even safer, state. This phase can last for months or years. It includes providing financial assistance to individuals and businesses, rebuilding critical infrastructure, debris cleanup, and offering mental health support to affected residents.' },
+            ];
+
+            const checklistData = [
+                { category: 'Emergency Kit', items: ['Water (1 gallon per person/day for 3 days)', 'Non-perishable food (3-day supply)', 'Flashlight and extra batteries', 'First-aid kit', 'Whistle to signal for help'] },
+                { category: 'Family Plan', items: ['Establish a family meeting place', 'Create a communication plan', 'Know your evacuation routes', 'Plan for pets'] },
+                { category: 'Home & Digital Safety', items: ['Secure heavy furniture', 'Know how to shut off utilities', 'Back up important digital documents'] },
+            ];
+
+            function setupNavigation() {
+                const navLinks = document.querySelectorAll('.nav-link');
+                const sections = document.querySelectorAll('main section');
+                
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.4
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(link => {
+                                link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+                            });
+                        }
+                    });
+                }, observerOptions);
+
+                sections.forEach(section => observer.observe(section));
+
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        document.querySelector(link.getAttribute('href')).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            }
+
+            function renderDisasterTypesChart() {
+                const ctx = document.getElementById('disasterTypesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Floods', 'Storms', 'Earthquakes', 'Extreme Temp', 'Drought', 'Wildfire'],
+                        datasets: [{
+                            label: 'Disaster Types',
+                            data: [167, 124, 33, 27, 21, 26],
+                            backgroundColor: ['#4A90E2', '#50E3C2', '#F5A623', '#D0021B', '#BD10E0', '#F8E71C'],
+                            borderColor: '#F8F7F4',
+                            borderWidth: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + ' events';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderDisasterFrequencyChart() {
+                const ctx = document.getElementById('disasterFrequencyChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['2019', '2020', '2021', '2022', '2023', '2024 (proj.)'],
+                        datasets: [
+                            {
+                                label: 'Natural Disasters',
+                                data: [320, 350, 365, 380, 398, 410],
+                                backgroundColor: '#4A90E2',
+                                borderColor: '#357ABD',
+                                borderWidth: 1
+                            },
+                             {
+                                label: 'Man-Made Incidents',
+                                data: [150, 165, 170, 160, 185, 190],
+                                backgroundColor: '#F5A623',
+                                borderColor: '#B87E1C',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#e0e0e0'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderIncidentGrid() {
+                const grid = document.getElementById('incident-grid');
+                grid.innerHTML = incidentData.map(item => `
+                    <div class="incident-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center text-center" data-type="${item.type}" data-name="${item.name}">
+                        <div class="text-4xl mb-2">${item.icon}</div>
+                        <h4 class="font-semibold">${item.name}</h4>
+                    </div>
+                `).join('');
+                
+                grid.innerHTML += `<div id="incident-details" class="hidden sm:col-span-2 md:col-span-3 lg:col-span-4 p-6 bg-blue-50 rounded-xl"></div>`;
+                
+                grid.querySelectorAll('.incident-card').forEach(card => {
+                    card.addEventListener('click', () => showIncidentDetails(card.dataset.name));
+                });
+            }
+
+            function showIncidentDetails(name) {
+                const detailsContainer = document.getElementById('incident-details');
+                const item = incidentData.find(d => d.name === name);
+
+                if (item) {
+                    detailsContainer.innerHTML = `
+                        <h3 class="text-xl font-bold mb-2 flex items-center"><span class="text-3xl mr-3">${item.icon}</span> ${item.name}</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-1">Key Signals & Warnings</h4>
+                                <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                    ${item.signals.map(s => `<li>${s}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-1">Recommended Initial Actions</h4>
+                                <p class="text-gray-600 bg-yellow-100 border-l-4 border-yellow-500 p-3 rounded-r-lg">${item.actions}</p>
+                            </div>
+                        </div>
+                    `;
+                    detailsContainer.classList.remove('hidden');
+                }
+                
+                const clickedCard = document.querySelector(`.incident-card[data-name="${name}"]`);
+                const grid = document.getElementById('incident-grid');
+                
+                const cardIndex = Array.from(grid.children).indexOf(clickedCard);
+                const itemsPerRow = window.innerWidth < 640 ? 1 : window.innerWidth < 768 ? 2 : window.innerWidth < 1024 ? 3 : 4;
+                const endOfRowIndex = Math.ceil((cardIndex + 1) / itemsPerRow) * itemsPerRow;
+                
+                const refNode = grid.children[endOfRowIndex];
+                if (refNode) {
+                    grid.insertBefore(detailsContainer, refNode);
+                } else {
+                    grid.appendChild(detailsContainer);
+                }
+            }
+
+            function setupIncidentFilters() {
+                const filterBtns = document.querySelectorAll('.filter-btn');
+                const cards = document.querySelectorAll('.incident-card');
+                const detailsContainer = document.getElementById('incident-details');
+
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        const filter = btn.dataset.filter;
+                        detailsContainer.classList.add('hidden');
+                        cards.forEach(card => {
+                            if (filter === 'all' || card.dataset.type === filter) {
+                                card.style.display = 'flex';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            }
+            
+            function renderResponseCycle() {
+                const container = document.getElementById('response-phases-container');
+                container.innerHTML = responseCycleData.map(phase => `
+                    <div class="response-phase p-4" data-id="${phase.id}">
+                        <h4 class="font-bold">${phase.name}</h4>
+                        <p class="text-sm text-gray-600">${phase.title.split(' - ')[1]}</p>
+                    </div>
+                `).join('');
+                
+                container.querySelectorAll('.response-phase').forEach(el => {
+                    el.addEventListener('click', () => updateResponseCycleDetails(el.dataset.id));
+                });
+                
+                updateResponseCycleDetails('mitigation');
+            }
+
+            function updateResponseCycleDetails(id) {
+                const detailsEl = document.getElementById('response-phase-details');
+                const data = responseCycleData.find(p => p.id === id);
+                document.querySelectorAll('.response-phase').forEach(el => {
+                    el.classList.toggle('active', el.dataset.id === id);
+                });
+                if(data) {
+                    detailsEl.innerHTML = `
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">${data.title}</h3>
+                        <p class="text-gray-700 leading-relaxed">${data.content}</p>
+                    `;
+                }
+            }
+
+            function renderChecklist() {
+                const container = document.getElementById('checklist-container');
+                let html = '';
+                let totalItems = 0;
+                checklistData.forEach(category => {
+                    html += `<h4 class="text-md font-semibold mt-4 border-b pb-2">${category.category}</h4>`;
+                    category.items.forEach(item => {
+                        totalItems++;
+                        html += `
+                            <div class="checklist-item">
+                                <input type="checkbox" id="item-${totalItems}" class="hidden">
+                                <label for="item-${totalItems}" class="flex items-center cursor-pointer">
+                                    <span class="checkbox-icon w-5 h-5 mr-3 border-2 border-gray-300 rounded-sm flex items-center justify-center">
+                                        <svg class="checkbox-icon-tick hidden w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    </span>
+                                    <span class="item-text text-gray-700">${item}</span>
+                                </label>
+                            </div>
+                        `;
+                    });
+                });
+                container.innerHTML = html;
+                container.dataset.totalItems = totalItems;
+                
+                container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.addEventListener('change', updateProgress);
+                });
+                updateProgress();
+            }
+
+            function updateProgress() {
+                const container = document.getElementById('checklist-container');
+                const totalItems = parseInt(container.dataset.totalItems, 10);
+                const checkedItems = container.querySelectorAll('input[type="checkbox"]:checked').length;
+                const progress = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+                
+                document.getElementById('progress-bar').style.width = `${progress}%`;
+                document.getElementById('progress-text').textContent = `${checkedItems}/${totalItems}`;
+            }
+
+            setupNavigation();
+            renderDisasterTypesChart();
+            renderDisasterFrequencyChart();
+            renderIncidentGrid();
+            setupIncidentFilters();
+            renderResponseCycle();
+            renderChecklist();
+        });
+    </script>
+
+
+</body></html>

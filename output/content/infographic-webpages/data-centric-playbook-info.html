@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>The Data-Centric AI Revolution</title>
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: The infographic follows a top-down narrative structure. It begins with a "hook" outlining the problems with the model-centric approach (The 'Why'). It then introduces the core philosophy of DCAI (The 'Data Flywheel'). The main body is a 'Toolkit' section detailing the three pillars: Weak Supervision, Active Learning, and Synthetic Data. This is followed by a section on how LLMs are accelerating the field. The narrative concludes with practical applications and a look to the future. This structure guides the user from the problem to the solution, then to the tools, and finally to modern applications. -->
+    <!-- Visualization & Content Choices:
+        - Why DCAI?: Goal: Inform -> Viz: Single Big Number. Justification: High-impact way to present key failure/bottleneck stats from the report. No library needed.
+        - Data Flywheel: Goal: Organize -> Viz: HTML/CSS Flowchart. Justification: Best non-SVG way to show an iterative process. No library needed.
+        - Weak Supervision Pipeline: Goal: Organize -> Viz: HTML/CSS Flowchart. Justification: Clearly illustrates the multi-stage process from LFs to a trained model. No library needed.
+        - AL Strategy Comparison: Goal: Compare -> Viz: Radar Chart. Justification: Excellent for comparing multiple entities (strategies) across multiple quantitative axes (cost, speed, robustness). Library: Chart.js/Canvas.
+        - Augmentation vs. Synthesis: Goal: Compare -> Viz: Grouped Bar Chart. Justification: Directly compares two concepts on key trade-offs (flexibility, privacy). Library: Chart.js/Canvas.
+        - LLM Roles: Goal: Organize -> Viz: Icon-style cards. Justification: Visually breaks down the different roles an LLM can play in a digestible format. No library needed.
+        - Fairness Application: Goal: Inform -> Viz: Donut Chart. Justification: Simple way to show the composition of a dataset and imply the need for fairness correction. Library: Chart.js/Canvas.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #073B4C; }
+        .chart-container { position: relative; margin: 1rem auto; height: 350px; max-height: 50vh; width: 100%; max-width: 450px; }
+        .stat-card h3 { color: #118AB2; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <header class="text-center my-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#073B4C]">The Data-Centric AI Revolution</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Shifting the focus from tweaking model code to systematically engineering the data that fuels it.</p>
+        </header>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">Why the Shift? The Model-Centric Bottleneck</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                <div class="stat-card bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+                    <h3 class="text-2xl font-bold mb-2">Data Quality is King</h3>
+                    <p class="text-6xl font-extrabold text-[#FF6B6B]">85%</p>
+                    <p class="mt-2 text-slate-600">of AI projects fail to deliver, not due to flawed models, but due to poor data quality and management.</p>
+                </div>
+                <div class="stat-card bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+                    <h3 class="text-2xl font-bold mb-2">Data Availability is Shrinking</h3>
+                    <p class="text-6xl font-extrabold text-[#FFD166]">2026</p>
+                    <p class="mt-2 text-slate-600">is the projected year for the exhaustion of high-quality public text data, forcing a move to data engineering.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">The Core Principle: The Data Flywheel</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-10">Data-Centric AI treats data as a living asset. The goal is a continuous, iterative loop where the model and data improve each other.</p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 text-center">
+                <div class="bg-white p-4 rounded-lg shadow-md border">
+                    <p class="font-bold text-indigo-600">1. Train Model</p>
+                </div>
+                <div class="text-2xl font-bold text-[#118AB2]">→</div>
+                <div class="bg-white p-4 rounded-lg shadow-md border">
+                    <p class="font-bold text-indigo-600">2. Analyze Errors</p>
+                </div>
+                 <div class="text-2xl font-bold text-[#118AB2]">→</div>
+                <div class="bg-white p-4 rounded-lg shadow-md border">
+                    <p class="font-bold text-indigo-600">3. Improve Data</p>
+                </div>
+                 <div class="text-2xl font-bold text-[#118AB2]">→</div>
+                <div class="bg-white p-4 rounded-lg shadow-md border">
+                    <p class="font-bold text-indigo-600">4. Retrain</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">The Data-Centric AI Toolkit</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-100 flex flex-col">
+                    <h3 class="text-xl font-bold text-[#118AB2] mb-4">1. Programmatic Labeling</h3>
+                    <p class="text-slate-600 flex-grow">Use <span class="font-semibold">Weak Supervision</span> to programmatically generate noisy labels for massive datasets using expert rules, or "Labeling Functions" (LFs).</p>
+                    <div class="chart-container">
+                        <canvas id="wsChart"></canvas>
+                    </div>
+                     <p class="text-xs text-center text-slate-500 mt-2">The Weak Supervision pipeline transforms noisy rules into a large-scale training set for a powerful end model.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-100 flex flex-col">
+                    <h3 class="text-xl font-bold text-[#118AB2] mb-4">2. Efficient Labeling</h3>
+                    <p class="text-slate-600 flex-grow">Use <span class="font-semibold">Active Learning</span> to intelligently select the most informative data points for manual labeling, maximizing model improvement while minimizing cost.</p>
+                    <div class="chart-container">
+                        <canvas id="alChart"></canvas>
+                    </div>
+                     <p class="text-xs text-center text-slate-500 mt-2">Comparing AL strategies reveals a trade-off between exploiting uncertainty and exploring for diversity.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-100 flex flex-col">
+                    <h3 class="text-xl font-bold text-[#118AB2] mb-4">3. Data Creation</h3>
+                    <p class="text-slate-600 flex-grow">Use <span class="font-semibold">Augmentation</span> to modify existing data or <span class="font-semibold">Synthetic Generation</span> to create new data from scratch, filling gaps and covering edge cases.</p>
+                    <div class="chart-container">
+                        <canvas id="genChart"></canvas>
+                    </div>
+                     <p class="text-xs text-center text-slate-500 mt-2">Synthetic data offers more flexibility and better privacy, but augmentation is lower risk.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">The Accelerator: LLMs as Universal Data Engines</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-10">Large Language Models (LLMs) have become a unifying force in DCAI, capable of performing nearly every data engineering task through natural language prompts.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md border">
+                    <p class="text-4xl mb-2">🏷️</p>
+                    <h4 class="font-bold text-lg text-[#073B4C]">As a Labeler</h4>
+                    <p class="text-sm text-slate-500">Replacing coded rules with natural language prompts (PromptedWS).</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border">
+                    <p class="text-4xl mb-2">🔍</p>
+                    <h4 class="font-bold text-lg text-[#073B4C]">As a Selector</h4>
+                    <p class="text-sm text-slate-500">Solving the active learning cold-start problem (ActiveLLM).</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border">
+                    <p class="text-4xl mb-2">✨</p>
+                    <h4 class="font-bold text-lg text-[#073B4C]">As a Generator</h4>
+                    <p class="text-sm text-slate-500">Creating high-quality, diverse synthetic text data.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border">
+                    <p class="text-4xl mb-2">⚖️</p>
+                    <h4 class="font-bold text-lg text-[#073B4C]">As an Evaluator</h4>
+                    <p class="text-sm text-slate-500">Providing nuanced, human-like judgments on model outputs.</p>
+                </div>
+            </div>
+        </section>
+        
+        <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const CHART_COLORS = {
+            red: 'rgb(255, 107, 107)',
+            yellow: 'rgb(255, 209, 102)',
+            green: 'rgb(6, 214, 160)',
+            blue: 'rgb(17, 138, 178)',
+            darkBlue: 'rgb(7, 59, 76)'
+        };
+
+        const chartJsOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+        };
+
+        function wrapLabels(labels, maxWidth) {
+            return labels.map(label => {
+                if (label.length <= maxWidth) return label;
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + ' ' + word).trim().length > maxWidth) {
+                        lines.push(currentLine.trim());
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                });
+                if (currentLine) lines.push(currentLine);
+                return lines;
+            });
+        }
+
+        function createWsChart() {
+            const ctx = document.getElementById('wsChart')?.getContext('2d');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Labeling Functions', 'Generative Label Model', 'Discriminative End Model'],
+                    datasets: [{
+                        label: 'Weak Supervision Pipeline',
+                        data: [30, 40, 30],
+                        backgroundColor: [CHART_COLORS.yellow, CHART_COLORS.green, CHART_COLORS.blue],
+                        borderColor: '#fff',
+                        borderWidth: 2,
+                    }]
+                },
+                options: { ...chartJsOptions, cutout: '60%' }
+            });
+        }
+
+        function createAlChart() {
+            const ctx = document.getElementById('alChart')?.getContext('2d');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Cost', 'Speed', 'Robustness', 'Simplicity', 'Exploration'],
+                    datasets: [{
+                        label: 'Uncertainty Sampling',
+                        data: [4, 5, 2, 5, 1],
+                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        borderColor: CHART_COLORS.red,
+                        pointBackgroundColor: CHART_COLORS.red,
+                    }, {
+                        label: 'Diversity Sampling',
+                        data: [3, 4, 4, 3, 5],
+                        backgroundColor: 'rgba(6, 214, 160, 0.2)',
+                        borderColor: CHART_COLORS.green,
+                        pointBackgroundColor: CHART_COLORS.green,
+                    }]
+                },
+                options: {
+                    ...chartJsOptions,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#eee' },
+                            grid: { color: '#eee' },
+                            pointLabels: { font: { size: 10 } },
+                            ticks: { display: false, stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createGenChart() {
+            const ctx = document.getElementById('genChart')?.getContext('2d');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: wrapLabels(['Flexibility', 'Privacy Control', 'Computational Cost', 'Fidelity Risk'], 16),
+                    datasets: [{
+                        label: 'Augmentation',
+                        data: [2, 1, 5, 2],
+                        backgroundColor: CHART_COLORS.blue,
+                        borderRadius: 4,
+                    }, {
+                        label: 'Synthetic Generation',
+                        data: [5, 5, 2, 4],
+                        backgroundColor: CHART_COLORS.yellow,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    ...chartJsOptions,
+                    scales: {
+                        y: { beginAtZero: true, max: 5 },
+                        x: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        createWsChart();
+        createAlChart();
+        createGenChart();
+    });
+</script>
+
+
+
+</body></html>

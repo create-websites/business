@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AI-Powered Movie Review Blog Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Slate Gray & Pacific Blue -->
+    <!-- Application Structure Plan: The application is structured as a 4-phase interactive project plan, guiding the user from data acquisition to publication. This task-oriented, modular design (Signal Acquisition, AI Analysis, Content Publishing, Full Workflow) was chosen over a linear report format to make the complex process digestible and actionable. Users can navigate via a top bar or scroll through the phases sequentially. Interactive elements within each section, like clickable cards and diagrams, allow for progressive disclosure of information, preventing overwhelm and enabling users to explore details as needed. This structure directly maps to the user's goal of understanding how to build this capability. -->
+    <!-- Visualization & Content Choices: 
+        1. Signal Sources: Report Info -> Different types of data sources. Goal -> Inform & Organize. Viz/Method -> Interactive HTML cards. Interaction -> Click to reveal specific examples (e.g., TMDB API). Justification -> Cards are visually appealing and the click-to-reveal interaction keeps the initial view clean. Library/Method -> Vanilla JS + Tailwind CSS.
+        2. AI Analysis: Report Info -> Steps in the AI analysis pipeline. Goal -> Explain a process. Viz/Method -> A flowchart-style diagram built with HTML/Tailwind. Interaction -> Clicking a step updates a text area with a detailed explanation. Justification -> A visual flow diagram is more intuitive for understanding a multi-step process than a text list. Library/Method -> Vanilla JS + Tailwind CSS.
+        3. Audience Format Preference: Report Info -> What content formats users prefer. Goal -> Compare. Viz/Method -> A dynamic doughnut chart. Interaction -> Buttons to filter data between "General Audience" and "Cinephiles", with hover tooltips. Justification -> A doughnut chart is excellent for showing parts-of-a-whole comparisons, and the interactivity makes the data exploration engaging. Library/Method -> Chart.js.
+        4. Publishing Options: Report Info -> Different platforms for publishing. Goal -> Compare. Viz/Method -> Simple comparison table. Interaction -> Static. Justification -> A table is the most direct and clear way to compare features across multiple options. Library/Method -> HTML + Tailwind CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+        }
+        .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+        .step-item.active {
+            background-color: #3b82f6;
+            color: white;
+            transform: scale(1.05);
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-slate-800">Movie Pulse AI</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-500 border-b-2 border-transparent" href="#phase1">1. Signal Acquisition</a>
+                        <a class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-500 border-b-2 border-transparent" href="#phase2">2. AI Analysis</a>
+                        <a class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-500 border-b-2 border-transparent" href="#phase3">3. Content &amp; Publishing</a>
+                        <a class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-500 border-b-2 border-transparent" href="#phase4">4. Full Workflow</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <section class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">Building an AI-Powered Movie Review Analysis Engine</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">This interactive report outlines a strategic framework for creating an automated blog that aggregates movie review signals, analyzes them with agentic AI, and presents engaging summaries for a broad audience.</p>
+        </section>
+
+        <div class="pt-16 -mt-16" id="phase1">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12">
+                <h3 class="text-2xl font-bold text-slate-900">Phase 1: Signal Acquisition</h3>
+                <p class="mt-2 text-slate-600">The foundation of our analysis is a diverse and robust data pipeline. We need to collect a wide range of signals to get a holistic view of a movie's reception. This involves tapping into structured data from APIs and unstructured data from social media and web pages. Click on a category below to see specific examples of data sources.</p>
+                <div class="grid md:grid-cols-3 gap-6 mt-8">
+                    <div class="card bg-slate-50 rounded-lg p-6 cursor-pointer" onclick="toggleDetails('api')">
+                        <h4 class="font-semibold text-lg text-blue-600">🔗 Official APIs</h4>
+                        <p class="text-sm text-slate-500 mt-1">Structured data for cast, crew, ratings, and official reviews.</p>
+                        <div class="hidden mt-4 text-sm text-slate-700 border-t pt-4" id="details-api">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>The Movie Database (TMDB):</strong> Comprehensive metadata.</li>
+                                <li><strong>OMDb API:</strong> Ratings from IMDb, Rotten Tomatoes, Metacritic.</li>
+                                <li><strong>NewsAPI:</strong> For professional reviews from news outlets.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card bg-slate-50 rounded-lg p-6 cursor-pointer" onclick="toggleDetails('scraping')">
+                        <h4 class="font-semibold text-lg text-blue-600">🕸️ Review Aggregators</h4>
+                        <p class="text-sm text-slate-500 mt-1">Aggregated scores and user comments from popular sites.</p>
+                        <div class="hidden mt-4 text-sm text-slate-700 border-t pt-4" id="details-scraping">
+                            <p>Scraping (with ethical considerations) can be used for:</p>
+                             <ul class="list-disc list-inside space-y-1 mt-2">
+                                <li><strong>Rotten Tomatoes:</strong> Audience and critic scores/reviews.</li>
+                                <li><strong>Metacritic:</strong> Weighted average scores.</li>
+                                <li><strong>IMDb:</strong> User ratings and detailed reviews.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card bg-slate-50 rounded-lg p-6 cursor-pointer" onclick="toggleDetails('social')">
+                        <h4 class="font-semibold text-lg text-blue-600">📱 Social Media Buzz</h4>
+                        <p class="text-sm text-slate-500 mt-1">Real-time public sentiment and discussion volume.</p>
+                         <div class="hidden mt-4 text-sm text-slate-700 border-t pt-4" id="details-social">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>X (Twitter) API:</strong> Tracking mentions, hashtags, and sentiment.</li>
+                                <li><strong>Reddit API:</strong> Discussions on subreddits like r/movies.</li>
+                                <li><strong>YouTube API:</strong> Comment analysis on trailers and video reviews.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-16 -mt-16" id="phase2">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12">
+                <h3 class="text-2xl font-bold text-slate-900">Phase 2: Agentic AI Analysis Workflow</h3>
+                <p class="mt-2 text-slate-600">Once data is collected, a series of AI agents perform automated analysis. Each agent has a specialized task, creating a pipeline that transforms raw data into actionable insights. Click on each step of the workflow to understand its function.</p>
+                <div class="lg:flex gap-8 items-center mt-8">
+                    <div class="flex-1">
+                        <div class="space-y-2" id="workflow-diagram">
+                            <div class="step-item p-4 bg-slate-100 rounded-lg cursor-pointer transition-all duration-300" data-step="1"><strong>Step 1:</strong> Data Ingestion &amp; Cleaning</div>
+                            <div class="text-center text-slate-400">▼</div>
+                            <div class="step-item p-4 bg-slate-100 rounded-lg cursor-pointer transition-all duration-300" data-step="2"><strong>Step 2:</strong> Core Analysis Agents</div>
+                            <div class="text-center text-slate-400">▼</div>
+                            <div class="step-item p-4 bg-slate-100 rounded-lg cursor-pointer transition-all duration-300" data-step="3"><strong>Step 3:</strong> Insight Synthesis</div>
+                             <div class="text-center text-slate-400">▼</div>
+                            <div class="step-item p-4 bg-slate-100 rounded-lg cursor-pointer transition-all duration-300" data-step="4"><strong>Step 4:</strong> Content Generation</div>
+                        </div>
+                    </div>
+                    <div class="flex-1 mt-6 lg:mt-0 bg-slate-50 rounded-lg p-6 min-h-[200px]">
+                        <h4 class="font-semibold text-lg text-slate-800 mb-2" id="analysis-title">Select a step</h4>
+                        <p class="text-slate-600" id="analysis-description">Click on a step in the workflow diagram to see a detailed description of the process here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pt-16 -mt-16" id="phase3">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-12">
+                 <h3 class="text-2xl font-bold text-slate-900">Phase 3: Content Format &amp; Publishing Strategy</h3>
+                <p class="mt-2 text-slate-600">The final output must be tailored to audience preferences. The AI's analysis can be formatted in various ways to appeal to different types of readers, from casual moviegoers to dedicated cinephiles. The chart below shows the preferred content formats based on audience type.</p>
+                <div class="text-center my-6">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600 transition-all" id="btn-general">General Audience</button>
+                    <button class="bg-slate-200 text-slate-700 px-4 py-2 rounded-md hover:bg-slate-300 transition-all ml-2" id="btn-cinephile">Cinephiles</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="audienceChart"></canvas>
+                </div>
+                 <div class="mt-12">
+                    <h4 class="text-xl font-bold text-slate-800 text-center">Publishing Platform Options</h4>
+                    <div class="overflow-x-auto mt-4">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b-2 border-slate-200 bg-slate-50 font-semibold">Platform</th>
+                                    <th class="py-2 px-4 border-b-2 border-slate-200 bg-slate-50 font-semibold">Pros</th>
+                                    <th class="py-2 px-4 border-b-2 border-slate-200 bg-slate-50 font-semibold">Cons</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="py-2 px-4 border-b border-slate-200">WordPress</td>
+                                    <td class="py-2 px-4 border-b border-slate-200">Highly customizable, large plugin ecosystem.</td>
+                                    <td class="py-2 px-4 border-b border-slate-200">Requires more maintenance.</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="py-2 px-4 border-b border-slate-200">Ghost / Substack</td>
+                                    <td class="py-2 px-4 border-b border-slate-200">Simple, focused on writing, built-in newsletter.</td>
+                                    <td class="py-2 px-4 border-b border-slate-200">Less design flexibility.</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="py-2 px-4 border-b border-slate-200">Custom Web App</td>
+                                    <td class="py-2 px-4 border-b border-slate-200">Total control over features and interactivity.</td>
+                                    <td class="py-2 px-4 border-b border-slate-200">Highest development cost and effort.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-16 -mt-16" id="phase4">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <h3 class="text-2xl font-bold text-slate-900">Phase 4: The End-to-End Automated Workflow</h3>
+                <p class="mt-2 text-slate-600">This diagram illustrates the complete, automated process from data collection to the final published blog post. The system is designed to run on a schedule (e.g., daily) to continuously monitor and report on new movie releases.</p>
+                <div class="mt-8 p-4 bg-slate-50 rounded-lg">
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4 text-center">
+                        <div class="p-4 bg-blue-100 rounded-lg w-full md:w-auto">
+                            <div class="font-bold text-blue-800">1. Data Fetcher</div>
+                            <div class="text-sm text-blue-600">APIs, Scrapers</div>
+                        </div>
+                        <div class="text-2xl text-slate-400">→</div>
+                        <div class="p-4 bg-indigo-100 rounded-lg w-full md:w-auto">
+                             <div class="font-bold text-indigo-800">2. AI Core</div>
+                            <div class="text-sm text-indigo-600">Analysis &amp; Synthesis</div>
+                        </div>
+                         <div class="text-2xl text-slate-400">→</div>
+                         <div class="p-4 bg-emerald-100 rounded-lg w-full md:w-auto">
+                             <div class="font-bold text-emerald-800">3. Content Engine</div>
+                            <div class="text-sm text-emerald-600">Draft Generation</div>
+                        </div>
+                        <div class="text-2xl text-slate-400">→</div>
+                        <div class="p-4 bg-amber-100 rounded-lg w-full md:w-auto">
+                            <div class="font-bold text-amber-800">4. Publisher</div>
+                            <div class="text-sm text-amber-600">CMS/Blog API</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const analysisSteps = {
+        '1': {
+            title: 'Data Ingestion & Cleaning',
+            description: 'The first agent collects data from all configured sources. It then cleans and standardizes the data, removing duplicates, handling missing values, and converting everything into a unified format for the next stage of analysis.'
+        },
+        '2': {
+            title: 'Core Analysis Agents',
+            description: 'A team of specialized agents analyzes the cleaned data. This includes: a Sentiment Agent to classify reviews as positive/negative/neutral, a Thematic Agent to identify key topics of discussion (e.g., plot, acting, cinematography), and a Trend Agent to track buzz over time.'
+        },
+        '3': {
+            title: 'Insight Synthesis',
+            description: 'This high-level agent takes the outputs from all analysis agents. It synthesizes the findings, identifies contradictions (e.g., high critic scores but negative audience buzz), and formulates a coherent overall narrative about the movie\'s reception.'
+        },
+        '4': {
+            title: 'Content Generation',
+            description: 'The final agent uses the synthesized insights to generate a draft blog post. It can create multiple formats: a quick bullet-point summary, a short paragraph, or a more detailed analysis, depending on the chosen content strategy. This draft is then sent to the publishing platform.'
+        }
+    };
+
+    const workflowDiagram = document.getElementById('workflow-diagram');
+    const analysisTitle = document.getElementById('analysis-title');
+    const analysisDescription = document.getElementById('analysis-description');
+
+    workflowDiagram.addEventListener('click', function(e) {
+        const stepItem = e.target.closest('.step-item');
+        if (stepItem) {
+            const step = stepItem.dataset.step;
+            const stepInfo = analysisSteps[step];
+            
+            document.querySelectorAll('.step-item').forEach(item => item.classList.remove('active'));
+            stepItem.classList.add('active');
+
+            analysisTitle.textContent = stepInfo.title;
+            analysisDescription.textContent = stepInfo.description;
+        }
+    });
+    
+    document.querySelector('.step-item[data-step="1"]').click();
+
+    const audienceData = {
+        general: {
+            labels: ['Quick Summaries', 'Top 10 Lists', 'Visual Infographics', 'In-depth Analysis'],
+            data: [45, 25, 20, 10],
+        },
+        cinephile: {
+            labels: ['In-depth Analysis', 'Director/Actor Deep Dives', 'Thematic Comparisons', 'Quick Summaries'],
+            data: [50, 25, 15, 10],
+        }
+    };
+
+    const chartCtx = document.getElementById('audienceChart').getContext('2d');
+    let audienceChart;
+
+    function renderChart(type) {
+        const data = audienceData[type].data;
+        const labels = audienceData[type].labels;
+
+        if (audienceChart) {
+            audienceChart.destroy();
+        }
+
+        audienceChart = new Chart(chartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Audience Preference',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(139, 92, 246, 0.8)'
+                    ],
+                    borderColor: '#f8fafc',
+                    borderWidth: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const btnGeneral = document.getElementById('btn-general');
+    const btnCinephile = document.getElementById('btn-cinephile');
+
+    btnGeneral.addEventListener('click', () => {
+        renderChart('general');
+        btnGeneral.classList.replace('bg-slate-200', 'bg-blue-500');
+        btnGeneral.classList.replace('text-slate-700', 'text-white');
+        btnCinephile.classList.replace('bg-blue-500', 'bg-slate-200');
+        btnCinephile.classList.replace('text-white', 'text-slate-700');
+    });
+
+    btnCinephile.addEventListener('click', () => {
+        renderChart('cinephile');
+        btnCinephile.classList.replace('bg-slate-200', 'bg-blue-500');
+        btnCinephile.classList.replace('text-slate-700', 'text-white');
+        btnGeneral.classList.replace('bg-blue-500', 'bg-slate-200');
+        btnGeneral.classList.replace('text-white', 'text-slate-700');
+    });
+
+    renderChart('general');
+    
+    const sections = document.querySelectorAll('div[id^="phase"]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === entry.target.id) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, { rootMargin: "-50% 0px -50% 0px" });
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector(link.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+});
+
+function toggleDetails(type) {
+    const allDetails = document.querySelectorAll('div[id^="details-"]');
+    allDetails.forEach(div => {
+        if (div.id !== `details-${type}`) {
+            div.classList.add('hidden');
+        }
+    });
+    const targetDiv = document.getElementById(`details-${type}`);
+    targetDiv.classList.toggle('hidden');
+}
+
+</script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

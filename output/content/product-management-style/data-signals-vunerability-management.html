@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Data Signals for Vulnerability Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .icon-bg {
+            background-color: #334155;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="container mx-auto px-6 py-16 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-4">
+            Harnessing <span class="gradient-text">Data Signals</span> for Proactive Vulnerability Management
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto">
+            Transform your security posture from reactive to proactive by identifying, gathering, and acting on the right intelligence.
+        </p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Section 1: Key Data Signals to Monitor -->
+        <section class="mb-20" id="signals">
+            <h2 class="text-3xl font-bold text-center mb-12">Key Data Signals to Monitor</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Signal Card 1: Vulnerability Scans -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-bg p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold">Vulnerability Scan Data</h3>
+                    </div>
+                    <p class="text-slate-400">Direct intelligence from scanners detailing CVEs, severity scores (CVSS), and the specific systems affected. This is your foundational layer.</p>
+                </div>
+
+                <!-- Signal Card 2: Asset Inventory -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-bg p-3 rounded-full mr-4">
+                             <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold">Asset Inventory Info</h3>
+                    </div>
+                    <p class="text-slate-400">A complete, continuously updated inventory of all hardware, software, and cloud assets. It provides the business context for every vulnerability.</p>
+                </div>
+
+                <!-- Signal Card 3: Network Traffic -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-bg p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold">Network &amp; Flow Data</h3>
+                    </div>
+                    <p class="text-slate-400">Anomalous traffic, unusual port activity, or communication with malicious IPs can indicate an attempted or successful exploit in real-time.</p>
+                </div>
+
+                <!-- Signal Card 4: Logs & Events -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-bg p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold">Log Files &amp; Security Events</h3>
+                    </div>
+                    <p class="text-slate-400">Rich data from firewalls, OS, apps, and SIEMs. Failed logins, errors, and system alerts often point to underlying security weaknesses.</p>
+                </div>
+
+                <!-- Signal Card 5: Threat Intelligence -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-bg p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold">Threat Intelligence Feeds</h3>
+                    </div>
+                    <p class="text-slate-400">External context on new exploits, zero-days, and attacker TTPs. This helps you prioritize vulnerabilities that are actively being targeted in the wild.</p>
+                </div>
+
+                <!-- Signal Card 6: EDR Data -->
+                <div class="card p-6 rounded-lg">
+                    <div class="flex items-center mb-4">
+                        <div class="icon-bg p-3 rounded-full mr-4">
+                            <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-semibold">Endpoint (EDR) Data</h3>
+                    </div>
+                    <p class="text-slate-400">Deep visibility into endpoint activity, including process creation and file modifications, signaling a successful local exploit.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: From Signal to Action -->
+        <section class="mb-16" id="action">
+            <h2 class="text-3xl font-bold text-center mb-12">From Signal to Action: The Lifecycle</h2>
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Timeline Line -->
+                <div aria-hidden="true" class="absolute left-1/2 -ml-px w-0.5 h-full bg-slate-700"></div>
+
+                <!-- Step 1: Gather -->
+                <div class="relative flex items-center justify-between mb-12">
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="z-10 flex items-center justify-center w-12 h-12 bg-emerald-500 rounded-full shadow-lg">
+                        <span class="text-xl font-bold text-white">1</span>
+                    </div>
+                    <div class="w-full md:w-5/12 p-6 card rounded-lg">
+                        <h3 class="font-bold text-xl mb-2">Gather Intelligence</h3>
+                        <p class="text-slate-400">Collect data from all sources: automated scanners, SIEMs, TIPs, and EDR solutions. Centralize this intelligence for a unified view of your environment.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Prioritize -->
+                <div class="relative flex items-center justify-between mb-12">
+                     <div class="w-full md:w-5/12 p-6 card rounded-lg text-right">
+                        <h3 class="font-bold text-xl mb-2">Prioritize with Context</h3>
+                        <p class="text-slate-400">Move beyond CVSS. Correlate threat intel and asset criticality to fix what matters most, first. Focus on vulnerabilities that are exploitable and on critical systems.</p>
+                    </div>
+                    <div class="z-10 flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full shadow-lg">
+                       <span class="text-xl font-bold text-white">2</span>
+                    </div>
+                    <div class="hidden md:block w-5/12"></div>
+                </div>
+
+                <!-- Step 3: Act -->
+                <div class="relative flex items-center justify-between mb-12">
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="z-10 flex items-center justify-center w-12 h-12 bg-sky-500 rounded-full shadow-lg">
+                        <span class="text-xl font-bold text-white">3</span>
+                    </div>
+                    <div class="w-full md:w-5/12 p-6 card rounded-lg">
+                        <h3 class="font-bold text-xl mb-2">Act and Remediate</h3>
+                        <p class="text-slate-400">Execute remediation through patching, configuration changes, or applying compensating controls. Automate workflows to accelerate response times.</p>
+                    </div>
+                </div>
+                
+                 <!-- Step 4: Measure -->
+                <div class="relative flex items-center justify-between">
+                     <div class="w-full md:w-5/12 p-6 card rounded-lg text-right">
+                        <h3 class="font-bold text-xl mb-2">Measure and Improve</h3>
+                        <p class="text-slate-400">Track key metrics like Mean Time to Detect (MTTD) and Remediate (MTTR). Use this data to refine processes and demonstrate program effectiveness.</p>
+                    </div>
+                    <div class="z-10 flex items-center justify-center w-12 h-12 bg-indigo-500 rounded-full shadow-lg">
+                        <span class="text-xl font-bold text-white">4</span>
+                    </div>
+                    <div class="hidden md:block w-5/12"></div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+
+
+</body></html>

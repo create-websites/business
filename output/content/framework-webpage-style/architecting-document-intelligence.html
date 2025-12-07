@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Guide to Document Intelligence Platforms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals with Slate Blue accents -->
+    <!-- Application Structure Plan: The application is designed as a top-down decision-making guide. It starts with a high-level introduction, then presents the core solution categories (Managed IDP, LLM APIs, Self-Hosted) via a tabbed navigation. This allows users to directly compare the main approaches. Within each category, detailed information is presented in cards and interactive tables. A dedicated 'Strategic Framework' section provides use-case-based recommendations and a summary chart, guiding the user to a final decision. This structure was chosen to transform a dense report into a practical, task-oriented tool for architects and developers, prioritizing comparison and decision support over linear reading. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Platform Comparison (Azure, Google, AWS). Goal: Compare. Viz/Method: Interactive HTML Table. Interaction: Tabs to switch between platforms. Justification: Allows for direct, side-by-side comparison of features, pricing, and models. Library/Method: Tailwind CSS for styling, JS for tab logic.
+        - Report Info: Decision Criteria (Cost, Effort, Latency). Goal: Compare. Viz/Method: Grouped Bar Chart. Interaction: Tooltips on hover. Justification: Visually represents the trade-offs between the three main approaches across key business and technical metrics. Library/Method: Chart.js (Canvas).
+        - Report Info: Architectural Flows (e.g., Self-Hosted Pipeline). Goal: Organize/Inform. Viz/Method: Styled HTML/CSS diagram using Flexbox. Interaction: None. Justification: Clearly visualizes process flow without using forbidden SVG/Mermaid. Library/Method: Tailwind CSS.
+        - Report Info: Use-Case Recommendations. Goal: Inform/Guide. Viz/Method: Accordion-style collapsible sections. Interaction: Click to expand/collapse. Justification: Presents specific scenarios and their recommended solutions in a clean, organized manner, preventing information overload. Library/Method: JS for accordion logic.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8; /* Warm off-white */
+            color: #333;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-button.active {
+            border-bottom-color: #4A5568; /* Slate Blue */
+            color: #2D3748; /* Darker Slate */
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #4A5568;
+            color: #FDFBF8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 1000px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Architecting Modern Document Intelligence</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">An interactive guide to comparing technologies for automated data extraction from documents.</p>
+        </header>
+
+        <nav class="flex justify-center border-b border-gray-300 mb-12">
+            <button class="nav-button active text-gray-700 font-semibold py-4 px-6" data-target="intro">Introduction</button>
+            <button class="nav-button text-gray-500 font-semibold py-4 px-6" data-target="solutions">Solution Deep Dive</button>
+            <button class="nav-button text-gray-500 font-semibold py-4 px-6" data-target="framework">Strategic Framework</button>
+        </nav>
+
+        <main>
+            <section class="content-section" id="intro">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">From Pixels to Data: The Evolution of Document Processing</h2>
+                    <p class="text-gray-700 mb-6 text-lg leading-relaxed">
+                        Automating data extraction from documents like invoices and W-2s has shifted from simple text recognition to intelligent, AI-driven analysis. This guide explores the landscape of modern solutions, helping you choose the right technology for your needs. We'll compare managed cloud platforms, direct Large Language Model (LLM) APIs, and self-hosted open-source options.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-8 text-center">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                            <h3 class="text-xl font-semibold mb-2 text-gray-800">Optical Character Recognition (OCR)</h3>
+                            <p class="text-gray-600">The foundational technology. It converts document images into raw, unstructured text. It's fast but lacks contextual understanding, requiring developers to write brittle rules to find specific data.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                            <h3 class="text-xl font-semibold mb-2 text-gray-800">Intelligent Document Processing (IDP)</h3>
+                            <p class="text-gray-600">The modern paradigm. IDP builds on OCR with AI and Machine Learning to classify, extract, and validate data, delivering structured JSON output that's ready for business applications.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section hidden" id="solutions">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-gray-800">A Deep Dive into Extraction Solutions</h2>
+                     <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Explore the three primary approaches to document intelligence. Each has distinct architectures, benefits, and trade-offs.</p>
+                </div>
+                <div class="flex justify-center mb-8">
+                    <div class="flex space-x-2 bg-gray-200 p-1 rounded-lg">
+                        <button class="solution-tab-button tab-button active px-4 py-2 text-sm font-medium rounded-md" data-solution="idp">Managed IDP Platforms</button>
+                        <button class="solution-tab-button tab-button px-4 py-2 text-sm font-medium rounded-md" data-solution="llm">Direct LLM APIs</button>
+                        <button class="solution-tab-button tab-button px-4 py-2 text-sm font-medium rounded-md" data-solution="oss">Self-Hosted Open Source</button>
+                    </div>
+                </div>
+
+                <div class="solution-content" id="idp">
+                    <div class="text-center max-w-3xl mx-auto mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800">Managed IDP Platforms</h3>
+                        <p class="text-gray-700 mt-2">These are powerful, "buy" options from major cloud providers. They offer pre-trained models and managed infrastructure, accelerating development for common document types like invoices and W-2s. They are reliable, scalable, and provide a good balance of power and ease of use.</p>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-lg shadow-md border border-gray-200">
+                        <div id="idp-comparison"></div>
+                    </div>
+                </div>
+
+                <div class="solution-content hidden" id="llm">
+                    <div class="text-center max-w-3xl mx-auto mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800">Direct Extraction with Multimodal LLMs</h3>
+                        <p class="text-gray-700 mt-2">This cutting-edge approach uses general-purpose models like GPT-4o or Gemini to "read" and extract data from documents. Its key advantage is incredible flexibility ("zero-shot" extraction) for handling highly variable or unknown document layouts without any model training.</p>
+                    </div>
+                     <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-800">Pros</h4>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Unmatched flexibility for variable layouts</li>
+                                <li>No training data needed to start ("zero-shot")</li>
+                                <li>Rapid development (prompt engineering vs. model training)</li>
+                                <li>Continuously improving capabilities</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                            <h4 class="font-semibold text-lg mb-2 text-gray-800">Cons</h4>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Potential for "hallucinations" (invented data)</li>
+                                <li>Higher or more variable latency</li>
+                                <li>Token-based pricing can be costly for text-heavy docs</li>
+                                <li>Requires careful prompt engineering for JSON output</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="solution-content hidden" id="oss">
+                    <div class="text-center max-w-3xl mx-auto mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800">Self-Hosted Open-Source</h3>
+                        <p class="text-gray-700 mt-2">The "build" option. This approach provides maximum control, data privacy, and potentially the lowest long-term cost at extreme scale. It involves deploying models like LayoutLM on your own infrastructure but requires significant ML expertise and upfront investment.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h4 class="font-semibold text-lg mb-4 text-center text-gray-800">Example Self-Hosted Pipeline</h4>
+                        <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-center">
+                            <div class="p-4 bg-slate-100 rounded-lg">
+                                <p class="font-semibold">Document Input</p>
+                                <p class="text-sm text-gray-600">(e.g., PDF, JPG)</p>
+                            </div>
+                            <div class="text-2xl text-gray-400 font-mono">→</div>
+                            <div class="p-4 bg-slate-100 rounded-lg">
+                                <p class="font-semibold">Open-Source OCR</p>
+                                <p class="text-sm text-gray-600">(e.g., Tesseract)</p>
+                            </div>
+                            <div class="text-2xl text-gray-400 font-mono">→</div>
+                            <div class="p-4 bg-slate-100 rounded-lg">
+                                <p class="font-semibold">LayoutLM Model</p>
+                                <p class="text-sm text-gray-600">(Fine-tuned)</p>
+                            </div>
+                            <div class="text-2xl text-gray-400 font-mono">→</div>
+                            <div class="p-4 bg-slate-100 rounded-lg">
+                                <p class="font-semibold">Structured JSON</p>
+                                <p class="text-sm text-gray-600">(Key-Value Pairs)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section hidden" id="framework">
+                <div class="text-center mb-12">
+                     <h2 class="text-3xl font-bold text-gray-800">Strategic Framework &amp; Recommendations</h2>
+                     <p class="text-lg text-gray-600 mt-2 max-w-3xl mx-auto">Use this framework to select the optimal technology based on your specific document type and business requirements.</p>
+                </div>
+                
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Decision Criteria Comparison</h3>
+                    <div class="chart-container bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                        <canvas id="decisionChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Use-Case Driven Recommendations</h3>
+                    <div class="space-y-4 max-w-4xl mx-auto" id="recommendations-accordion">
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const navButtons = document.querySelectorAll('.nav-button');
+        const contentSections = document.querySelectorAll('.content-section');
+        const solutionTabButtons = document.querySelectorAll('.solution-tab-button');
+        const solutionContents = document.querySelectorAll('.solution-content');
+
+        const idpData = {
+            'Azure Document Intelligence': {
+                'Primary Customization': 'Custom Neural & Template Models',
+                'Min. Training Data': '5 documents',
+                'Pre-built Invoice': '✓ Yes',
+                'Pre-built W-2': '✓ Yes',
+                'Key Feature': 'Offers two custom model types (Template for fixed layouts, Neural for variable ones) and containerized deployment for on-premise scenarios.'
+            },
+            'Google Document AI': {
+                'Primary Customization': 'GenAI Custom Extractor',
+                'Min. Training Data': '0 (zero-shot) to 5-10 (fine-tuning)',
+                'Pre-built Invoice': '✓ Yes',
+                'Pre-built W-2': '✓ Yes',
+                'Key Feature': 'Deeply integrated with Generative AI, allowing for powerful zero-shot extraction where you just define a schema without providing labeled data.'
+            },
+            'AWS Textract': {
+                'Primary Customization': 'Custom Queries (Adapters)',
+                'Min. Training Data': 'Varies; representative dataset needed',
+                'Pre-built Invoice': '✓ Yes (AnalyzeExpense API)',
+                'Pre-built W-2': '✓ Yes (via Forms/Queries)',
+                'Key Feature': 'Uses a unique "Queries" feature where you train the model by asking natural language questions, which is great for targeting specific fields.'
+            }
+        };
+
+        const recommendationsData = [
+            {
+                title: 'Scenario A: High-Volume, Standardized Forms (e.g., W-2s)',
+                content: '<strong>Recommendation:</strong> Managed IDP Platform with a Pre-built Model (e.g., Azure W-2 model, Google W2 parser).<br><br><strong>Rationale:</strong> These documents have fixed layouts. Pre-built models from cloud vendors offer the highest reliability, accuracy, and speed with minimal development effort. The predictable per-page cost is ideal for budgeting at scale.'
+            },
+            {
+                title: 'Scenario B: Semi-Structured, Variable Documents (e.g., Invoices)',
+                content: '<strong>Recommendation:</strong> A Hybrid Approach. Start with a managed IDP pre-built model (e.g., AWS AnalyzeExpense) and use a Direct LLM API call as a fallback for failures or low-confidence results.<br><br><strong>Rationale:</strong> Most invoices follow common patterns that pre-built models handle efficiently. The LLM provides a flexible safety net for the "long tail" of unique layouts, maximizing accuracy without using the more expensive LLM for every document.'
+            },
+            {
+                title: 'Scenario C: Unstructured Documents (e.g., Contracts, Legal Briefs)',
+                content: '<strong>Recommendation:</strong> Direct Multimodal LLM API or a fine-tuned Custom Neural/Generative Model.<br><br><strong>Rationale:</strong> Value lies in semantic context, not visual structure. LLMs excel at this type of reading comprehension. A template-based IDP would fail. A custom neural model from Azure or Google is a strong alternative.'
+            },
+            {
+                title: 'Scenario D: Maximum Control & Data Privacy',
+                content: '<strong>Recommendation:</strong> A Self-Hosted Open-Source Pipeline (e.g., LayoutLMv3).<br><br><strong>Rationale:</strong> This is the only path that guarantees data never leaves your private network. It offers maximum customization but requires significant investment in infrastructure and ML expertise. It can be more cost-effective at extreme volumes.'
+            }
+        ];
+
+        function createIdpTable(platform) {
+            const data = idpData[platform];
+            let tableHtml = `<h4 class="text-xl font-bold text-center mb-4 text-gray-800">${platform}</h4>`;
+            tableHtml += '<div class="overflow-x-auto"><table class="w-full text-left text-sm">';
+            
+            Object.keys(data).forEach(key => {
+                tableHtml += `<tr class="border-b border-gray-200"><td class="py-3 pr-4 font-semibold text-gray-600">${key}</td><td class="py-3 text-gray-800">${data[key]}</td></tr>`;
+            });
+
+            tableHtml += '</table></div>';
+            return tableHtml;
+        }
+
+        function renderIdpContent() {
+            const container = document.getElementById('idp-comparison');
+            let content = '<div class="flex justify-center mb-6 border-b border-gray-300">';
+            Object.keys(idpData).forEach((platform, index) => {
+                content += `<button class="idp-tab-button nav-button px-4 py-3 text-sm font-medium ${index === 0 ? 'active' : ''}" data-platform="${platform}">${platform}</button>`;
+            });
+            content += '</div>';
+            content += '<div id="idp-table-container"></div>';
+            container.innerHTML = content;
+
+            const idpTableContainer = document.getElementById('idp-table-container');
+            idpTableContainer.innerHTML = createIdpTable(Object.keys(idpData)[0]);
+
+            document.querySelectorAll('.idp-tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.idp-tab-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    idpTableContainer.innerHTML = createIdpTable(button.dataset.platform);
+                });
+            });
+        }
+        
+        function renderRecommendations() {
+            const container = document.getElementById('recommendations-accordion');
+            let content = '';
+            recommendationsData.forEach((item, index) => {
+                content += `
+                    <div class="bg-white border border-gray-200 rounded-lg">
+                        <h2>
+                            <button type="button" class="accordion-button flex items-center justify-between w-full p-5 font-medium text-left text-gray-700 hover:bg-gray-100" data-index="${index}">
+                                <span>${item.title}</span>
+                                <svg class="w-3 h-3 rotate-0 shrink-0 transition-transform duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                                </svg>
+                            </button>
+                        </h2>
+                        <div class="accordion-content p-5 border-t border-gray-200">
+                            <p class="text-gray-600">${item.content}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = content;
+
+            document.querySelectorAll('.accordion-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const wasOpen = button.classList.contains('open');
+                    
+                    document.querySelectorAll('.accordion-button').forEach(btn => {
+                        btn.classList.remove('open');
+                        btn.querySelector('svg').style.transform = 'rotate(0deg)';
+                    });
+
+                    if (!wasOpen) {
+                        button.classList.add('open');
+                        button.querySelector('svg').style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+        }
+
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                contentSections.forEach(section => {
+                    if (section.id === button.dataset.target) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        solutionTabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                solutionTabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                solutionContents.forEach(content => {
+                    if (content.id === button.dataset.solution) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        const chartData = {
+            labels: ['Accuracy (Structured)', 'Accuracy (Variable)', 'Initial Dev Effort', 'Per-Page Cost (High Vol)', 'Latency', 'Data Privacy'],
+            datasets: [
+                {
+                    label: 'Managed IDP',
+                    data: [9, 7, 3, 6, 3, 7],
+                    backgroundColor: 'rgba(74, 85, 104, 0.7)',
+                    borderColor: 'rgba(74, 85, 104, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Direct LLM API',
+                    data: [8, 9, 2, 5, 7, 7],
+                    backgroundColor: 'rgba(113, 128, 150, 0.7)',
+                    borderColor: 'rgba(113, 128, 150, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Self-Hosted OS',
+                    data: [8, 7, 9, 2, 5, 10],
+                    backgroundColor: 'rgba(160, 174, 192, 0.7)',
+                    borderColor: 'rgba(160, 174, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        const chartConfig = {
+            type: 'bar',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 10,
+                        title: {
+                            display: true,
+                            text: 'Relative Score (1=Low/Bad, 10=High/Good)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.x !== null) {
+                                    label += context.parsed.x;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('load', () => {
+            renderIdpContent();
+            renderRecommendations();
+            const ctx = document.getElementById('decisionChart').getContext('2d');
+            new Chart(ctx, chartConfig);
+        });
+
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Agentic System Decision Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed as a guided journey. It starts with a clear introduction (Hero), moves to a detailed exploration of the four agent types presented in a card-based grid for easy comparison (Agent Systems), then provides an interactive questionnaire to apply the decision matrix (Decision Matrix). This is followed by a visual comparison of the systems on a chart (Comparison), and concludes with key advice and observations (Key Takeaways). This thematic, task-oriented structure was chosen over a linear report format to empower users to first learn, then immediately apply the knowledge in an engaging way, reinforcing their understanding and making the information more actionable. -->
+    <!-- Visualization & Content Choices: 
+        - Agent Systems Overview: Report Info -> Organize & Inform -> Card Layout (HTML/Tailwind) -> Interaction: Hover effects to highlight details -> Justification: Cards allow for scannable, digestible chunks of information, making it easy to compare the four distinct agent types side-by-side.
+        - Decision Matrix: Report Info -> Goal: Guide Decision -> Interactive Questionnaire (HTML/JS) -> Interaction: User selects answers, JS reveals the recommended agent type with explanation -> Justification: Transforms a static list of questions into an active, personalized tool, providing immediate value and clarity.
+        - System Comparison Chart: Report Info -> Goal: Compare -> Radar Chart (Chart.js/Canvas) -> Interaction: Tooltips on hover provide specific scores and details -> Justification: A radar chart effectively visualizes the multi-dimensional nature (Autonomy, Complexity, Predictability, Cost) of each system, offering a quick, comparative snapshot that text alone cannot provide.
+        - Key Takeaways: Report Info -> Inform & Advise -> Accordion (HTML/JS) -> Interaction: Clicking headers expands to reveal content -> Justification: An accordion keeps the final section clean and uncluttered, allowing users to focus on one key piece of advice at a time.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #3D3D3D;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #D97706;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background-color: #F59E0B;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #D97706;
+        }
+        .radio-label:has(input:checked) {
+            background-color: #FEF3C7;
+            border-color: #FBBF24;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 600px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) { 
+            .chart-container { 
+                height: 400px; 
+            } 
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-amber-700">Agentic Systems Guide</h1>
+            <div class="hidden md:flex space-x-8">
+                <a class="nav-link font-medium" href="#overview">Overview</a>
+                <a class="nav-link font-medium" href="#matrix">Decision Matrix</a>
+                <a class="nav-link font-medium" href="#comparison">Comparison</a>
+                <a class="nav-link font-medium" href="#takeaways">Key Takeaways</a>
+            </div>
+            <button class="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500" id="mobile-menu-button">
+                 <div class="w-6 h-0.5 bg-gray-600 mb-1.5"></div>
+                 <div class="w-6 h-0.5 bg-gray-600"></div>
+            </button>
+        </nav>
+        <div class="hidden md:hidden px-6 pb-4" id="mobile-menu">
+            <a class="block py-2 nav-link" href="#overview">Overview</a>
+            <a class="block py-2 nav-link" href="#matrix">Decision Matrix</a>
+            <a class="block py-2 nav-link" href="#comparison">Comparison</a>
+            <a class="block py-2 nav-link" href="#takeaways">Key Takeaways</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="text-center py-16" id="hero">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Choosing the Right Automation System</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto"> Kreatebots guide to matching the right level of agent autonomy to your specific business challenges. Navigate the four types of agentic systems and find the perfect fit for your tasks.</p>
+        </section>
+
+        <section class="py-16" id="overview">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold">Four Agentic Systems: An Overview</h3>
+                <p class="text-md text-gray-500 mt-2">This section provides a detailed look at the four distinct types of agentic systems. Each card explains the core characteristics, highlights typical use cases, and outlines the primary benefits, allowing you to easily compare and contrast their capabilities.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Card 1 -->
+                <div class="card bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 bg-amber-100 rounded-full mr-3"><span class="text-xl">⚙️</span></div>
+                        <h4 class="text-xl font-semibold">Rule-Based Systems</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">The foundational layer. Pure if-this-then-that logic with no AI reasoning required. Best for tasks where all conditions are known upfront.</p>
+                    <ul class="text-sm space-y-2 mb-4 text-gray-700">
+                        <li><span class="font-semibold text-amber-800">→ Predictable:</span> 100% auditable and scripted.</li>
+                        <li><span class="font-semibold text-amber-800">→ Fast:</span> No API calls or model inference.</li>
+                        <li><span class="font-semibold text-amber-800">→ No LLM:</span> Zero dependency on large language models.</li>
+                    </ul>
+                    <p class="text-xs bg-gray-100 p-2 rounded-md"><span class="font-bold">Example:</span> Auto-approve expenses under $500, rename files by pattern, or copy Excel data to forms.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="card bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 bg-amber-100 rounded-full mr-3"><span class="text-xl">🤝</span></div>
+                        <h4 class="text-xl font-semibold">Workflow Agents</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">The enhancement layer where an LLM assists a human who makes the final decision. Ideal for boosting productivity with minimal risk.</p>
+                    <ul class="text-sm space-y-2 mb-4 text-gray-700">
+                        <li><span class="font-semibold text-amber-800">→ Human-in-the-loop:</span> AI drafts and suggests, people execute.</li>
+                        <li><span class="font-semibold text-amber-800">→ Low Risk:</span> Quick value with no process changes needed.</li>
+                        <li><span class="font-semibold text-amber-800">→ High Gain:</span> Can provide a 30-50% productivity boost.</li>
+                    </ul>
+                    <p class="text-xs bg-gray-100 p-2 rounded-md"><span class="font-bold">Example:</span> Zendesk agent that drafts support responses, meeting transcript summarizer.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="card bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 bg-amber-100 rounded-full mr-3"><span class="text-xl">🚀</span></div>
+                        <h4 class="text-xl font-semibold">Semi-Autonomous Agents</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">The execution layer. These agents handle complex, multi-step tasks within strict guardrails, replacing workflows that take 2-8 hours.</p>
+                     <ul class="text-sm space-y-2 mb-4 text-gray-700">
+                        <li><span class="font-semibold text-amber-800">→ Orchestration:</span> Chains 5-20 actions across systems.</li>
+                        <li><span class="font-semibold text-amber-800">→ Bounded Autonomy:</span> Operates within a well-defined scope.</li>
+                        <li><span class="font-semibold text-amber-800">→ High Impact:</span> Replaces significant manual work.</li>
+                    </ul>
+                    <p class="text-xs bg-gray-100 p-2 rounded-md"><span class="font-bold">Example:</span> Lead enrichment that fetches CRM data, drafts personalized emails, and logs results.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="card bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <div class="p-2 bg-amber-100 rounded-full mr-3"><span class="text-xl">🧠</span></div>
+                        <h4 class="text-xl font-semibold">Autonomous Agents</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">The strategic layer. You set a high-level objective, and the agent determines the path, coordinates across tools, and self-corrects over time.</p>
+                     <ul class="text-sm space-y-2 mb-4 text-gray-700">
+                        <li><span class="font-semibold text-amber-800">→ Goal-driven:</span> Solves problems without a pre-defined path.</li>
+                        <li><span class="font-semibold text-amber-800">→ Cross-system:</span> Works across many tools over days or weeks.</li>
+                        <li><span class="font-semibold text-amber-800">→ Self-correcting:</span> Detects failures and adjusts strategy.</li>
+                    </ul>
+                    <p class="text-xs bg-gray-100 p-2 rounded-md"><span class="font-bold">Example:</span> Competitive intelligence that monitors news 24/7 and generates executive briefings.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-white rounded-xl shadow-lg" id="matrix">
+            <div class="text-center mb-12 px-4">
+                <h3 class="text-3xl font-bold">Interactive Decision Matrix</h3>
+                <p class="text-md text-gray-500 mt-2 max-w-3xl mx-auto">This tool operationalizes the decision matrix from the report. By answering a few diagnostic questions about your task, you can receive a tailored recommendation for which agentic system to deploy. This transforms the framework into a practical, hands-on utility for your specific needs.</p>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="space-y-8" id="quiz-container">
+                    <div class="question-group" data-question="1">
+                        <p class="font-semibold text-lg mb-4 text-center">1. How structured is the task and its inputs?</p>
+                        <div class="grid sm:grid-cols-2 gap-4 px-4">
+                            <label class="radio-label p-4 border-2 rounded-lg cursor-pointer text-center">
+                                <input class="hidden" name="q1" type="radio" value="structured"/>
+                                <strong class="text-amber-800">Structured</strong>
+                                <p class="text-sm text-gray-500">Inputs are predictable and follow a strict format.</p>
+                            </label>
+                            <label class="radio-label p-4 border-2 rounded-lg cursor-pointer text-center">
+                                <input class="hidden" name="q1" type="radio" value="unstructured"/>
+                                <strong class="text-amber-800">Unstructured</strong>
+                                <p class="text-sm text-gray-500">Inputs vary and require interpretation (e.g., natural language).</p>
+                            </label>
+                        </div>
+                    </div>
+                     <div class="question-group hidden" data-question="2">
+                        <p class="font-semibold text-lg mb-4 text-center">2. What level of human oversight is required?</p>
+                        <div class="grid sm:grid-cols-2 gap-4 px-4">
+                            <label class="radio-label p-4 border-2 rounded-lg cursor-pointer text-center">
+                                <input class="hidden" name="q2" type="radio" value="validation"/>
+                                <strong class="text-amber-800">Human Validation Required</strong>
+                                <p class="text-sm text-gray-500">The system should suggest actions, but a human must approve.</p>
+                            </label>
+                            <label class="radio-label p-4 border-2 rounded-lg cursor-pointer text-center">
+                                <input class="hidden" name="q2" type="radio" value="autonomous"/>
+                                <strong class="text-amber-800">Autonomous Execution</strong>
+                                <p class="text-sm text-gray-500">The system can execute tasks without direct human approval.</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="question-group hidden" data-question="3">
+                        <p class="font-semibold text-lg mb-4 text-center">3. What is the scope of the process?</p>
+                        <div class="grid sm:grid-cols-2 gap-4 px-4">
+                            <label class="radio-label p-4 border-2 rounded-lg cursor-pointer text-center">
+                                <input class="hidden" name="q3" type="radio" value="bounded"/>
+                                <strong class="text-amber-800">Bounded &amp; Multi-Step</strong>
+                                <p class="text-sm text-gray-500">A complex but well-defined workflow with clear success criteria.</p>
+                            </label>
+                             <label class="radio-label p-4 border-2 rounded-lg cursor-pointer text-center">
+                                <input class="hidden" name="q3" type="radio" value="ongoing"/>
+                                <strong class="text-amber-800">Ongoing &amp; Adaptive</strong>
+                                <p class="text-sm text-gray-500">Requires continuous adaptation across multiple systems to meet a goal.</p>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 text-center hidden p-6 bg-amber-50 rounded-lg border-2 border-amber-200 mx-4" id="result-container">
+                    <h4 class="text-2xl font-bold mb-2 text-amber-900">Recommended System:</h4>
+                    <p class="text-xl font-semibold mb-2" id="result-title"></p>
+                    <p class="text-gray-700" id="result-description"></p>
+                    <button class="mt-6 btn-primary font-bold py-2 px-4 rounded-lg" id="reset-quiz">Start Over</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16" id="comparison">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold">System Comparison</h3>
+                <p class="text-md text-gray-500 mt-2 max-w-3xl mx-auto">This section offers a visual breakdown of the four agentic systems across key dimensions. The chart below helps to illustrate the trade-offs between autonomy, complexity, predictability, and implementation cost, providing an at-a-glance understanding of how each system is positioned.</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="agentComparisonChart"></canvas>
+            </div>
+        </section>
+
+        <section class="py-16" id="takeaways">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold">Key Takeaways &amp; Advice</h3>
+                 <p class="text-md text-gray-500 mt-2 max-w-3xl mx-auto">This final section synthesizes the core message of the report into actionable advice and observations. Use the accordions to explore the most important principles for developing a mature and effective AI agent strategy, ensuring you serve the problem, not just the technology.</p>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-gray-200">
+                    <h2 class="accordion-header mb-0">
+                        <button class="w-full text-left p-4 font-semibold flex justify-between items-center" type="button">
+                            Strategic Deployment is Key
+                            <span class="transform transition-transform duration-300">▼</span>
+                        </button>
+                    </h2>
+                    <div class="accordion-content">
+                        <div class="p-4 border-t border-gray-200 text-gray-600">
+                           A mature AI strategy deploys all four types of agents where they deliver maximum value. These are not progressive stages to be achieved in order, but a portfolio of tools to be used appropriately. Your invoice processing might use rule-based systems while your market research runs on autonomous agents.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item bg-white rounded-lg shadow-sm border border-gray-200">
+                    <h2 class="accordion-header mb-0">
+                        <button class="w-full text-left p-4 font-semibold flex justify-between items-center" type="button">
+                           The Architecture Serves the Problem
+                           <span class="transform transition-transform duration-300">▼</span>
+                        </button>
+                    </h2>
+                    <div class="accordion-content">
+                        <div class="p-4 border-t border-gray-200 text-gray-600">
+                           The most important principle is to select the architecture that best fits the problem you're trying to solve. Avoid the temptation to use the most advanced technology if a simpler, more predictable system can achieve the goal more effectively and reliably.
+                        </div>
+                    </div>
+                </div>
+                 <div class="accordion-item bg-white rounded-lg shadow-sm border border-gray-200">
+                    <h2 class="accordion-header mb-0">
+                        <button class="w-full text-left p-4 font-semibold flex justify-between items-center" type="button">
+                           The Winning Strategy
+                           <span class="transform transition-transform duration-300">▼</span>
+                        </button>
+                    </h2>
+                    <div class="accordion-content">
+                        <div class="p-4 border-t border-gray-200 text-gray-600">
+                            The companies that are truly winning with AI agents aren't necessarily the ones with the most sophisticated technology. They are the ones who excel at matching the right level of autonomy to each specific business challenge, ensuring efficiency, reliability, and a strong return on investment.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                             targetElement.scrollIntoView({
+                                behavior: 'smooth'
+                            });
+                        }
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+
+            const quizContainer = document.getElementById('quiz-container');
+            const resultContainer = document.getElementById('result-container');
+            const resetQuizButton = document.getElementById('reset-quiz');
+
+            const results = {
+                'rule-based': {
+                    title: 'Rule-Based System',
+                    description: 'This task is highly structured with predictable inputs and requires no interpretation. A rule-based system provides the fastest, most reliable, and 100% auditable solution.'
+                },
+                'workflow': {
+                    title: 'Workflow Agent',
+                    description: 'The task requires language understanding but needs human validation before execution. A workflow agent is perfect for assisting humans, drafting content, and boosting productivity without full automation risk.'
+                },
+                'semi-autonomous': {
+                    title: 'Semi-Autonomous Agent',
+                    description: 'This is a complex, multi-step process that is well-defined and operates within clear boundaries. A semi-autonomous agent can execute the entire workflow, saving significant time.'
+                },
+                'autonomous': {
+                    title: 'Autonomous Agent',
+                    description: 'The task is goal-oriented, requires adaptation, and spans multiple systems. An autonomous agent is needed to independently problem-solve, strategize, and self-correct over time.'
+                }
+            };
+
+            let answers = {};
+
+            quizContainer.addEventListener('change', function(e) {
+                if (e.target.type === 'radio') {
+                    const questionGroup = e.target.closest('.question-group');
+                    const questionNumber = parseInt(questionGroup.dataset.question);
+                    answers[`q${questionNumber}`] = e.target.value;
+                    handleQuizLogic();
+                }
+            });
+
+            function handleQuizLogic() {
+                if (answers.q1 === 'structured') {
+                    showResult('rule-based');
+                    return;
+                }
+                
+                const q2Group = document.querySelector('[data-question="2"]');
+                if (answers.q1 === 'unstructured') {
+                    q2Group.classList.remove('hidden');
+                } else {
+                    q2Group.classList.add('hidden');
+                }
+
+                if (answers.q2 === 'validation') {
+                    showResult('workflow');
+                    return;
+                }
+
+                const q3Group = document.querySelector('[data-question="3"]');
+                if (answers.q2 === 'autonomous') {
+                    q3Group.classList.remove('hidden');
+                } else {
+                    q3Group.classList.add('hidden');
+                }
+
+                if (answers.q3 === 'bounded') {
+                    showResult('semi-autonomous');
+                } else if (answers.q3 === 'ongoing') {
+                    showResult('autonomous');
+                }
+            }
+
+            function showResult(systemKey) {
+                quizContainer.classList.add('hidden');
+                resultContainer.classList.remove('hidden');
+                const result = results[systemKey];
+                document.getElementById('result-title').textContent = result.title;
+                document.getElementById('result-description').textContent = result.description;
+            }
+
+            resetQuizButton.addEventListener('click', function() {
+                answers = {};
+                resultContainer.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+                document.querySelectorAll('.question-group').forEach((group, index) => {
+                    if (index > 0) group.classList.add('hidden');
+                });
+                document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+            });
+            
+            const accordions = document.querySelectorAll('.accordion-item');
+            accordions.forEach(item => {
+                const header = item.querySelector('.accordion-header button');
+                const content = item.querySelector('.accordion-content');
+                const icon = header.querySelector('span');
+
+                header.addEventListener('click', () => {
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        accordions.forEach(otherItem => {
+                           const otherContent = otherItem.querySelector('.accordion-content');
+                           const otherIcon = otherItem.querySelector('.accordion-header button span');
+                           otherContent.style.maxHeight = null;
+                           otherIcon.style.transform = 'rotate(0deg)';
+                        });
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            const ctx = document.getElementById('agentComparisonChart').getContext('2d');
+            const agentComparisonChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Autonomy', 'Task Complexity', 'Predictability', 'Implementation Cost'],
+                    datasets: [{
+                        label: 'Rule-Based',
+                        data: [1, 1, 10, 2],
+                        backgroundColor: 'rgba(251, 191, 36, 0.2)',
+                        borderColor: 'rgba(251, 191, 36, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Workflow',
+                        data: [3, 4, 7, 4],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Semi-Autonomous',
+                        data: [7, 8, 5, 7],
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Autonomous',
+                        data: [10, 10, 2, 10],
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 14,
+                                },
+                                color: '#3D3D3D'
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(253, 251, 248, 1)',
+                                color: 'rgba(0,0,0,0.5)',
+                                stepSize: 2
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.r !== null) {
+                                        label += context.parsed.r;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

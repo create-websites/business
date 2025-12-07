@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Financial Data Signal Universe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard, moving from broad categories to specifics. The top-level choice is "Free vs. Paid" data, which acts as a master filter. Below this, users can explore specific "Data Types" (Market, Fundamental, Alternative) presented as cards. Clicking a card reveals details, examples, and connected "Use Cases". A separate "Use Case" section allows for reverse exploration: clicking a use case highlights the relevant data types. This two-way interactive structure was chosen to empower different user journeys—whether starting from a known data category or a specific business problem—making the complex landscape of financial data intuitive and easy to navigate. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Free vs. Paid Data Categories -> Goal: High-level filtering -> Viz/Presentation: Toggle Buttons -> Interaction: Click to update entire app view -> Justification: Provides a clear, simple entry point for exploration. -> Library/Method: HTML/JS.
+        - Report Info: Data Types (Market, Fundamental, etc.) -> Goal: Organize & Inform -> Viz/Presentation: Interactive Cards -> Interaction: Click to show details and update context -> Justification: Breaks down complex info into manageable chunks, preventing overload. -> Library/Method: HTML/CSS/JS.
+        - Report Info: Relative importance/availability of data types -> Goal: Compare -> Viz/Presentation: Bar Chart -> Interaction: Chart dynamically updates based on Free/Paid category selection -> Justification: A bar chart offers an immediate visual comparison of different data sources. -> Library/Method: Chart.js (Canvas).
+        - Report Info: Connection between Data Types and Use Cases -> Goal: Show Relationships -> Viz/Presentation: Interactive Highlighting between sections -> Interaction: Clicking a use case card highlights relevant data type cards, and vice versa -> Justification: Creates a powerful, bi-directional learning tool that clarifies practical applications. -> Library/Method: JS class manipulation. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 40vh;
+        }
+        .data-type-card, .use-case-card {
+            transition: all 0.3s ease-in-out;
+        }
+        .active-tab {
+            background-color: #38b2ac;
+            color: white;
+        }
+        .selected-card {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #38b2ac;
+        }
+         .highlight-card {
+            border: 2px solid #38b2ac;
+            box-shadow: 0 0 15px rgba(56, 178, 172, 0.5);
+        }
+        .content-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="app">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">The Financial Data Signal Universe</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to the datasets and signals powering modern financial products. Explore the landscape, from free public data to proprietary sources, and see how they connect to real-world applications.</p>
+        </header>
+
+        <section class="mb-10" id="data-source-selector">
+            <div class="flex justify-center bg-slate-200 rounded-full p-1 max-w-sm mx-auto">
+                <button class="category-btn w-1/2 py-2 px-4 rounded-full text-sm font-semibold focus:outline-none transition-colors duration-300" data-category="free">Free &amp; Public Data</button>
+                <button class="category-btn w-1/2 py-2 px-4 rounded-full text-sm font-semibold focus:outline-none transition-colors duration-300" data-category="paid">Paid &amp; Proprietary</button>
+            </div>
+        </section>
+
+        <main class="space-y-16">
+            <section id="data-type-explorer">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">Explore Data Types</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-2xl mx-auto">Select a data category above, then click on a data type below to learn more. Discover what each type entails, see common examples, and understand its role in the financial ecosystem.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="data-type-grid">
+                </div>
+            </section>
+            
+            <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8 min-h-[300px] content-fade-in hidden" id="details-view">
+                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <div class="lg:col-span-2" id="data-type-details">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-3" id="details-title"></h3>
+                        <p class="text-slate-600 mb-4" id="details-description"></p>
+                        <h4 class="font-semibold text-slate-800 mb-2">Common Signals &amp; Datasets:</h4>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1" id="details-examples"></ul>
+                    </div>
+                    <div class="lg:col-span-3">
+                         <h3 class="text-xl font-bold text-slate-900 mb-3 text-center" id="details-use-cases-title">Connected Use Cases</h3>
+                         <div class="flex flex-wrap gap-3 justify-center" id="details-use-cases">
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="data-comparison">
+                 <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">Data Landscape Comparison</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-2xl mx-auto">This chart illustrates the relative availability and volume of signals across different data types within the selected category. It provides a high-level view of where data is most concentrated.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="chart-container">
+                        <canvas id="data-comparison-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="use-case-explorer">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">Explore by Use Case</h2>
+                    <p class="mt-2 text-md text-slate-600 max-w-2xl mx-auto">Discover how different data signals are combined to build powerful financial products. Click on a use case to see which data types are most critical for its implementation.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="use-case-grid">
+                </div>
+                 <div class="mt-8 text-center text-slate-600 bg-slate-100 p-4 rounded-lg min-h-[50px]" id="use-case-details-text">
+                    <p>Select a use case to see more information.</p>
+                 </div>
+            </section>
+        </main>
+        
+        <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const financialData = {
+                free: {
+                    title: "Free & Public Data",
+                    types: {
+                        market: {
+                            name: "Market Data",
+                            icon: '📈',
+                            description: "Publicly available data related to trading activity and price movements from exchanges and public sources.",
+                            examples: ["End-of-day stock prices (e.g., Yahoo Finance)", "Basic foreign exchange rates", "Cryptocurrency prices from public APIs", "Delayed futures data"],
+                            useCases: ["personalPortfolio", "basicResearch", "marketAnalysis"],
+                        },
+                        fundamental: {
+                            name: "Fundamental & Corporate Data",
+                            icon: '🏢',
+                            description: "Information released by public companies about their financial health and operations, often found in regulatory filings.",
+                            examples: ["Quarterly earnings reports (SEC EDGAR)", "Annual financial statements", "Press releases and corporate announcements", "Insider trading filings"],
+                            useCases: ["valueInvesting", "basicResearch", "creditScoring"],
+                        },
+                        economic: {
+                            name: "Macroeconomic Data",
+                            icon: '🌍',
+                            description: "Data published by governments and international organizations that reflects the state of the economy.",
+                            examples: ["GDP growth rates (BEA)", "Unemployment figures (BLS)", "Inflation rates (CPI)", "Central bank interest rates (Federal Reserve)"],
+                            useCases: ["marketAnalysis", "riskManagement", "valueInvesting"],
+                        },
+                    },
+                    chartData: {
+                        labels: ["Market Data", "Fundamental Data", "Macroeconomic Data"],
+                        values: [85, 70, 65],
+                        label: "Relative Signal Volume (Free)"
+                    }
+                },
+                paid: {
+                    title: "Paid & Proprietary",
+                    types: {
+                        market: {
+                            name: "Real-Time & Granular Market Data",
+                            icon: '⚡',
+                            description: "High-frequency, low-latency data feeds directly from exchanges or specialized vendors, crucial for time-sensitive applications.",
+                            examples: ["Level 2 order book data", "Real-time tick data", "Consolidated market data feeds (e.g., Bloomberg, Refinitiv)", "Options pricing data"],
+                            useCases: ["algoTrading", "riskManagement", "marketAnalysis"],
+                        },
+                        fundamental: {
+                            name: "Aggregated & Cleaned Fundamentals",
+                            icon: '📊',
+                            description: "Cleaned, standardized, and aggregated financial statement data and estimates from providers that add value beyond raw filings.",
+                            examples: ["Standardized financials (e.g., S&P Capital IQ, FactSet)", "Analyst consensus estimates", "Corporate supply chain data", "M&A transaction databases"],
+                            useCases: ["valueInvesting", "riskManagement", "creditScoring"],
+                        },
+                        alternative: {
+                            name: "Alternative Data",
+                            icon: '🛰️',
+                            description: "Non-traditional data sources that can provide unique insights into company performance and market trends.",
+                            examples: ["Satellite imagery of retail parking lots", "Credit card transaction data", "Web scraping and social media sentiment", "Geolocation data from mobile devices"],
+                            useCases: ["algoTrading", "marketAnalysis", "riskManagement"],
+                        }
+                    },
+                    chartData: {
+                        labels: ["Real-Time Market", "Aggregated Fundamentals", "Alternative Data"],
+                        values: [95, 80, 90],
+                        label: "Relative Signal Volume (Paid)"
+                    }
+                }
+            };
+
+            const useCases = {
+                algoTrading: {
+                    name: "Algorithmic Trading",
+                    description: "Automated trading strategies that rely on real-time data to execute trades at high speeds, often exploiting small price discrepancies.",
+                    relevantData: ['market', 'alternative']
+                },
+                riskManagement: {
+                    name: "Risk Management",
+                    description: "Models and systems used to identify, measure, and mitigate financial risks, such as market risk, credit risk, and operational risk.",
+                    relevantData: ['market', 'fundamental', 'alternative', 'economic']
+                },
+                marketAnalysis: {
+                    name: "Sentiment & Market Analysis",
+                    description: "Analyzing data to gauge market mood and predict broader market movements, going beyond individual company analysis.",
+                    relevantData: ['market', 'alternative', 'economic']
+                },
+                valueInvesting: {
+                    name: "Fundamental & Value Investing",
+                    description: "A strategy that involves picking stocks that appear to be trading for less than their intrinsic or book value based on company financials.",
+                    relevantData: ['fundamental', 'economic']
+                },
+                creditScoring: {
+                    name: "Corporate Credit Scoring",
+                    description: "Assessing the creditworthiness of a company by analyzing its financial health, obligations, and ability to meet debt payments.",
+                    relevantData: ['fundamental']
+                },
+                personalPortfolio: {
+                    name: "Personal Portfolio Tracking",
+                    description: "Basic tracking and analysis of personal investments, typically using end-of-day pricing and public company information.",
+                    relevantData: ['market']
+                },
+                basicResearch: {
+                    name: "Academic & Basic Research",
+                    description: "Utilizing publicly available data for academic studies, market research, and developing foundational financial models.",
+                    relevantData: ['market', 'fundamental']
+                },
+            };
+
+            let state = {
+                category: 'free',
+                selectedDataType: null,
+                selectedUseCase: null,
+            };
+
+            const dataTypeGrid = document.getElementById('data-type-grid');
+            const useCaseGrid = document.getElementById('use-case-grid');
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const chartCanvas = document.getElementById('data-comparison-chart');
+            
+            const detailsView = document.getElementById('details-view');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsDescription = document.getElementById('details-description');
+            const detailsExamples = document.getElementById('details-examples');
+            const detailsUseCases = document.getElementById('details-use-cases');
+            const useCaseDetailsText = document.getElementById('use-case-details-text');
+
+            let dataChart;
+
+            function render() {
+                renderCategoryButtons();
+                renderDataTypeGrid();
+                renderUseCaseGrid();
+                updateChart();
+                updateDetailsView();
+                updateHighlights();
+            }
+
+            function renderCategoryButtons() {
+                categoryBtns.forEach(btn => {
+                    btn.classList.toggle('active-tab', btn.dataset.category === state.category);
+                });
+            }
+
+            function renderDataTypeGrid() {
+                dataTypeGrid.innerHTML = '';
+                const data = financialData[state.category].types;
+                for (const key in data) {
+                    const type = data[key];
+                    const card = document.createElement('div');
+                    card.className = 'data-type-card bg-white p-6 rounded-xl border-2 border-transparent shadow-md hover:shadow-xl hover:border-teal-500 cursor-pointer';
+                    card.dataset.type = key;
+                    card.innerHTML = `
+                        <div class="text-4xl mb-3">${type.icon}</div>
+                        <h3 class="text-xl font-bold text-slate-900">${type.name}</h3>
+                        <p class="text-slate-600 mt-2 text-sm">${type.description}</p>
+                    `;
+                    dataTypeGrid.appendChild(card);
+                }
+            }
+
+            function renderUseCaseGrid() {
+                useCaseGrid.innerHTML = '';
+                for (const key in useCases) {
+                    const useCase = useCases[key];
+                    const card = document.createElement('div');
+                    card.className = 'use-case-card bg-white p-5 rounded-xl border-2 border-transparent shadow-md hover:shadow-xl cursor-pointer flex flex-col justify-between';
+                    card.dataset.usecase = key;
+                    card.innerHTML = `
+                        <div>
+                           <h3 class="text-lg font-bold text-slate-900">${useCase.name}</h3>
+                           <p class="text-slate-600 mt-2 text-sm">${useCase.description}</p>
+                        </div>
+                    `;
+                    useCaseGrid.appendChild(card);
+                }
+            }
+            
+            function updateDetailsView() {
+                const data = financialData[state.category].types[state.selectedDataType];
+                if (!data) {
+                    detailsView.classList.add('hidden');
+                    return;
+                }
+                
+                detailsView.classList.remove('hidden');
+                detailsView.classList.add('content-fade-in');
+                
+                detailsTitle.textContent = data.name;
+                detailsDescription.textContent = data.description;
+                
+                detailsExamples.innerHTML = '';
+                data.examples.forEach(example => {
+                    const li = document.createElement('li');
+                    li.textContent = example;
+                    detailsExamples.appendChild(li);
+                });
+
+                detailsUseCases.innerHTML = '';
+                data.useCases.forEach(ucKey => {
+                    const useCase = useCases[ucKey];
+                    if (useCase) {
+                         const pill = document.createElement('div');
+                         pill.className = 'bg-teal-100 text-teal-800 text-sm font-medium px-3 py-1 rounded-full';
+                         pill.textContent = useCase.name;
+                         detailsUseCases.appendChild(pill);
+                    }
+                });
+
+                setTimeout(() => detailsView.classList.remove('content-fade-in'), 500);
+            }
+
+            function updateChart() {
+                const chartData = financialData[state.category].chartData;
+                if (dataChart) {
+                    dataChart.destroy();
+                }
+                const ctx = chartCanvas.getContext('2d');
+                dataChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: [{
+                            label: chartData.label,
+                            data: chartData.values,
+                            backgroundColor: 'rgba(56, 178, 172, 0.6)',
+                            borderColor: 'rgba(56, 178, 172, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.raw}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Relative Signal Volume / Availability'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function updateHighlights() {
+                document.querySelectorAll('.data-type-card').forEach(card => {
+                    card.classList.remove('selected-card', 'highlight-card');
+                    if (state.selectedDataType === card.dataset.type) {
+                        card.classList.add('selected-card');
+                    }
+                    if (state.selectedUseCase) {
+                         const useCase = useCases[state.selectedUseCase];
+                         if (useCase && useCase.relevantData.includes(card.dataset.type)) {
+                            card.classList.add('highlight-card');
+                         }
+                    }
+                });
+
+                document.querySelectorAll('.use-case-card').forEach(card => {
+                    card.classList.remove('selected-card');
+                     if (state.selectedUseCase === card.dataset.usecase) {
+                        card.classList.add('selected-card');
+                    }
+                });
+                
+                if(state.selectedUseCase) {
+                    const useCase = useCases[state.selectedUseCase];
+                    useCaseDetailsText.innerHTML = `<p><strong class="font-semibold text-slate-800">${useCase.name}</strong> primarily relies on the highlighted data types above. ${useCase.description}</p>`;
+                } else {
+                    useCaseDetailsText.innerHTML = `<p>Select a use case to see more information.</p>`;
+                }
+            }
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.category = btn.dataset.category;
+                    state.selectedDataType = null;
+                    state.selectedUseCase = null;
+                    render();
+                });
+            });
+
+            dataTypeGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.data-type-card');
+                if (card) {
+                    state.selectedDataType = (state.selectedDataType === card.dataset.type) ? null : card.dataset.type;
+                    state.selectedUseCase = null; 
+                    render();
+                    if(state.selectedDataType) {
+                         detailsView.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+
+            useCaseGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.use-case-card');
+                if (card) {
+                    state.selectedUseCase = (state.selectedUseCase === card.dataset.usecase) ? null : card.dataset.usecase;
+                    state.selectedDataType = null;
+                    render();
+                    document.getElementById('data-type-explorer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+
+            render();
+        });
+    </script>
+
+
+</body></html>

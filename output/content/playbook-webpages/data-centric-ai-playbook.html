@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>A Practitioner's Guide to Data-Centric AI</title>
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed as a guided journey through the modern data-centric engineering workflow, structured into thematic sections based on user tasks rather than academic topics. The flow is: 1) The 'Why' (motivation for DCAI), 2) The 'How' (a toolkit for Labeling, Selecting, and Generating data), and 3) The 'What Next' (an interactive framework for strategy selection). This task-oriented structure is more intuitive for a practitioner than a linear summary of the source reports, transforming the research into an actionable guide. Key interactions include animated diagrams and interactive decision-support tools. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: Motivations for DCAI (quality bottleneck, diminishing returns) -> Goal: Inform -> Viz/Method: Large, animated numeric callouts -> Interaction: Numbers count up on scroll. Justification: Visually engaging way to present impactful statistics.
+        - Report Info: Weak Supervision Pipeline -> Goal: Organize -> Viz/Method: HTML/CSS flowchart -> Interaction: Steps fade in sequentially on scroll. Justification: Clearly visualizes the multi-stage nature of WS. NO SVG/Mermaid.
+        - Report Info: Active Learning Query Strategies -> Goal: Compare -> Viz/Method: Interactive Dropdown + Text/Canvas -> Interaction: User selects a strategy to see its principle and a simple visual. Justification: More engaging and digestible than a static table.
+        - Report Info: Optimal Transport for Augmentation -> Goal: Compare -> Viz/Method: Side-by-side Canvas diagrams -> Interaction: Visual shows OT barycenters respecting data manifold vs. naive interpolation. Justification: Illustrates the geometric advantage of OT clearly.
+        - Report Info: Overall paradigm comparison -> Goal: Guide -> Viz/Method: Interactive Decision Framework (HTML selects) -> Interaction: User answers questions to get a recommended workflow. Justification: Transforms a static comparison into a personalized, actionable tool.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .nav-link { transition: all 0.2s ease-in-out; border-bottom: 2px solid transparent; }
+        .nav-link.active, .nav-link:hover { color: #4338ca; border-bottom-color: #4338ca; }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.6s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .chart-container { position: relative; margin: auto; height: 300px; max-height: 40vh; width: 100%; max-width: 500px; }
+        .interactive-card { transition: all 0.3s ease; }
+        .interactive-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .flow-step { opacity: 0; transform: translateX(-20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .flow-step.visible { opacity: 1; transform: translateX(0px); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+        <header class="py-10 text-center">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-slate-800">The Data-Centric AI Playbook</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">An interactive guide to engineering high-quality datasets when real-world data is scarce, noisy, or insufficient.</p>
+        </header>
+
+        <nav class="sticky top-0 z-50 bg-[#f8fafc]/95 backdrop-blur-lg border-b border-slate-200 flex justify-center space-x-4 md:space-x-8 py-3 mb-12" id="main-nav">
+            <a class="nav-link font-semibold p-2" href="#intro">The 'Why'</a>
+            <a class="nav-link font-semibold p-2" href="#ws">Label Data</a>
+            <a class="nav-link font-semibold p-2" href="#al">Select Data</a>
+            <a class="nav-link font-semibold p-2" href="#gen">Generate Data</a>
+            <a class="nav-link font-semibold p-2" href="#framework">Build Your Strategy</a>
+        </nav>
+
+        <main id="main-content">
+
+            <section class="content-section space-y-12" id="intro">
+                <div>
+                    <h2 class="text-3xl font-bold text-center text-slate-800">The Paradigm Shift to Data-Centric AI</h2>
+                    <p class="mt-4 text-lg text-center text-slate-600 max-w-3xl mx-auto">For decades, AI research focused on building better models. The new frontier of progress, however, lies in systematically engineering the data itself. This shift is driven by critical bottlenecks in the model-centric approach.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-100">
+                        <div class="text-5xl font-extrabold text-indigo-600" data-stat="85">0</div>
+                        <p class="mt-2 font-semibold text-slate-700">% of AI Projects Fail</p>
+                        <p class="text-sm text-slate-500">due to issues with data quality, not model flaws.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-100">
+                        <div class="text-5xl font-extrabold text-indigo-600" data-stat="90">0</div>
+                        <p class="mt-2 font-semibold text-slate-700">% of Research was Model-Centric</p>
+                        <p class="text-sm text-slate-500">historically, leading to a focus on code over data.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-100">
+                        <div class="text-5xl font-extrabold text-indigo-600" data-stat="2026">2023</div>
+                        <p class="mt-2 font-semibold text-slate-700">Projected Year of Data Exhaustion</p>
+                        <p class="text-sm text-slate-500">for high-quality public text data, forcing a move to data engineering.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section space-y-12" id="ws">
+                <div>
+                    <h2 class="text-3xl font-bold text-center text-slate-800">Toolkit: Programmatic Labeling with Weak Supervision</h2>
+                    <p class="mt-4 text-lg text-center text-slate-600 max-w-3xl mx-auto">When you have abundant unlabeled data but no labels, weak supervision allows you to programmatically create a large training set by encoding domain knowledge into heuristic "Labeling Functions" (LFs).</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+                    <h3 class="text-2xl font-semibold text-center text-slate-700 mb-8">The Weak Supervision Pipeline</h3>
+                    <div class="space-y-4 max-w-2xl mx-auto">
+                        <div class="flow-step flex items-center space-x-4">
+                            <div class="flex-shrink-0 bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">1</div>
+                            <div>
+                                <h4 class="font-semibold">Write Labeling Functions (LFs)</h4>
+                                <p class="text-slate-600">Encode heuristics (e.g., keyword searches, patterns, LLM prompts) to programmatically vote on labels or abstain.</p>
+                            </div>
+                        </div>
+                        <div class="h-12 w-px bg-slate-300 ml-6"></div>
+                        <div class="flow-step flex items-center space-x-4">
+                            <div class="flex-shrink-0 bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                             <div>
+                                <h4 class="font-semibold">Train Generative Label Model</h4>
+                                <p class="text-slate-600">This model learns the accuracies and correlations of your LFs by observing their agreements and disagreements—no ground truth needed.</p>
+                            </div>
+                        </div>
+                         <div class="h-12 w-px bg-slate-300 ml-6"></div>
+                        <div class="flow-step flex items-center space-x-4">
+                            <div class="flex-shrink-0 bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                            <div>
+                                <h4 class="font-semibold">Generate Probabilistic Labels</h4>
+                                <p class="text-slate-600">The output is a full training set with "soft" labels (e.g., 90% Class A), capturing the model's aggregate confidence.</p>
+                            </div>
+                        </div>
+                         <div class="h-12 w-px bg-slate-300 ml-6"></div>
+                         <div class="flow-step flex items-center space-x-4">
+                            <div class="flex-shrink-0 bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg">4</div>
+                            <div>
+                                <h4 class="font-semibold">Train Discriminative End Model</h4>
+                                <p class="text-slate-600">A powerful end model (e.g., a Transformer) learns from the probabilistic labels to generalize beyond the simple heuristics of the LFs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="content-section space-y-12" id="al">
+                 <div>
+                    <h2 class="text-3xl font-bold text-center text-slate-800">Toolkit: Efficient Data Selection with Active Learning</h2>
+                    <p class="mt-4 text-lg text-center text-slate-600 max-w-3xl mx-auto">When your labeling budget is limited, Active Learning (AL) helps you maximize model performance by intelligently selecting the most valuable data points for manual annotation.</p>
+                </div>
+                 <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+                    <h3 class="text-2xl font-semibold text-center text-slate-700 mb-2">The Query Strategy Explorer</h3>
+                    <p class="text-center text-slate-600 mb-6 max-w-2xl mx-auto">The "brain" of an active learner is its query strategy. Select a strategy below to understand its core principle for choosing which data to label next.</p>
+                    <div class="max-w-xl mx-auto">
+                         <select class="block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" id="al-strategy-selector">
+                            <option value="uncertainty">Uncertainty Sampling</option>
+                            <option value="diversity">Diversity Sampling</option>
+                            <option value="hybrid">Hybrid Strategies</option>
+                        </select>
+                        <div class="mt-6 p-6 bg-slate-50 rounded-lg min-h-[150px]" id="al-strategy-display">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section space-y-12" id="gen">
+                 <div>
+                    <h2 class="text-3xl font-bold text-center text-slate-800">Toolkit: Creating New Data with Generative Methods</h2>
+                    <p class="mt-4 text-lg text-center text-slate-600 max-w-3xl mx-auto">When you need to fill gaps in your dataset, cover rare edge cases, or simply create more data, generative methods provide the solution. Optimal Transport offers a principled, geometric framework for this task.</p>
+                </div>
+
+                 <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
+                    <h3 class="text-2xl font-semibold text-center text-slate-700 mb-8">Principled Augmentation with Optimal Transport</h3>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="text-center">
+                            <h4 class="font-semibold text-slate-600 mb-2">Naive Interpolation (e.g., Mixup)</h4>
+                            <div class="w-full h-48 bg-slate-100 rounded-lg"><canvas id="naive-interp-canvas"></canvas></div>
+                            <p class="text-sm text-slate-500 mt-2">Simply averaging data points can create unrealistic samples that fall "off" the true data manifold, harming model training.</p>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="font-semibold text-slate-600 mb-2">Wasserstein Barycenters (OT)</h4>
+                            <div class="w-full h-48 bg-slate-100 rounded-lg"><canvas id="ot-interp-canvas"></canvas></div>
+                            <p class="text-sm text-slate-500 mt-2">OT finds a geometric "average" that respects the data's structure, producing realistic, high-fidelity samples.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="content-section space-y-12" id="framework">
+                 <div>
+                    <h2 class="text-3xl font-bold text-center text-slate-800">Build Your Strategy: A Unified Framework</h2>
+                    <p class="mt-4 text-lg text-center text-slate-600 max-w-3xl mx-auto">These techniques are most powerful when combined. Use this interactive guide to determine the best data-building strategy for your specific problem.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-100 max-w-4xl mx-auto">
+                    <div class="space-y-6">
+                         <div>
+                            <label class="font-semibold text-slate-700" for="q1">1. What is your starting point?</label>
+                            <select class="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" id="q1">
+                                <option value="unlabeled">Large pool of unlabeled data, no labels</option>
+                                <option value="small_labeled">Small set of high-quality labels, large unlabeled pool</option>
+                                <option value="no_data">Very little or no initial data</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label class="font-semibold text-slate-700" for="q2">2. What is your primary bottleneck?</label>
+                            <select class="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" id="q2">
+                                <option value="cost">Manual labeling is too expensive/slow</option>
+                                <option value="gaps">My data lacks diversity or has edge case gaps</option>
+                                <option value="performance">My model's performance on a small dataset is poor</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-8 bg-indigo-50 p-6 rounded-lg border border-indigo-200" id="recommendation-panel">
+                         <h4 class="font-bold text-indigo-800 text-lg mb-2">Recommended Strategy:</h4>
+                         <div class="text-slate-700 space-y-2" id="recommendation-content">
+                            <p>Your recommended workflow will appear here...</p>
+                         </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+ 
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const state = {
+        activeSection: 'intro',
+        recommendations: {
+            unlabeled: {
+                cost: "<strong>Primary Strategy: Weak Supervision.</strong><br>1. Start by writing Labeling Functions (LFs) to programmatically label your data. Use an LLM for PromptedWS for maximum flexibility.<br>2. Use the resulting noisy labels to train an initial model.",
+                gaps: "<strong>Primary Strategy: Weak Supervision + Generation.</strong><br>1. Use Weak Supervision to get baseline labels on your existing data.<br>2. Use Generative Models (e.g., LLMs, OT Barycenters) to synthesize data for underrepresented areas, then label this new data with your WS system.",
+                performance: "<strong>Primary Strategy: Weak Supervision + Active Learning.</strong><br>1. Use Weak Supervision to generate a large training set. This is often the fastest way to boost performance from zero.<br>2. Apply Active Learning to find the most uncertain predictions from your WS model. Manually label these points to create a clean validation set and identify areas where your LFs need improvement."
+            },
+            small_labeled: {
+                cost: "<strong>Primary Strategy: Active Learning.</strong><br>1. Start with Active Learning to make the most of your limited annotation budget. Focus on hybrid Uncertainty + Diversity strategies.<br>2. As your labeled set grows, use it to bootstrap a Weak Supervision system by discovering LFs that cover your labeled examples.",
+                gaps: "<strong>Primary Strategy: Generation + Active Learning.</strong><br>1. Use your labeled set to fine-tune or prompt a Generative Model to create synthetic data for your gap areas.<br>2. Use Active Learning to select the most valuable mix of synthetic and real data for manual labeling.",
+                performance: "<strong>Primary Strategy: Active Learning.</strong><br>1. Start with Active Learning to find the most impactful data points to label first. This ensures the steepest initial learning curve for your model and makes the most efficient use of your small, high-quality dataset."
+            },
+            no_data: {
+                cost: "<strong>Primary Strategy: Synthetic Data Generation.</strong><br>1. Use Generative Models (especially LLMs) to create a foundational dataset from scratch. This becomes your initial 'unlabeled' pool.<br>2. Once you have synthetic data, proceed with a Weak Supervision / Active Learning strategy to label and refine it.",
+                gaps: "<strong>Primary Strategy: Synthetic Data Generation.</strong><br>1. Your only option is to generate data. Focus on prompting generative models to specifically create data covering the diversity and edge cases you anticipate needing. This is an exercise in high-quality prompt engineering.",
+                performance: "<strong>Primary Strategy: Synthetic Data Generation.</strong><br>1. Create a large, diverse synthetic dataset first. This is a prerequisite for any model training. Focus on quality and diversity in your generation process."
+            }
+        }
+    };
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const contentSections = document.querySelectorAll('.content-section');
+    const flowSteps = document.querySelectorAll('.flow-step');
+
+    const alSelector = document.getElementById('al-strategy-selector');
+    const alDisplay = document.getElementById('al-strategy-display');
+    
+    const recQ1 = document.getElementById('q1');
+    const recQ2 = document.getElementById('q2');
+    const recContent = document.getElementById('recommendation-content');
+
+    const alContent = {
+        uncertainty: {
+            title: "Uncertainty Sampling: The 'Exploitation' Strategy",
+            text: "This strategy queries what the model doesn't know. It selects data points where the model is least confident, which are typically near its current decision boundary. This is excellent for quickly refining the model's knowledge but can be prone to selecting redundant, similar examples.",
+        },
+        diversity: {
+            title: "Diversity Sampling: The 'Exploration' Strategy",
+            text: "This strategy queries to cover all bases. It selects data points that are representative of the entire dataset, ensuring broad coverage of the feature space. This helps build a more generalized model by preventing focus on a single, narrow area of uncertainty.",
+        },
+        hybrid: {
+            title: "Hybrid Strategies: The Best of Both Worlds",
+            text: "State-of-the-art methods combine both principles. They aim to select a batch of data that is simultaneously uncertain (informative) and diverse (representative). This balances the need to fix known weaknesses with the need to discover new ones, leading to the most robust and efficient learning."
+        }
+    };
+
+    function updateALDisplay() {
+        const strategy = alSelector.value;
+        const content = alContent[strategy];
+        alDisplay.innerHTML = `
+            <h4 class="font-bold text-slate-800">${content.title}</h4>
+            <p class="mt-2 text-slate-600">${content.text}</p>
+        `;
+    }
+
+    function updateRecommendation() {
+        const q1 = recQ1.value;
+        const q2 = recQ2.value;
+        const recommendation = state.recommendations[q1][q2];
+        recContent.innerHTML = `<p>${recommendation}</p>`;
+    }
+
+    function observeFlowSteps() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const step = entry.target;
+                    const delay = Array.from(flowSteps).indexOf(step) * 150;
+                    setTimeout(() => {
+                        step.classList.add('visible');
+                    }, delay);
+                }
+            });
+        }, { threshold: 0.1 });
+        flowSteps.forEach(step => observer.observe(step));
+    }
+    
+    function navigateTo(hash) {
+        const targetId = hash ? hash.substring(1) : 'intro';
+        state.activeSection = targetId;
+
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${targetId}`);
+        });
+
+        contentSections.forEach(section => {
+            section.classList.toggle('active', section.id === targetId);
+        });
+
+        if (targetId === 'ws') {
+            observeFlowSteps();
+        }
+        
+        if (targetId === 'gen' && !window.genChartsInitialized) {
+            initGenCharts();
+            window.genChartsInitialized = true;
+        }
+    }
+    
+    function drawClusters(canvasId, showInterpolation, useOT) {
+        const canvas = document.getElementById(canvasId);
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        const cluster1 = { x: w * 0.2, y: h * 0.3, r: w * 0.1 };
+        const cluster2 = { x: w * 0.8, y: h * 0.7, r: w * 0.1 };
+        const p1 = { x: cluster1.x, y: cluster1.y };
+        const p2 = { x: cluster2.x, y: cluster2.y };
+
+        ctx.fillStyle = 'rgba(67, 56, 202, 0.1)';
+        ctx.beginPath();
+        ctx.arc(cluster1.x, cluster1.y, cluster1.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cluster2.x, cluster2.y, cluster2.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#4338ca';
+        ctx.beginPath(); ctx.arc(p1.x, p1.y, 5, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(p2.x, p2.y, 5, 0, Math.PI*2); ctx.fill();
+        
+        if (showInterpolation) {
+            let interpPoint;
+            if (useOT) {
+                interpPoint = { x: w * 0.45, y: h * 0.55 };
+                ctx.strokeStyle = '#16a34a'; // Green
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.quadraticCurveTo(w*0.7, h*0.3, p2.x, p2.y);
+                ctx.stroke();
+            } else {
+                interpPoint = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+                ctx.strokeStyle = '#dc2626'; // Red
+                 ctx.setLineDash([5, 5]);
+                ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+            }
+             ctx.setLineDash([]);
+             ctx.fillStyle = useOT ? '#16a34a' : '#dc2626';
+             ctx.beginPath(); ctx.arc(interpPoint.x, interpPoint.y, 7, 0, Math.PI*2); ctx.fill();
+             ctx.fillStyle = 'white';
+             ctx.beginPath(); ctx.arc(interpPoint.x, interpPoint.y, 4, 0, Math.PI*2); ctx.fill();
+        }
+    }
+
+    function initGenCharts() {
+        drawClusters('naive-interp-canvas', true, false);
+        drawClusters('ot-interp-canvas', true, true);
+    }
+    
+    function animateStats() {
+        const stats = document.querySelectorAll('[data-stat]');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = +el.getAttribute('data-stat');
+                    const duration = 1500;
+                    let start = 0;
+                    if (target > 2000) { start = target - 5; } // Fast-forward for years
+                    const stepTime = 20;
+                    const steps = duration / stepTime;
+                    const increment = (target - start) / steps;
+
+                    const timer = setInterval(() => {
+                        start += increment;
+                        if (start >= target) {
+                            clearInterval(timer);
+                            start = target;
+                        }
+                        el.textContent = Math.floor(start).toLocaleString();
+                    }, stepTime);
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        stats.forEach(stat => observer.observe(stat));
+    }
+
+
+    document.querySelector('#main-nav').addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            const hash = e.target.getAttribute('href');
+            navigateTo(hash);
+            window.history.replaceState(null, null, hash);
+        }
+    });
+    
+    if (alSelector) {
+        alSelector.addEventListener('change', updateALDisplay);
+    }
+    
+    if (recQ1 && recQ2) {
+        recQ1.addEventListener('change', updateRecommendation);
+        recQ2.addEventListener('change', updateRecommendation);
+    }
+    
+    // Initial navigation based on URL hash or default
+    const initialHash = window.location.hash || '#intro';
+    navigateTo(initialHash);
+    
+    // Initial content setup for interactive elements
+    if (alSelector) updateALDisplay();
+    if (recQ1) updateRecommendation();
+    animateStats();
+});
+</script>
+
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

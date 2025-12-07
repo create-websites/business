@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LLM Decision Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: A task-oriented, guided decision flow. It starts with an overview, moves to an interactive framework where users assess their task complexity, visually explore trade-offs, and browse specific use cases. This is followed by a direct model comparison and key takeaways. This structure was chosen to transform a complex analytical decision into a simple, step-by-step interactive process, making it more intuitive and useful for developers and PMs than a static report. -->
+    <!-- Visualization & Content Choices: 1. Task Complexity Flowchart (HTML/CSS/JS): Goal=Guide. A simple, interactive diagram to direct users. Chosen for its clarity in representing a decision process without library overhead. 2. Trade-offs Radar Chart (Chart.js): Goal=Compare. Shows multi-dimensional data (cost, speed, quality) for different models. A radar chart is ideal for visualizing trade-offs. 3. Use Case Cards (HTML/CSS/JS): Goal=Organize/Inform. Presents concrete examples in a filterable grid, a common and effective UI pattern for exploration. 4. Cost vs. Performance Scatter Plot (Chart.js): Goal=Relationships. Visually demonstrates the efficiency frontier between cost and quality. All interactions update relevant text blocks for context. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #3D3D3D;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #4A5568;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .use-case-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .use-case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .decision-btn.selected {
+            background-color: #E67A7A;
+            color: white;
+            border-color: #E67A7A;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#3D3D3D] mb-2">Choosing Your LLM: A Decision Framework</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">An interactive guide to selecting the right model for your needs, balancing cost, speed, and capability.</p>
+        </header>
+
+        <nav class="flex justify-center space-x-2 sm:space-x-4 bg-white p-2 rounded-full shadow-sm mb-12 sticky top-4 z-10">
+            <button class="nav-button active px-4 py-2 text-sm sm:text-base font-medium text-gray-700 rounded-full" data-target="framework">Interactive Framework</button>
+            <button class="nav-button px-4 py-2 text-sm sm:text-base font-medium text-gray-700 rounded-full" data-target="comparison">Model Profiles</button>
+            <button class="nav-button px-4 py-2 text-sm sm:text-base font-medium text-gray-700 rounded-full" data-target="usecases">Use Cases</button>
+        </nav>
+
+        <main>
+            <section class="content-section active" id="framework">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold mb-2">Find Your Fit</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Start by evaluating your primary task. Your choice here will reveal the key trade-offs and guide you to the most suitable model category.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-center mb-6">What is the core complexity of your task?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div class="flex flex-col items-center">
+                            <button class="decision-btn w-full p-4 border-2 border-gray-200 rounded-lg hover:border-[#A8DADC] focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all" id="btn-simple">
+                                <span class="text-5xl mb-2">⚡️</span>
+                                <span class="block font-semibold">Simple &amp; Fast Tasks</span>
+                                <span class="text-sm text-gray-500">Classification, simple extraction, standard chatbots</span>
+                            </button>
+                        </div>
+                        <div class="flex flex-col items-center">
+                           <button class="decision-btn w-full p-4 border-2 border-gray-200 rounded-lg hover:border-[#A8DADC] focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all" id="btn-creative">
+                                <span class="text-5xl mb-2">🎨</span>
+                                <span class="block font-semibold">Creative &amp; Nuanced Tasks</span>
+                                <span class="text-sm text-gray-500">Marketing copy, summarization, style imitation</span>
+                            </button>
+                        </div>
+                        <div class="flex flex-col items-center">
+                             <button class="decision-btn w-full p-4 border-2 border-gray-200 rounded-lg hover:border-[#A8DADC] focus:outline-none focus:ring-2 focus:ring-[#A8DADC] transition-all" id="btn-complex">
+                                <span class="text-5xl mb-2">🧠</span>
+                                <span class="block font-semibold">Complex Reasoning Tasks</span>
+                                <span class="text-sm text-gray-500">Multi-step logic, code generation, scientific analysis</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-[#F8F7F4] rounded-lg min-h-[120px] transition-opacity duration-500" id="decision-output">
+                         <p class="text-center text-gray-600">Select a task complexity above to see our recommendation.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="content-section" id="comparison">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold mb-2">Model Profiles &amp; Trade-offs</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Visualize the balance between performance, speed, and cost for different model classes. Smaller models are cheaper and faster, while larger models offer superior reasoning capabilities.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg">
+                        <h3 class="text-xl font-semibold text-center mb-4">Relative Capability Profile</h3>
+                        <div class="chart-container">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                         <div class="flex justify-center space-x-2 mt-4">
+                            <button class="model-select-btn bg-gray-200 text-gray-800 px-4 py-1 rounded-full text-sm" data-model="mini">Mini</button>
+                            <button class="model-select-btn bg-[#A8DADC] text-white px-4 py-1 rounded-full text-sm" data-model="standard">Standard</button>
+                            <button class="model-select-btn bg-gray-200 text-gray-800 px-4 py-1 rounded-full text-sm" data-model="large">Large</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg">
+                         <h3 class="text-xl font-semibold text-center mb-4">Cost vs. Performance</h3>
+                         <div class="chart-container">
+                            <canvas id="scatterChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">Models in the top-left offer the best performance for their cost.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="usecases">
+                 <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold mb-2">Common Use Cases</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Explore how different models are applied to real-world scenarios. This can help you map your needs to a proven solution.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="use-case-grid">
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const contentSections = document.querySelectorAll('.content-section');
+            const modelData = {
+                mini: {
+                    label: 'Mini (e.g., GPT-4o-mini)',
+                    radar: [9, 9, 4],
+                    scatter: { x: 1, y: 75 },
+                    color: 'rgba(230, 122, 122, 0.7)',
+                    recommendation: `
+                        <h4 class="font-bold text-lg text-[#3D3D3D] mb-2">Recommendation: Smaller Model (e.g., GPT-4o-mini)</h4>
+                        <p class="text-gray-700">Excellent choice. Smaller models are optimized for speed and cost-efficiency. They excel at tasks like data classification, sentiment analysis, and powering simple chatbots where near-instant responses are crucial and deep reasoning isn't required.</p>
+                    `
+                },
+                standard: {
+                    label: 'Standard (e.g., GPT-4o)',
+                    radar: [5, 7, 8],
+                    scatter: { x: 5, y: 95 },
+                    color: 'rgba(168, 218, 220, 0.7)',
+                    recommendation: `
+                        <h4 class="font-bold text-lg text-[#3D3D3D] mb-2">Recommendation: Standard Model (e.g., GPT-4o)</h4>
+                        <p class="text-gray-700">This is the sweet spot. Standard models provide a powerful balance of high-quality output, reasonable speed, and moderate cost. They are versatile enough for creative writing, complex summarization, and advanced conversational AI without the overhead of the largest models.</p>
+                    `
+                },
+                large: {
+                    label: 'Large (e.g., Future high-end models)',
+                    radar: [2, 4, 10],
+                    scatter: { x: 10, y: 100 },
+                    color: 'rgba(74, 85, 104, 0.7)',
+                    recommendation: `
+                        <h4 class="font-bold text-lg text-[#3D3D3D] mb-2">Recommendation: Larger Model</h4>
+                        <p class="text-gray-700">Go for power. For tasks requiring deep, multi-step reasoning, specialized knowledge, or generating complex code, larger models are unmatched. They are slower and more expensive but provide state-of-the-art performance for the most demanding applications.</p>
+                    `
+                }
+            };
+            
+            const useCases = [
+                { title: 'Customer Support Chatbot', model: 'Mini', description: 'Provides quick, accurate answers to common questions. Speed is key to a good user experience.', icon: '💬' },
+                { title: 'Email Triage & Categorization', model: 'Mini', description: 'Automatically sorts incoming emails by intent (e.g., support, sales, spam). High throughput and low cost are essential.', icon: '📧' },
+                { title: 'Sentiment Analysis', model: 'Mini', description: 'Gauges customer sentiment from reviews or social media posts in real-time.', icon: '😊' },
+                { title: 'Blog Post Generation', model: 'Standard', description: 'Creates well-written, coherent articles on various topics with a specific tone or style.', icon: '✍️' },
+                { title: 'Meeting Summarization', model: 'Standard', description: 'Condenses long transcripts into key points and action items, requiring nuance and understanding.', icon: '📝' },
+                { title: 'Personalized Marketing Copy', model: 'Standard', description: 'Generates creative and engaging ad copy tailored to different audience segments.', icon: '🎯' },
+                { title: 'Code Generation & Debugging', model: 'Large', description: 'Writes complex functions, translates code between languages, and identifies subtle bugs. Requires deep logical reasoning.', icon: '💻' },
+                { title: 'Scientific Research Analysis', model: 'Large', description: 'Analyzes research papers, understands complex methodologies, and synthesizes findings across multiple documents.', icon: '🔬' },
+                { title: 'Financial Modeling', model: 'Large', description: 'Interprets financial data, understands complex regulations, and assists in building predictive models.', icon: '📈' },
+            ];
+
+            const useCaseGrid = document.getElementById('use-case-grid');
+            useCases.forEach(uc => {
+                const card = document.createElement('div');
+                let modelColor = '';
+                if (uc.model === 'Mini') modelColor = 'bg-red-100 text-red-800';
+                else if (uc.model === 'Standard') modelColor = 'bg-blue-100 text-blue-800';
+                else modelColor = 'bg-gray-200 text-gray-800';
+
+                card.className = 'use-case-card bg-white p-6 rounded-2xl shadow-lg flex flex-col';
+                card.innerHTML = `
+                    <div class="text-4xl mb-3">${uc.icon}</div>
+                    <h4 class="font-bold text-lg mb-2">${uc.title}</h4>
+                    <p class="text-gray-600 text-sm flex-grow">${uc.description}</p>
+                    <div class="mt-4">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full ${modelColor}">${uc.model} Model</span>
+                    </div>
+                `;
+                useCaseGrid.appendChild(card);
+            });
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            const decisionButtons = {
+                simple: document.getElementById('btn-simple'),
+                creative: document.getElementById('btn-creative'),
+                complex: document.getElementById('btn-complex')
+            };
+            const decisionOutput = document.getElementById('decision-output');
+
+            decisionButtons.simple.addEventListener('click', () => {
+                updateDecision('mini');
+                highlightDecisionButton('simple');
+            });
+            decisionButtons.creative.addEventListener('click', () => {
+                updateDecision('standard');
+                highlightDecisionButton('creative');
+            });
+            decisionButtons.complex.addEventListener('click', () => {
+                updateDecision('large');
+                 highlightDecisionButton('complex');
+            });
+
+            function highlightDecisionButton(type) {
+                Object.values(decisionButtons).forEach(btn => btn.classList.remove('selected'));
+                decisionButtons[type].classList.add('selected');
+            }
+
+            function updateDecision(modelType) {
+                decisionOutput.style.opacity = '0';
+                setTimeout(() => {
+                    decisionOutput.innerHTML = modelData[modelType].recommendation;
+                    decisionOutput.style.opacity = '1';
+                }, 300);
+            }
+
+            let radarChart, scatterChart;
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            const scatterCtx = document.getElementById('scatterChart').getContext('2d');
+
+            function createRadarChart(modelType) {
+                const data = {
+                    labels: ['Low Cost', 'High Speed', 'Capability'],
+                    datasets: [{
+                        label: modelData[modelType].label,
+                        data: modelData[modelType].radar,
+                        fill: true,
+                        backgroundColor: modelData[modelType].color,
+                        borderColor: modelData[modelType].color.replace('0.7', '1'),
+                        pointBackgroundColor: modelData[modelType].color.replace('0.7', '1'),
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: modelData[modelType].color.replace('0.7', '1')
+                    }]
+                };
+
+                if (radarChart) {
+                    radarChart.data = data;
+                    radarChart.update();
+                } else {
+                    radarChart = new Chart(radarCtx, {
+                        type: 'radar',
+                        data: data,
+                        options: {
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    angleLines: { color: '#e2e8f0' },
+                                    grid: { color: '#e2e8f0' },
+                                    pointLabels: { font: { size: 12 }, color: '#4A5568' },
+                                    ticks: {
+                                        display: false,
+                                        stepSize: 2
+                                    },
+                                    suggestedMin: 0,
+                                    suggestedMax: 10
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            return label + ': ' + context.formattedValue;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            function createScatterChart() {
+                const scatterData = {
+                    datasets: Object.keys(modelData).map(key => ({
+                        label: modelData[key].label,
+                        data: [modelData[key].scatter],
+                        backgroundColor: modelData[key].color.replace('0.7', '1'),
+                        pointRadius: 10,
+                        pointHoverRadius: 12
+                    }))
+                };
+                
+                scatterChart = new Chart(scatterCtx, {
+                    type: 'scatter',
+                    data: scatterData,
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Cost & Latency (Lower is Better)',
+                                    color: '#4A5568'
+                                },
+                                grid: {
+                                    color: '#f1f5f9'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Performance / Quality',
+                                    color: '#4A5568'
+                                },
+                                grid: {
+                                    color: '#f1f5f9'
+                                },
+                                suggestedMin: 60,
+                                suggestedMax: 105
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const modelSelectButtons = document.querySelectorAll('.model-select-btn');
+            modelSelectButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modelType = button.dataset.model;
+                    createRadarChart(modelType);
+                    modelSelectButtons.forEach(btn => {
+                        btn.classList.remove('bg-[#A8DADC]', 'text-white');
+                        btn.classList.add('bg-gray-200', 'text-gray-800');
+                    });
+                    button.classList.add('bg-[#A8DADC]', 'text-white');
+                    button.classList.remove('bg-gray-200', 'text-gray-800');
+                });
+            });
+
+            createRadarChart('standard');
+            createScatterChart();
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Infographic: A Quant's Guide to Options Data Providers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: The infographic follows a narrative structure designed to guide a quantitative analyst from understanding the core problem to making a final decision. It starts with a 'Hook' (The Scale of OPRA) to establish why vendors are needed. It then 'Organizes' the market into Tiers, 'Compares' providers on key metrics (Historical Depth, Price vs. Quality), and concludes with an 'Actionable Guide' (Use-Case Recommendations). This top-down funnel approach was chosen to make the complex report information digestible and decision-oriented, rather than a simple data dump. -->
+    <!-- Visualization & Content Choices: 1. OPRA Data -> Goal: Inform -> Viz: Single Big Number -> Justification: High-impact visualization to convey massive scale. 2. Provider Tiers -> Goal: Organize -> Viz: Styled HTML Cards -> Justification: Clearly segments the market visually. 3. Historical Depth -> Goal: Compare/Rank -> Viz: Horizontal Bar Chart (Chart.js) -> Justification: Best for comparing a single metric (years of history) across multiple categories. 4. Price vs. Quality -> Goal: Reveal Relationships -> Viz: Scatter Plot (Chart.js) -> Justification: Perfectly visualizes the "Price-Quality Frontier" concept from the report. 5. Use-Case Guide -> Goal: Organize/Inform -> Viz: Flowchart (HTML/CSS) -> Justification: Provides a clear, step-by-step decision framework for the user. All methods avoid SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F4F7F5; color: #1E1B18; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 400px; max-height: 60vh; }
+        @media (min-width: 768px) { .chart-container { height: 500px; } }
+        .flowchart-node { border: 2px solid #3E92CC; background-color: white; padding: 1rem; border-radius: 0.5rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .flowchart-line { width: 2px; background-color: #3E92CC; margin-left: auto; margin-right: auto; }
+        .text-shadow-custom { text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:px-8 md:py-12">
+
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-[#0A2463] mb-4 text-shadow-custom">A Quant's Guide to Options Data</h1>
+            <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">Navigating the complex marketplace of historical options data providers is critical. This guide synthesizes key findings from our due diligence report to help you make the right strategic choice.</p>
+        </header>
+
+        <section class="mb-20" id="the-problem">
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center border-t-8 border-[#D8315B]">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0A2463] mb-4">The Source of Truth: Why Vendors Exist</h2>
+                <p class="text-gray-600 max-w-4xl mx-auto mb-8">All U.S. options data originates from the Options Price Reporting Authority (OPRA). Processing this firehose of information is a massive technical challenge, creating the need for specialized data vendors. The sheer scale is staggering.</p>
+                <div class="bg-[#0A2463] text-white rounded-lg p-8 inline-block shadow-2xl">
+                    <div class="text-5xl md:text-7xl font-extrabold text-[#3E92CC]">187+ Million</div>
+                    <div class="text-lg md:text-2xl font-semibold mt-2">Messages Per Second (Peak Microbursts)</div>
+                </div>
+                 <p class="text-xs text-gray-500 max-w-4xl mx-auto mt-4">Source: OPRA, 2024 system upgrade report. This technical complexity is the central reason for the tiered market of data providers and explains the significant disparities in their pricing and quality.</p>
+            </div>
+        </section>
+
+        <section class="mb-20" id="market-tiers">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#0A2463] text-center mb-2">Understanding the Marketplace</h2>
+            <p class="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto">The options data market is segmented into distinct tiers, each catering to different user needs, budgets, and quality requirements.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+                    <div class="text-2xl mb-2">🏛️</div>
+                    <h3 class="text-xl font-bold text-[#0A2463] mb-2">Institutional &amp; Academic</h3>
+                    <p class="text-gray-600">The "gold standard." Unparalleled data quality and deep history for top-tier research and large-scale quant operations.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+                     <div class="text-2xl mb-2">💻</div>
+                    <h3 class="text-xl font-bold text-[#0A2463] mb-2">Professional &amp; Algorithmic</h3>
+                    <p class="text-gray-600">"Battle-tested" data. Granular, high-quality data for quant firms and sophisticated algorithmic traders.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+                    <div class="text-2xl mb-2">🔬</div>
+                    <h3 class="text-xl font-bold text-[#0A2463] mb-2">Specialized &amp; Exchange-Direct</h3>
+                    <p class="text-gray-600">Value-added analytics or authoritative data straight from the source. For specific needs like volatility analysis.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition-shadow">
+                     <div class="text-2xl mb-2">💰</div>
+                    <h3 class="text-xl font-bold text-[#0A2463] mb-2">Budget &amp; Developer API</h3>
+                    <p class="text-gray-600">Accessibility and affordability. Modern APIs and low-cost plans, often with trade-offs in historical quality.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20" id="historical-depth">
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0A2463] text-center mb-2">Comparing Historical Depth</h2>
+                <p class="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">The length of available historical data is a critical factor for robust backtesting. Institutional providers offer the deepest look back, with some records extending over two decades.</p>
+                <div class="chart-container">
+                    <canvas id="historyChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20" id="price-quality">
+             <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0A2463] text-center mb-2">The Price-Quality Frontier</h2>
+                <p class="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">Providers make explicit trade-offs between cost and quality. This chart maps vendors based on their pricing tier and an assessed quality score derived from the report's analysis of data fidelity, granularity, and features.</p>
+                <div class="chart-container">
+                    <canvas id="frontierChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12" id="decision-guide">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#0A2463] text-center mb-12">Which Provider is Right for You?</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="flowchart-node bg-[#D8315B] text-white border-[#D8315B]">
+                    <h3 class="text-2xl font-bold">Start Here: What is Your Primary Goal?</h3>
+                </div>
+                <div class="h-8 flowchart-line"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="flex flex-col items-center">
+                        <div class="flowchart-node">
+                            <h4 class="text-lg font-semibold">Academic Research or Replicating Studies?</h4>
+                        </div>
+                        <div class="h-4 w-px bg-[#3E92CC]"></div>
+                        <div class="text-2xl">⬇️</div>
+                        <div class="h-4 w-px bg-[#3E92CC]"></div>
+                        <div class="flowchart-node bg-blue-50">
+                            <p class="font-bold text-[#0A2463]">OptionMetrics</p>
+                            <p class="text-sm text-gray-600">The academic "gold standard."</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="flowchart-node">
+                            <h4 class="text-lg font-semibold">Pro-level Quant Backtesting or Volatility Analysis?</h4>
+                        </div>
+                        <div class="h-4 w-px bg-[#3E92CC]"></div>
+                        <div class="text-2xl">⬇️</div>
+                        <div class="h-4 w-px bg-[#3E92CC]"></div>
+                        <div class="space-y-4">
+                            <div class="flowchart-node bg-blue-50">
+                                <p class="font-bold text-[#0A2463]">AlgoSeek / SpiderRock</p>
+                                <p class="text-sm text-gray-600">For granular backtesting.</p>
+                            </div>
+                            <div class="flowchart-node bg-blue-50">
+                                <p class="font-bold text-[#0A2463]">ORATS</p>
+                                <p class="text-sm text-gray-600">For specialized volatility analytics.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="flex flex-col items-center">
+                        <div class="flowchart-node">
+                            <h4 class="text-lg font-semibold">Building an App or on a Tight Budget?</h4>
+                        </div>
+                        <div class="h-4 w-px bg-[#3E92CC]"></div>
+                        <div class="text-2xl">⬇️</div>
+                        <div class="h-4 w-px bg-[#3E92CC]"></div>
+                         <div class="space-y-4">
+                            <div class="flowchart-node bg-blue-50">
+                                <p class="font-bold text-[#0A2463]">Polygon.io</p>
+                                <p class="text-sm text-gray-600">Modern, developer-friendly API.</p>
+                            </div>
+                            <div class="flowchart-node bg-blue-50">
+                                <p class="font-bold text-[#0A2463]">EODHD</p>
+                                <p class="text-sm text-gray-600">Most affordable. <strong class="text-[#D8315B]">Caution:</strong> data quality concerns.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!--
+
+    <footer class="text-center p-6 bg-gray-800 text-gray-400 text-sm">
+        <p>Infographic based on the "Quantitative Analyst's Due Diligence Report on Historical Options Data Providers".</p>
+        <p>This is a visual summary and not a substitute for conducting your own thorough due diligence.</p>
+    </footer>
+
+     -->
+
+    <script>
+        const brilliantBlues = {
+            primary: '#3E92CC',
+            secondary: '#0A2463',
+            accent: '#D8315B',
+            light: '#F4F7F5',
+            dark: '#1E1B18'
+        };
+
+        const chartTooltipConfig = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        function wrapLabel(str, maxWidth) {
+            if (str.length <= maxWidth) {
+                return str;
+            }
+            let result = [];
+            let currentLine = '';
+            const words = str.split(' ');
+            for (const word of words) {
+                if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
+                    result.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else {
+                    currentLine += word + ' ';
+                }
+            }
+            result.push(currentLine.trim());
+            return result;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const historyData = [
+                { provider: 'OneTick', startYear: 1993 },
+                { provider: 'OptionMetrics', startYear: 1996 },
+                { provider: 'iVolatility', startYear: 2000 },
+                { provider: 'CBOE LiveVol', startYear: 2004 },
+                { provider: 'ORATS', startYear: 2007 },
+                { provider: 'NewMark Risk', startYear: 2007 },
+                { provider: 'SpiderRock', startYear: 2010 },
+                { provider: 'AlgoSeek', startYear: 2012 },
+                { provider: 'Polygon.io', startYear: 2017 },
+                { provider: 'EODHD', startYear: new Date().getFullYear() - 1 },
+            ].sort((a,b) => a.startYear - b.startYear);
+            
+            const currentYear = new Date().getFullYear();
+            const historyCtx = document.getElementById('historyChart').getContext('2d');
+            new Chart(historyCtx, {
+                type: 'bar',
+                data: {
+                    labels: historyData.map(d => d.provider),
+                    datasets: [{
+                        label: 'Years of History',
+                        data: historyData.map(d => currentYear - d.startYear),
+                        backgroundColor: brilliantBlues.primary,
+                        borderColor: brilliantBlues.secondary,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    return Array.isArray(label) ? label.join(' ') : label;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'U.S. Data History Since Start Year',
+                            font: { size: 16, weight: 'bold' },
+                            color: brilliantBlues.dark
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Years of Available Data',
+                                font: { size: 14 },
+                                color: brilliantBlues.dark
+                            },
+                             grid: { color: '#e0e0e0' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            const frontierData = [
+                { label: 'OneTick', x: 10, y: 10, tier: 'Enterprise' },
+                { label: 'OptionMetrics', x: 9, y: 9.5, tier: 'Enterprise' },
+                { label: 'Bloomberg (BQL)', x: 9.5, y: 9, tier: 'Enterprise' },
+                { label: 'SpiderRock', x: 7, y: 8.5, tier: 'Institutional' },
+                { label: 'AlgoSeek', x: 6, y: 8, tier: 'Professional' },
+                { label: 'ORATS', x: 6.5, y: 8.2, tier: 'Professional' },
+                { label: 'CBOE LiveVol', x: 7.5, y: 9, tier: 'Professional' },
+                { label: 'iVolatility', x: 5, y: 7, tier: 'Retail/Pro' },
+                { label: 'Polygon.io', x: 4, y: 5, tier: 'Retail/Pro' },
+                { label: 'EODHD', x: 1, y: 2, tier: 'Retail' },
+            ];
+            
+            const tierColors = {
+                'Enterprise': 'rgba(216, 49, 91, 0.9)',
+                'Institutional': 'rgba(10, 36, 99, 0.9)',
+                'Professional': 'rgba(62, 146, 204, 0.9)',
+                'Retail/Pro': 'rgba(244, 182, 11, 0.9)',
+                'Retail': 'rgba(128, 128, 128, 0.9)'
+            };
+
+            const frontierCtx = document.getElementById('frontierChart').getContext('2d');
+            new Chart(frontierCtx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Data Providers',
+                        data: frontierData.map(d => ({ x: d.x, y: d.y, label: d.label })),
+                        backgroundColor: frontierData.map(d => tierColors[d.tier]),
+                        pointRadius: 10,
+                        pointHoverRadius: 15,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.label || '';
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Relative Positioning of Data Providers',
+                            font: { size: 16, weight: 'bold' },
+                            color: brilliantBlues.dark
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '→ Relative Cost / Pricing Tier', font: { size: 14 } },
+                            min: 0,
+                            max: 11,
+                             grid: { color: '#e0e0e0' }
+                        },
+                        y: {
+                            title: { display: true, text: '↑ Assessed Data Quality & Features', font: { size: 14 } },
+                            min: 0,
+                            max: 11,
+                             grid: { color: '#e0e0e0' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

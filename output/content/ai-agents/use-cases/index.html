@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>E-commerce AI Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A task-oriented, multi-section single-page application. The structure includes: 1) a main Dashboard for KPIs and AI summary, 2) a Sales section for deep dives, 3) a Traffic section for user sources, 4) a Customer Journey funnel to visualize drop-offs, and 5) an actionable AI Recommendations list. This structure was chosen over a linear report to empower users to explore data based on their immediate questions (e.g., "How are sales?") and to clearly separate analysis from action, which is a more intuitive workflow for an e-commerce manager. -->
+    <!-- Visualization & Content Choices:
+    - Report Info: High-level KPIs (Sales, Traffic, Conversion). Goal: Inform. Viz: Large text in HTML cards. Interaction: Hover for details. Justification: Quick, scannable overview.
+    - Report Info: Sales trend over time. Goal: Show Change. Viz: Line Chart (Chart.js). Interaction: Date range filter buttons. Justification: Standard, effective way to show trends.
+    - Report Info: Top Products. Goal: Compare. Viz: Horizontal Bar Chart (Chart.js). Justification: Easy comparison of product performance.
+    - Report Info: Customer conversion flow. Goal: Organize/Identify problems. Viz: HTML/CSS funnel diagram. Interaction: Hover for drop-off insights. Justification: Visually intuitive for funnels, avoids SVG complexity. Library/Method: Styled HTML divs.
+    - Report Info: AI-driven suggestions. Goal: Act. Viz: List of interactive cards. Interaction: Clickable "Take Action" buttons. Justification: Turns insights into a clear, actionable to-do list.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f5;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active {
+            border-bottom-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 40vh;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .funnel-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            margin: 0.5rem auto;
+            background-color: #eff6ff;
+            color: #1e40af;
+            border-radius: 0.5rem;
+            clip-path: polygon(0% 0%, 100% 0%, 95% 50%, 100% 100%, 0% 100%, 5% 50%);
+            width: 90%;
+            max-width: 600px;
+            transition: background-color 0.3s;
+        }
+        .funnel-step:hover {
+            background-color: #dbeafe;
+        }
+        .funnel-dropoff {
+            text-align: center;
+            color: #ef4444;
+            font-weight: 500;
+        }
+        .funnel-dropoff .arrow {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="min-h-screen">
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+                        <span class="text-blue-600 mr-2">🦠</span> E-commerce AI Agent
+                    </h1>
+                </div>
+                <nav class="flex space-x-4 sm:space-x-8 border-b">
+                    <button class="nav-link py-3 px-1 text-sm sm:text-base font-semibold text-gray-600 hover:text-blue-600" data-section="dashboard">Dashboard</button>
+                    <button class="nav-link py-3 px-1 text-sm sm:text-base font-semibold text-gray-600 hover:text-blue-600" data-section="sales">Sales Performance</button>
+                    <button class="nav-link py-3 px-1 text-sm sm:text-base font-semibold text-gray-600 hover:text-blue-600" data-section="traffic">Traffic &amp; Engagement</button>
+                    <button class="nav-link py-3 px-1 text-sm sm:text-base font-semibold text-gray-600 hover:text-blue-600" data-section="journey">Customer Journey</button>
+                    <button class="nav-link py-3 px-1 text-sm sm:text-base font-semibold text-gray-600 hover:text-blue-600" data-section="actions">AI Recommendations</button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <section class="space-y-8" id="dashboard">
+                <div>
+                    <div class="p-6 bg-white rounded-xl shadow-md flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <div class="text-4xl">🤖</div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">AI Narrative for the Last 30 Days</h2>
+                            <p class="mt-1 text-gray-600" id="ai-narrative-dashboard">Here's a summary of your performance. Sales are trending up, driven by strong organic traffic. However, conversion rates have slightly dipped, suggesting potential friction in the checkout process.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="kpi-card">
+                        <h3 class="text-gray-500 font-medium">Total Sales</h3>
+                        <p class="text-3xl font-bold mt-2 text-gray-900" id="kpi-sales">$125,430</p>
+                        <p class="text-green-600 text-sm mt-1" id="kpi-sales-change">+5.2% vs last period</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3 class="text-gray-500 font-medium">Total Sessions</h3>
+                        <p class="text-3xl font-bold mt-2 text-gray-900" id="kpi-sessions">88,920</p>
+                        <p class="text-green-600 text-sm mt-1" id="kpi-sessions-change">+8.1% vs last period</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3 class="text-gray-500 font-medium">Conversion Rate</h3>
+                        <p class="text-3xl font-bold mt-2 text-gray-900" id="kpi-conversion">2.8%</p>
+                        <p class="text-red-600 text-sm mt-1" id="kpi-conversion-change">-0.3% vs last period</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h3 class="text-gray-500 font-medium">Average Order Value</h3>
+                        <p class="text-3xl font-bold mt-2 text-gray-900" id="kpi-aov">$141.06</p>
+                        <p class="text-green-600 text-sm mt-1" id="kpi-aov-change">+1.5% vs last period</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-900">Sales Trend (Last 30 Days)</h3>
+                    <div class="chart-container mt-4">
+                        <canvas id="dashboardSalesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="hidden space-y-8" id="sales">
+                 <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                    <h2 class="text-xl font-bold text-blue-900">Sales Performance Deep Dive</h2>
+                    <p class="mt-1 text-blue-700">This section allows for a detailed analysis of your sales data. Use the filters to explore trends over different time periods, identify your most valuable products, and understand which sales channels are performing best. The AI will provide contextual insights based on your selections.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2 sm:mb-0">Sales Over Time</h3>
+                        <div class="flex space-x-2" id="sales-time-filter">
+                            <button class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300" data-range="7">7D</button>
+                            <button class="px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-md" data-range="30">30D</button>
+                            <button class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300" data-range="90">90D</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="salesTrendChart"></canvas>
+                    </div>
+                     <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-600"><span class="font-bold text-gray-800">AI Insight:</span> <span id="sales-chart-narrative">Over the last 30 days, sales show a consistent upward trend with peaks on weekends.</span></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Top 5 Products by Revenue</h3>
+                        <div class="chart-container" style="height:300px;">
+                            <canvas id="topProductsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Sales by Channel</h3>
+                        <div class="chart-container" style="height:300px;">
+                            <canvas id="salesChannelChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="hidden space-y-8" id="traffic">
+                <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                    <h2 class="text-xl font-bold text-blue-900">Traffic &amp; Engagement Analysis</h2>
+                    <p class="mt-1 text-blue-700">Explore where your visitors are coming from and how they interact with your site. This section breaks down traffic by source and key engagement metrics. Understanding these patterns is key to optimizing your marketing spend and improving on-site experience.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Traffic Sources (Last 30 Days)</h3>
+                        <div class="chart-container">
+                            <canvas id="trafficSourceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900">Engagement Metrics</h3>
+                        <div class="space-y-6 mt-4">
+                            <div>
+                                <div class="flex justify-between items-baseline">
+                                    <h4 class="font-medium text-gray-600">Bounce Rate</h4>
+                                    <span class="font-bold text-2xl text-red-500">45.2%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                  <div class="bg-red-500 h-2.5 rounded-full" style="width: 45.2%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Slightly higher than the industry average of 40%. Focus on landing page optimization.</p>
+                            </div>
+                            <div>
+                               <div class="flex justify-between items-baseline">
+                                    <h4 class="font-medium text-gray-600">Avg. Session Duration</h4>
+                                    <span class="font-bold text-2xl text-green-600">2m 45s</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                  <div class="bg-green-600 h-2.5 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Healthy engagement. Users are spending time exploring products.</p>
+                            </div>
+                             <div>
+                               <div class="flex justify-between items-baseline">
+                                    <h4 class="font-medium text-gray-600">Pages per Session</h4>
+                                    <span class="font-bold text-2xl text-green-600">4.8</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                  <div class="bg-green-600 h-2.5 rounded-full" style="width: 80%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Strong internal navigation and product discovery.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="hidden space-y-8" id="journey">
+                 <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                    <h2 class="text-xl font-bold text-blue-900">Customer Conversion Funnel</h2>
+                    <p class="mt-1 text-blue-700">This visualization shows the path customers take from their first visit to making a purchase. The biggest opportunities for growth often lie in reducing the drop-off rate between these key steps. Hover over a step for AI insights on potential friction points.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-900 text-center mb-6">Conversion Funnel (Last 30 Days)</h3>
+                    <div class="space-y-2" id="customer-funnel">
+                        <!-- Funnel steps will be injected by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <section class="hidden space-y-6" id="actions">
+                <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                    <h2 class="text-xl font-bold text-blue-900">AI-Powered Recommendations</h2>
+                    <p class="mt-1 text-blue-700">Based on the latest data, here are prioritized actions to improve performance. These recommendations are designed to target the most impactful areas for growth. Click an action button to mark it as complete.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="recommendations-list">
+                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-orange-400">
+                        <h4 class="font-bold text-gray-800">Optimize Checkout Flow</h4>
+                        <p class="text-sm text-gray-600 mt-2">The drop-off rate from 'Checkout' to 'Purchase' is high (45%). Simplify the checkout form and offer guest checkout to reduce friction.</p>
+                        <button class="action-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors">Take Action</button>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-400">
+                        <h4 class="font-bold text-gray-800">Promote "Ergo-Comfort Mouse"</h4>
+                        <p class="text-sm text-gray-600 mt-2">This product has the highest revenue and a strong conversion rate. Feature it on the homepage and in an email campaign to maximize sales.</p>
+                        <button class="action-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors">Take Action</button>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-400">
+                        <h4 class="font-bold text-gray-800">Launch Social Media Ad Campaign</h4>
+                        <p class="text-sm text-gray-600 mt-2">Traffic from 'Social Media' has a high conversion rate but low volume. Invest in targeted ads on Instagram and Facebook to attract more high-intent buyers.</p>
+                        <button class="action-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors">Take Action</button>
+                    </div>
+                     <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-400">
+                        <h4 class="font-bold text-gray-800">Improve Mobile Landing Page Speed</h4>
+                        <p class="text-sm text-gray-600 mt-2">Mobile bounce rate is 15% higher than desktop. Compress images and defer non-critical scripts to improve load times for mobile users.</p>
+                        <button class="action-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors">Take Action</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const appState = {
+        activeSection: 'dashboard',
+        salesDateRange: 30,
+    };
+
+    const mockData = {
+        sales: (days) => {
+            const data = [];
+            const labels = [];
+            let lastValue = 3500;
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                const fluctuation = (Math.random() - 0.45) * 500;
+                lastValue = Math.max(2000, lastValue + fluctuation + (days - i) * 5);
+                data.push(Math.round(lastValue));
+            }
+            return { labels, data };
+        },
+        topProducts: [
+            { name: 'Ergo-Comfort Mouse', revenue: 25400 },
+            { name: 'Mechanical Keyboard', revenue: 19800 },
+            { name: '4K Webcam', revenue: 15200 },
+            { name: 'USB-C Docking Station', revenue: 12100 },
+            { name: 'Noise-Cancelling Headphones', revenue: 9800 },
+        ],
+        salesChannel: {
+            labels: ['Organic Search', 'Direct', 'Paid Search', 'Social Media', 'Referral'],
+            data: [45, 25, 15, 10, 5],
+        },
+        trafficSource: {
+            labels: ['Organic Search', 'Direct', 'Paid Search', 'Social Media', 'Referral'],
+            data: [52000, 21000, 9500, 4820, 1600],
+        },
+        funnelData: [
+            { stage: 'Total Sessions', users: 88920, tip: "This is the total number of visits to your site." },
+            { stage: 'Viewed Product', users: 53352, tip: "40% drop-off. Many users leave without viewing a product. Consider improving homepage CTAs." },
+            { stage: 'Added to Cart', users: 8536, tip: "High drop-off (84%). Product pages may lack compelling information or clear 'add to cart' buttons." },
+            { stage: 'Reached Checkout', users: 4695, tip: "Good progression from cart to checkout." },
+            { stage: 'Purchased', users: 2582, tip: "45% drop-off at checkout is high. Simplify the form or add more payment options." },
+        ]
+    };
+
+    const charts = {};
+
+    const chartConfigs = {
+        line: (data, label) => ({
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: label,
+                    data: data.data,
+                    fill: true,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.3,
+                    pointBackgroundColor: '#3b82f6'
+                }]
+            },
+            options: chartOptions,
+        }),
+        bar: (data, label) => ({
+             type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: label,
+                    data: data.data,
+                    backgroundColor: ['#2563eb', '#4f46e5', '#7c3aed', '#9333ea', '#c026d3'],
+                    borderRadius: 4
+                }]
+            },
+            options: chartOptions,
+        }),
+        horizontalBar: (data, label) => ({
+             type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: label,
+                    data: data.data,
+                    backgroundColor: ['#1d4ed8', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'],
+                    borderRadius: 4
+                }]
+            },
+            options: {...chartOptions, indexAxis: 'y' },
+        }),
+        doughnut: (data, label) => ({
+            type: 'doughnut',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: label,
+                    data: data.data,
+                    backgroundColor: ['#1e40af', '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {...chartOptions, cutout: '70%'},
+        })
+    };
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: true,
+                backgroundColor: '#1e293b',
+                titleColor: '#f8fafc',
+                bodyColor: '#cbd5e1',
+                padding: 10,
+                cornerRadius: 6,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: '#e5e7eb',
+                },
+                ticks: { color: '#6b7280' }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: { color: '#6b7280' }
+            }
+        }
+    };
+    
+    function initCharts() {
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        const dashboardSalesData = mockData.sales(30);
+        const topProductsData = { labels: mockData.topProducts.map(p => p.name), data: mockData.topProducts.map(p => p.revenue) };
+
+        charts.dashboardSalesChart = new Chart(document.getElementById('dashboardSalesChart'), chartConfigs.line(dashboardSalesData, 'Sales'));
+        charts.salesTrendChart = new Chart(document.getElementById('salesTrendChart'), chartConfigs.line(dashboardSalesData, 'Sales'));
+        charts.topProductsChart = new Chart(document.getElementById('topProductsChart'), chartConfigs.horizontalBar(topProductsData, 'Revenue'));
+        charts.salesChannelChart = new Chart(document.getElementById('salesChannelChart'), chartConfigs.doughnut(mockData.salesChannel, 'Sales'));
+        charts.trafficSourceChart = new Chart(document.getElementById('trafficSourceChart'), chartConfigs.bar(mockData.trafficSource, 'Sessions'));
+    }
+
+    function updateSalesCharts() {
+        const salesData = mockData.sales(appState.salesDateRange);
+        charts.salesTrendChart.data.labels = salesData.labels;
+        charts.salesTrendChart.data.datasets[0].data = salesData.data;
+        charts.salesTrendChart.update();
+
+        const narrativeEl = document.getElementById('sales-chart-narrative');
+        if (appState.salesDateRange === 7) {
+            narrativeEl.textContent = 'Sales in the last week show a slight dip, likely due to mid-week seasonality.';
+        } else if (appState.salesDateRange === 30) {
+            narrativeEl.textContent = 'Over the last 30 days, sales show a consistent upward trend with peaks on weekends.';
+        } else {
+            narrativeEl.textContent = 'The 90-day view indicates steady long-term growth, though month-over-month velocity has slowed slightly.';
+        }
+    }
+
+    function renderFunnel() {
+        const funnelContainer = document.getElementById('customer-funnel');
+        funnelContainer.innerHTML = '';
+        let lastUsers = mockData.funnelData[0].users;
+
+        mockData.funnelData.forEach((step, index) => {
+            const stepEl = document.createElement('div');
+            stepEl.className = 'funnel-step';
+            stepEl.innerHTML = `
+                <div class="font-semibold">${step.stage}</div>
+                <div class="text-right">
+                    <div class="font-bold text-lg">${step.users.toLocaleString()}</div>
+                    <div class="text-xs opacity-80">Users</div>
+                </div>
+            `;
+            stepEl.title = step.tip;
+            funnelContainer.appendChild(stepEl);
+
+            if (index < mockData.funnelData.length - 1) {
+                const nextStep = mockData.funnelData[index + 1];
+                const dropOff = lastUsers - nextStep.users;
+                const dropOffRate = ((dropOff / lastUsers) * 100).toFixed(1);
+
+                const dropOffEl = document.createElement('div');
+                dropOffEl.className = 'funnel-dropoff';
+                dropOffEl.innerHTML = `<div class="arrow">&darr;</div><div>${dropOffRate}% Drop-off</div>`;
+                funnelContainer.appendChild(dropOffEl);
+                lastUsers = nextStep.users;
+            }
+        });
+    }
+
+    function handleNavigation(e) {
+        if (!e.target.matches('.nav-link')) return;
+
+        const targetSection = e.target.dataset.section;
+        appState.activeSection = targetSection;
+
+        document.querySelectorAll('main section').forEach(section => {
+            section.classList.toggle('hidden', section.id !== targetSection);
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.section === targetSection);
+        });
+    }
+    
+    function handleSalesFilter(e) {
+        if (!e.target.matches('#sales-time-filter button')) return;
+        
+        const range = e.target.dataset.range;
+        appState.salesDateRange = parseInt(range, 10);
+        
+        document.querySelectorAll('#sales-time-filter button').forEach(btn => {
+            btn.classList.remove('bg-blue-600', 'text-white');
+            btn.classList.add('bg-gray-200', 'text-gray-600');
+        });
+        
+        e.target.classList.add('bg-blue-600', 'text-white');
+        e.target.classList.remove('bg-gray-200', 'text-gray-600');
+        
+        updateSalesCharts();
+    }
+
+    function handleActionClick(e) {
+        if (!e.target.matches('.action-btn')) return;
+
+        e.target.textContent = 'Action Logged ✔';
+        e.target.disabled = true;
+        e.target.classList.add('bg-gray-400', 'cursor-not-allowed');
+        e.target.classList.remove('hover:bg-orange-600', 'hover:bg-green-600', 'hover:bg-blue-600', 'hover:bg-red-600');
+    }
+
+    document.querySelector('header nav').addEventListener('click', handleNavigation);
+    document.getElementById('sales-time-filter').addEventListener('click', handleSalesFilter);
+    document.getElementById('recommendations-list').addEventListener('click', handleActionClick);
+    
+    document.querySelector('.nav-link[data-section="dashboard"]').classList.add('active');
+    
+    initCharts();
+    renderFunnel();
+});
+</script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

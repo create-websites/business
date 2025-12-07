@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Cloud Architecture Decision Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Cool Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive decision wizard. It guides the user through a series of questions about their project requirements (workload, scale, cost model, etc.). Based on their answers, it calculates an affinity score for three architectures: Serverless, Containerized Microservices, and Distributed Data Processing. The results are presented with a primary recommendation and a radar chart for visual comparison. This task-oriented wizard structure was chosen because it directly addresses the user's need—making a complex technical decision—in a structured, personalized, and engaging way, which is far more effective for this topic than a static report layout. -->
+    <!-- Visualization & Content Choices: Report Info: Decision criteria for cloud architectures. -> Goal: Compare suitability of three options based on user input. -> Viz/Presentation Method: A radar chart from Chart.js is the primary visualization. -> Interaction: User answers questions via radio buttons, which dynamically calculates scores that feed the chart. This provides a multi-dimensional comparison at a glance. -> Justification: The radar chart is ideal for comparing multiple items across multiple quantitative dimensions (the criteria scores). It clearly shows which architecture has the best overall coverage for the user's needs. Supporting text is presented in cards and accordions to manage information density. -> Library/Method: Chart.js (Canvas). CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Cloud Architecture Decision Framework</h1>
+            <p class="mt-2 text-lg text-slate-600">Find the best architecture for your next project.</p>
+        </header>
+
+        <main>
+            <section class="mb-12 max-w-4xl mx-auto" id="introduction">
+                <p class="text-center text-slate-700">This interactive tool will help you determine whether a Serverless, Containerized Microservices, or Distributed Data Processing architecture is the right fit for your needs. Answer the following questions about your project's characteristics, and we'll provide a tailored recommendation based on common industry best practices.</p>
+            </section>
+            
+            <section class="max-w-2xl mx-auto space-y-8" id="assessment">
+            </section>
+
+            <div class="text-center mt-8">
+                 <button class="bg-teal-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-teal-700 transition-all transform hover:scale-105 disabled:bg-slate-400 disabled:cursor-not-allowed disabled:scale-100" id="calculate-btn">Show My Recommendation</button>
+            </div>
+            <div class="text-center text-red-500 mt-4 h-6" id="validation-message"></div>
+
+
+            <section class="hidden mt-16 fade-in" id="results">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Your Recommendation</h2>
+                    <p class="mt-2 text-lg text-slate-600">Based on your answers, here's our analysis.</p>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold text-center mb-2" id="recommendation-title"></h3>
+                    <p class="text-center text-slate-600" id="recommendation-summary"></p>
+                </div>
+                
+                <div class="grid md:grid-cols-5 gap-8 items-center">
+                    <div class="md:col-span-3 bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-bold text-center mb-4">Architecture Affinity Score</h3>
+                        <div class="chart-container">
+                            <canvas id="resultsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 space-y-4" id="detailed-breakdown">
+                    </div>
+                </div>
+                
+                 <div class="text-center mt-12">
+                    <button class="bg-slate-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-slate-700 transition-all" id="reset-btn">Start Over</button>
+                </div>
+            </section>
+
+            <section class="mt-16" id="comparison-table">
+                 <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-900">Architecture At-a-Glance</h2>
+                    <p class="mt-2 text-lg text-slate-600">A general comparison of the three architectures.</p>
+                </div>
+                <div class="overflow-x-auto bg-white p-4 rounded-2xl shadow-lg border border-slate-200">
+                    <table class="w-full min-w-[600px] text-left">
+                        <thead>
+                            <tr class="border-b border-slate-200">
+                                <th class="p-4 font-semibold">Criterion</th>
+                                <th class="p-4 font-semibold text-teal-700">Serverless</th>
+                                <th class="p-4 font-semibold text-indigo-700">Containers</th>
+                                <th class="p-4 font-semibold text-amber-700">Distributed Data</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                             <tr>
+                                <td class="p-4 font-medium">Primary Use Case</td>
+                                <td class="p-4">Event-driven tasks, APIs, background jobs</td>
+                                <td class="p-4">Long-running services, web apps, complex APIs</td>
+                                <td class="p-4">Large-scale batch/stream data processing</td>
+                            </tr>
+                             <tr>
+                                <td class="p-4 font-medium">Scalability Model</td>
+                                <td class="p-4">Automatic, per-request scaling to zero</td>
+                                <td class="p-4">Cluster-based, requires configuration</td>
+                                <td class="p-4">Scales data processing nodes, job-based</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">Cost Model</td>
+                                <td class="p-4">Pay-per-execution, very cost-effective for sporadic traffic</td>
+                                <td class="p-4">Pay for running instances/nodes (always on)</td>
+                                <td class="p-4">Pay for cluster uptime during jobs</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">Operational Overhead</td>
+                                <td class="p-4">Very Low (managed by cloud provider)</td>
+                                <td class="p-4">Medium-High (manage containers, orchestrator)</td>
+                                <td class="p-4">Medium (managed services like EMR help)</td>
+                            </tr>
+                             <tr>
+                                <td class="p-4 font-medium">State Management</td>
+                                <td class="p-4">Stateless by design; requires external DB/cache</td>
+                                <td class="p-4">Can manage state within services or externally</td>
+                                <td class="p-4">Inherently stateful for data processing jobs</td>
+                            </tr>
+                             <tr>
+                                <td class="p-4 font-medium">Typical Latency</td>
+                                <td class="p-4">Low, but can have cold start delays</td>
+                                <td class="p-4">Consistently low latency for "warm" services</td>
+                                <td class="p-4">High (minutes to hours), not for real-time APIs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const assessmentSection = document.getElementById('assessment');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const validationMessage = document.getElementById('validation-message');
+            const resultsSection = document.getElementById('results');
+            const introductionSection = document.getElementById('introduction');
+            const comparisonTableSection = document.getElementById('comparison-table');
+            const resetBtn = document.getElementById('reset-btn');
+            
+            let userChoices = {};
+            let chartInstance = null;
+            
+            calculateBtn.disabled = true;
+
+            const questions = [
+                {
+                    id: 'workload',
+                    text: 'What best describes your primary workload pattern?',
+                    options: [
+                        { value: 'event', text: 'Event-Driven (e.g., file uploads, API calls, queue messages)', scores: { serverless: 3, containers: 1, data: 0 } },
+                        { value: 'service', text: 'Always-On Service (e.g., web server, persistent API)', scores: { serverless: 1, containers: 3, data: 0 } },
+                        { value: 'batch', text: 'Large-Scale Batch Processing (e.g., ETL, data analysis)', scores: { serverless: 1, containers: 2, data: 3 } }
+                    ]
+                },
+                {
+                    id: 'traffic',
+                    text: 'How would you describe your expected traffic pattern?',
+                    options: [
+                        { value: 'sporadic', text: 'Sporadic & Unpredictable', scores: { serverless: 3, containers: 1, data: 1 } },
+                        { value: 'consistent', text: 'Consistent & High Volume', scores: { serverless: 2, containers: 3, data: 2 } },
+                        { value: 'scheduled', text: 'Scheduled Bursts (e.g., nightly jobs)', scores: { serverless: 2, containers: 2, data: 3 } }
+                    ]
+                },
+                {
+                    id: 'ops',
+                    text: 'How much operational overhead are you willing to manage?',
+                    options: [
+                        { value: 'low', text: 'As Little As Possible (fully managed)', scores: { serverless: 3, containers: 0, data: 2 } },
+                        { value: 'medium', text: 'Some Control (e.g., container configs, scaling rules)', scores: { serverless: 1, containers: 3, data: 2 } },
+                        { value: 'high', text: 'Full Control (custom environments, complex orchestration)', scores: { serverless: 0, containers: 2, data: 1 } }
+                    ]
+                },
+                {
+                    id: 'latency',
+                    text: 'What are your application\'s latency requirements?',
+                    options: [
+                        { value: 'tolerant', text: 'Tolerant of occasional delays (e.g., "cold starts")', scores: { serverless: 2, containers: 3, data: 0 } },
+                        { value: 'low', text: 'Requires consistently low latency', scores: { serverless: 1, containers: 3, data: 0 } },
+                        { value: 'not_realtime', text: 'Not for real-time user interaction (minutes to hours)', scores: { serverless: 0, containers: 1, data: 3 } }
+                    ]
+                },
+                {
+                    id: 'state',
+                    text: 'How does your application handle state?',
+                     options: [
+                        { value: 'stateless', text: 'Primarily Stateless (state managed in external DB/cache)', scores: { serverless: 3, containers: 2, data: 1 } },
+                        { value: 'stateful', text: 'Requires Stateful Components (e.g., in-memory cache, connections)', scores: { serverless: 0, containers: 3, data: 2 } },
+                        { value: 'data_intensive', text: 'Inherently stateful for large data transformations', scores: { serverless: 0, containers: 1, data: 3 } }
+                    ]
+                }
+            ];
+            
+            const recommendationContent = {
+                serverless: {
+                    title: 'Serverless Architecture',
+                    summary: 'Ideal for event-driven applications with unpredictable traffic, prioritizing low operational overhead and cost-efficiency.',
+                    color: 'teal'
+                },
+                containers: {
+                    title: 'Containerized Microservices',
+                    summary: 'Best for complex, long-running applications that require consistent performance, control over the environment, and state management.',
+                    color: 'indigo'
+                },
+                data: {
+                    title: 'Distributed Data Processing',
+                    summary: 'The choice for large-scale data analysis, ETL jobs, and machine learning workloads where processing massive datasets is the core task.',
+                    color: 'amber'
+                }
+            };
+
+            function renderQuestions() {
+                let html = '';
+                questions.forEach((q, index) => {
+                    html += `
+                        <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200 fade-in" style="animation-delay: ${index * 100}ms;">
+                            <p class="font-semibold text-lg mb-4">${index + 1}. ${q.text}</p>
+                            <fieldset class="space-y-3">
+                                <legend class="sr-only">${q.text}</legend>
+                    `;
+                    q.options.forEach(opt => {
+                        html += `
+                            <div class="flex items-center">
+                                <input type="radio" id="${q.id}-${opt.value}" name="${q.id}" value="${opt.value}" class="h-4 w-4 text-teal-600 border-slate-300 focus:ring-teal-500">
+                                <label for="${q.id}-${opt.value}" class="ml-3 block text-sm font-medium text-slate-700">${opt.text}</label>
+                            </div>
+                        `;
+                    });
+                    html += `</fieldset></div>`;
+                });
+                assessmentSection.innerHTML = html;
+            }
+
+            function checkAllAnswered() {
+                const answeredCount = Object.keys(userChoices).length;
+                if (answeredCount === questions.length) {
+                    calculateBtn.disabled = false;
+                    validationMessage.textContent = '';
+                } else {
+                    calculateBtn.disabled = true;
+                }
+            }
+
+            assessmentSection.addEventListener('change', e => {
+                if (e.target.type === 'radio') {
+                    userChoices[e.target.name] = e.target.value;
+                    checkAllAnswered();
+                }
+            });
+
+            calculateBtn.addEventListener('click', () => {
+                if (Object.keys(userChoices).length !== questions.length) {
+                    validationMessage.textContent = 'Please answer all questions before proceeding.';
+                    return;
+                }
+                
+                const scores = { serverless: 0, containers: 0, data: 0 };
+                questions.forEach(q => {
+                    const selectedOptionValue = userChoices[q.id];
+                    const selectedOption = q.options.find(opt => opt.value === selectedOptionValue);
+                    if (selectedOption) {
+                        scores.serverless += selectedOption.scores.serverless;
+                        scores.containers += selectedOption.scores.containers;
+                        scores.data += selectedOption.scores.data;
+                    }
+                });
+
+                displayResults(scores);
+            });
+            
+            function displayResults(scores) {
+                assessmentSection.classList.add('hidden');
+                calculateBtn.parentElement.classList.add('hidden');
+                validationMessage.classList.add('hidden');
+                introductionSection.classList.add('hidden');
+                comparisonTableSection.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+                const topChoice = sortedScores[0][0];
+
+                const recommendationTitle = document.getElementById('recommendation-title');
+                const recommendationSummary = document.getElementById('recommendation-summary');
+                const breakdownContainer = document.getElementById('detailed-breakdown');
+                
+                const topContent = recommendationContent[topChoice];
+                recommendationTitle.textContent = `Top Recommendation: ${topContent.title}`;
+                recommendationTitle.className = `text-2xl font-bold text-center mb-2 text-${topContent.color}-700`;
+                recommendationSummary.textContent = topContent.summary;
+
+                breakdownContainer.innerHTML = sortedScores.map(([key, score]) => {
+                    const content = recommendationContent[key];
+                    const isTop = key === topChoice;
+                    return `
+                        <div class="p-4 rounded-lg border ${isTop ? `bg-${content.color}-50 border-${content.color}-400` : 'bg-slate-50 border-slate-200'}">
+                             <h4 class="font-bold text-lg text-${content.color}-700">${content.title}</h4>
+                             <p class="text-sm text-slate-600">${content.summary}</p>
+                        </div>
+                    `;
+                }).join('');
+
+                renderChart(scores);
+            }
+            
+            function renderChart(scores) {
+                const ctx = document.getElementById('resultsChart').getContext('2d');
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+                
+                const labels = questions.map(q => q.text.split('(')[0].trim().replace('your ','').replace('application\'s ','').replace('primary workload ','').replace('expected traffic ','').replace('much operational overhead are you willing to ','').replace('latency requirements?','Latency').replace('does ','').replace('handle ',''));
+
+                const getDatasetScores = (arch) => {
+                    return questions.map(q => {
+                        const choice = userChoices[q.id];
+                        const option = q.options.find(o => o.value === choice);
+                        return option.scores[arch] || 0;
+                    });
+                };
+                
+                chartInstance = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Serverless',
+                                data: getDatasetScores('serverless'),
+                                backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                                borderColor: 'rgb(13, 148, 136)',
+                                pointBackgroundColor: 'rgb(13, 148, 136)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgb(13, 148, 136)',
+                                borderWidth: 2,
+                            },
+                            {
+                                label: 'Containers',
+                                data: getDatasetScores('containers'),
+                                backgroundColor: 'rgba(67, 56, 202, 0.2)',
+                                borderColor: 'rgb(67, 56, 202)',
+                                pointBackgroundColor: 'rgb(67, 56, 202)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgb(67, 56, 202)',
+                                borderWidth: 2,
+                            },
+                            {
+                                label: 'Distributed Data',
+                                data: getDatasetScores('data'),
+                                backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                                borderColor: 'rgb(217, 119, 6)',
+                                pointBackgroundColor: 'rgb(217, 119, 6)',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: 'rgb(217, 119, 6)',
+                                borderWidth: 2,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 3,
+                                stepSize: 1,
+                                pointLabels: {
+                                    font: { size: 12 },
+                                    color: '#475569'
+                                },
+                                grid: { color: '#e2e8f0' },
+                                angleLines: { color: '#e2e8f0' }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: '500'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            resetBtn.addEventListener('click', () => {
+                userChoices = {};
+                resultsSection.classList.add('hidden');
+                assessmentSection.classList.remove('hidden');
+                calculateBtn.parentElement.classList.remove('hidden');
+                validationMessage.classList.remove('hidden');
+                introductionSection.classList.remove('hidden');
+                comparisonTableSection.classList.remove('hidden');
+                renderQuestions();
+                checkAllAnswered();
+            });
+            
+            renderQuestions();
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Infographic: Architecting Modern Document Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Narrative & Structure Plan: The infographic tells a story in four acts. Act 1: "The Evolution," introduces the core problem and the shift from OCR to IDP. Act 2: "The Cloud Titans," provides a head-to-head comparison of the major managed platforms (Azure, Google, AWS) using bar charts and feature callouts. Act 3: "The New Challengers," contrasts the established cloud platforms with the disruptive approaches of Direct LLM APIs and Self-Hosted models, using donut charts and flow diagrams. Act 4: "The Strategic Playbook," concludes with a clear, use-case-driven recommendation guide, helping the user choose the right path. This narrative structure guides the user from foundational knowledge to actionable strategy. -->
+    <!-- Visualization & Content Choices:
+        - Data Point: Minimum training documents for custom models (Azure, Google). Goal: Compare. Viz: Bar Chart. Justification: A bar chart provides a direct, simple visual comparison of the low data requirements, highlighting Google's zero-shot advantage. Library: Chart.js (Canvas).
+        - Data Point: Pricing comparison of cloud platforms. Goal: Compare. Viz: Grouped Bar Chart. Justification: Effectively compares multiple cost dimensions (e.g., pre-built vs. custom) across the three main competitors in a single view. Library: Chart.js (Canvas).
+        - Data Point: Self-Hosted Pipeline. Goal: Organize/Inform. Viz: HTML/CSS Flow Diagram. Justification: A styled flexbox layout clearly illustrates the sequence of components in a self-hosted solution without using forbidden SVG/Mermaid. Method: HTML/CSS with Tailwind.
+        - Data Point: Strategic Decision Criteria (Effort vs. Control). Goal: Compare/Relationships. Viz: Bubble Chart. Justification: A bubble chart can visually represent three dimensions (e.g., X-axis: Effort, Y-axis: Control, Bubble Size: Cost), making complex trade-offs intuitive. Library: Chart.js (Canvas).
+        - Data Point: Market Share/Preference (Conceptual). Goal: Inform. Viz: Donut Chart. Justification: A donut chart is a visually engaging way to show the composition of different approaches in the market. Library: Chart.js (Canvas).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC; /* Light Slate Background */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .stat-card {
+            background-color: #FFFFFF; /* White Cards */
+            border: 1px solid #E2E8F0; /* Slate Border */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .text-accent {
+            color: #118AB2; /* Vibrant Blue */
+        }
+        .text-highlight {
+            color: #EF476F; /* Vibrant Pink */
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 text-slate-900">
+                The <span class="text-accent">Document Intelligence</span> Playbook
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">
+                From Scanned Pages to Structured JSON: A Visual Guide to Modern Data Extraction.
+            </p>
+        </header>
+
+        <!-- Section 1: The Evolution -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10 text-slate-900">
+                The Leap from <span class="text-slate-500">OCR</span> to <span class="text-highlight">Intelligent Automation</span>
+            </h2>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="stat-card p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800">Then: OCR</h3>
+                    <p class="text-slate-600 mb-4">Optical Character Recognition was a revolution in digitizing text. It converts images to raw text strings, but that's where it stops.</p>
+                    <div class="bg-slate-100 p-4 rounded-md font-mono text-sm text-slate-500">
+                        "123 Main St. Total: $599.99 INV-12345"
+                    </div>
+                     <p class="text-sm mt-3 text-slate-500">It sees text, but understands nothing. Developers are left to write brittle, layout-specific rules to find the data they need.</p>
+                </div>
+                <div class="stat-card p-6 rounded-lg border-2 border-highlight">
+                    <h3 class="text-2xl font-bold mb-3 text-highlight">Now: IDP</h3>
+                    <p class="text-slate-600 mb-4">Intelligent Document Processing uses AI to understand context, classifying documents and extracting data into structured JSON, ready for any application.</p>
+                    <div class="bg-slate-100 p-4 rounded-md font-mono text-sm text-emerald-600">
+                        <pre>{
+  "address": "123 Main St.",
+  "invoice_id": "INV-12345",
+  "total": 599.99
+}</pre>
+                    </div>
+                    <p class="text-sm mt-3 text-slate-500">It delivers pre-interpreted, structured data, automating entire workflows.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Cloud Titans -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10 text-slate-900">The Cloud Titans: Managed IDP Platforms</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">Azure, Google Cloud, and AWS offer powerful, managed "buy" solutions. Here's how they stack up on key features.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="stat-card p-6 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4 text-center text-slate-800">Minimum Docs for Custom Training</h3>
+                    <p class="text-sm text-slate-500 text-center mb-4">Lower is better. Google's GenAI approach allows for "zero-shot" extraction, a major advantage for rapid deployment.</p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="trainingDataChart"></canvas>
+                    </div>
+                </div>
+                <div class="stat-card p-6 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4 text-center text-slate-800">The Customization Playbook</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 font-bold text-2xl mr-4">A</span>
+                            <div>
+                                <h4 class="font-semibold text-slate-800">Azure: The Dual-Model Approach</h4>
+                                <p class="text-sm text-slate-600">Offers both fast 'Template' models for fixed layouts and flexible 'Neural' models for variable ones.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-highlight font-bold text-2xl mr-4">G</span>
+                            <div>
+                                <h4 class="font-semibold text-slate-800">Google: The GenAI Powerhouse</h4>
+                                <p class="text-sm text-slate-600">Leverages foundation models for zero-shot extraction, requiring no initial training data.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-orange-500 font-bold text-2xl mr-4">W</span>
+                            <div>
+                                <h4 class="font-semibold text-slate-800">AWS: The Query Master</h4>
+                                <p class="text-sm text-slate-600">Customizes by training 'Adapters' to answer specific, natural language questions about your documents.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: The New Challengers -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10 text-slate-900">The New Challengers</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">Two powerful alternatives are reshaping the landscape: using general-purpose LLMs directly, or building your own solution with open-source tools.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="stat-card p-6 rounded-lg">
+                    <h3 class="text-xl font-bold mb-4 text-center text-slate-800">Direct LLM APIs: The Ultimate Flex</h3>
+                    <p class="text-sm text-slate-500 text-center mb-4">Leverage models like GPT-4o or Gemini to "read" any document. Unmatched flexibility, but watch for higher latency and potential "hallucinations".</p>
+                    <div class="chart-container h-80">
+                        <canvas id="llmDonutChart"></canvas>
+                    </div>
+                </div>
+                <div class="stat-card p-6 rounded-lg">
+                     <h3 class="text-xl font-bold mb-4 text-center text-slate-800">Self-Hosted: Maximum Control</h3>
+                     <p class="text-sm text-slate-500 text-center mb-6">Build your own pipeline for total data privacy and the lowest long-term cost at extreme scale. Requires significant ML expertise.</p>
+                     <div class="space-y-2">
+                        <div class="flex items-center justify-center space-x-2">
+                             <div class="bg-slate-100 p-3 rounded-md text-center"><p class="font-semibold text-sm">Document Input</p></div>
+                             <div class="text-2xl text-accent">→</div>
+                             <div class="bg-slate-100 p-3 rounded-md text-center"><p class="font-semibold text-sm">Open-Source OCR</p><p class="text-xs text-slate-500">(Tesseract)</p></div>
+                        </div>
+                        <div class="flex justify-center"><div class="text-2xl text-accent">↓</div></div>
+                        <div class="flex items-center justify-center space-x-2">
+                             <div class="bg-slate-100 p-3 rounded-md text-center"><p class="font-semibold text-sm">Structured JSON</p></div>
+                             <div class="text-2xl text-accent">←</div>
+                             <div class="bg-slate-100 p-3 rounded-md text-center"><p class="font-semibold text-sm">LayoutLM Model</p><p class="text-xs text-slate-500">(Fine-Tuned)</p></div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Strategic Playbook -->
+        <section>
+            <h2 class="text-3xl font-bold text-center mb-10 text-slate-900">The Strategic Playbook: Choosing Your Path</h2>
+            <p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">The right choice depends on your documents, volume, and in-house expertise. This framework guides your decision.</p>
+            
+            <div class="stat-card p-6 md:p-8 rounded-lg mb-12">
+                <h3 class="text-xl font-bold text-center mb-4 text-slate-800">The Decision Matrix: Effort vs. Control vs. Cost</h3>
+                <p class="text-sm text-slate-500 text-center mb-6">This chart visualizes the fundamental trade-offs. Bubble size represents relative long-term cost at scale.</p>
+                <div class="chart-container h-96">
+                    <canvas id="decisionBubbleChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="stat-card p-6 rounded-lg">
+                    <h4 class="font-bold text-lg mb-2 text-highlight">Scenario A: Standard Forms (W-2s)</h4>
+                    <p class="text-sm text-slate-600">You have high volumes of fixed-layout documents. Reliability and speed are key.</p>
+                    <p class="font-semibold mt-3">Recommendation: <span class="text-accent">Managed IDP with a Pre-Built Model.</span></p>
+                </div>
+                <div class="stat-card p-6 rounded-lg">
+                    <h4 class="font-bold text-lg mb-2 text-highlight">Scenario B: Variable Invoices</h4>
+                    <p class="text-sm text-slate-600">You process invoices from thousands of vendors with unpredictable layouts.</p>
+                    <p class="font-semibold mt-3">Recommendation: <span class="text-accent">Hybrid Approach (IDP + LLM Fallback).</span></p>
+                </div>
+                 <div class="stat-card p-6 rounded-lg">
+                    <h4 class="font-bold text-lg mb-2 text-highlight">Scenario C: Unstructured Contracts</h4>
+                    <p class="text-sm text-slate-600">You need to extract semantic meaning, not just key-value pairs.</p>
+                    <p class="font-semibold mt-3">Recommendation: <span class="text-accent">Direct Multimodal LLM API.</span></p>
+                </div>
+                 <div class="stat-card p-6 rounded-lg">
+                    <h4 class="font-bold text-lg mb-2 text-highlight">Scenario D: Max Data Privacy</h4>
+                    <p class="text-sm text-slate-600">Data cannot leave your environment. You have a skilled MLOps team.</p>
+                    <p class="font-semibold mt-3">Recommendation: <span class="text-accent">Self-Hosted Open-Source Pipeline.</span></p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+<script>
+const FONT_COLOR = '#334155'; // Slate-700 for text
+const GRID_COLOR = 'rgba(226, 232, 240, 0.8)'; // Slate-200 with transparency
+const PALETTE = {
+    pink: '#EF476F',
+    yellow: '#FFD166',
+    green: '#06D6A0',
+    blue: '#118AB2',
+    navy: '#073B4C',
+};
+
+const tooltipPlugin = {
+    plugins: {
+        legend: {
+            labels: {
+                color: FONT_COLOR,
+                font: {
+                    size: 14
+                }
+            }
+        },
+        tooltip: {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                      return label.join(' ');
+                    } else {
+                      return label;
+                    }
+                }
+            }
+        }
+    }
+};
+
+function wrapLabel(str, maxWidth) {
+    if (str.length <= maxWidth) return str;
+    const words = str.split(' ');
+    const lines = [];
+    let currentLine = '';
+    for (const word of words) {
+        if ((currentLine + word).length > maxWidth) {
+            lines.push(currentLine.trim());
+            currentLine = '';
+        }
+        currentLine += word + ' ';
+    }
+    lines.push(currentLine.trim());
+    return lines.filter(line => line.length > 0);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Chart 1: Training Data
+    const trainingDataCtx = document.getElementById('trainingDataChart').getContext('2d');
+    new Chart(trainingDataCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Azure (Custom Models)', 'Google (GenAI Extractor)'],
+            datasets: [{
+                label: 'Minimum Documents Required',
+                data: [5, 0],
+                backgroundColor: [PALETTE.blue, PALETTE.green],
+                borderColor: [PALETTE.blue, PALETTE.green],
+                borderWidth: 1,
+                barThickness: 40
+            }]
+        },
+        options: {
+            ...tooltipPlugin,
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: { color: FONT_COLOR, stepSize: 1 },
+                    grid: { color: GRID_COLOR }
+                },
+                y: {
+                    ticks: { color: FONT_COLOR, font: { size: 14 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // Chart 2: LLM Donut
+    const llmDonutCtx = document.getElementById('llmDonutChart').getContext('2d');
+    new Chart(llmDonutCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Flexibility', 'Speed of Development', 'Potential Latency', 'Risk of Hallucination'],
+            datasets: [{
+                data: [40, 30, 15, 15],
+                backgroundColor: [PALETTE.green, PALETTE.yellow, PALETTE.pink, '#D90429'],
+                borderColor: '#FFFFFF',
+                borderWidth: 4
+            }]
+        },
+        options: {
+            ...tooltipPlugin,
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                ...tooltipPlugin.plugins,
+                title: {
+                    display: true,
+                    text: 'LLM API Trade-Offs',
+                    color: FONT_COLOR,
+                    font: { size: 16 }
+                }
+            }
+        }
+    });
+    
+    // Chart 3: Decision Bubble Chart
+    const decisionBubbleCtx = document.getElementById('decisionBubbleChart').getContext('2d');
+    new Chart(decisionBubbleCtx, {
+        type: 'bubble',
+        data: {
+            datasets: [{
+                label: 'Managed IDP',
+                data: [{ x: 3, y: 7, r: 15 }],
+                backgroundColor: PALETTE.blue,
+            }, {
+                label: 'Direct LLM API',
+                data: [{ x: 2, y: 9, r: 12 }],
+                backgroundColor: PALETTE.green,
+            }, {
+                label: 'Self-Hosted OS',
+                data: [{ x: 9, y: 10, r: 10 }],
+                backgroundColor: PALETTE.pink,
+            }]
+        },
+        options: {
+            ...tooltipPlugin,
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    min: 0,
+                    max: 10,
+                    title: { display: true, text: 'Initial Development Effort', color: FONT_COLOR },
+                    ticks: { color: FONT_COLOR },
+                    grid: { color: GRID_COLOR }
+                },
+                y: {
+                    min: 0,
+                    max: 10,
+                    title: { display: true, text: 'Flexibility & Control', color: FONT_COLOR },
+                    ticks: { color: FONT_COLOR },
+                    grid: { color: GRID_COLOR }
+                }
+            },
+            plugins: {
+                ...tooltipPlugin.plugins,
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: (Effort: ${context.parsed.x}, Control: ${context.parsed.y}, Cost: ${context.raw.r})`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

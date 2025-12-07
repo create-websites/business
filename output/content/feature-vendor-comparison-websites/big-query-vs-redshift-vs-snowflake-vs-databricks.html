@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Cloud Data Platform Decision Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Harmony -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard, not a linear report, to facilitate user-driven exploration. It starts with a high-level summary and an interactive feature matrix for quick comparison. The core of the app is a visual Radar Chart for at-a-glance multi-dimensional comparison, coupled with a tabbed "Deep Dive" section for specifics on each platform. Finally, a "Use Case Explorer" allows users to map their needs directly to a recommended solution. This task-oriented structure empowers users to find relevant information quickly, whether they prefer a visual overview, detailed text, or a problem-first approach, leading to a more informed decision. -->
+    <!-- Visualization & Content Choices: 
+    - Report Info: Core differentiators of BigQuery, Redshift, Snowflake, Databricks.
+    - Goal: Compare, Organize, Inform.
+    - Viz/Presentation Method:
+        1. Feature Matrix (HTML Table): Goal->Organize/Compare. Presents dense factual data for quick scanning. Interaction->Subtle hover highlights. Justification->Standard, effective for feature-by-feature comparison.
+        2. Platform Strengths (Radar Chart - Chart.js): Goal->Compare/Relationships. Visualizes multi-dimensional strengths and weaknesses. Interaction->Checkboxes to toggle platforms, allowing focused comparisons. Justification->Provides a powerful, immediate visual heuristic that text alone cannot.
+        3. Detailed Info (Tabbed Sections - HTML/JS): Goal->Inform. Breaks down complex information into manageable chunks. Interaction->Clicking tabs to switch content views. Justification->Classic UI pattern to prevent information overload.
+        4. Use Case Recommendations (Buttons + Dynamic Text - HTML/JS): Goal->Inform/Guide. Maps user needs to platform strengths directly. Interaction->Clicking a use case button reveals a tailored recommendation. Justification->A task-oriented approach that delivers immediate value.
+    - Library/Method: Chart.js for the canvas-based radar chart, Vanilla JS for all state management and DOM manipulation (tabs, filters, dynamic text).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .active-tab {
+            border-color: #A57C5A;
+            background-color: #F3ECE5;
+            color: #A57C5A;
+            font-weight: 600;
+        }
+        .inactive-tab {
+            border-color: transparent;
+            color: #6B7280;
+        }
+        .use-case-btn.active {
+            background-color: #A57C5A;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 60vh;
+            max-height: 500px;
+            width: 100%;
+            max-width: 700px;
+        }
+        .platform-logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #F3ECE5;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+        .platform-color-bigquery { color: #4285F4; }
+        .platform-color-redshift { color: #FF9900; }
+        .platform-color-snowflake { color: #29B5E8; }
+        .platform-color-databricks { color: #FF3621; }
+        .bg-platform-bigquery { background-color: #4285F4; }
+        .bg-platform-redshift { background-color: #FF9900; }
+        .bg-platform-snowflake { background-color: #29B5E8; }
+        .bg-platform-databricks { background-color: #FF3621; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#A57C5A] mb-2">Cloud Data Platform Decision Framework</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">An interactive guide to choosing between BigQuery, Redshift, Snowflake, and Databricks.</p>
+        </header>
+
+        <main class="space-y-16">
+            
+            <section class="card p-6 md:p-8" id="comparison-chart">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-2 text-[#634832]">Visual Strengths Comparison</h2>
+                <p class="text-center text-gray-600 mb-6">Select platforms to compare their core strengths on the chart below. This helps visualize the ideal fit for different priorities, from raw performance to ease of use.</p>
+                <div class="flex flex-col md:flex-row">
+                    <div class="w-full md:w-3/4">
+                        <div class="chart-container">
+                            <canvas id="platformRadarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/4 mt-6 md:mt-0 md:pl-8 flex flex-row md:flex-col justify-center space-x-4 md:space-x-0 md:space-y-4" id="chart-controls">
+                    </div>
+                </div>
+            </section>
+
+            <section id="deep-dive">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-2 text-[#634832]">Platform Deep Dive</h2>
+                <p class="text-center text-gray-600 mb-8">Explore detailed information on each platform's architecture, pricing model, key features, and best-fit scenarios.</p>
+                <div class="card">
+                    <div class="border-b border-gray-200">
+                        <nav aria-label="Tabs" class="flex flex-wrap -mb-px p-4" id="tabs-nav">
+                        </nav>
+                    </div>
+                    <div class="p-6 md:p-8" id="tabs-content">
+                    </div>
+                </div>
+            </section>
+            
+            <section id="use-cases">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-2 text-[#634832]">Find Your Best Fit by Use Case</h2>
+                 <p class="text-center text-gray-600 mb-8">What is your primary goal? Select a use case to see our top recommendation and an explanation of why it's the best choice.</p>
+                <div class="flex flex-wrap justify-center gap-3 md:gap-4 mb-8" id="use-case-buttons">
+                </div>
+                <div class="card p-6 md:p-8 min-h-[200px] flex items-center justify-center transition-opacity duration-500" id="use-case-result">
+                     <p class="text-gray-500 text-center">Select a use case above to see the recommendation.</p>
+                </div>
+            </section>
+
+            <section id="feature-matrix">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-2 text-[#634832]">At-a-Glance Feature Matrix</h2>
+                <p class="text-center text-gray-600 mb-8">A quick, side-by-side comparison of the core architectural and functional aspects of each platform.</p>
+                <div class="card overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-[#F3ECE5] text-[#634832] uppercase tracking-wider">
+                            <tr>
+                                <th class="p-4">Feature</th>
+                                <th class="p-4">Google BigQuery</th>
+                                <th class="p-4">Amazon Redshift</th>
+                                <th class="p-4">Snowflake</th>
+                                <th class="p-4">Databricks Lakehouse</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="matrix-body">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const platformData = {
+            bigquery: {
+                name: "Google BigQuery",
+                themeColor: "#4285F4",
+                lightThemeColor: "rgba(66, 133, 244, 0.2)",
+                logo: `<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.43 14.24l-1.39-2.31c-.39-.65-1.18-1.03-1.95-1.03H9.98c-.73 0-1.39.35-1.78.91l-1.01 1.45c-.29.41-.77.65-1.27.65-.53 0-1.01-.27-1.29-.72-.28-.45-.22-1.02.16-1.4l3.1-3.1c.39-.39.9-.59 1.42-.59h4.35c1.47 0 2.65-1.19 2.65-2.65s-1.18-2.65-2.65-2.65H11.5c-.55 0-1-.45-1-1s.45-1 1-1h4.35c2.57 0 4.65 2.08 4.65 4.65 0 1.63-1.04 3.06-2.52 3.84z" fill="#4285F4"/>`,
+                scores: { "Performance": 8, "Cost Efficiency": 7, "Ease of Use": 9, "Ecosystem": 8, "AI/ML Integration": 9, "Scalability": 9 },
+                content: {
+                    summary: "A fully-managed, serverless data warehouse that enables super-fast SQL queries using the processing power of Google's infrastructure. Its separation of compute and storage is a core feature.",
+                    architecture: "Serverless, decoupled storage (Colossus) and compute (Dremel). Automatically provisions resources, making it extremely low-maintenance.",
+                    pricing: "Pay-per-query (on-demand) or flat-rate capacity pricing. Storage is billed separately and is very cheap. Potential for cost unpredictability with on-demand.",
+                    strengths: ["Zero-ops/Serverless", "Excellent for ad-hoc analysis", "Built-in ML capabilities (BigQuery ML)", "High-speed queries on large datasets"],
+                    weaknesses: ["On-demand pricing can be unpredictable", "Less fine-grained control over resources", "Can be slower with very high concurrency"]
+                }
+            },
+            redshift: {
+                name: "Amazon Redshift",
+                themeColor: "#FF9900",
+                lightThemeColor: "rgba(255, 153, 0, 0.2)",
+                logo: `<path d="M11.3,4.35c-1.35-1.35-3.3-2.1-5.3-2.1C2.65,2.25,0,4.9,0,8.25c0,1.45,0.5,2.8,1.35,3.85l6.5,8.65 c0.3,0.4,0.75,0.65,1.2,0.65s0.9-0.25,1.2-0.65l6.5-8.65c0.85-1.05,1.35-2.4,1.35-3.85c0-3.35-2.65-6-6-6 C12.75,2.25,12.05,2.8,11.3,4.35z M8,13.25c-2.75,0-5-2.25-5-5s2.25-5,5-5s5,2.25,5,5S10.75,13.25,8,13.25z" fill="#FF9900" transform="scale(1.2) translate(-1, -2)"/>`,
+                scores: { "Performance": 7, "Cost Efficiency": 8, "Ease of Use": 7, "Ecosystem": 9, "AI/ML Integration": 7, "Scalability": 7 },
+                content: {
+                    summary: "A fast, fully managed, petabyte-scale data warehouse service that is part of the larger AWS ecosystem. It is based on PostgreSQL and is designed for OLAP workloads.",
+                    architecture: "Cluster-based (provisioned nodes). The RA3 nodes with managed storage decouple compute and storage, but it is not as elastic as Snowflake or BigQuery.",
+                    pricing: "Based on the number and type of nodes provisioned (pay-per-hour). Concurrency scaling offers temporary clusters to handle query bursts.",
+                    strengths: ["Deep integration with AWS ecosystem", "Excellent price-performance at scale", "Familiar PostgreSQL-like interface", "Mature and stable"],
+                    weaknesses: ["Requires more management (cluster resizing)", "Scaling can cause downtime", "Concurrency can be a bottleneck without extra cost"]
+                }
+            },
+            snowflake: {
+                name: "Snowflake",
+                themeColor: "#29B5E8",
+                lightThemeColor: "rgba(41, 181, 232, 0.2)",
+                logo: `<path d="M12 2L1 9l11 7 11-7L12 2zm0 17.5L4.5 14 12 9.5 19.5 14 12 19.5z" fill="#29B5E8"/>`,
+                scores: { "Performance": 9, "Cost Efficiency": 6, "Ease of Use": 8, "Ecosystem": 7, "AI/ML Integration": 6, "Scalability": 10 },
+                content: {
+                    summary: "A cloud-native data platform built from the ground up for the cloud. Its key innovation is the multi-cluster shared data architecture that allows for near-infinite, instant concurrency.",
+                    architecture: "Unique 3-layer architecture: decoupled storage, multi-cluster compute ('virtual warehouses'), and cloud services. Compute and storage scale independently and instantly.",
+                    pricing: "Pay-per-second for compute (virtual warehouses) based on size (T-shirt sizing). Storage is billed separately. Credits-based system.",
+                    strengths: ["Instant and elastic scalability", "Near-unlimited concurrency", "Easy data sharing ('Secure Data Sharing')", "Supports structured and semi-structured data seamlessly"],
+                    weaknesses: ["Can become expensive if compute is not managed carefully", "Less mature ML/AI offerings compared to competitors", "Ecosystem integration is good but less native than GCP/AWS"]
+                }
+            },
+            databricks: {
+                name: "Databricks Lakehouse",
+                themeColor: "#FF3621",
+                lightThemeColor: "rgba(255, 54, 33, 0.2)",
+                logo: `<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z" fill="#FF3621"/>`,
+                scores: { "Performance": 9, "Cost Efficiency": 7, "Ease of Use": 6, "Ecosystem": 8, "AI/ML Integration": 10, "Scalability": 8 },
+                content: {
+                    summary: "A unified platform that combines data warehousing and data lakes into a 'lakehouse' architecture. It is built on top of Apache Spark and is exceptional for AI, ML, and data engineering workloads.",
+                    architecture: "Lakehouse architecture on top of open data formats (Delta Lake). Separates compute and storage, leveraging cloud object storage. Provides data warehousing capabilities via Databricks SQL.",
+                    pricing: "Based on Databricks Units (DBUs), which are consumed based on the size and type of compute resources used. Multiple pricing tiers.",
+                    strengths: ["Best-in-class for AI/ML and data science", "Unified platform for data engineering, SQL, and ML", "Based on open standards (Delta Lake, Spark)", "Strong streaming capabilities"],
+                    weaknesses: ["Can be more complex to manage than pure data warehouses", "SQL warehouse is newer than competitors", "Requires more data engineering expertise to maximize"]
+                }
+            }
+        };
+
+        const featureMatrixData = [
+            { feature: "Primary Paradigm", values: ["Serverless DWH", "Provisioned DWH", "Cloud-Native DWH", "Unified Lakehouse"] },
+            { feature: "Architecture", values: ["Decoupled Compute/Storage", "Managed Storage (RA3)", "Multi-Cluster, Shared Data", "Lakehouse (Delta Lake)"] },
+            { feature: "Best for", values: ["Ad-hoc Analytics, BI", "BI, AWS-centric orgs", "Concurrency, Data Sharing", "AI/ML, Data Engineering"] },
+            { feature: "Scalability Model", values: ["Automatic", "Manual/Scheduled Resize", "Instant, Elastic", "Cluster Auto-Scaling"] },
+            { feature: "Data Support", values: ["Structured, Semi-structured", "Primarily Structured", "Structured, Semi-structured", "All types (inc. Unstructured)"] },
+            { feature: "Maintenance", values: ["Very Low", "Medium", "Low", "Medium-High"] }
+        ];
+
+        const useCaseData = {
+            "bi-dashboards": {
+                title: "Interactive BI Dashboards",
+                recommendation: "snowflake",
+                reason: "Snowflake's multi-cluster architecture provides near-unlimited concurrency, ensuring that a high number of users and dashboards can query data simultaneously without performance degradation. This is crucial for company-wide BI deployments."
+            },
+            "ad-hoc-analysis": {
+                title: "Ad-hoc Exploratory Analysis",
+                recommendation: "bigquery",
+                reason: "BigQuery's serverless nature and powerful Dremel engine make it incredibly fast for running complex, ad-hoc SQL queries without any setup. Its pay-per-query model is perfect for unpredictable analytical workloads."
+            },
+            "ml-ai-workloads": {
+                title: "Data Science & ML Training",
+                recommendation: "databricks",
+                reason: "Databricks is unmatched in this area. It provides a unified environment for data preparation, model training (with MLflow), and serving, all on the same data used for BI. Its deep integration with Spark and ML libraries is a key advantage."
+            },
+            "aws-ecosystem": {
+                title: "Deep AWS Ecosystem Integration",
+                recommendation: "redshift",
+                reason: "For organizations heavily invested in the AWS ecosystem, Redshift offers the tightest and most seamless integration with services like S3, Glue, Kinesis, and SageMaker, simplifying data pipelines and reducing data transfer costs."
+            },
+            "data-sharing": {
+                title: "Secure Cross-Organization Data Sharing",
+                recommendation: "snowflake",
+                reason: "Snowflake's 'Secure Data Sharing' is a revolutionary feature that allows organizations to share live, read-only data with partners or customers without copying or moving it. This is incredibly efficient and secure."
+            }
+        };
+
+        let radarChart;
+
+        const setupUI = () => {
+            const chartControlsContainer = document.getElementById('chart-controls');
+            const tabsNavContainer = document.getElementById('tabs-nav');
+            const tabsContentContainer = document.getElementById('tabs-content');
+            const useCaseButtonsContainer = document.getElementById('use-case-buttons');
+            const matrixBody = document.getElementById('matrix-body');
+
+            Object.entries(platformData).forEach(([key, platform], index) => {
+                
+                chartControlsContainer.innerHTML += `
+                    <label for="${key}-checkbox" class="flex items-center cursor-pointer p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <input type="checkbox" id="${key}-checkbox" data-platform="${key}" class="form-checkbox h-5 w-5 rounded" checked style="accent-color:${platform.themeColor};">
+                        <span class="ml-3 text-gray-700 font-medium">${platform.name}</span>
+                    </label>
+                `;
+
+                tabsNavContainer.innerHTML += `
+                    <button role="tab" data-tab-target="${key}" class="tab-btn flex items-center text-sm font-medium text-center border-b-2 py-3 px-5 ${index === 0 ? 'active-tab' : 'inactive-tab'}">
+                        <svg class="platform-logo" viewBox="0 0 24 24" fill="currentColor">${platform.logo}</svg>
+                        ${platform.name}
+                    </button>
+                `;
+
+                const strengthsList = platform.content.strengths.map(s => `<li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✓</span>${s}</li>`).join('');
+                const weaknessesList = platform.content.weaknesses.map(w => `<li class="flex items-start"><span class="text-red-500 mr-2 mt-1">✗</span>${w}</li>`).join('');
+
+                tabsContentContainer.innerHTML += `
+                    <div id="${key}" class="tab-content ${index > 0 ? 'hidden' : ''}">
+                        <p class="mb-6 text-gray-600">${platform.content.summary}</p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2 text-[#A57C5A]">Architecture</h4>
+                                <p class="text-gray-600">${platform.content.architecture}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2 text-[#A57C5A]">Pricing Model</h4>
+                                <p class="text-gray-600">${platform.content.pricing}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2 text-[#A57C5A]">Strengths</h4>
+                                <ul class="space-y-2 text-gray-700">${strengthsList}</ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg mb-2 text-[#A57C5A]">Weaknesses</h4>
+                                <ul class="space-y-2 text-gray-700">${weaknessesList}</ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            Object.entries(useCaseData).forEach(([key, useCase]) => {
+                useCaseButtonsContainer.innerHTML += `
+                    <button data-usecase="${key}" class="use-case-btn text-sm md:text-base font-medium py-2 px-5 rounded-full bg-white shadow-sm border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-300">
+                        ${useCase.title}
+                    </button>
+                `;
+            });
+            
+            featureMatrixData.forEach(row => {
+                const valuesHtml = row.values.map(val => `<td class="p-4">${val}</td>`).join('');
+                matrixBody.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 font-semibold text-gray-800">${row.feature}</td>
+                        ${valuesHtml}
+                    </tr>
+                `;
+            });
+            
+            addEventListeners();
+            createRadarChart();
+        };
+        
+        const createRadarChart = () => {
+            const ctx = document.getElementById('platformRadarChart').getContext('2d');
+            const labels = Object.keys(Object.values(platformData)[0].scores);
+            const datasets = Object.entries(platformData).map(([key, platform]) => ({
+                label: platform.name,
+                data: Object.values(platform.scores),
+                fill: true,
+                backgroundColor: platform.lightThemeColor,
+                borderColor: platform.themeColor,
+                pointBackgroundColor: platform.themeColor,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: platform.themeColor,
+                hidden: false
+            }));
+
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: {
+                                font: { size: 12, weight: '500' },
+                                color: '#4A4A4A'
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(255, 255, 255, 0.75)',
+                                color: '#6B7280',
+                                stepSize: 2,
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    elements: {
+                        line: { borderWidth: 2 }
+                    }
+                }
+            });
+        };
+        
+        const updateRadarChart = () => {
+            const visiblePlatforms = Array.from(document.querySelectorAll('#chart-controls input[type="checkbox"]'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.dataset.platform);
+            
+            radarChart.data.datasets.forEach(dataset => {
+                const platformKey = Object.keys(platformData).find(key => platformData[key].name === dataset.label);
+                dataset.hidden = !visiblePlatforms.includes(platformKey);
+            });
+            radarChart.update();
+        };
+
+        const addEventListeners = () => {
+            document.querySelectorAll('#chart-controls input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateRadarChart);
+            });
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.dataset.tabTarget;
+                    
+                    tabs.forEach(t => {
+                        t.classList.remove('active-tab');
+                        t.classList.add('inactive-tab');
+                    });
+                    tab.classList.add('active-tab');
+                    tab.classList.remove('inactive-tab');
+
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    document.getElementById(targetId).classList.remove('hidden');
+                });
+            });
+            
+            const useCaseButtons = document.querySelectorAll('.use-case-btn');
+            useCaseButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    useCaseButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    const useCaseKey = button.dataset.usecase;
+                    const data = useCaseData[useCaseKey];
+                    const platform = platformData[data.recommendation];
+                    
+                    const resultContainer = document.getElementById('use-case-result');
+                    resultContainer.style.opacity = 0;
+                    
+                    setTimeout(() => {
+                        resultContainer.innerHTML = `
+                            <div class="text-center">
+                                <h3 class="text-xl font-bold mb-2">For ${data.title}, we recommend:</h3>
+                                <div class="inline-flex items-center justify-center p-3 px-6 rounded-lg" style="background-color:${platform.lightThemeColor}; border: 1px solid ${platform.themeColor};">
+                                    <span class="text-2xl font-bold" style="color:${platform.themeColor};">${platform.name}</span>
+                                </div>
+                                <p class="mt-4 max-w-2xl mx-auto text-gray-600">${data.reason}</p>
+                            </div>
+                        `;
+                        resultContainer.style.opacity = 1;
+                    }, 300);
+                });
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', setupUI);
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

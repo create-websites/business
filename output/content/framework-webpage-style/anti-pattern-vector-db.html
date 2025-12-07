@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dataknobs Guide to System Anti-Patterns</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The application transforms a list of technical anti-patterns, educational experience. The structure is designed for discoverability and deep-dives. It consists of a main header, a category-based navigation/filter bar, . Each card represents an anti-pattern. This dashboard-like approach allows users to either get a full overview or focus on specific areas (e.g., 'Data Management', 'Security'). Clicking a card opens a modal with detailed explanations ('The Problem', 'The Solution') and a comparative Chart.js visualization, illustrating the impact of choosing the right approach. This structure was chosen because it turns passive reading into active exploration, making the complex information more digestible and memorable for a technical audience. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: List of 5 anti-patterns.
+        - Goal: Inform, Compare, Organize.
+        - Viz/Presentation Method:  cards for each anti-pattern, organized in a filterable grid. A modal view for detailed textual explanation.
+        - Interaction: Users can filter cards by category ('Data', 'Orchestration', 'Security', 'Infrastructure'). Clicking a card triggers a modal.
+        - Justification: This layered approach (overview -> filter -> details) caters to different user needs. The modal focuses attention on one concept at a time.
+        - Library/Method: Simple Bar Charts using Chart.js (on Canvas) are used within each modal. These charts are not for complex data analysis but serve as powerful visual aids to compare the 'anti-pattern' vs. the 'best practice' across dimensions like 'Cost', 'Risk', or 'Complexity', reinforcing the educational point of each section. This directly supports the application's goal of clarifying technical trade-offs.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcfb;
+            color: #333;
+        }
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .filter-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .filter-btn.active {
+            background-color: #a58a69;
+            color: #ffffff;
+        }
+        .modal-backdrop {
+            background-color: rgba(0,0,0,0.5);
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-in-out;
+        }
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">A Guide to Modern System Anti-Patterns</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Dataknobs guide to common pitfalls in AI and Data Engineering. Click on a category to filter or a card to learn more.</p>
+        </header>
+
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12" id="filter-nav">
+        </nav>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="card-grid">
+        </main>
+    </div>
+
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" id="detail-modal">
+        <div class="modal-backdrop fixed inset-0"></div>
+        <div class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative transform scale-95">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl" id="close-modal-btn">×</button>
+            <div class="p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2" id="modal-title"></h2>
+                <span class="inline-block bg-tan-200 text-tan-800 text-sm font-semibold px-3 py-1 rounded-full mb-6" id="modal-category"></span>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-red-600 mb-2">The Problem</h3>
+                        <p class="text-gray-700 leading-relaxed" id="modal-problem"></p>
+                    </div>
+                     <div>
+                        <h3 class="text-xl font-semibold text-green-600 mb-2">The Solution</h3>
+                        <p class="text-gray-700 leading-relaxed" id="modal-solution"></p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                     <h3 class="text-xl font-semibold text-gray-800 text-center mb-4">Impact Comparison</h3>
+                     <div class="chart-container">
+                        <canvas id="modal-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const antiPatternsData = [
+            {
+                id: 1,
+                title: 'Storing all business state inside the vector DB.',
+                category: 'Data Management',
+                problem: 'Vector databases are optimized for similarity search, not for transactional integrity (ACID properties) or complex queries. Using them as a primary business database leads to data inconsistency, poor query performance for non-vector operations, and high operational complexity.',
+                solution: 'Use a purpose-built database (like PostgreSQL or a NoSQL DB) for your core business state. Store a reference ID to the vector embedding, effectively separating transactional data from searchable vector data. This ensures data integrity and uses each system for its strengths.',
+                chartData: {
+                    labels: ['Data Integrity', 'Query Flexibility', 'Maintenance Cost'],
+                    datasets: [
+                        {
+                            label: 'Anti-Pattern',
+                            data: [3, 4, 9],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Best Practice',
+                            data: [9, 8, 3],
+                            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 2,
+                title: 'Triggering re-embeddings on every tiny metadata change.',
+                category: 'Data Management',
+                problem: 'Embedding is a computationally expensive and costly process. Re-calculating vectors for minor metadata updates (e.g., changing a tag, fixing a typo in a non-critical field) that do not alter the core semantic meaning of the text is highly inefficient and wastes resources.',
+                solution: 'Implement a selective re-embedding strategy. Only trigger the process when the source content that the embedding is based on has significantly changed. For metadata, update the metadata store directly without touching the vector.',
+                chartData: {
+                    labels: ['Compute Cost', 'System Latency', 'Efficiency'],
+                    datasets: [
+                        {
+                            label: 'Anti-Pattern',
+                            data: [10, 8, 2],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Best Practice',
+                            data: [2, 3, 9],
+                            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 3,
+                title: 'Glueing steps with ad-hoc cron scripts.',
+                category: 'Orchestration',
+                problem: 'Using cron jobs to chain complex data pipeline steps is brittle. There is no built-in support for retries, dependency management, monitoring, or alerting for failures (dead-letter queues). This makes pipelines unreliable and incredibly difficult to debug or maintain.',
+                solution: 'Use a proper workflow orchestration tool like Apache Airflow, Prefect, or a cloud-native service like AWS Step Functions. These tools provide robustness, visibility, and scalability for complex, multi-step processes.',
+                chartData: {
+                    labels: ['Reliability', 'Maintainability', 'Observability'],
+                    datasets: [
+                        {
+                            label: 'Anti-Pattern',
+                            data: [2, 3, 1],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Best Practice',
+                            data: [9, 8, 10],
+                            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 4,
+                title: 'PII leaking into prompts/embeddings when avoidable.',
+                category: 'Security',
+                problem: 'Embedding Personally Identifiable Information (PII) into vectors creates a significant security and compliance risk. Once encoded, the data is difficult to track, manage, or purge. Sending PII to third-party model APIs can violate privacy regulations like GDPR and CCPA.',
+                solution: 'Implement a robust PII detection and redaction/anonymization pipeline before any data is sent for embedding or used in a prompt. Treat data security as a primary concern from the start of the system design.',
+                chartData: {
+                    labels: ['Security Risk', 'Compliance Burden', 'User Trust'],
+                    datasets: [
+                        {
+                            label: 'Anti-Pattern',
+                            data: [10, 9, 2],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Best Practice',
+                            data: [2, 3, 9],
+                            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 5,
+                title: 'One giant EMR cluster for everything.',
+                category: 'Infrastructure',
+                problem: 'Running hot (urgent, interactive) and cold (long-running, batch) workloads on the same large, persistent cluster is inefficient. It leads to resource contention, where long jobs can starve short ones, and results in paying for idle resources during off-peak hours.',
+                solution: 'Separate workloads by their characteristics. Use transient or serverless clusters (like EMR Serverless) for ad-hoc and batch jobs, and right-sized persistent clusters for continuous, high-priority workloads. This optimizes both performance and cost.',
+                chartData: {
+                    labels: ['Cost Efficiency', 'Resource Utilization', 'Performance'],
+                    datasets: [
+                        {
+                            label: 'Anti-Pattern',
+                            data: [3, 4, 5],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Best Practice',
+                            data: [9, 9, 8],
+                            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                }
+            },
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cardGrid = document.getElementById('card-grid');
+            const filterNav = document.getElementById('filter-nav');
+            const modal = document.getElementById('detail-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalBackdrop = modal.querySelector('.modal-backdrop');
+
+            let chartInstance = null;
+            const categoryColors = {
+                'Data Management': 'bg-blue-100 text-blue-800',
+                'Orchestration': 'bg-purple-100 text-purple-800',
+                'Security': 'bg-yellow-100 text-yellow-800',
+                'Infrastructure': 'bg-green-100 text-green-800',
+            };
+
+            const categories = ['All', ...new Set(antiPatternsData.map(item => item.category))];
+
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.textContent = category;
+                btn.className = 'filter-btn px-4 py-2 rounded-full text-sm md:text-base font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300';
+                if (category === 'All') {
+                    btn.classList.add('active');
+                }
+                btn.dataset.filter = category;
+                filterNav.appendChild(btn);
+            });
+
+            const renderCards = (filter = 'All') => {
+                cardGrid.innerHTML = '';
+                const filteredData = filter === 'All' ? antiPatternsData : antiPatternsData.filter(item => item.category === filter);
+
+                filteredData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card bg-white p-6 rounded-lg shadow-md cursor-pointer';
+                    card.dataset.id = item.id;
+                    card.dataset.category = item.category;
+
+                    const categoryColor = categoryColors[item.category] || 'bg-gray-100 text-gray-800';
+                    card.innerHTML = `
+                        <span class="inline-block ${categoryColor} text-xs font-semibold px-2.5 py-0.5 rounded-full mb-3">${item.category}</span>
+                        <h3 class="text-xl font-semibold text-gray-800">${item.title}</h3>
+                    `;
+                    card.addEventListener('click', () => openModal(item.id));
+                    cardGrid.appendChild(card);
+                });
+            };
+            
+            filterNav.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderCards(e.target.dataset.filter);
+                }
+            });
+
+            const openModal = (id) => {
+                const data = antiPatternsData.find(item => item.id === id);
+                if (!data) return;
+
+                document.getElementById('modal-title').textContent = data.title;
+                const categoryEl = document.getElementById('modal-category');
+                categoryEl.textContent = data.category;
+                categoryEl.className = `inline-block ${categoryColors[data.category]} text-sm font-semibold px-3 py-1 rounded-full mb-6`;
+                document.getElementById('modal-problem').textContent = data.problem;
+                document.getElementById('modal-solution').textContent = data.solution;
+
+                const ctx = document.getElementById('modal-chart').getContext('2d');
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: data.chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                suggestedMax: 10,
+                                grid: {
+                                    color: '#e5e7eb'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += context.parsed.y;
+                                        if (context.parsed.y > 7) label += ' (Good)';
+                                        else if (context.parsed.y < 4) label += ' (Poor)';
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeModal = () => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            };
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', closeModal);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+            
+            renderCards();
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

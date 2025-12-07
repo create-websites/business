@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Infographic: Optimal Transport for Data Building</title>
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: This infographic follows a top-to-bottom linear narrative designed to build understanding progressively. It starts with the core analogy (1. The Big Idea), explains the key theoretical evolution (2. From Rigid Map to Flexible Plan), highlights its main advantage for ML (3. The Geometric Advantage of Wasserstein Distance), addresses the primary implementation barrier (4. Taming Complexity), and finally showcases its real-world utility in a modular fashion (5. The Data-Centric AI Toolkit). This structure transforms the dense academic report into a clear, digestible story for a technical audience. -->
+    <!-- Visualization & Content Choices: 
+        - Data Point: Core Concept of OT -> Goal: Inform -> Visualization: Large text + Unicode icon -> Justification: A simple, powerful hook to grab attention.
+        - Data Point: Monge vs. Kantorovich -> Goal: Compare -> Visualization: HTML/CSS Diagram -> Justification: Visually contrasts the rigid one-to-one mapping with the flexible one-to-many plan, making the conceptual leap intuitive. NO SVG/Mermaid used.
+        - Data Point: Wasserstein vs. KL Divergence -> Goal: Compare -> Visualization: Side-by-side Chart.js Bar Charts -> Justification: Clearly illustrates the key advantage of W-distance (handling disjoint supports) where others fail, which is a critical concept for ML practitioners. Chart.js on Canvas used.
+        - Data Point: Computational Algorithms (Table 1) -> Goal: Compare -> Visualization: Chart.js Bar Chart -> Justification: Dramatically visualizes the massive speed improvement of modern approximate algorithms like Sinkhorn over exact solvers. Chart.js on Canvas used.
+        - Data Point: OT Applications (Sections 4-7) -> Goal: Inform/Organize -> Visualization: Styled HTML/CSS cards in a grid -> Justification: Presents the diverse applications in a modular, easy-to-scan format, each with a clear icon and concise explanation. NO SVG/Mermaid used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff; 
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+        .text-shadow {
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-[#004E89] uppercase tracking-wider text-shadow">Optimal Transport</h1>
+            <p class="mt-4 text-xl md:text-2xl font-semibold text-gray-700">The Smart Way to Compare and Engineer Data Distributions</p>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-4 text-[#0077B6]">The Big Idea: Moving Earth 🌍</h2>
+            <p class="text-center text-lg text-gray-600 max-w-3xl mx-auto">
+                Imagine you have a pile of earth and you need to move it to fill a hole of the same size. Optimal Transport (OT) is the mathematical framework for finding the most efficient plan to do this, minimizing the total "work" (mass × distance). In data science, OT applies this same principle to find the cheapest way to "transform" one probability distribution into another.
+            </p>
+        </section>
+
+        <section class="mb-20 bg-white p-6 md:p-10 rounded-2xl shadow-xl">
+            <h2 class="text-3xl font-bold text-center mb-8 text-[#0077B6]">From a Rigid Map to a Flexible Plan</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">The power of modern OT comes from a key conceptual shift that made the problem solvable and vastly more applicable.</p>
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                <div class="text-center border-2 border-red-300 p-6 rounded-lg">
+                    <h3 class="font-bold text-xl text-red-600 mb-2">The Old Way: Monge's Map (1781)</h3>
+                    <p class="text-sm text-gray-500 mb-4">A strict one-to-one mapping. Fails if a single source point needs to supply multiple destinations (no "mass splitting").</p>
+                    <div class="flex justify-around items-center h-24">
+                        <div class="w-10 h-10 bg-blue-300 rounded-full"></div>
+                        <div class="text-3xl text-gray-400 font-mono">→</div>
+                        <div class="w-10 h-10 bg-green-300 rounded-md"></div>
+                    </div>
+                </div>
+                <div class="text-center border-2 border-green-400 p-6 rounded-lg">
+                    <h3 class="font-bold text-xl text-green-700 mb-2">The Modern Way: Kantorovich's Plan (1940s)</h3>
+                    <p class="text-sm text-gray-500 mb-4">A flexible one-to-many "transport plan" that allows mass to be split, guaranteeing a solution always exists.</p>
+                     <div class="flex justify-around items-center h-24 relative">
+                        <div class="w-10 h-10 bg-blue-300 rounded-full z-10"></div>
+                        <div class="absolute w-full h-full top-0 left-0">
+                           <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 50"><path d="M 20,25 L 80,15" fill="none" stroke="#90E0EF" stroke-width="2"></path><path d="M 20,25 L 80,35" fill="none" stroke="#90E0EF" stroke-width="2"></path></svg>
+                        </div>
+                         <div class="flex flex-col space-y-4 z-10">
+                            <div class="w-10 h-10 bg-green-300 rounded-md"></div>
+                            <div class="w-10 h-10 bg-green-300 rounded-md"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-4 text-[#0077B6]">The Geometric Advantage: Why Wasserstein Distance Wins</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">The Wasserstein distance (derived from OT) is powerful for machine learning because it's defined even for non-overlapping distributions, unlike other metrics which can fail and provide no useful signal for model training.</p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                 <div class="text-center p-6 bg-white rounded-xl shadow-lg">
+                     <h3 class="font-semibold text-gray-700 mb-2">Wasserstein Distance</h3>
+                     <div class="chart-container" style="height:200px"><canvas id="wDistChart"></canvas></div>
+                     <p class="text-sm text-gray-500 mt-4">Result: <strong>A finite distance.</strong> Provides a useful gradient for optimization.</p>
+                 </div>
+                 <div class="text-center p-6 bg-white rounded-xl shadow-lg">
+                     <h3 class="font-semibold text-gray-700 mb-2">KL / JS Divergence</h3>
+                     <div class="chart-container" style="height:200px"><canvas id="klDivChart"></canvas></div>
+                     <p class="text-sm text-gray-500 mt-4">Result: <strong>Infinite or constant.</strong> Gradients vanish, halting model training.</p>
+                 </div>
+            </div>
+        </section>
+
+        <section class="mb-20 bg-white p-6 md:p-10 rounded-2xl shadow-xl">
+             <h2 class="text-3xl font-bold text-center mb-4 text-[#0077B6]">Taming Complexity: Making OT Fast</h2>
+             <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">Solving OT exactly is very slow. Modern algorithms like Sinkhorn use entropic regularization to find an approximate solution thousands of times faster, making OT practical for large datasets.</p>
+            <div class="chart-container" style="height: 350px;">
+                <canvas id="algoChart"></canvas>
+            </div>
+            <p class="text-center text-xs text-gray-500 mt-2">This chart shows the massive improvement in relative computational cost for approximate algorithms. Lower is better.</p>
+        </section>
+        
+        <section>
+            <h2 class="text-4xl font-black text-center mb-10 text-[#004E89] uppercase tracking-wide text-shadow">A Data-Centric AI Toolkit</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#0077B6]">
+                    <p class="text-3xl mb-2">✨</p><h3 class="font-bold text-lg">Generative Modeling (WGANs)</h3>
+                    <p class="text-sm text-gray-600 mt-1">Uses the Wasserstein distance as a loss function to stabilize GAN training, preventing mode collapse and generating more diverse, high-quality synthetic data.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#0077B6]">
+                    <p class="text-3xl mb-2">➕</p><h3 class="font-bold text-lg">Data Augmentation</h3>
+                    <p class="text-sm text-gray-600 mt-1">Calculates Wasserstein Barycenters to create realistic new samples by "averaging" multiple data points in a geometrically meaningful way, avoiding out-of-distribution examples.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#0077B6]">
+                    <p class="text-3xl mb-2">🌉</p><h3 class="font-bold text-lg">Domain Adaptation</h3>
+                    <p class="text-sm text-gray-600 mt-1">Learns a transport map to align a labeled source domain with an unlabeled target domain, allowing models to generalize across different data distributions and reduce domain shift.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#90E0EF]">
+                    <p class="text-3xl mb-2">🔗</p><h3 class="font-bold text-lg">Data Fusion (GW &amp; FGW)</h3>
+                    <p class="text-sm text-gray-600 mt-1">Uses Gromov-Wasserstein to align data with different structures (like graphs), and Fused Gromov-Wasserstein to align multi-modal data by considering both features and structure.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#90E0EF]">
+                    <p class="text-3xl mb-2">✂️</p><h3 class="font-bold text-lg">Coreset Selection</h3>
+                    <p class="text-sm text-gray-600 mt-1">Identifies a small, representative subset of a large dataset by minimizing the OT distance, enabling more efficient model training with minimal performance loss.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#90E0EF]">
+                    <p class="text-3xl mb-2">⚖️</p><h3 class="font-bold text-lg">Algorithmic Fairness</h3>
+                    <p class="text-sm text-gray-600 mt-1">Aligns model output distributions across different demographic groups to a common "fair" target (the barycenter), mitigating bias while preserving accuracy.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const wrapLabel = (label) => {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).trim().length > 16 && currentLine.length > 0) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+            return lines;
+        };
+        
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+        
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    }
+                }
+            }
+        };
+
+        const wDistCtx = document.getElementById('wDistChart');
+        if (wDistCtx) new Chart(wDistCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Distribution A', 'Distribution B'],
+                datasets: [{ data: [1, 0], backgroundColor: '#0077B6' }, { data: [0, 1], backgroundColor: '#90E0EF'}]
+            },
+            options: { ...commonOptions, scales: { x: { stacked: true, grid: { display: false } }, y: { display: false } } }
+        });
+        
+        const klDivCtx = document.getElementById('klDivChart');
+        if (klDivCtx) new Chart(klDivCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Distribution A', 'Distribution B'],
+                datasets: [{ data: [1, 0], backgroundColor: '#0077B6' }, { data: [0, 1], backgroundColor: '#90E0EF' }]
+            },
+            options: { ...commonOptions, scales: { x: { stacked: true, grid: { display: false } }, y: { display: false, suggestedMax: 1.5 } },
+                plugins: {
+                    ...commonOptions.plugins,
+                    annotation: {
+                        annotations: {
+                            label1: {
+                                type: 'label',
+                                xValue: 'Distribution B',
+                                yValue: 1.25,
+                                content: ['Result: ∞'],
+                                font: { size: 14, weight: 'bold' },
+                                color: '#004E89'
+                            }
+                        }
+                    }
+                }
+             }
+        });
+
+        const algoCtx = document.getElementById('algoChart');
+        if (algoCtx) new Chart(algoCtx, {
+            type: 'bar',
+            data: {
+                labels: [wrapLabel('Simplex / Interior-Point'), wrapLabel('Entropic OT (Sinkhorn)'), wrapLabel('Sliced Wasserstein (SWD)')],
+                datasets: [{
+                    label: 'Relative Computational Cost',
+                    data: [10000, 50, 10],
+                    backgroundColor: ['#483D8B', '#0077B6', '#90E0EF'],
+                }]
+            },
+            options: {
+                ...commonOptions,
+                indexAxis: 'y',
+                 scales: {
+                    x: {
+                        type: 'logarithmic',
+                        title: {
+                            display: true,
+                            text: 'Relative Cost (Log Scale)'
+                        }
+                    },
+                     y: {
+                         grid: { display: false }
+                     }
+                }
+            }
+        });
+
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

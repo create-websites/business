@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Infographic: Data Signals for Food Demand Sensing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Energetic & Playful (Amber/Yellow variant) -->
+    <!-- Application Structure Plan: The infographic is structured as a top-to-bottom narrative telling a coherent story. It starts with a high-level hook ("What is Demand Sensing?"), moves into the core data ("The Spectrum of Signals"), shows the practical benefit ("Impact on the Supply Chain"), and concludes with actionable information ("How to Procure Signals"). This linear flow is ideal for an infographic format, guiding the user logically from the 'what' to the 'why' and finally the 'how', making complex information digestible in a single scrolling experience. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Core concept of demand sensing. -> Goal: Inform. -> Viz/Method: A 'Single Big Number' stat and introductory text. -> Justification: Grabs attention and defines the topic immediately. -> Library/Method: HTML/Tailwind.
+        - Report Info: List of data signals (free, paid, etc.). -> Goal: Compare & Organize. -> Viz/Method: A grid of cards, each representing a signal. -> Justification: This visually organizes disparate pieces of information into a consistent, scannable format, superior to a simple list. -> Library/Method: HTML/Tailwind.
+        - Report Info: Impact on supply chain. -> Goal: Show Change & Relationships. -> Viz/Method: A simplified flowchart paired with a dynamic line chart. -> Justification: This combination is highly effective. The flowchart shows the process, and the chart provides quantitative proof of the impact, demonstrating the cause-and-effect relationship between signals and outcomes. -> Library/Method: Flowchart is HTML/CSS with Unicode arrows. Chart is Chart.js (Canvas).
+        - Report Info: Data procurement methods. -> Goal: Inform. -> Viz/Method: A list with custom icons. -> Justification: A visually styled list is more engaging than bullet points for this type of categorical information. -> Library/Method: HTML/Tailwind with Unicode characters for icons.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFBEB; /* amber-50 */
+            color: #44403C; /* stone-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .kpi-card {
+            background-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .supply-chain-stage {
+            transition: all 0.3s ease-in-out;
+            border-color: #D6D3D1; /* stone-300 */
+        }
+        .supply-chain-stage.highlighted {
+            background-color: #FDE68A; /* amber-200 */
+            border-color: #F59E0B; /* amber-500 */
+            transform: scale(1.03);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:py-16">
+
+        <header class="text-center mb-16 md:mb-24">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-amber-600 mb-4">The Recipe for Accuracy</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto text-stone-600">An Infographic on Data Signals for Food Demand Sensing</p>
+        </header>
+
+        <section class="mb-16 md:mb-24" id="introduction">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-3xl font-bold mb-4 text-stone-800">What is Demand Sensing?</h2>
+                    <p class="text-stone-600 mb-4">
+                        It's the art and science of listening to the market in near real-time. Instead of just relying on past sales, demand sensing tunes into a wide variety of digital signals to create highly accurate short-term forecasts. For the food industry, this means less waste, fuller shelves, and happier customers.
+                    </p>
+                    <p class="text-stone-600">
+                        By understanding subtle shifts in consumer behavior as they happen, companies can adjust their supply chains dynamically.
+                    </p>
+                </div>
+                <div class="kpi-card text-center rounded-2xl shadow-lg p-8">
+                    <span class="text-7xl md:text-8xl font-extrabold text-amber-500 block">40%</span>
+                    <span class="text-xl md:text-2xl font-bold text-stone-700 mt-2 block">Reduction in Forecast Errors</span>
+                    <p class="text-stone-500 mt-2">Companies using demand sensing can drastically improve their forecast accuracy for the upcoming 1-4 weeks.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24" id="signals">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-800">The Spectrum of Signals</h2>
+                <p class="text-lg text-stone-600 max-w-2xl mx-auto mt-2">A diverse range of data provides a holistic view of consumer demand.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg text-amber-700">Point-of-Sale (POS) Data</h3>
+                    <p class="text-sm text-stone-600 mt-1">The gold standard. Real-time checkout data shows what's selling, where, and when.</p>
+                    <div class="mt-4 pt-4 border-t border-stone-200 flex justify-between text-xs font-medium">
+                        <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">Paid</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">External</span>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg text-amber-700">Social Media Trends</h3>
+                    <p class="text-sm text-stone-600 mt-1">Viral recipes on TikTok or health trends on Instagram are powerful leading indicators of demand spikes.</p>
+                    <div class="mt-4 pt-4 border-t border-stone-200 flex justify-between text-xs font-medium">
+                        <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">Paid</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">External</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg text-amber-700">Weather Forecasts</h3>
+                    <p class="text-sm text-stone-600 mt-1">Predicts demand for weather-sensitive items like ice cream, soup, and BBQ supplies.</p>
+                    <div class="mt-4 pt-4 border-t border-stone-200 flex justify-between text-xs font-medium">
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Free</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">External</span>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg text-amber-700">Promotional Calendars</h3>
+                    <p class="text-sm text-stone-600 mt-1">Internal data on upcoming sales or marketing campaigns helps predict planned demand lifts.</p>
+                    <div class="mt-4 pt-4 border-t border-stone-200 flex justify-between text-xs font-medium">
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Free</span>
+                        <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full">Internal</span>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg text-amber-700">Search Engine Queries</h3>
+                    <p class="text-sm text-stone-600 mt-1">Rising searches for "vegan cheese" or "quick dinner ideas" signal shifting consumer interest.</p>
+                     <div class="mt-4 pt-4 border-t border-stone-200 flex justify-between text-xs font-medium">
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Free</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">External</span>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg text-amber-700">Retailer Inventory</h3>
+                    <p class="text-sm text-stone-600 mt-1">Knowing partner stock levels helps prevent stockouts and optimize replenishment orders.</p>
+                     <div class="mt-4 pt-4 border-t border-stone-200 flex justify-between text-xs font-medium">
+                        <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">Paid</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full">External</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-16 md:mb-24" id="impact">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-800">Impact on the Supply Chain</h2>
+                <p class="text-lg text-stone-600 max-w-3xl mx-auto mt-2">Here’s how a real-time signal, like a viral recipe trend, can refine the forecast and trigger actions across the supply chain to meet sudden demand.</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-bold text-center mb-4">Supply Chain Response</h3>
+                         <div class="space-y-2" id="supply-chain-diagram">
+                            <div class="supply-chain-stage border-2 rounded-lg p-4 text-center" data-stage="procurement">
+                                <span class="font-bold">1. Procurement</span>
+                                <p class="text-sm text-stone-500">Signal triggers increased orders for raw ingredients from suppliers.</p>
+                            </div>
+                             <div class="text-center text-2xl text-stone-300">↓</div>
+                            <div class="supply-chain-stage border-2 rounded-lg p-4 text-center" data-stage="manufacturing">
+                                <span class="font-bold">2. Manufacturing</span>
+                                <p class="text-sm text-stone-500">Production schedules are adjusted to increase output of the trending product.</p>
+                            </div>
+                             <div class="text-center text-2xl text-stone-300">↓</div>
+                            <div class="supply-chain-stage border-2 rounded-lg p-4 text-center" data-stage="distribution">
+                                <span class="font-bold">3. Distribution</span>
+                                <p class="text-sm text-stone-500">Logistics are prioritized to move more product to high-demand regions.</p>
+                            </div>
+                             <div class="text-center text-2xl text-stone-300">↓</div>
+                            <div class="supply-chain-stage border-2 rounded-lg p-4 text-center" data-stage="retail">
+                                <span class="font-bold">4. Retail</span>
+                                <p class="text-sm text-stone-500">Stores increase shelf stock to avoid empty spaces and lost sales.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                         <h3 class="text-xl font-bold text-center mb-4">Forecast vs. Reality</h3>
+                         <div class="chart-container">
+                            <canvas id="demandImpactChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-stone-500 mt-4">The demand-sensed forecast more accurately tracks actual sales, reducing the gap that leads to stockouts or overstocking.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8 md:mb-16" id="procurement">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-800">How to Procure Signals</h2>
+                <p class="text-lg text-stone-600 max-w-2xl mx-auto mt-2">Data can be acquired through various channels, each suited for different types of signals.</p>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="bg-white rounded-lg shadow-md p-6 flex items-center">
+                    <div class="text-3xl mr-4 text-amber-500">🔌</div>
+                    <div>
+                        <h3 class="font-bold">APIs &amp; Direct Feeds</h3>
+                        <p class="text-sm text-stone-600">Automated connections to services for real-time data like weather, social media analytics, or retailer data platforms.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 flex items-center">
+                     <div class="text-3xl mr-4 text-amber-500">📈</div>
+                     <div>
+                        <h3 class="font-bold">Syndicated Data Providers</h3>
+                        <p class="text-sm text-stone-600">Companies like Nielsen and IRI offer paid subscriptions to comprehensive POS, consumer panel, and market trend data.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 flex items-center">
+                     <div class="text-3xl mr-4 text-amber-500">🤝</div>
+                     <div>
+                        <h3 class="font-bold">Direct Retail Partnerships</h3>
+                        <p class="text-sm text-stone-600">Collaborating with retailers to share inventory and sales data provides a highly granular and accurate signal.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chartCtx = document.getElementById('demandImpactChart').getContext('2d');
+            const supplyChainStages = document.querySelectorAll('.supply-chain-stage');
+
+            const labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'];
+            
+            new Chart(chartCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Traditional Forecast',
+                            data: [100, 102, 101, 105, 103, 106, 104, 108],
+                            borderColor: '#A8A29E', // stone-400
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            pointRadius: 2,
+                        },
+                        {
+                            label: 'Demand-Sensed Forecast',
+                            data: [100, 102, 115, 140, 165, 150, 130, 115],
+                            borderColor: '#F59E0B', // amber-500
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                             pointRadius: 2,
+                        },
+                         {
+                            label: 'Actual Demand',
+                            data: [100, 103, 120, 150, 175, 160, 135, 120],
+                            borderColor: '#16A34A', // green-600
+                            backgroundColor: 'transparent',
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#16A34A',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Sales Units'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const highlightStages = () => {
+                 const stagesToHighlight = ['procurement', 'distribution', 'retail'];
+                 supplyChainStages.forEach(stage => {
+                    if (stagesToHighlight.includes(stage.dataset.stage)) {
+                       setTimeout(() => {
+                           stage.classList.add('highlighted');
+                       }, Math.random() * 500 + 200);
+                    }
+                });
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        highlightStages();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(document.getElementById('impact'));
+        });
+    </script>
+
+
+
+
+</body></html>

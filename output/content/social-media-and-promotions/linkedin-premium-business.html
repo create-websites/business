@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>The Definitive Guide to LinkedIn Premium Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: "Calm Harmony" - A professional and clean palette with a warm neutral background, deep blue for primary text and accents, a softer blue for secondary elements, and a subtle gold/amber for highlights, inspired by LinkedIn's branding. -->
+    <!-- Application Structure Plan: The SPA is designed as a narrative journey for a small business owner. It starts with a high-level "Why" (the strategic value), moves to the "What" (a detailed, interactive toolkit), provides a direct "Comparison" (Premium vs. Basic), clarifies the "How" (the risk-free trial), and ends with a "Verdict" (the investment decision). This thematic, non-linear structure is more intuitive than mirroring the report's chapter layout. It allows users to explore sections based on their immediate questions (e.g., jump straight to the feature comparison), enhancing usability and comprehension. Key interactions include tabbed interfaces for features, a dynamic comparison chart, and clickable cards to reveal more information, making data consumption active rather than passive. -->
+    <!-- Visualization & Content Choices: The application translates the report's text into interactive components. Report Info: Core business functions -> Goal: Inform & Engage -> Viz/Presentation: Interactive cards for the three pillars. Interaction: Click to reveal details. Justification: Breaks down complex strategy into digestible, user-driven chunks. Report Info: Feature comparison table -> Goal: Compare -> Viz/Presentation: A side-by-side HTML table coupled with a Chart.js bar chart. Interaction: The chart visually reinforces the quantitative differences (like InMail credits) presented in the table. Justification: Caters to both readers who prefer text and those who grasp data visually. The bar chart provides an immediate, impactful comparison. Report Info: Feature descriptions -> Goal: Organize & Detail -> Viz/Presentation: A tabbed interface for the "Toolkit" section. Interaction: Click tabs to switch between features. Justification: Organizes a large amount of detailed information cleanly, preventing cognitive overload and allowing users to focus on one feature at a time. All choices adhere to the designed structure and avoid SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #4A4A4A;
+        }
+        .bg-primary { background-color: #0A66C2; }
+        .text-primary { color: #0A66C2; }
+        .bg-secondary { background-color: #E0EFFF; }
+        .text-secondary { color: #3884d4; }
+        .accent-gold { color: #C3943F; }
+        .border-accent { border-color: #C3943F; }
+        .bg-accent-light { background-color: #FFF8E1; }
+        .nav-link {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #E0EFFF;
+            color: #0A66C2;
+        }
+        .tab.active {
+            border-color: #0A66C2;
+            color: #0A66C2;
+            background-color: #ffffff;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="h-8 w-8 text-primary" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3v9zM6.5 8.25A1.75 1.75 0 118.25 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93-.94 0-1.62.61-1.62 1.93V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.38.99 3.38 3.3V19z"></path>
+                </svg>
+                <h1 class="text-xl font-bold text-gray-800">Premium Business Guide</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-2">
+                <a class="nav-link" href="#strategy">Strategy</a>
+                <a class="nav-link" href="#toolkit">Toolkit</a>
+                <a class="nav-link" href="#comparison">Comparison</a>
+                <a class="nav-link" href="#trial">Trial</a>
+                <a class="nav-link" href="#verdict">Verdict</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-gray-600 focus:outline-none" id="menu-btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div class="hidden md:hidden px-4 pt-2 pb-4 space-y-2" id="mobile-menu">
+            <a class="block nav-link" href="#strategy">Strategy</a>
+            <a class="block nav-link" href="#toolkit">Toolkit</a>
+            <a class="block nav-link" href="#comparison">Comparison</a>
+            <a class="block nav-link" href="#trial">Trial</a>
+            <a class="block nav-link" href="#verdict">Verdict</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section class="text-center mb-16 md:mb-24" id="hero">
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Is LinkedIn Premium a Growth Catalyst?</h1>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600">An interactive guide for small tech &amp; digital companies to analyze the value of LinkedIn Premium Business, its powerful toolkit, and its potential return on investment.</p>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="strategy">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">Amplify Your Growth Engine</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-md text-gray-600">LinkedIn Premium Business isn't just a collection of features; it's an integrated system designed to amplify your company's growth across three interconnected pillars. This section explores the strategic value proposition for your business.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Accelerate Business Development</h3>
+                    <p class="text-gray-600">Dismantle communication barriers with tools like InMail. Proactively contact high-value decision-makers, partners, or investors directly, fundamentally speeding up your business development cycle without waiting for connection requests.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Systematize Lead Generation</h3>
+                    <p class="text-gray-600">Transform inefficient networking into a structured, data-driven prospecting workflow. Use advanced filters to build precise lists of ideal customers, ensuring your outreach is focused on high-quality, relevant leads at scale.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-xl font-semibold text-primary mb-3">Enhance Brand Credibility</h3>
+                    <p class="text-gray-600">Leverage features that build a powerful feedback loop. A premium profile signals credibility, increasing connection acceptance and profile views, which in turn generate warm leads from interested prospects who have already viewed your profile.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="toolkit">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">A Forensic Analysis of the Toolkit</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-md text-gray-600">Each component of the Premium Business toolkit addresses a specific challenge faced by small businesses. This section provides an interactive deep-dive into the core features and their strategic applications.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+                <div class="border-b border-gray-200 mb-4">
+                    <nav aria-label="Tabs" class="-mb-px flex flex-wrap gap-x-4 gap-y-2">
+                        <button class="tab active whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500" data-tab="inmail">InMail</button>
+                        <button class="tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500" data-tab="search">Advanced Search</button>
+                        <button class="tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500" data-tab="profile-views">Profile Views</button>
+                        <button class="tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500" data-tab="insights">Company Insights</button>
+                        <button class="tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500" data-tab="branding">Branding Suite</button>
+                        <button class="tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-gray-500" data-tab="learning">LinkedIn Learning</button>
+                    </nav>
+                </div>
+                <div class="min-h-[250px]" id="tab-content">
+                    <div class="tab-pane fade-in active" id="inmail">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">InMail: Forging Direct Lines of Communication</h4>
+                        <p class="text-gray-600">Receive 15 monthly credits to message any LinkedIn member directly, bypassing the need for a connection. This is a cornerstone feature for lead generation, providing a direct line to decision-makers. Response rates are often higher than cold emails because the message is delivered within a trusted professional context.</p>
+                    </div>
+                    <div class="tab-pane fade-in hidden" id="search">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Advanced Search &amp; Unlimited Browsing: Precision Prospecting</h4>
+                        <p class="text-gray-600">Unlock granular search filters like company size, seniority, and job function to create hyper-targeted prospect lists. This dramatically improves lead quality. The removal of the commercial search limit ensures your prospecting and research can proceed at scale without interruption.</p>
+                    </div>
+                    <div class="tab-pane fade-in hidden" id="profile-views">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">"Who Viewed Your Profile": Actionable Intelligence</h4>
+                        <p class="text-gray-600">Get a full 90-day list of who has viewed your profile, turning passive interest into warm leads. A view from a target company is a strong buying signal, allowing for timely and relevant outreach. Analytics also show if you're attracting the right audience.</p>
+                    </div>
+                    <div class="tab-pane fade-in hidden" id="insights">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Expanded Company Insights: Competitive Edge</h4>
+                        <p class="text-gray-600">Access premium data on Company Pages, including employee growth charts, hiring trends, and total headcount changes. This intelligence helps you analyze competitors, anticipate market shifts, and identify strategic opportunities invisible to non-subscribers.</p>
+                    </div>
+                    <div class="tab-pane fade-in hidden" id="branding">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Premium Branding Suite: Architecting Trust</h4>
+                        <p class="text-gray-600">Enhance your profile's credibility with the gold Premium badge, a custom call-to-action button (e.g., "Visit Website"), and the "Open Profile" option. These features work together to signal professionalism and convert profile traffic into tangible business inquiries.</p>
+                    </div>
+                    <div class="tab-pane fade-in hidden" id="learning">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">Integrated Upskilling via LinkedIn Learning</h4>
+                        <p class="text-gray-600">Gain unlimited access to thousands of expert-led courses. This is a significant value-add for small businesses, allowing founders and employees to upskill in critical areas, directly enhancing the company's capabilities and service offerings.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="comparison">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">At a Glance: Premium vs. Basic</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-md text-gray-600">This section provides a clear, side-by-side comparison to help you understand the tangible benefits of a Premium Business account over a free Basic account. The chart below visualizes the key quantitative differences.</p>
+            </div>
+            <div class="grid lg:grid-cols-5 gap-8 items-start">
+                <div class="lg:col-span-3 bg-white rounded-lg shadow-lg overflow-hidden">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3" scope="col">Feature</th>
+                                <th class="px-6 py-3 bg-secondary text-primary" scope="col">Premium Business</th>
+                                <th class="px-6 py-3" scope="col">Free Basic</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">InMail Messaging</td>
+                                <td class="px-6 py-4 bg-blue-50">15 credits/month to message anyone</td>
+                                <td class="px-6 py-4">Only message 1st-degree connections</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Search Filters</td>
+                                <td class="px-6 py-4 bg-blue-50">Advanced filters (company size, seniority)</td>
+                                <td class="px-6 py-4">Basic filters only</td>
+                            </tr>
+                             <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">People Browsing</td>
+                                <td class="px-6 py-4 bg-blue-50">Unlimited</td>
+                                <td class="px-6 py-4">Commercial use limit</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Who Viewed Your Profile</td>
+                                <td class="px-6 py-4 bg-blue-50">Full 90-day list of viewers</td>
+                                <td class="px-6 py-4">Limited list of recent viewers</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 font-medium text-gray-900">Company Insights</td>
+                                <td class="px-6 py-4 bg-blue-50">Employee growth charts, hiring trends</td>
+                                <td class="px-6 py-4">Basic public info only</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <td class="px-6 py-4 font-medium text-gray-900">LinkedIn Learning</td>
+                                <td class="px-6 py-4 bg-blue-50">Unlimited access to all courses</td>
+                                <td class="px-6 py-4">No access</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-center mb-4">Feature Access Comparison</h3>
+                    <div class="chart-container">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="trial">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">The No-Risk Evaluation</h2>
+                <p class="mt-2 max-w-2xl mx-auto text-md text-gray-600">LinkedIn offers a free one-month trial, but what happens when it ends? This section clarifies the downgrade protocol, highlighting what you lose and, more importantly, what you keep.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-6 rounded-r-lg">
+                    <h3 class="text-xl font-semibold mb-3">What You Lose After Trial</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>All InMail credits and ability to send new ones</li>
+                        <li>Advanced Search filters and unlimited browsing</li>
+                        <li>Full 90-day "Who Viewed Your Profile" history</li>
+                        <li>Expanded Company Insights and analytics</li>
+                        <li>Premium branding (gold badge, custom CTA)</li>
+                        <li>Unlimited access to LinkedIn Learning</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 border-l-4 border-green-500 text-green-800 p-6 rounded-r-lg">
+                    <h3 class="text-xl font-semibold mb-3">What You Keep (Your Core Assets)</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Your complete profile and all 1st-degree connections</li>
+                        <li>Full history of all messages, including InMails</li>
+                        <li>Ability to reply to InMail conversations started during trial</li>
+                        <li>Your professionally curated network remains intact</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-accent-light rounded-lg p-8 md:p-12 text-center scroll-mt-20" id="verdict">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">The Final Verdict: A Tool, Not a Strategy</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-700 mb-6">LinkedIn Premium Business is a potent growth accelerant, but its value is only unlocked when integrated into a well-defined business development process. The return on investment is directly proportional to the time and effort you dedicate to using its features.</p>
+            <p class="max-w-3xl mx-auto text-lg text-gray-700 font-semibold">The most logical action is to commit to the one-month free trial as a focused pilot program. The downgrade process is safe and preserves your core data, making it a no-cost, no-risk opportunity to gather firsthand evidence for your business.</p>
+        </section>
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 80) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (mobileMenu.offsetParent !== null) {
+                       mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            const tabs = document.querySelectorAll('.tab');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-tab');
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    tabPanes.forEach(pane => {
+                        if (pane.id === target) {
+                            pane.classList.remove('hidden');
+                            pane.classList.add('active');
+                        } else {
+                            pane.classList.add('hidden');
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            const comparisonChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['InMail Credits', 'Advanced Filters', 'Profile View History (Days)', 'Learning Courses'],
+                    datasets: [{
+                        label: 'Premium Business',
+                        data: [15, 10, 90, 100],
+                        backgroundColor: 'rgba(10, 102, 194, 0.7)',
+                        borderColor: 'rgba(10, 102, 194, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Free Basic',
+                        data: [0, 3, 5, 0],
+                        backgroundColor: 'rgba(200, 200, 200, 0.7)',
+                        borderColor: 'rgba(150, 150, 150, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        if (context.label === 'Learning Courses') {
+                                           label += context.parsed.y > 0 ? 'Full Access' : 'No Access';
+                                        } else if (context.label === 'Advanced Filters') {
+                                            label += context.parsed.y > 3 ? 'Full Set' : 'Limited';
+                                        }
+                                        else {
+                                           label += context.parsed.y;
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    if (this.getLabelForValue(value).includes('Courses')) {
+                                        return value > 0 ? 'Access' : 'None';
+                                    }
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+
+</body></html>

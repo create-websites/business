@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Lead Generation Playbook for Web Developers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Earthy Neutrals -->
+    <!-- Application Structure Plan: The application is structured as a top-to-bottom educational journey. It starts with the "Why" (the market opportunity), moves to the "How" (a conceptual funnel and specific strategies), then to "What's Best" (an interactive strategy comparison tool), and finally "What to Use" (a resource toolkit). This linear, thematic flow is more intuitive for a guide than a dashboard layout. Key interactions include clicking through a funnel diagram, switching between strategy tabs, and sorting a chart to compare methods, guiding the user from high-level understanding to actionable detail. -->
+    <!-- Visualization & Content Choices: 
+        1. SMB Website Gap: Goal=Inform. Viz=Donut Chart. Interaction=Hover for tooltips. Justification=Visually impactful way to show a key proportion. Library=Chart.js.
+        2. Lead Funnel: Goal=Organize/Explain. Viz=HTML/CSS Diagram. Interaction=Click stage to see details. Justification=Interactive and lightweight way to teach a core concept without static images. Method=HTML/CSS/JS.
+        3. Strategy Comparison: Goal=Compare/Analyze. Viz=Grouped Bar Chart. Interaction=Buttons to sort data by effectiveness/effort. Justification=Allows users to dynamically analyze strategies based on their own priorities (e.g., find high-impact, low-effort options). Library=Chart.js.
+        All other content is presented in structured text (cards, lists) for clarity and readability.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #383838;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #D97706; 
+        }
+        .active-tab {
+            border-bottom-color: #D97706;
+            color: #D97706;
+            font-weight: 600;
+        }
+        .funnel-stage {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left-width: 4px;
+            border-color: transparent;
+        }
+        .funnel-stage.active, .funnel-stage:hover {
+            background-color: #FEF3C7;
+            border-color: #FBBF24;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-amber-700">Lead Gen Playbook</h1>
+            <div class="hidden md:flex space-x-8">
+                <a class="nav-link text-gray-600" href="#opportunity">Opportunity</a>
+                <a class="nav-link text-gray-600" href="#strategies">Strategies</a>
+                <a class="nav-link text-gray-600" href="#analyzer">Analyzer</a>
+                <a class="nav-link text-gray-600" href="#toolkit">Toolkit</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 md:py-16">
+
+        <section class="text-center mb-16 md:mb-24">
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Find Your Next Client</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">An interactive guide to generating leads for your web development business by targeting small businesses and self-employed professionals who need a digital presence.</p>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="opportunity">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold mb-2">The Digital Divide Opportunity</h3>
+                <p class="text-md text-gray-600 max-w-2xl mx-auto">A significant portion of small businesses still operate without a website, representing a vast, untapped market for web developers. This section visualizes the scale of this opportunity.</p>
+            </div>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 max-w-4xl mx-auto">
+                 <h4 class="text-xl font-semibold text-center mb-4">US Small Businesses With vs. Without a Website</h4>
+                 <div class="chart-container h-64 md:h-80 max-w-md">
+                    <canvas id="smbWebsiteChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="funnel">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold mb-2">The Lead Generation Funnel</h3>
+                <p class="text-md text-gray-600 max-w-2xl mx-auto">Understanding the client acquisition process is key. The funnel provides a framework for turning strangers into clients. Click on each stage to learn more about its goal and associated actions.</p>
+            </div>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <div class="funnel-stage active p-4 rounded-lg" id="funnel-awareness">
+                        <h5 class="font-bold text-lg">1. Awareness</h5>
+                        <p class="text-sm text-gray-500">Making potential clients aware of their problem and your existence.</p>
+                    </div>
+                    <div class="h-8 flex justify-center items-center"><div class="w-1 h-full bg-gray-200"></div></div>
+                    <div class="funnel-stage p-4 rounded-lg" id="funnel-interest">
+                        <h5 class="font-bold text-lg">2. Interest &amp; Consideration</h5>
+                        <p class="text-sm text-gray-500">Nurturing interest by showcasing your expertise and value.</p>
+                    </div>
+                     <div class="h-8 flex justify-center items-center"><div class="w-1 h-full bg-gray-200"></div></div>
+                    <div class="funnel-stage p-4 rounded-lg" id="funnel-conversion">
+                        <h5 class="font-bold text-lg">3. Conversion</h5>
+                        <p class="text-sm text-gray-500">Turning an interested lead into a paying client.</p>
+                    </div>
+                </div>
+                <div class="bg-amber-50 p-6 rounded-lg border border-amber-200 h-full" id="funnel-details">
+                    <h4 class="font-bold text-xl text-amber-800 mb-3" id="funnel-detail-title"></h4>
+                    <p class="text-gray-700" id="funnel-detail-text"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="strategies">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold mb-2">Lead Generation Strategies</h3>
+                <p class="text-md text-gray-600 max-w-2xl mx-auto">Explore a curated list of proven strategies to find businesses that need a website. This section is divided into data-driven prospecting and direct outreach methods.</p>
+            </div>
+            <div class="max-w-5xl mx-auto">
+                <div class="border-b border-gray-300 mb-8">
+                    <nav aria-label="Tabs" class="-mb-px flex space-x-6">
+                        <button class="tab-btn active-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="tab-data-driven">
+                            Data-Driven Prospecting
+                        </button>
+                        <button class="tab-btn text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" id="tab-outreach">
+                            Direct Outreach &amp; Networking
+                        </button>
+                    </nav>
+                </div>
+                <div class="tab-content grid grid-cols-1 md:grid-cols-2 gap-6" id="content-data-driven">
+                </div>
+                <div class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6" id="content-outreach">
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="analyzer">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold mb-2">Strategy Analyzer</h3>
+                <p class="text-md text-gray-600 max-w-2xl mx-auto">Not all strategies are created equal. This interactive chart helps you compare different lead generation methods based on their potential effectiveness and the effort required, allowing you to prioritize your actions.</p>
+            </div>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 max-w-5xl mx-auto">
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <span class="font-semibold mr-4">Sort by:</span>
+                    <button class="bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition" id="sort-effectiveness">Effectiveness</button>
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition" id="sort-effort">Effort (Low to High)</button>
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition" id="sort-default">Default</button>
+                </div>
+                <div class="chart-container h-96 md:h-[500px]">
+                    <canvas id="strategyAnalyzerChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="scroll-mt-20" id="toolkit">
+             <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold mb-2">Resource Toolkit</h3>
+                <p class="text-md text-gray-600 max-w-2xl mx-auto">A collection of tools that can streamline your lead generation and outreach efforts. These resources can help you manage leads, automate communication, and stay organized.</p>
+            </div>
+            <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">CRMs (Customer Relationship Management)</h4>
+                    <p class="text-gray-600 text-sm">Tools like HubSpot CRM (Free), Zoho, or Pipedrive to track your leads, conversations, and deals.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Email Outreach Tools</h4>
+                    <p class="text-gray-600 text-sm">Services like Hunter.io or Snov.io to find email addresses, and Mailshake or Lemlist for sending personalized cold email campaigns.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Local SEO Tools</h4>
+                    <p class="text-gray-600 text-sm">Platforms like BrightLocal or SEMrush can help you analyze local search results and identify businesses with poor online visibility.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Web Scrapers (Use Ethically)</h4>
+                    <p class="text-gray-600 text-sm">Tools like Octoparse or ParseHub can automate data collection from directories. Always respect site terms of service.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Social Media Schedulers</h4>
+                    <p class="text-gray-600 text-sm">Use Buffer or Hootsuite to schedule content marketing posts, establishing you as an expert in your field.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <h4 class="font-bold text-lg mb-2">Networking Platforms</h4>
+                    <p class="text-gray-600 text-sm">Leverage LinkedIn Sales Navigator and local Meetup.com groups to find and connect with business owners.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const smbWebsiteCtx = document.getElementById('smbWebsiteChart').getContext('2d');
+    const smbWebsiteChart = new Chart(smbWebsiteCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Have a Website', 'No Website'],
+            datasets: [{
+                label: '% of Small Businesses',
+                data: [64, 36],
+                backgroundColor: [
+                    'rgba(5, 150, 105, 0.7)',
+                    'rgba(217, 119, 6, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(5, 150, 105, 1)',
+                    'rgba(217, 119, 6, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw}%`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const funnelStages = {
+        awareness: {
+            title: 'Goal: Awareness',
+            text: 'At this stage, your primary goal is to find businesses that might not even realize the full extent of their need for a professional website. You are making them aware of the problem (e.g., poor online visibility, outdated design) and introducing your services as a potential solution. Activities include prospecting on local directories and initial, non-intrusive contact.'
+        },
+        interest: {
+            title: 'Goal: Spark Interest & Consideration',
+            text: 'Once a potential lead is identified, the goal is to capture their interest. This involves showcasing the value you provide. You can do this by offering a free website audit, sharing portfolio examples relevant to their industry, or providing a clear breakdown of the benefits a new website would bring to their specific business, such as increased customer inquiries or improved brand credibility.'
+        },
+        conversion: {
+            title: 'Goal: Conversion',
+            text: 'This is the decision-making stage. The lead is actively considering hiring you. Your goal is to make this decision as easy as possible. This involves providing clear, detailed proposals, answering questions promptly, showcasing testimonials from past clients, and clearly outlining the project timeline, process, and cost. The objective is to build trust and close the deal.'
+        }
+    };
+    
+    const funnelContainer = document.querySelector('#funnel');
+    const funnelDetailTitle = document.getElementById('funnel-detail-title');
+    const funnelDetailText = document.getElementById('funnel-detail-text');
+
+    function updateFunnelDetails(stage) {
+        funnelDetailTitle.textContent = funnelStages[stage].title;
+        funnelDetailText.textContent = funnelStages[stage].text;
+        
+        funnelContainer.querySelectorAll('.funnel-stage').forEach(el => {
+            el.classList.remove('active');
+        });
+        document.getElementById(`funnel-${stage}`).classList.add('active');
+    }
+    
+    funnelContainer.addEventListener('click', (e) => {
+        const stageEl = e.target.closest('.funnel-stage');
+        if (stageEl) {
+            const stageId = stageEl.id.split('-')[1];
+            updateFunnelDetails(stageId);
+        }
+    });
+    
+    updateFunnelDetails('awareness');
+
+    const strategiesData = {
+        dataDriven: [
+            { 
+                title: 'Google Maps Prospecting',
+                description: 'Search for local business categories (e.g., "plumbers in Brooklyn") and check their listings. Look for businesses with no website link, a link to a Facebook page, or an outdated site.' 
+            },
+            { 
+                title: 'Local Directories (Yelp, etc.)',
+                description: 'Scour directories like Yelp, Yellow Pages, and industry-specific sites. These are goldmines for finding established businesses that have neglected their online presence.'
+            },
+            {
+                title: 'Social Media Search',
+                description: 'Search on Instagram or Facebook for local businesses. Many use these platforms as their primary online presence but lack a professional, central hub for customers.'
+            },
+            {
+                title: 'Local Business Registries',
+                description: 'Check your local Chamber of Commerce or city business registration lists. This is a more manual process but can uncover brand new businesses that need to start from scratch.'
+            }
+        ],
+        outreach: [
+            {
+                title: 'Personalized Cold Email',
+                description: 'Craft a short, personalized email. Mention something specific about their business and offer a tangible piece of value, like a free 5-minute audit of their current site (if they have one).'
+            },
+            {
+                title: 'Local Networking Events',
+                description: 'Attend local business meetups or BNI groups. In-person connections are powerful for building trust and generating high-quality referrals.'
+            },
+            {
+                title: 'Content Marketing',
+                description: 'Write blog posts or create social media content about the importance of a website for a specific niche you want to target (e.g., "Why Every Local Bakery Needs a Website").'
+            },
+            {
+                title: 'Referral Partnerships',
+                description: 'Partner with other B2B service providers like marketing agencies, accountants, or graphic designers who serve the same clients but don\'t offer web development.'
+            }
+        ]
+    };
+
+    function renderStrategies() {
+        const dataDrivenContainer = document.getElementById('content-data-driven');
+        const outreachContainer = document.getElementById('content-outreach');
+
+        dataDrivenContainer.innerHTML = strategiesData.dataDriven.map(s => `
+            <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
+                <h4 class="font-bold text-lg mb-2">${s.title}</h4>
+                <p class="text-gray-600 text-sm">${s.description}</p>
+            </div>
+        `).join('');
+
+        outreachContainer.innerHTML = strategiesData.outreach.map(s => `
+            <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
+                <h4 class="font-bold text-lg mb-2">${s.title}</h4>
+                <p class="text-gray-600 text-sm">${s.description}</p>
+            </div>
+        `).join('');
+    }
+
+    renderStrategies();
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active-tab', 'text-amber-700', 'font-semibold'));
+            btn.classList.add('active-tab', 'text-amber-700', 'font-semibold');
+
+            const contentId = `content-${btn.id.split('-')[1]}`;
+            tabContents.forEach(content => {
+                if (content.id === contentId) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    let analyzerChart;
+    const initialStrategyData = [
+        { name: 'Google Maps Prospecting', effectiveness: 8, effort: 4 },
+        { name: 'Local Directories', effectiveness: 7, effort: 5 },
+        { name: 'Cold Email', effectiveness: 7, effort: 7 },
+        { name: 'Networking Events', effectiveness: 9, effort: 8 },
+        { name: 'Referral Partnerships', effectiveness: 10, effort: 6 },
+        { name: 'Content Marketing', effectiveness: 6, effort: 9 },
+    ];
+    let currentStrategyData = [...initialStrategyData];
+
+    function createAnalyzerChart() {
+        const analyzerCtx = document.getElementById('strategyAnalyzerChart').getContext('2d');
+        if(analyzerChart) {
+            analyzerChart.destroy();
+        }
+        analyzerChart = new Chart(analyzerCtx, {
+            type: 'bar',
+            data: {
+                labels: currentStrategyData.map(d => d.name),
+                datasets: [
+                    {
+                        label: 'Effectiveness',
+                        data: currentStrategyData.map(d => d.effectiveness),
+                        backgroundColor: 'rgba(5, 150, 105, 0.7)',
+                        borderColor: 'rgba(5, 150, 105, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Effort',
+                        data: currentStrategyData.map(d => d.effort),
+                        backgroundColor: 'rgba(217, 119, 6, 0.7)',
+                        borderColor: 'rgba(217, 119, 6, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 10,
+                        title: {
+                            display: true,
+                            text: 'Rating (1-10)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                           autoSkip: false,
+                           maxRotation: 0,
+                           minRotation: 0
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw}/10`;
+                            }
+                        }
+                    },
+                     legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    }
+
+    document.getElementById('sort-effectiveness').addEventListener('click', () => {
+        currentStrategyData.sort((a, b) => b.effectiveness - a.effectiveness);
+        createAnalyzerChart();
+    });
+
+    document.getElementById('sort-effort').addEventListener('click', () => {
+        currentStrategyData.sort((a, b) => a.effort - b.effort);
+        createAnalyzerChart();
+    });
+
+    document.getElementById('sort-default').addEventListener('click', () => {
+        currentStrategyData = [...initialStrategyData];
+        createAnalyzerChart();
+    });
+
+    createAnalyzerChart();
+});
+</script>
+
+
+</body></html>

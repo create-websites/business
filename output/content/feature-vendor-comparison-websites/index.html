@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Image Recognition Software Comparator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard. It starts with a high-level, multi-metric comparison using a radar chart for an immediate overview. This is followed by a task-oriented "Feature Comparison" section with interactive filters, allowing users to drill down based on their specific needs. Next, a "Performance Deep Dive" section uses a dynamic bar chart to compare core quantitative metrics like accuracy and speed. Finally, "Detailed Vendor Profiles" offer comprehensive information on each provider. This top-down structure (from general overview to specific details) guides the user logically, enabling both quick assessment and in-depth analysis in a non-linear, user-driven flow. This is more effective than a static report for a user trying to make a selection decision. -->
+    <!-- Visualization & Content Choices: 1. Overall Score: Report data on multiple vendor attributes -> Goal: High-level comparison -> Viz: Radar Chart -> Interaction: Hover for tooltips, click legend to highlight -> Justification: Excellent for multivariate comparison to see overall strengths/weaknesses -> Library: Chart.js/Canvas. 2. Feature Availability: Report data on specific software features -> Goal: Organize & Compare -> Viz: Interactive Card Grid with Filters -> Interaction: Click buttons to filter vendors by feature -> Justification: Allows users to focus on features most relevant to them -> Library: HTML/Tailwind + JS. 3. Performance Metrics: Report data on accuracy/speed -> Goal: Compare quantitative stats -> Viz: Grouped Bar Chart -> Interaction: Dropdown to switch between metrics -> Justification: Clear, direct comparison of performance data -> Library: Chart.js/Canvas. 4. Vendor Details: Report text on vendor specifics -> Goal: Inform -> Viz: Styled Text Blocks/Cards -> Interaction: Smooth scroll navigation -> Justification: Consolidates detailed info in an organized layout -> Library: HTML/Tailwind. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+            color: #374151;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #4338CA;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Retail Image Recognition: A Comparative Analysis</h1>
+            <p class="mt-1 text-md text-gray-500">An interactive dashboard to evaluate leading solution providers.</p>
+        </div>
+    </header>
+
+    <nav class="bg-white sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center space-x-2 sm:space-x-4 py-3">
+                <button class="nav-button active text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-target="overview">Overview</button>
+                <button class="nav-button text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-target="features">Features</button>
+                <button class="nav-button text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-target="performance">Performance</button>
+                <button class="nav-button text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-target="profiles">Profiles</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <section class="mb-16" id="overview">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">High-Level Performance Overview</h2>
+                <p class="text-gray-600 mb-6 max-w-3xl">This radar chart provides an at-a-glance comparison of the key players across five critical dimensions: Accuracy, Speed, Feature Set, Analytics, and Integration capabilities. Use the legend to toggle providers on and off for a clearer view.</p>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="features">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Interactive Feature Comparison</h2>
+                <p class="text-gray-600 mb-6 max-w-3xl">Filter the providers based on the features that matter most to your business. This section helps you identify which solutions meet your specific operational requirements, from basic stock detection to advanced competitive analysis.</p>
+                <div class="mb-6 flex flex-wrap gap-2 justify-center">
+                    <button class="feature-filter-btn active-filter bg-indigo-600 text-white py-2 px-4 rounded-full text-sm font-medium" data-filter="all">All Features</button>
+                    <button class="feature-filter-btn bg-white text-gray-700 py-2 px-4 rounded-full text-sm font-medium border border-gray-300 hover:bg-gray-50" data-filter="availability">Shelf Availability</button>
+                    <button class="feature-filter-btn bg-white text-gray-700 py-2 px-4 rounded-full text-sm font-medium border border-gray-300 hover:bg-gray-50" data-filter="compliance">Planogram Compliance</button>
+                    <button class="feature-filter-btn bg-white text-gray-700 py-2 px-4 rounded-full text-sm font-medium border border-gray-300 hover:bg-gray-50" data-filter="pricing">Pricing &amp; Promotion</button>
+                    <button class="feature-filter-btn bg-white text-gray-700 py-2 px-4 rounded-full text-sm font-medium border border-gray-300 hover:bg-gray-50" data-filter="analytics">Advanced Analytics</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="feature-grid">
+                </div>
+            </section>
+
+            <section class="mb-16" id="performance">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Performance Deep Dive</h2>
+                <p class="text-gray-600 mb-6 max-w-3xl">Compare providers on core performance metrics. Accuracy is critical for reliable data, while processing speed impacts how quickly your field teams can get feedback and take action. Use the dropdown to switch between different metrics.</p>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex justify-end mb-4">
+                        <select class="block w-full max-w-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" id="performanceMetricSelector">
+                            <option selected="" value="skuAccuracy">SKU Recognition Accuracy (%)</option>
+                            <option value="priceAccuracy">Price Tag Accuracy (%)</option>
+                            <option value="processingSpeed">Processing Speed (sec/image)</option>
+                        </select>
+                    </div>
+                    <div class="chart-container" style="max-height: 450px;">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="profiles">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Detailed Vendor Profiles</h2>
+                <p class="text-gray-600 mb-6 max-w-3xl">Explore detailed profiles for each provider. This section outlines their core focus, key strengths, and ideal use cases to help you make an informed decision.</p>
+                <div class="space-y-8" id="profiles-grid">
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const vendorData = [
+                {
+                    id: 'trax',
+                    name: 'Trax IR',
+                    logoColor: '#EF4444',
+                    scores: { accuracy: 9.2, speed: 8.5, features: 9.5, analytics: 9.3, integration: 8.8 },
+                    performance: { skuAccuracy: 97, priceAccuracy: 95, processingSpeed: 3 },
+                    description: 'A global leader in retail execution, offering a comprehensive suite of solutions powered by computer vision. Strong focus on CPG brands and retailers.',
+                    strengths: ['Shelf Digitization', 'Real-time Insights', 'Retail Execution Tools', 'Global Scalability'],
+                    features: ['availability', 'compliance', 'pricing', 'analytics']
+                },
+                {
+                    id: 'paralleldots',
+                    name: 'Parallel Dots',
+                    logoColor: '#3B82F6',
+                    scores: { accuracy: 8.8, speed: 9.0, features: 8.5, analytics: 9.0, integration: 8.5 },
+                    performance: { skuAccuracy: 95, priceAccuracy: 94, processingSpeed: 2.5 },
+                    description: 'Leverages advanced AI to provide shelf insights and competitor intelligence. Known for its high-speed processing and robust analytics platform, "Sherlock".',
+                    strengths: ['Fast Image Processing', 'Competitor Analysis', 'AI-driven Recommendations', 'Customizable Dashboards'],
+                    features: ['availability', 'compliance', 'pricing', 'analytics']
+                },
+                {
+                    id: 'vispera',
+                    name: 'Vispera',
+                    logoColor: '#10B981',
+                    scores: { accuracy: 9.0, speed: 8.2, features: 8.8, analytics: 8.5, integration: 8.0 },
+                    performance: { skuAccuracy: 96, priceAccuracy: 93, processingSpeed: 4 },
+                    description: 'Specializes in visual intelligence for retail, focusing on turning shelf photos into actionable data for perfect store execution.',
+                    strengths: ['High SKU Accuracy', 'Out-of-Stock Detection', 'Planogram Compliance Engine', 'Focus on Visuals'],
+                    features: ['availability', 'compliance', 'pricing']
+                },
+                {
+                    id: 'form',
+                    name: 'FORM',
+                    logoColor: '#F97316',
+                    scores: { accuracy: 8.5, speed: 8.0, features: 9.2, analytics: 8.8, integration: 9.2 },
+                    performance: { skuAccuracy: 94, priceAccuracy: 92, processingSpeed: 5 },
+                    description: 'Offers a unified platform for field teams that combines task management with image recognition, creating a closed-loop execution system.',
+                    strengths: ['Integrated Task Management', 'Field Team Workflow Automation', 'Strong Integration Capabilities', 'Mobile-first Approach'],
+                    features: ['availability', 'compliance', 'analytics']
+                },
+                {
+                    id: 'snap2insight',
+                    name: 'Snap2Insight',
+                    logoColor: '#8B5CF6',
+                    scores: { accuracy: 8.2, speed: 8.8, features: 8.0, analytics: 8.2, integration: 8.1 },
+                    performance: { skuAccuracy: 93, priceAccuracy: 91, processingSpeed: 3.5 },
+                    description: 'Provides real-time shelf intelligence and analytics for CPG companies, focusing on speed and actionable insights for sales reps.',
+                    strengths: ['Real-time Mobile Feedback', 'Affordability', 'Simple User Interface', 'Promotion Execution Tracking'],
+                    features: ['availability', 'pricing']
+                },
+                {
+                    id: 'cluevision',
+                    name: 'Clue Vision',
+                    logoColor: '#F59E0B',
+                    scores: { accuracy: 8.6, speed: 8.4, features: 8.3, analytics: 8.0, integration: 7.8 },
+                    performance: { skuAccuracy: 94, priceAccuracy: 92, processingSpeed: 4.5 },
+                    description: 'Focuses on delivering accurate and granular data from retail shelves, with a strong emphasis on customizable recognition models for specific product categories.',
+                    strengths: ['Custom Model Training', 'Granular Product Data', 'Share of Shelf Analysis', 'Flexible Deployment'],
+                    features: ['availability', 'compliance', 'analytics']
+                }
+            ];
+
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            let barChart;
+
+            const radarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Accuracy', 'Speed', 'Feature Set', 'Analytics', 'Integration'],
+                    datasets: vendorData.map(vendor => ({
+                        label: vendor.name,
+                        data: Object.values(vendor.scores),
+                        fill: true,
+                        backgroundColor: `${vendor.logoColor}33`,
+                        borderColor: vendor.logoColor,
+                        pointBackgroundColor: vendor.logoColor,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: vendor.logoColor
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: {
+                            borderWidth: 3
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 6,
+                            suggestedMax: 10,
+                            pointLabels: {
+                                font: {
+                                    size: 14,
+                                }
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(255, 255, 255, 0.75)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const renderBarChart = (metric) => {
+                const chartData = {
+                    labels: vendorData.map(v => v.name),
+                    datasets: [{
+                        label: document.querySelector(`#performanceMetricSelector option[value=${metric}]`).textContent,
+                        data: vendorData.map(v => v.performance[metric]),
+                        backgroundColor: vendorData.map(v => `${v.logoColor}B3`),
+                        borderColor: vendorData.map(v => v.logoColor),
+                        borderWidth: 1
+                    }]
+                };
+
+                if (barChart) {
+                    barChart.data = chartData;
+                    barChart.options.scales.y.title.text = (metric === 'processingSpeed') ? 'Seconds' : 'Percentage (%)';
+                    barChart.update();
+                } else {
+                    barChart = new Chart(barCtx, {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: (metric === 'processingSpeed') ? 'Seconds' : 'Percentage (%)'
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            }
+                        }
+                    });
+                }
+            };
+
+            document.getElementById('performanceMetricSelector').addEventListener('change', (e) => {
+                renderBarChart(e.target.value);
+            });
+            renderBarChart('skuAccuracy');
+
+            const featureGrid = document.getElementById('feature-grid');
+            const profilesGrid = document.getElementById('profiles-grid');
+
+            const populateGrids = () => {
+                vendorData.forEach(vendor => {
+                    const featureCard = `
+                        <div class="feature-card bg-white p-5 rounded-lg shadow-md border-l-4" style="border-color: ${vendor.logoColor};" data-features='${JSON.stringify(vendor.features)}'>
+                            <h3 class="text-lg font-bold text-gray-800">${vendor.name}</h3>
+                            <div class="mt-4 space-y-2 text-sm">
+                                <p class="flex items-center gap-2 ${vendor.features.includes('availability') ? 'text-gray-700' : 'text-gray-400'}">
+                                    <span class="w-4 h-4 rounded-full ${vendor.features.includes('availability') ? 'bg-green-500' : 'bg-gray-300'}"></span> Shelf Availability
+                                </p>
+                                <p class="flex items-center gap-2 ${vendor.features.includes('compliance') ? 'text-gray-700' : 'text-gray-400'}">
+                                    <span class="w-4 h-4 rounded-full ${vendor.features.includes('compliance') ? 'bg-green-500' : 'bg-gray-300'}"></span> Planogram Compliance
+                                </p>
+                                <p class="flex items-center gap-2 ${vendor.features.includes('pricing') ? 'text-gray-700' : 'text-gray-400'}">
+                                    <span class="w-4 h-4 rounded-full ${vendor.features.includes('pricing') ? 'bg-green-500' : 'bg-gray-300'}"></span> Pricing & Promotion
+                                </p>
+                                <p class="flex items-center gap-2 ${vendor.features.includes('analytics') ? 'text-gray-700' : 'text-gray-400'}">
+                                    <span class="w-4 h-4 rounded-full ${vendor.features.includes('analytics') ? 'bg-green-500' : 'bg-gray-300'}"></span> Advanced Analytics
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    featureGrid.innerHTML += featureCard;
+
+                    const profileCard = `
+                        <div id="profile-${vendor.id}" class="bg-white rounded-lg shadow-lg overflow-hidden md:flex">
+                            <div class="md:w-1/3 p-6 flex flex-col justify-center items-center text-center" style="background-color: ${vendor.logoColor}1A;">
+                                <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background-color: ${vendor.logoColor};">
+                                    <span class="text-white text-2xl font-bold">${vendor.name.substring(0,2)}</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900">${vendor.name}</h3>
+                            </div>
+                            <div class="md:w-2/3 p-6">
+                                <p class="text-gray-600 mb-4">${vendor.description}</p>
+                                <h4 class="font-semibold text-gray-800 mb-2">Key Strengths:</h4>
+                                <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                    ${vendor.strengths.map(s => `<li>${s}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    profilesGrid.innerHTML += profileCard;
+                });
+            };
+            populateGrids();
+
+            const filterButtons = document.querySelectorAll('.feature-filter-btn');
+            const featureCards = document.querySelectorAll('.feature-card');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    filterButtons.forEach(btn => btn.classList.remove('active-filter', 'bg-indigo-600', 'text-white'));
+                    filterButtons.forEach(btn => btn.classList.add('bg-white', 'text-gray-700'));
+                    button.classList.add('active-filter', 'bg-indigo-600', 'text-white');
+                    button.classList.remove('bg-white', 'text-gray-700');
+
+                    featureCards.forEach(card => {
+                        const features = JSON.parse(card.dataset.features);
+                        if (filter === 'all' || features.includes(filter)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = button.dataset.target;
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 80, 
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 90) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navButtons.forEach(button => {
+                    button.classList.remove('active');
+                    if (button.dataset.target === current) {
+                        button.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

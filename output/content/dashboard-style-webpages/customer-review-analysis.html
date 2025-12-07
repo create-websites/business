@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Customer Review Signal Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A tab-based SPA with three sections: 'Overview', 'Topic Deep Dive', and 'Review Explorer'. This structure was chosen to guide the user from a high-level summary to granular details in a logical flow. The 'Overview' provides key metrics at a glance. 'Topic Deep Dive' allows for focused analysis on specific product features. 'Review Explorer' provides access to the raw qualitative data. This tiered approach prevents information overload and makes the complex data highly consumable and intuitive to navigate. -->
+    <!-- Visualization & Content Choices: 
+        - Overall Sentiment: Report Info -> Proportion of sentiments -> Goal: Inform -> Viz: Donut Chart -> Interaction: Hover for details -> Justification: Best for showing parts of a whole -> Library: Chart.js.
+        - Sentiment Over Time: Report Info -> Sentiment trend -> Goal: Change -> Viz: Line Chart -> Interaction: Hover for monthly data -> Justification: Standard for time-series data -> Library: Chart.js.
+        - Top Topics: Report Info -> Frequency of keywords -> Goal: Compare -> Viz: Horizontal Bar Chart -> Interaction: Hover for count -> Justification: Clear for ranked categories -> Library: Chart.js.
+        - Topic Sentiment Breakdown: Report Info -> Sentiment per topic -> Goal: Compare/Organize -> Viz: Stacked Bar Chart -> Interaction: Select topic from dropdown to update chart -> Justification: Allows detailed comparison within a category -> Library: Chart.js.
+        - Individual Reviews: Report Info -> Raw review text -> Goal: Organize -> Method: Interactive HTML list -> Interaction: Filter by topic, sentiment, rating -> Justification: Provides qualitative context to quantitative data -> Method: Vanilla JS + Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #403d39;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-btn {
+            transition: all 0.3s ease;
+        }
+        .nav-btn.active {
+            background-color: #A08C6E;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-btn:not(.active):hover {
+            background-color: #EAE3D9;
+        }
+        .kpi-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            border: 1px solid #EAE3D9;
+        }
+        .filter-select {
+             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#403d39] tracking-tight">Customer Review Signal Analysis</h1>
+            <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">An interactive dashboard summarizing key themes, sentiments, and insights from product feedback.</p>
+        </header>
+
+        <nav class="flex justify-center mb-10 bg-[#EAE3D9] rounded-full p-1 max-w-md mx-auto">
+            <button class="nav-btn active w-1/3 py-2 px-4 rounded-full font-semibold" data-view="overview">Overview</button>
+            <button class="nav-btn w-1/3 py-2 px-4 rounded-full font-semibold" data-view="deepdive">Topic Deep Dive</button>
+            <button class="nav-btn w-1/3 py-2 px-4 rounded-full font-semibold" data-view="explorer">Review Explorer</button>
+        </nav>
+
+        <main>
+            <div class="view space-y-12" id="overview">
+                <section>
+                    <p class="text-center text-gray-700 max-w-4xl mx-auto mb-8">This overview provides a high-level summary of the customer feedback landscape. Key metrics offer a quick pulse check on overall satisfaction, while the charts illustrate the distribution of sentiment and how it has evolved over time. Use this section to quickly grasp the big picture of customer opinion.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="kpi-card">
+                            <h3 class="text-lg font-semibold text-gray-500">Total Reviews</h3>
+                            <p class="text-4xl font-bold text-[#A08C6E] mt-2" id="totalReviews">--</p>
+                        </div>
+                        <div class="kpi-card">
+                            <h3 class="text-lg font-semibold text-gray-500">Average Rating</h3>
+                            <p class="text-4xl font-bold text-[#A08C6E] mt-2" id="avgRating">--</p>
+                        </div>
+                        <div class="kpi-card">
+                            <h3 class="text-lg font-semibold text-gray-500">Overall Sentiment</h3>
+                            <p class="text-4xl font-bold text-[#A08C6E] mt-2" id="overallSentiment">--</p>
+                        </div>
+                    </div>
+                </section>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h2 class="text-xl font-bold text-center mb-4">Overall Sentiment Distribution</h2>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="sentimentDonutChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h2 class="text-xl font-bold text-center mb-4">Top Mentioned Topics</h2>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="topTopicsBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h2 class="text-xl font-bold text-center mb-4">Sentiment Trend Over Time</h2>
+                    <div class="chart-container h-72 md:h-80 !max-w-5xl">
+                        <canvas id="sentimentTrendLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view hidden space-y-8" id="deepdive">
+                 <section class="text-center">
+                    <p class="text-gray-700 max-w-4xl mx-auto">Dive deeper into what customers are saying about specific product features or aspects of their experience. Select a topic from the dropdown menu to see a detailed breakdown of the sentiment associated with it. This allows for a granular understanding of strengths and weaknesses identified in the reviews.</p>
+                    <div class="mt-6 flex justify-center items-center gap-4">
+                        <label class="text-lg font-medium" for="topicFilter">Select a Topic:</label>
+                        <select class="filter-select appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-[#A08C6E] focus:border-[#A08C6E]" id="topicFilter">
+                        </select>
+                    </div>
+                </section>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <h2 class="text-xl font-bold text-center mb-4" id="topicChartTitle">Sentiment Breakdown for Battery Life</h2>
+                    <div class="chart-container h-80 md:h-96">
+                        <canvas id="topicSentimentBarChart"></canvas>
+                    </div>
+                </div>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-lg font-bold mb-3 text-green-700">Common Positive Phrases</h3>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700" id="positivePhrases"></ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-lg font-bold mb-3 text-red-700">Common Negative Phrases</h3>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700" id="negativePhrases"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view hidden space-y-8" id="explorer">
+                <section class="text-center">
+                    <p class="text-gray-700 max-w-4xl mx-auto mb-6">Explore the raw data behind the analysis. Use the filters below to sift through individual customer reviews. This tool is perfect for finding specific examples of feedback, understanding the context behind the numbers, and gathering qualitative evidence to support data-driven decisions.</p>
+                     <div class="bg-white p-4 rounded-xl shadow-md border border-gray-200 flex flex-wrap justify-center items-center gap-4">
+                        <div>
+                            <label class="font-medium mr-2" for="explorerTopicFilter">Topic:</label>
+                            <select class="filter-select appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10" id="explorerTopicFilter"></select>
+                        </div>
+                        <div>
+                            <label class="font-medium mr-2" for="explorerSentimentFilter">Sentiment:</label>
+                            <select class="filter-select appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10" id="explorerSentimentFilter"></select>
+                        </div>
+                        <div>
+                            <label class="font-medium mr-2" for="explorerRatingFilter">Rating:</label>
+                            <select class="filter-select appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10" id="explorerRatingFilter"></select>
+                        </div>
+                        <button class="py-2 px-4 bg-[#A08C6E] text-white font-semibold rounded-md hover:bg-[#8d7a60] transition" id="resetFilters">Reset</button>
+                    </div>
+                </section>
+                <div class="space-y-4" id="reviewList">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const mockData = {
+            reviews: [
+                { id: 1, date: "2025-09-15", rating: 5, sentiment: "Positive", topic: "Battery Life", text: "The battery life is absolutely incredible! Lasts me two full days with heavy use." },
+                { id: 2, date: "2025-09-14", rating: 4, sentiment: "Positive", topic: "Screen Quality", text: "Vibrant screen, great for watching movies. A little dim in direct sunlight though." },
+                { id: 3, date: "2025-09-14", rating: 2, sentiment: "Negative", topic: "Software", text: "The software is buggy and crashes frequently. Needs an update ASAP." },
+                { id: 4, date: "2025-09-13", rating: 3, sentiment: "Neutral", topic: "Price", text: "It's priced fairly for what you get, but it's not a bargain." },
+                { id: 5, date: "2025-09-12", rating: 1, sentiment: "Negative", topic: "Customer Service", text: "Had an issue and customer service was completely unhelpful. Very disappointing experience." },
+                { id: 6, date: "2025-08-28", rating: 5, sentiment: "Positive", topic: "Design", text: "Sleek, modern design. Feels very premium in the hand." },
+                { id: 7, date: "2025-08-25", rating: 2, sentiment: "Negative", topic: "Battery Life", text: "Battery barely lasts half a day. I have to carry a power bank everywhere." },
+                { id: 8, date: "2025-08-22", rating: 4, sentiment: "Positive", topic: "Camera", text: "Takes stunning photos in good light. The zoom is impressive." },
+                { id: 9, date: "2025-08-19", rating: 3, sentiment: "Negative", topic: "Software", text: "The user interface feels clunky and outdated." },
+                { id: 10, date: "2025-08-15", rating: 5, sentiment: "Positive", topic: "Performance", text: "Blazing fast performance. Apps open instantly and multitasking is a breeze." },
+                { id: 11, date: "2025-07-30", rating: 4, sentiment: "Positive", topic: "Battery Life", text: "I'm very satisfied with the battery performance for my daily use." },
+                { id: 12, date: "2025-07-25", rating: 1, sentiment: "Negative", topic: "Price", text: "Way too expensive for the features it offers. Not worth the money." },
+                { id: 13, date: "2025-07-20", rating: 3, sentiment: "Neutral", topic: "Camera", text: "The camera is average. It gets the job done but won't blow you away." },
+                { id: 14, date: "2025-07-15", rating: 4, sentiment: "Positive", topic: "Customer Service", text: "The support team was quick and resolved my issue professionally." },
+                { id: 15, date: "2025-06-21", rating: 2, sentiment: "Negative", topic: "Design", text: "The material feels cheap and it's a fingerprint magnet." },
+                { id: 16, date: "2025-06-18", rating: 5, sentiment: "Positive", topic: "Software", text: "Clean software experience, no bloatware, and very intuitive to use." },
+                { id: 17, date: "2025-06-10", rating: 4, sentiment: "Positive", topic: "Performance", text: "Handles all my games and apps without any lag. Really impressive." },
+                { id: 18, date: "2025-06-05", rating: 1, sentiment: "Negative", topic: "Screen Quality", text: "There's a noticeable green tint on my screen. Very poor quality control." }
+            ],
+            topicPhrases: {
+                "Battery Life": {
+                    positive: ["lasts two full days", "incredible life", "satisfied with performance"],
+                    negative: ["barely lasts half a day", "have to carry a power bank", "drains too fast"]
+                },
+                "Screen Quality": {
+                    positive: ["vibrant screen", "great for movies", "sharp and clear"],
+                    negative: ["dim in sunlight", "noticeable green tint", "poor quality control"]
+                },
+                "Software": {
+                    positive: ["clean experience", "no bloatware", "intuitive to use"],
+                    negative: ["buggy and crashes", "clunky interface", "needs an update"]
+                },
+                "Price": {
+                    positive: ["great value", "worth every penny", "affordable price"],
+                    negative: ["way too expensive", "not worth the money", "overpriced"]
+                },
+                "Customer Service": {
+                    positive: ["quick and professional", "helpful support team", "resolved my issue"],
+                    negative: ["completely unhelpful", "disappointing experience", "long wait times"]
+                },
+                "Design": {
+                    positive: ["sleek, modern design", "feels very premium", "looks beautiful"],
+                    negative: ["feels cheap", "fingerprint magnet", "awkward to hold"]
+                },
+                "Camera": {
+                    positive: ["stunning photos", "impressive zoom", "great in low light"],
+                    negative: ["average photos", "blurry images", "poor video quality"]
+                },
+                "Performance": {
+                    positive: ["blazing fast", "no lag", "handles all my games"],
+                    negative: ["stutters occasionally", "slow to open apps", "overheats easily"]
+                }
+            }
+        };
+
+        const { reviews, topicPhrases } = mockData;
+        
+        const topics = [...new Set(reviews.map(r => r.topic))];
+        let charts = {};
+
+        function init() {
+            setupNavigation();
+            populateOverview();
+            initDeepDive();
+            initExplorer();
+            createSentimentDonutChart();
+            createTopTopicsBarChart();
+            createSentimentTrendLineChart();
+        }
+
+        function setupNavigation() {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const views = document.querySelectorAll('.view');
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const viewId = btn.dataset.view;
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    views.forEach(view => {
+                        if (view.id === viewId) {
+                            view.classList.remove('hidden');
+                        } else {
+                            view.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        }
+        
+        function populateOverview() {
+            document.getElementById('totalReviews').textContent = reviews.length;
+            const avgRating = (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1);
+            document.getElementById('avgRating').textContent = `${avgRating} ★`;
+            const sentimentCounts = reviews.reduce((acc, r) => {
+                acc[r.sentiment] = (acc[r.sentiment] || 0) + 1;
+                return acc;
+            }, {});
+            const dominantSentiment = Object.keys(sentimentCounts).reduce((a, b) => sentimentCounts[a] > sentimentCounts[b] ? a : b);
+            document.getElementById('overallSentiment').textContent = dominantSentiment;
+        }
+        
+        function createSentimentDonutChart() {
+            const ctx = document.getElementById('sentimentDonutChart').getContext('2d');
+            const sentimentCounts = reviews.reduce((acc, r) => {
+                acc[r.sentiment] = (acc[r.sentiment] || 0) + 1;
+                return acc;
+            }, {});
+
+            const data = {
+                labels: ['Positive', 'Neutral', 'Negative'],
+                datasets: [{
+                    data: [sentimentCounts.Positive || 0, sentimentCounts.Neutral || 0, sentimentCounts.Negative || 0],
+                    backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+                    borderColor: '#FDFBF8',
+                    borderWidth: 4,
+                }]
+            };
+
+            charts.sentimentDonut = new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+        
+        function createTopTopicsBarChart() {
+            const ctx = document.getElementById('topTopicsBarChart').getContext('2d');
+            const topicCounts = reviews.reduce((acc, r) => {
+                acc[r.topic] = (acc[r.topic] || 0) + 1;
+                return acc;
+            }, {});
+            const sortedTopics = Object.entries(topicCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            
+            charts.topTopicsBar = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedTopics.map(t => t[0]),
+                    datasets: [{
+                        label: 'Number of Mentions',
+                        data: sortedTopics.map(t => t[1]),
+                        backgroundColor: '#A08C6E',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                     scales: {
+                        x: { beginAtZero: true, grid: { display: false } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        function createSentimentTrendLineChart() {
+            const ctx = document.getElementById('sentimentTrendLineChart').getContext('2d');
+            const monthlyData = reviews.reduce((acc, review) => {
+                const month = new Date(review.date).toLocaleString('default', { month: 'short', year: 'numeric' });
+                if (!acc[month]) {
+                    acc[month] = { Positive: 0, Negative: 0, date: new Date(review.date) };
+                }
+                acc[month][review.sentiment] = (acc[month][review.sentiment] || 0) + 1;
+                return acc;
+            }, {});
+
+            const sortedMonths = Object.entries(monthlyData).sort((a,b) => a[1].date - b[1].date);
+            const labels = sortedMonths.map(m => m[0]);
+            
+            charts.sentimentTrend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Positive', data: sortedMonths.map(m => m[1].Positive), borderColor: '#22c55e', backgroundColor: '#22c55e20', fill: true, tension: 0.3 },
+                        { label: 'Negative', data: sortedMonths.map(m => m[1].Negative), borderColor: '#ef4444', backgroundColor: '#ef444420', fill: true, tension: 0.3 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function initDeepDive() {
+            const topicFilter = document.getElementById('topicFilter');
+            topics.forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic;
+                option.textContent = topic;
+                topicFilter.appendChild(option);
+            });
+
+            topicFilter.addEventListener('change', (e) => {
+                updateTopicDeepDive(e.target.value);
+            });
+            
+            createTopicSentimentBarChart(topics[0]);
+            updateTopicDeepDive(topics[0]);
+        }
+        
+        function updateTopicDeepDive(topic) {
+            document.getElementById('topicChartTitle').textContent = `Sentiment Breakdown for ${topic}`;
+            updateTopicSentimentBarChart(topic);
+
+            const positivePhrasesList = document.getElementById('positivePhrases');
+            const negativePhrasesList = document.getElementById('negativePhrases');
+            positivePhrasesList.innerHTML = '';
+            negativePhrasesList.innerHTML = '';
+
+            const phrases = topicPhrases[topic] || { positive: ['N/A'], negative: ['N/A'] };
+            phrases.positive.forEach(phrase => {
+                const li = document.createElement('li');
+                li.textContent = phrase;
+                positivePhrasesList.appendChild(li);
+            });
+            phrases.negative.forEach(phrase => {
+                const li = document.createElement('li');
+                li.textContent = phrase;
+                negativePhrasesList.appendChild(li);
+            });
+        }
+
+        function createTopicSentimentBarChart(initialTopic) {
+            const ctx = document.getElementById('topicSentimentBarChart').getContext('2d');
+            const topicData = reviews.filter(r => r.topic === initialTopic).reduce((acc, r) => {
+                acc[r.sentiment] = (acc[r.sentiment] || 0) + 1;
+                return acc;
+            }, {});
+            
+            charts.topicSentimentBar = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sentiment'],
+                    datasets: [
+                        { label: 'Positive', data: [topicData.Positive || 0], backgroundColor: '#22c55e' },
+                        { label: 'Neutral', data: [topicData.Neutral || 0], backgroundColor: '#f59e0b' },
+                        { label: 'Negative', data: [topicData.Negative || 0], backgroundColor: '#ef4444' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+        
+        function updateTopicSentimentBarChart(topic) {
+            const topicData = reviews.filter(r => r.topic === topic).reduce((acc, r) => {
+                acc[r.sentiment] = (acc[r.sentiment] || 0) + 1;
+                return acc;
+            }, {});
+            
+            if (charts.topicSentimentBar) {
+                charts.topicSentimentBar.data.datasets[0].data = [topicData.Positive || 0];
+                charts.topicSentimentBar.data.datasets[1].data = [topicData.Neutral || 0];
+                charts.topicSentimentBar.data.datasets[2].data = [topicData.Negative || 0];
+                charts.topicSentimentBar.update();
+            }
+        }
+        
+        function initExplorer() {
+            const topicFilter = document.getElementById('explorerTopicFilter');
+            const sentimentFilter = document.getElementById('explorerSentimentFilter');
+            const ratingFilter = document.getElementById('explorerRatingFilter');
+            const resetButton = document.getElementById('resetFilters');
+
+            const allTopics = ['All', ...topics];
+            allTopics.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t; option.textContent = t;
+                topicFilter.appendChild(option);
+            });
+
+            const allSentiments = ['All', 'Positive', 'Neutral', 'Negative'];
+            allSentiments.forEach(s => {
+                const option = document.createElement('option');
+                option.value = s; option.textContent = s;
+                sentimentFilter.appendChild(option);
+            });
+            
+            const allRatings = ['All', '5', '4', '3', '2', '1'];
+             allRatings.forEach(r => {
+                const option = document.createElement('option');
+                option.value = r; option.textContent = r === 'All' ? 'All Stars' : `${r} Star${r > 1 ? 's' : ''}`;
+                ratingFilter.appendChild(option);
+            });
+            
+            [topicFilter, sentimentFilter, ratingFilter].forEach(filter => {
+                filter.addEventListener('change', renderReviews);
+            });
+            
+            resetButton.addEventListener('click', () => {
+                topicFilter.value = 'All';
+                sentimentFilter.value = 'All';
+                ratingFilter.value = 'All';
+                renderReviews();
+            });
+
+            renderReviews();
+        }
+        
+        function renderReviews() {
+            const list = document.getElementById('reviewList');
+            list.innerHTML = '';
+
+            const selectedTopic = document.getElementById('explorerTopicFilter').value;
+            const selectedSentiment = document.getElementById('explorerSentimentFilter').value;
+            const selectedRating = document.getElementById('explorerRatingFilter').value;
+
+            const filteredReviews = reviews.filter(review => {
+                const topicMatch = selectedTopic === 'All' || review.topic === selectedTopic;
+                const sentimentMatch = selectedSentiment === 'All' || review.sentiment === selectedSentiment;
+                const ratingMatch = selectedRating === 'All' || review.rating.toString() === selectedRating;
+                return topicMatch && sentimentMatch && ratingMatch;
+            });
+            
+            if (filteredReviews.length === 0) {
+                 list.innerHTML = `<div class="text-center p-8 bg-white rounded-lg shadow-md border"><p class="text-gray-600">No reviews match the selected filters.</p></div>`;
+                return;
+            }
+
+            filteredReviews.forEach(review => {
+                const sentimentColors = {
+                    Positive: { border: 'border-green-500', bg: 'bg-green-50', text: 'text-green-800' },
+                    Neutral: { border: 'border-amber-500', bg: 'bg-amber-50', text: 'text-amber-800' },
+                    Negative: { border: 'border-red-500', bg: 'bg-red-50', text: 'text-red-800' },
+                };
+                const colors = sentimentColors[review.sentiment];
+                
+                const card = `
+                    <div class="bg-white p-5 rounded-lg shadow-md border ${colors.border} border-l-4">
+                        <div class="flex justify-between items-start">
+                           <div>
+                                <div class="flex items-center gap-4">
+                                    <span class="font-bold py-1 px-3 rounded-full ${colors.bg} ${colors.text}">${review.topic}</span>
+                                    <span class="text-lg font-bold text-gray-800">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">${new Date(review.date).toLocaleDateString()}</p>
+                           </div>
+                           <span class="font-semibold ${colors.text}">${review.sentiment}</span>
+                        </div>
+                        <p class="text-gray-700 mt-3">${review.text}</p>
+                    </div>
+                `;
+                list.innerHTML += card;
+            });
+        }
+
+        init();
+    });
+    </script>
+
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

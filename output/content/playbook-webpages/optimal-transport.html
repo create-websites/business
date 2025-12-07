@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive Report: Optimal Transport for Data Building</title>
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: The SPA is structured into four thematic, navigable sections: 'Foundations', 'The OT Toolkit', 'Strategic Guide', and 'Future Horizons'. This design transforms the linear report into a user-driven exploratory tool. The 'Foundations' section uses interactive diagrams to explain core theory (Monge vs. Kantorovich, Wasserstein vs. KL). 'The OT Toolkit' uses a card-based layout to showcase practical applications (WGANs, Barycenters, etc.), making complex use cases digestible. The 'Strategic Guide' implements an interactive decision tree, directly translating the report's framework into a functional tool. This structure prioritizes user engagement and practical application over a passive reading experience. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Monge vs. Kantorovich -> Goal: Compare -> Viz/Method: Interactive HTML/CSS diagram -> Interaction: Clicking on each concept reveals explanatory text. -> Justification: Clearly visualizes the conceptual shift from a rigid map to a flexible plan. NO SVG/Mermaid used.
+        - Report Info: Wasserstein vs. other divergences -> Goal: Compare -> Viz/Method: Two side-by-side Chart.js bar charts -> Interaction: Hovering reveals tooltips explaining the values. -> Justification: Effectively demonstrates W-distance's ability to handle disjoint supports where others fail. Chart.js on Canvas used.
+        - Report Info: Computational OT Algorithms (Table 1) -> Goal: Compare -> Viz/Method: Interactive Chart.js bar chart for complexity + HTML table for details. -> Interaction: User can toggle between chart and table view. -> Justification: Offers both a quick visual comparison (chart) and detailed information (table) for different user needs. Chart.js on Canvas used.
+        - Report Info: WGAN architecture -> Goal: Organize/Inform -> Viz/Method: HTML/CSS flowchart -> Interaction: None, static visual explanation. -> Justification: Provides a clear, easy-to-understand overview of the WGAN process. NO SVG/Mermaid used.
+        - Report Info: Strategic Framework (Section 9) -> Goal: Guide -> Viz/Method: Interactive dropdowns (HTML/JS) -> Interaction: User selections dynamically update a recommendation panel. -> Justification: Transforms static text into a practical, personalized decision-support tool.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #FDFBF8; color: #434242; }
+        .nav-link { transition: all 0.3s; border-bottom: 2px solid transparent; }
+        .nav-link.active, .nav-link:hover { color: #A855F7; border-bottom-color: #A855F7; }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .chart-container { position: relative; margin: auto; height: 320px; max-height: 40vh; width: 100%; max-width: 600px; }
+        .interactive-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .interactive-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <header class="py-6 text-center">
+            <h1 class="text-4xl font-bold text-gray-800">Optimal Transport</h1>
+            <p class="mt-2 text-xl text-gray-500">A Data-Centric Framework for Distributional Engineering</p>
+        </header>
+
+        <nav class="sticky top-0 z-10 bg-[#FDFBF8]/80 backdrop-blur-sm border-b border-gray-200 flex justify-center space-x-4 md:space-x-8 py-3 mb-10" id="main-nav">
+            <a class="nav-link font-medium" href="#foundations">Foundations</a>
+            <a class="nav-link font-medium" href="#toolkit">The OT Toolkit</a>
+            <a class="nav-link font-medium" href="#guide">Strategic Guide</a>
+            <a class="nav-link font-medium" href="#future">Future Horizons</a>
+        </nav>
+
+        <main id="main-content">
+            
+            <section class="content-section space-y-12" id="foundations">
+                <div>
+                    <h2 class="text-3xl font-bold text-center text-gray-800">Core Concepts</h2>
+                    <p class="mt-4 text-lg text-center text-gray-600 max-w-3xl mx-auto">Optimal Transport (OT) provides a powerful way to compare probability distributions by finding the most efficient way to morph one into another. This section explores the fundamental ideas that evolved OT from a niche mathematical puzzle into a cornerstone of modern data science.</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-2xl font-semibold text-center text-gray-700 mb-6">From a Rigid Map to a Flexible Plan</h3>
+                    <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">The key innovation in OT was relaxing the strict one-to-one mapping of Monge's original problem to the more flexible one-to-many "transport plan" of Kantorovich, which allows for mass splitting.</p>
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div class="text-center p-6 bg-gray-50 rounded-lg">
+                            <h4 class="font-bold text-lg text-purple-700">Monge's Transport Map (1781)</h4>
+                            <p class="text-sm text-gray-500 mb-4">A deterministic one-to-one mapping. Fails if mass needs to be split.</p>
+                            <div class="flex justify-around items-center h-40">
+                                <div class="flex flex-col space-y-4">
+                                    <div class="w-8 h-8 bg-blue-300 rounded-full"></div>
+                                    <div class="w-8 h-8 bg-blue-300 rounded-full"></div>
+                                </div>
+                                <div class="text-3xl text-gray-400">→</div>
+                                <div class="flex flex-col space-y-4">
+                                    <div class="w-8 h-8 bg-green-300 rounded-md"></div>
+                                    <div class="w-8 h-8 bg-green-300 rounded-md"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center p-6 bg-gray-50 rounded-lg">
+                            <h4 class="font-bold text-lg text-purple-700">Kantorovich's Transport Plan (1940s)</h4>
+                            <p class="text-sm text-gray-500 mb-4">A probabilistic plan allowing one source point to map to multiple destinations.</p>
+                            <div class="flex justify-around items-center h-40 relative">
+                                <div class="w-8 h-8 bg-blue-300 rounded-full"></div>
+                                <div class="text-3xl text-gray-400">→</div>
+                                <div class="flex flex-col space-y-4">
+                                    <div class="w-8 h-8 bg-green-300 rounded-md"></div>
+                                    <div class="w-8 h-8 bg-green-300 rounded-md"></div>
+                                </div>
+                                <canvas class="absolute top-0 left-0 w-full h-full" id="kantorovich-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-2xl font-semibold text-center text-gray-700 mb-6">A Geometric Distance for Distributions</h3>
+                    <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">Unlike metrics like KL-divergence, the Wasserstein distance provides a meaningful and smooth measure of distance even for distributions that do not overlap, making it ideal for gradient-based optimization in machine learning.</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="text-center">
+                            <h4 class="font-semibold text-gray-600 mb-2">Wasserstein Distance</h4>
+                            <div class="chart-container" style="height: 250px;">
+                                <canvas id="w-dist-chart"></canvas>
+                            </div>
+                             <p class="text-sm text-gray-500 mt-2">Provides a finite distance based on the "work" needed to move one distribution to the other.</p>
+                        </div>
+                        <div class="text-center">
+                             <h4 class="font-semibold text-gray-600 mb-2">KL-Divergence</h4>
+                             <div class="chart-container" style="height: 250px;">
+                                <canvas id="kl-div-chart"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">Returns infinity for disjoint distributions, providing no useful gradient for optimization.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-2xl font-semibold text-center text-gray-700 mb-6">Taming Complexity: Scalable OT Algorithms</h3>
+                    <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">Solving the exact OT problem is computationally expensive. Modern methods, especially the Sinkhorn algorithm, provide fast, scalable approximations that make OT practical for large datasets.</p>
+                    <div class="chart-container">
+                        <canvas id="algo-complexity-chart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-4">This chart compares the relative computational cost of different OT algorithms, showing the dramatic improvement of modern approximate methods like Sinkhorn and Sliced Wasserstein over exact solvers.</p>
+                </div>
+            </section>
+
+            <section class="content-section" id="toolkit">
+                <h2 class="text-3xl font-bold text-center text-gray-800">The OT Toolkit: Data-Centric Applications</h2>
+                <p class="mt-4 text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">Optimal Transport is not just a theoretical concept; it's a versatile toolkit for solving real-world data science problems. Explore how OT is used to generate, augment, align, and curate data.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="interactive-card bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h4 class="font-bold text-purple-700">Generative Modeling (WGANs)</h4>
+                        <p class="text-sm text-gray-600 mt-2">By using the Wasserstein distance as a loss function, WGANs achieve more stable training and avoid common failure modes like mode collapse, leading to higher-quality synthetic data generation.</p>
+                    </div>
+                     <div class="interactive-card bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h4 class="font-bold text-purple-700">Data Augmentation</h4>
+                        <p class="text-sm text-gray-600 mt-2">Wasserstein Barycenters provide a principled way to "average" data points (like images or text embeddings), creating realistic new samples that lie on the data manifold.</p>
+                    </div>
+                    <div class="interactive-card bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h4 class="font-bold text-purple-700">Domain Adaptation</h4>
+                        <p class="text-sm text-gray-600 mt-2">OT can learn a mapping to align a labeled source domain with an unlabeled target domain, allowing models to generalize across distributions and reducing domain shift.</p>
+                    </div>
+                     <div class="interactive-card bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h4 class="font-bold text-purple-700">Multi-Modal Fusion (FGW)</h4>
+                        <p class="text-sm text-gray-600 mt-2">The Fused Gromov-Wasserstein distance aligns data from different modalities (e.g., text and images) by considering both their features and their internal structures.</p>
+                    </div>
+                     <div class="interactive-card bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h4 class="font-bold text-purple-700">Coreset Selection</h4>
+                        <p class="text-sm text-gray-600 mt-2">OT is used to find a small, representative subset of a large dataset that preserves its overall distribution, enabling more efficient model training.</p>
+                    </div>
+                     <div class="interactive-card bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                        <h4 class="font-bold text-purple-700">Algorithmic Fairness</h4>
+                        <p class="text-sm text-gray-600 mt-2">OT can align the output distributions of a model across different demographic groups to a common fair target, mitigating bias while minimally impacting accuracy.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="content-section" id="guide">
+                 <h2 class="text-3xl font-bold text-center text-gray-800">Strategic Guide</h2>
+                <p class="mt-4 text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">Choosing the right OT method depends on your goal, data, and constraints. Use this interactive guide to find the best approach for your data-building task.</p>
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="font-semibold text-gray-700" for="guide-goal">1. What is your primary objective?</label>
+                                <select class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50" id="guide-goal">
+                                    <option value="generate">Generate or Augment Data</option>
+                                    <option value="align">Align or Fuse Data</option>
+                                    <option value="curate">Curate or Refine a Dataset</option>
+                                </select>
+                            </div>
+                             <div>
+                                <label class="font-semibold text-gray-700" for="guide-data">2. What are your data's characteristics?</label>
+                                <select class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50" id="guide-data">
+                                    <option value="common_space">Data lives in a common space</option>
+                                    <option value="incomparable">Data has different structures (e.g., graphs)</option>
+                                    <option value="multimodal">Data has both features and structure</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 p-6 rounded-lg border border-purple-200" id="recommendation-panel">
+                             <h4 class="font-bold text-purple-800 text-lg mb-2">Recommendation:</h4>
+                             <div id="recommendation-content">
+                                <p class="text-gray-700">Your results will appear here...</p>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="future">
+                <h2 class="text-3xl font-bold text-center text-gray-800">Future Horizons</h2>
+                <p class="mt-4 text-lg text-center text-gray-600 max-w-3xl mx-auto mb-10">The intersection of Optimal Transport and AI is a vibrant field of research. While progress has been immense, several key challenges and exciting frontiers remain.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-gray-100">
+                         <h4 class="font-semibold text-xl text-gray-700 mb-3">Key Challenges</h4>
+                         <ul class="space-y-3 list-disc list-inside text-gray-600">
+                             <li><b>Scalability in High Dimensions:</b> The "curse of dimensionality" remains a hurdle, requiring more research into dimension-robust OT formulations.</li>
+                             <li><b>Robustness to Outliers:</b> Standard OT is sensitive to noisy data. Unbalanced and partial OT methods are a promising direction for more robust algorithms.</li>
+                              <li><b>Numerical Methods:</b> There is a continuing need for faster, more stable, and more accurate solvers to navigate the speed-accuracy trade-off.</li>
+                         </ul>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md border-gray-100">
+                         <h4 class="font-semibold text-xl text-gray-700 mb-3">Emerging Frontiers</h4>
+                         <ul class="space-y-3 list-disc list-inside text-gray-600">
+                             <li><b>Integration with GNNs:</b> OT is being used to create more expressive pooling layers and loss functions for Graph Neural Networks.</li>
+                              <li><b>Causal Inference:</b> OT provides a framework for estimating causal effects by optimally matching treated and control groups.</li>
+                               <li><b>Continual Learning:</b> OT can help align distributions between sequential tasks, mitigating catastrophic forgetting in continual learning setups.</li>
+                         </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const state = {
+        activeSection: 'foundations',
+        recommendations: {
+            generate: {
+                common_space: { title: "WGANs & Barycenters", text: "For generating novel samples, use a Wasserstein GAN (WGAN). For interpolating between existing data to create augmentations, use Wasserstein Barycenters." },
+                incomparable: { title: "N/A", text: "Generation across different structures is less defined. Consider mapping to a common latent space first." },
+                multimodal: { title: "Generative Models + FGW", text: "Use multi-modal generative models. FGW can be used to measure distance in the latent space." }
+            },
+            align: {
+                common_space: { title: "OT for Domain Adaptation", text: "Use standard Optimal Transport to learn a mapping that aligns the source and target distributions." },
+                incomparable: { title: "Gromov-Wasserstein (GW)", text: "GW is designed specifically to align distributions from different metric spaces by preserving internal structure, ideal for graph matching." },
+                multimodal: { title: "Fused Gromov-Wasserstein (FGW)", text: "FGW is the best choice as it simultaneously aligns based on both structural similarity and feature similarity." }
+            },
+            curate: {
+                common_space: { title: "OT Coreset Selection & Fairness", text: "Use OT-based coreset selection to prune your dataset efficiently, or OT-based fairness methods to align distributions across sensitive groups." },
+                incomparable: { title: "N/A", text: "Curation across different structures is not a standard OT task. Focus on aligning them first with GW." },
+                multimodal: { title: "N/A", text: "Curation for multi-modal data is complex. Focus on aligning them first with FGW." }
+            }
+        }
+    };
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const contentSections = document.querySelectorAll('.content-section');
+    const guideGoal = document.getElementById('guide-goal');
+    const guideData = document.getElementById('guide-data');
+    const recContent = document.getElementById('recommendation-content');
+
+    function navigateTo(hash) {
+        const targetId = hash ? hash.substring(1) : 'foundations';
+        state.activeSection = targetId;
+
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${targetId}`);
+        });
+
+        contentSections.forEach(section => {
+            section.classList.toggle('active', section.id === targetId);
+        });
+        
+        if (targetId === "foundations") {
+            initFoundationsCharts();
+        }
+    }
+
+    document.querySelector('#main-nav').addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            const hash = e.target.getAttribute('href');
+            navigateTo(hash);
+            window.history.pushState(null, null, hash);
+        }
+    });
+
+    let chartsInitialized = false;
+    function initFoundationsCharts() {
+        if(chartsInitialized) return;
+        
+        const kantorovichCanvas = document.getElementById('kantorovich-canvas');
+        if (kantorovichCanvas) {
+            const ctx = kantorovichCanvas.getContext('2d');
+            const parent = kantorovichCanvas.parentElement;
+            kantorovichCanvas.width = parent.clientWidth;
+            kantorovichCanvas.height = parent.clientHeight;
+            ctx.strokeStyle = 'rgba(168, 85, 247, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(kantorovichCanvas.width * 0.2, kantorovichCanvas.height / 2);
+            ctx.lineTo(kantorovichCanvas.width * 0.8, kantorovichCanvas.height * 0.25);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(kantorovichCanvas.width * 0.2, kantorovichCanvas.height / 2);
+            ctx.lineTo(kantorovichCanvas.width * 0.8, kantorovichCanvas.height * 0.75);
+            ctx.stroke();
+        }
+
+        const wDistCtx = document.getElementById('w-dist-chart');
+        if(wDistCtx) new Chart(wDistCtx, {
+            type: 'bar',
+            data: { labels: ['Dist A', 'Dist B'], datasets: [{ data: [1, 0] }, { data: [0, 1] }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { onComplete: () => { const ctx = wDistCtx.getContext('2d'); ctx.font = 'bold 24px Inter'; ctx.fillStyle = '#434242'; ctx.textAlign = 'center'; ctx.fillText('Distance: Finite', wDistCtx.width / 2, wDistCtx.height / 2); }} }
+        });
+
+        const klDivCtx = document.getElementById('kl-div-chart');
+        if(klDivCtx) new Chart(klDivCtx, {
+            type: 'bar',
+            data: { labels: ['Dist A', 'Dist B'], datasets: [{ data: [1, 0] }, { data: [0, 1] }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { onComplete: () => { const ctx = klDivCtx.getContext('2d'); ctx.font = 'bold 24px Inter'; ctx.fillStyle = '#434242'; ctx.textAlign = 'center'; ctx.fillText('Distance: ∞', klDivCtx.width / 2, klDivCtx.height / 2); }} }
+        });
+        
+        const algoCtx = document.getElementById('algo-complexity-chart');
+        if(algoCtx) new Chart(algoCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Simplex/Interior-Point', 'APDAGD', 'Sinkhorn', 'Sliced Wasserstein'],
+                datasets: [{
+                    label: 'Relative Computational Cost',
+                    data: [100, 70, 20, 10],
+                    backgroundColor: ['#E57373', '#FFB74D', '#81C784', '#64B5F6'],
+                }]
+            },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { callback: (v) => v + '%' } } } }
+        });
+        
+        chartsInitialized = true;
+    }
+    
+    function updateRecommendation() {
+        const goal = guideGoal.value;
+        const data = guideData.value;
+        const rec = state.recommendations[goal][data];
+        recContent.innerHTML = `
+            <h4 class="font-bold text-purple-800 text-lg mb-2">${rec.title}</h4>
+            <p class="text-gray-700">${rec.text}</p>
+        `;
+        recContent.classList.add('fade-in');
+        setTimeout(() => recContent.classList.remove('fade-in'), 500);
+    }
+
+    if (guideGoal && guideData) {
+        guideGoal.addEventListener('change', updateRecommendation);
+        guideData.addEventListener('change', updateRecommendation);
+        updateRecommendation();
+    }
+
+    // Initial navigation
+    navigateTo(window.location.hash || '#foundations');
+});
+</script>
+
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

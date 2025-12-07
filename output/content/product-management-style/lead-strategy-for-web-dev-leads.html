@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>SMB Web Dev Lead Generation Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: A three-stage interactive funnel design (Generation, Qualification, Management) was chosen over a linear report. This structure mirrors a real-world business process, making it more intuitive and actionable. Users can navigate via a sticky header to explore each stage. Stage 1 uses interactive cards for discovery, Stage 2 uses a dynamic radar chart for analysis, and Stage 3 uses a visual process flow diagram. This flow guides the user from high-level strategy to detailed tactics, enhancing comprehension and engagement. -->
+    <!-- Visualization & Content Choices: 
+        1. Lead Generation Methods: Report Info -> List of methods. Goal -> Inform & Organize. Viz -> Interactive HTML/CSS Cards. Interaction -> Click to reveal details. Justification -> Presents multiple options clearly without initial overload. Method -> Tailwind CSS, Vanilla JS.
+        2. Lead Prioritization: Report Info -> Prioritize conference-heavy clients. Goal -> Compare & Analyze. Viz -> Radar Chart. Interaction -> Sliders adjust criteria weights, dynamically updating the chart and a summary text block. Justification -> Visually demonstrates the multidimensional nature of a "high-quality" lead. Library -> Chart.js (Canvas).
+        3. Lead Management Process ("Agent"): Report Info -> Build an agent to manage leads. Goal -> Organize & Explain a Process. Viz -> Horizontal Process Flow Diagram. Interaction -> Hover over stages for tooltips with details. Justification -> Clearly visualizes the step-by-step workflow from lead to conversion. Method -> HTML/CSS with Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #3f3c3a;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            color: #D97706;
+            border-bottom-color: #D97706;
+        }
+        .strategy-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+        }
+        .card-details.open {
+            max-height: 500px;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .process-step {
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+        .process-step .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 10px;
+        }
+        .process-step:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-amber-700">Lead Strategy</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <button class="nav-button text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" data-section="generation" onclick="scrollToSection('generation')">1. Generation</button>
+                        <button class="nav-button text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" data-section="qualification" onclick="scrollToSection('qualification')">2. Qualification</button>
+                        <button class="nav-button text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" data-section="management" onclick="scrollToSection('management')">3. Management</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-800">An Interactive Funnel for High-Value Web Dev Leads</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">This guide breaks down the process of finding, qualifying, and managing web development leads for SMBs, with a special focus on identifying clients who need frequent campaign and conference websites.</p>
+        </div>
+
+        <section class="py-12 scroll-mt-20" id="generation">
+            <div class="text-center mb-10">
+                <span class="text-amber-600 font-semibold uppercase tracking-wider">Stage 1</span>
+                <h3 class="text-2xl md:text-3xl font-bold mt-2 text-gray-800">Lead Generation: Building Your Prospect List</h3>
+                <p class="mt-3 max-w-xl mx-auto text-gray-500">This section outlines various methods to find potential clients. Each approach targets businesses that are likely to need new or updated websites. Click on any card to explore the specific tactics, tools, and expected outcomes for that method.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="strategy-card bg-white rounded-xl shadow-md p-6" onclick="toggleDetails(this)">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl font-bold">📅</div>
+                        <h4 class="ml-4 text-lg font-semibold text-gray-700">Event &amp; Conference Databases</h4>
+                    </div>
+                    <div class="card-details">
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tactic:</strong> Scour websites of upcoming and past industry conferences, trade shows, and expos. Look for exhibitor and sponsor lists. These companies are actively marketing and often create dedicated microsites for each event.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tools:</strong> Google Search, specific event websites (e.g., Cvent), industry association sites.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Outcome:</strong> A high-quality list of businesses with a proven need for event-based marketing websites.</p>
+                    </div>
+                </div>
+
+                <div class="strategy-card bg-white rounded-xl shadow-md p-6" onclick="toggleDetails(this)">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl font-bold">💻</div>
+                        <h4 class="ml-4 text-lg font-semibold text-gray-700">Technology Stack Analysis</h4>
+                    </div>
+                    <div class="card-details">
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tactic:</strong> Use tools to identify the technologies a company's website is built on. Target businesses using outdated platforms (e.g., old versions of WordPress, Drupal, or sunsetted CMSs) or simple website builders (Wix, Squarespace) who may be ready for a custom solution.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tools:</strong> BuiltWith, Wappalyzer, SimilarTech.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Outcome:</strong> A list of leads with a clear technical need for a website migration or rebuild.</p>
+                    </div>
+                </div>
+
+                <div class="strategy-card bg-white rounded-xl shadow-md p-6" onclick="toggleDetails(this)">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl font-bold">📈</div>
+                        <h4 class="ml-4 text-lg font-semibold text-gray-700">High-Growth Company Tracking</h4>
+                    </div>
+                     <div class="card-details">
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tactic:</strong> Monitor lists of fast-growing companies or those who have recently received funding. These businesses are often scaling up their marketing efforts and may need a more robust web presence to match their growth.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tools:</strong> Crunchbase, LinkedIn Sales Navigator, local business journals ("40 under 40", "Fast 50" lists).</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Outcome:</strong> Leads with budget and a strong business case for investing in a high-quality website.</p>
+                    </div>
+                </div>
+
+                <div class="strategy-card bg-white rounded-xl shadow-md p-6" onclick="toggleDetails(this)">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl font-bold">🏢</div>
+                        <h4 class="ml-4 text-lg font-semibold text-gray-700">Local Business Directories</h4>
+                    </div>
+                     <div class="card-details">
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tactic:</strong> Systematically go through local directories like Chamber of Commerce listings, B2B service directories, or even Google Maps. Look for businesses with no website link, a broken link, or a very basic/outdated site.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tools:</strong> Google Maps, Yelp, Yellow Pages, local Chamber of Commerce websites.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Outcome:</strong> A steady stream of local leads who have a clear and immediate need.</p>
+                    </div>
+                </div>
+
+                <div class="strategy-card bg-white rounded-xl shadow-md p-6" onclick="toggleDetails(this)">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl font-bold">🤝</div>
+                        <h4 class="ml-4 text-lg font-semibold text-gray-700">Partnership Networks</h4>
+                    </div>
+                     <div class="card-details">
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tactic:</strong> Build referral relationships with marketing agencies, SEO consultants, graphic designers, and copywriters who serve the same SMB market but don't offer web development. They are a fantastic source of warm, pre-qualified leads.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tools:</strong> LinkedIn networking, local business meetups, BNI groups.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Outcome:</strong> High-conversion leads that come with an existing layer of trust.</p>
+                    </div>
+                </div>
+                 <div class="strategy-card bg-white rounded-xl shadow-md p-6" onclick="toggleDetails(this)">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-2xl font-bold">📣</div>
+                        <h4 class="ml-4 text-lg font-semibold text-gray-700">Job Board Monitoring</h4>
+                    </div>
+                     <div class="card-details">
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tactic:</strong> Look for companies hiring for marketing or sales roles. An expanding team is a strong indicator of growth and investment in marketing, which often includes a new website. Look for freelance or contract "Web Developer" postings to find companies that might prefer an agency.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Tools:</strong> LinkedIn Jobs, Indeed, AngelList.</p>
+                        <p class="text-sm text-gray-600 mt-2"><strong>Outcome:</strong> Timely leads that are actively looking to invest in their digital presence.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 bg-white rounded-2xl shadow-inner-lg scroll-mt-20" id="qualification">
+            <div class="text-center mb-10">
+                <span class="text-amber-600 font-semibold uppercase tracking-wider">Stage 2</span>
+                <h3 class="text-2xl md:text-3xl font-bold mt-2 text-gray-800">Lead Qualification: Identifying the Ideal Client</h3>
+                <p class="mt-3 max-w-xl mx-auto text-gray-500">Not all leads are created equal. This section helps you prioritize prospects by scoring them against key criteria. Use the sliders to adjust the importance of each factor and see how the "Ideal Lead Profile" changes in the chart below. The goal is to focus your efforts on the most promising opportunities.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="px-4">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700" for="weight1">Event Frequency</label>
+                            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600" id="weight1" max="10" min="1" oninput="updateChart()" type="range" value="9"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700" for="weight2">Outdated Technology</label>
+                            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600" id="weight2" max="10" min="1" oninput="updateChart()" type="range" value="7"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700" for="weight3">Clear Growth Signals</label>
+                            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600" id="weight3" max="10" min="1" oninput="updateChart()" type="range" value="8"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700" for="weight4">Marketing Team Size</label>
+                            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600" id="weight4" max="10" min="1" oninput="updateChart()" type="range" value="6"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700" for="weight5">Poor User Experience (UX)</label>
+                            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600" id="weight5" max="10" min="1" oninput="updateChart()" type="range" value="5"/>
+                        </div>
+                    </div>
+                    <div class="mt-6 bg-amber-50 border-l-4 border-amber-500 text-amber-800 p-4 rounded-r-lg">
+                        <p class="font-semibold">Ideal Lead Profile Summary:</p>
+                        <p class="text-sm mt-1" id="profileSummary">Based on the current weights, the ideal lead frequently attends events, shows clear growth signals, and is using outdated technology.</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="leadScoreChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 scroll-mt-20" id="management">
+            <div class="text-center mb-10">
+                <span class="text-amber-600 font-semibold uppercase tracking-wider">Stage 3</span>
+                <h3 class="text-2xl md:text-3xl font-bold mt-2 text-gray-800">Lead Management: The Automated "Agent"</h3>
+                <p class="mt-3 max-w-2xl mx-auto text-gray-500">An "agent" is a systematic process for managing leads, ensuring no opportunity falls through the cracks. This visual pipeline shows the journey from a qualified lead to a closed deal. Hover over each step to see the key actions and tools involved in creating an efficient and scalable sales process.</p>
+            </div>
+            <div class="w-full overflow-x-auto pb-6">
+                <div class="flex items-center justify-between min-w-[800px] md:min-w-0 space-x-2 md:space-x-0 md:grid md:grid-cols-5 md:gap-4 text-center">
+                    
+                    <div class="flex-1 process-step">
+                        <div class="p-4 bg-white rounded-lg shadow-md h-full flex flex-col justify-center">
+                            <div class="text-3xl">📥</div>
+                            <h5 class="font-semibold mt-2 text-sm">New Lead</h5>
+                        </div>
+                        <div class="tooltip w-48 bg-gray-800 text-white text-xs rounded py-2 px-3">
+                            <strong>Action:</strong> Lead enters the system from one of the generation sources. Data is automatically populated in the CRM.
+                            <br/><strong>Tools:</strong> CRM (e.g., HubSpot, Pipedrive), Zapier, Lead Scrapers.
+                        </div>
+                    </div>
+
+                    <div class="text-gray-300 font-bold text-2xl hidden md:block">→</div>
+
+                    <div class="flex-1 process-step">
+                        <div class="p-4 bg-white rounded-lg shadow-md h-full flex flex-col justify-center">
+                            <div class="text-3xl">📞</div>
+                            <h5 class="font-semibold mt-2 text-sm">Initial Contact</h5>
+                        </div>
+                        <div class="tooltip w-48 bg-gray-800 text-white text-xs rounded py-2 px-3">
+                            <strong>Action:</strong> Personalized outreach via email or LinkedIn. Goal is to schedule a brief discovery call.
+                            <br/><strong>Tools:</strong> Email Automation (e.g., Mailshake), LinkedIn Sales Navigator.
+                        </div>
+                    </div>
+
+                    <div class="text-gray-300 font-bold text-2xl hidden md:block">→</div>
+
+                    <div class="flex-1 process-step">
+                        <div class="p-4 bg-white rounded-lg shadow-md h-full flex flex-col justify-center">
+                             <div class="text-3xl">🔎</div>
+                            <h5 class="font-semibold mt-2 text-sm">Needs Analysis</h5>
+                        </div>
+                        <div class="tooltip w-48 bg-gray-800 text-white text-xs rounded py-2 px-3">
+                            <strong>Action:</strong> Discovery call to understand pain points, budget, timeline, and decision-makers (BANT).
+                            <br/><strong>Tools:</strong> Video Conferencing (Zoom), Note-taking apps, CRM.
+                        </div>
+                    </div>
+
+                    <div class="text-gray-300 font-bold text-2xl hidden md:block">→</div>
+
+                    <div class="flex-1 process-step">
+                        <div class="p-4 bg-white rounded-lg shadow-md h-full flex flex-col justify-center">
+                            <div class="text-3xl">📝</div>
+                            <h5 class="font-semibold mt-2 text-sm">Proposal Sent</h5>
+                        </div>
+                        <div class="tooltip w-48 bg-gray-800 text-white text-xs rounded py-2 px-3">
+                            <strong>Action:</strong> Create and send a detailed proposal outlining scope, value, and pricing.
+                            <br/><strong>Tools:</strong> Proposal Software (e.g., PandaDoc), CRM for tracking.
+                        </div>
+                    </div>
+                    
+                    <div class="text-gray-300 font-bold text-2xl hidden md:block">→</div>
+
+                    <div class="flex-1 process-step">
+                        <div class="p-4 bg-white rounded-lg shadow-md h-full flex flex-col justify-center">
+                            <div class="text-3xl">🏆</div>
+                            <h5 class="font-semibold mt-2 text-sm">Won / Lost</h5>
+                        </div>
+                        <div class="tooltip w-48 bg-gray-800 text-white text-xs rounded py-2 px-3">
+                            <strong>Action:</strong> Mark the opportunity as won or lost. If won, begin onboarding. If lost, schedule a long-term follow-up.
+                            <br/><strong>Tools:</strong> CRM, Project Management (Asana, Trello).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        let chart;
+        const labels = [
+            'Event Frequency', 
+            'Outdated Tech', 
+            'Growth Signals', 
+            'Marketing Team', 
+            'Poor UX'
+        ];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('leadScoreChart').getContext('2d');
+            const initialData = [
+                document.getElementById('weight1').value,
+                document.getElementById('weight2').value,
+                document.getElementById('weight3').value,
+                document.getElementById('weight4').value,
+                document.getElementById('weight5').value
+            ];
+
+            chart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels.map(label => label.split(' ').join('\n')),
+                    datasets: [{
+                        label: 'Ideal Lead Profile',
+                        data: initialData,
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                        borderColor: 'rgba(217, 119, 6, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(217, 119, 6, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(217, 119, 6, 1)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 11
+                                },
+                                color: '#3f3c3a'
+                            },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                stepSize: 2,
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                             labels: {
+                                color: '#3f3c3a'
+                            }
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
+                }
+            });
+            updateProfileSummary();
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    const navButton = document.querySelector(`.nav-button[data-section="${id}"]`);
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                        navButton.classList.add('active');
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        function updateChart() {
+            const newData = [
+                document.getElementById('weight1').value,
+                document.getElementById('weight2').value,
+                document.getElementById('weight3').value,
+                document.getElementById('weight4').value,
+                document.getElementById('weight5').value
+            ];
+            chart.data.datasets[0].data = newData;
+            chart.update();
+            updateProfileSummary();
+        }
+
+        function updateProfileSummary() {
+            const weights = [
+                { label: 'frequently attends events', value: parseInt(document.getElementById('weight1').value) },
+                { label: 'is using outdated technology', value: parseInt(document.getElementById('weight2').value) },
+                { label: 'shows clear growth signals', value: parseInt(document.getElementById('weight3').value) },
+                { label: 'has a dedicated marketing team', value: parseInt(document.getElementById('weight4').value) },
+                { label: 'has a website with poor UX', value: parseInt(document.getElementById('weight5').value) }
+            ];
+            
+            weights.sort((a, b) => b.value - a.value);
+            
+            const topThree = weights.slice(0, 3).map(w => w.label);
+            const summaryText = `Based on the current weights, the ideal lead ${topThree[0]}, ${topThree[1]}, and ${topThree[2]}.`;
+            
+            document.getElementById('profileSummary').textContent = summaryText;
+        }
+
+        function toggleDetails(cardElement) {
+            const details = cardElement.querySelector('.card-details');
+            details.classList.toggle('open');
+        }
+
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+
+</body></html>
