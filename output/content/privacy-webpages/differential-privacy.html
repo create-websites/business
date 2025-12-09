@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Differential Privacy: The Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals & Data Blue/Orange. Background: #f8fafc (Slate 50), Text: #1e293b (Slate 800), Accent: #3b82f6 (Blue 500) & #f97316 (Orange 500) -->
+    <!-- Application Structure Plan: The app is structured as a vertical narrative dashboard. 1. Hero: Conceptual definition. 2. Randomized Response Simulator: A gamified intro to 'plausible deniability' (the core intuition). 3. The Privacy Budget (Epsilon) Playground: The technical core, allowing users to visualize the trade-off between data utility and privacy using the Laplace mechanism on a mock dataset. 4. Algorithms & Comparisons: A structured comparison section. 5. Implementation Guide: Practical steps. This flow moves from Intuition -> Math/Visualization -> Context -> Application. -->
+    <!-- Visualization & Content Choices: 
+        1. Randomized Response: Interactive coin flip game using DOM manipulation and a Chart.js Bar chart to show how noisy individual answers converge to aggregate truth.
+        2. Epsilon Playground: Chart.js Line/Bar chart comparing 'True Data' vs 'Noisy Data'. Users control Epsilon via a slider. Demonstrates the Laplace Mechanism.
+        3. Comparison Matrix: HTML Grid for K-Anonymity vs DP.
+        4. No SVG used. Icons are CSS shapes or Unicode. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        .coin {
+            width: 60px;
+            height: 60px;
+            background-color: #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: #78350f;
+            border: 4px solid #d97706;
+            margin: 0 auto;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+        .coin:active {
+            transform: scale(0.95);
+        }
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-900 tracking-tight">DP<span class="text-blue-600">Lab</span></span>
+                </div>
+                <div class="hidden sm:flex space-x-8 items-center">
+                    <button class="text-slate-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition" onclick="scrollToSection('intuition')">Intuition</button>
+                    <button class="text-slate-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition" onclick="scrollToSection('epsilon')">The Privacy Budget</button>
+                    <button class="text-slate-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition" onclick="scrollToSection('algorithms')">Algorithms</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold text-slate-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+                Differential Privacy
+            </h1>
+            <p class="mt-5 max-w-xl mx-auto text-xl text-slate-500">
+                A rigorous mathematical definition of privacy. It guarantees that the output of an analysis is essentially the same whether <em>your</em> data is included or not.
+            </p>
+            <div class="mt-8 flex justify-center gap-4">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition" onclick="scrollToSection('intuition')">Start Experimenting</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+        <!-- SECTION 1: INTUITION (Randomized Response) -->
+        <section class="space-y-8" id="intuition">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-slate-900">1. Intuition: Plausible Deniability</h2>
+                <p class="mt-4 text-lg text-slate-600">
+                    Before complex algorithms, we start with <strong>Randomized Response</strong>. Imagine we ask a sensitive question: "Have you ever cheated on a test?"
+                    To protect your privacy, we introduce a coin flip mechanism. This gives you <em>plausible deniability</em>—even if you say "Yes", we don't know if it's the truth or the coin.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 grid md:grid-cols-2">
+                <!-- Interactive Game Side -->
+                <div class="p-8 bg-slate-50 border-r border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">The Protocol</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-slate-600 text-sm mb-6">
+                        <li>Flip a coin (hidden from the analyst).</li>
+                        <li>If <strong>Heads</strong>: Answer <strong>Truthfully</strong>.</li>
+                        <li>If <strong>Tails</strong>: Flip again. Answer <strong>Yes</strong> if Heads, <strong>No</strong> if Tails (Random Answer).</li>
+                    </ol>
+                    
+                    <div class="flex flex-col items-center space-y-6 py-6 bg-blue-50 rounded-xl border border-blue-100">
+                        <div class="text-center">
+                            <p class="text-sm font-semibold text-blue-800 mb-2">Step 1: The Coin Flip</p>
+                            <div class="coin" id="coinBtn" onclick="flipCoin()">?</div>
+                            <p class="mt-2 text-sm text-slate-500 h-5" id="coinResult">Click to flip</p>
+                        </div>
+
+                        <div class="hidden w-full px-6 transition-opacity" id="actionArea">
+                            <p class="text-center text-sm font-semibold text-slate-700 mb-3" id="instructionText">Instruction...</p>
+                            <div class="flex gap-2 justify-center">
+                                <button class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded shadow transition" onclick="submitResponse('Yes')">Say "YES"</button>
+                                <button class="flex-1 bg-rose-500 hover:bg-rose-600 text-white py-2 rounded shadow transition" onclick="submitResponse('No')">Say "NO"</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-between text-xs text-slate-400">
+                        <span>Simulated Users: <span class="font-mono text-slate-700" id="userCount">0</span></span>
+                        <button class="text-blue-600 hover:underline" onclick="autoSimulate()">Auto-Simulate 100 Users</button>
+                    </div>
+                </div>
+
+                <!-- Visualization Side -->
+                <div class="p-8 flex flex-col justify-center">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Analyst View</h3>
+                    <p class="text-sm text-slate-500 mb-4">We recover the true statistics by removing the expected noise mathmatically.</p>
+                    <div class="chart-container">
+                        <canvas id="rrChart"></canvas>
+                    </div>
+                    <div class="mt-4 bg-yellow-50 p-3 rounded border border-yellow-200 text-xs text-yellow-800">
+                        <strong>Insight:</strong> Even though ~25% of people are forced to lie, with enough data, we can estimate the true percentage accurately, while no single user can be proven to have answered truthfully.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE PRIVACY BUDGET (Epsilon) -->
+        <section class="space-y-8" id="epsilon">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-slate-900">2. The Privacy Budget (ε)</h2>
+                <p class="mt-4 text-lg text-slate-600">
+                    Modern DP adds noise from a specific distribution (like Laplace). The amount of noise is controlled by <strong>Epsilon (ε)</strong>.
+                </p>
+                <div class="flex justify-center gap-8 mt-4 text-sm">
+                    <div class="text-center">
+                        <div class="font-bold text-emerald-600 text-lg">High ε (e.g., 10)</div>
+                        <div class="text-slate-500">Low Privacy, High Accuracy</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-bold text-rose-600 text-lg">Low ε (e.g., 0.1)</div>
+                        <div class="text-slate-500">High Privacy, Low Accuracy</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 md:p-8">
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Controls -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2" for="epsilonSlider">
+                                Adjust Epsilon (ε): <span class="font-mono text-blue-600 text-lg" id="epsilonValue">1.0</span>
+                            </label>
+                            <input class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" id="epsilonSlider" max="5.0" min="0.1" step="0.1" type="range" value="1.0"/>
+                            <div class="flex justify-between text-xs text-slate-400 mt-1">
+                                <span>More Privacy (Noise)</span>
+                                <span>More Utility (Accuracy)</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <h4 class="font-semibold text-slate-800 mb-2 text-sm">Scenario: Employee Salaries</h4>
+                            <p class="text-xs text-slate-600 mb-2">We are querying the average salary of a department. To protect any single high-earner, we add <strong>Laplace Noise</strong>.</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">True Average:</span>
+                                    <span class="font-mono font-bold text-slate-800">$75,000</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">DP Reported:</span>
+                                    <span class="font-mono font-bold text-blue-600" id="dpValue">$75,000</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Error:</span>
+                                    <span class="font-mono text-rose-500" id="errorValue">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <h4 class="font-semibold text-blue-900 mb-1 text-sm">The Laplace Mechanism</h4>
+                            <p class="text-xs text-blue-800">
+                                Noise is drawn from a Laplace distribution: 
+                                <br/><code class="font-mono bg-blue-100 px-1 rounded">Lap(sensitivity / ε)</code>.
+                                <br/>Lower ε = Wider curve = More possible noise.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="lg:col-span-2 flex flex-col items-center">
+                        <div class="w-full flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-slate-700">Noise Distribution Visualization</h3>
+                            <button class="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-slate-600 transition" onclick="regenerateNoise()">Regenerate Sample</button>
+                        </div>
+                        <div class="chart-container" style="height: 350px;">
+                            <canvas id="laplaceChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center text-slate-400 mt-2">The blue area is the probability distribution of the noise. The orange bar is a single random sample added to the data.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ALGORITHMS & COMPARISON -->
+        <section class="grid md:grid-cols-2 gap-8" id="algorithms">
+            <!-- Algorithms -->
+            <div class="space-y-6">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h2 class="text-2xl font-bold text-slate-900">Key Algorithms</h2>
+                    <p class="text-slate-500">Different data types require different noise mechanisms.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 step-card">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">1. Laplace Mechanism</h3>
+                    <div class="flex gap-2 mb-2">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">Numerical Data</span>
+                    </div>
+                    <p class="text-sm text-slate-600">Used for counting queries (e.g., "How many people have diabetes?"). Adds noise from the Laplace distribution centered at 0. Simple and effective for numerical answers.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 step-card">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">2. Exponential Mechanism</h3>
+                    <div class="flex gap-2 mb-2">
+                        <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">Categorical / Best Item</span>
+                    </div>
+                    <p class="text-sm text-slate-600">Used when picking the "best" item (e.g., "What is the most common disease?"). Instead of adding noise to a count, it makes the probability of selecting an item proportional to its score.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 step-card">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">3. Local DP (Randomized Response)</h3>
+                    <div class="flex gap-2 mb-2">
+                        <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full font-medium">Client-Side</span>
+                    </div>
+                    <p class="text-sm text-slate-600">Noise is added <em>on the user's device</em> before data is ever sent to the server. Used by Apple and Google for keyboard metrics.</p>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="space-y-6">
+                 <div class="border-l-4 border-orange-500 pl-4">
+                    <h2 class="text-2xl font-bold text-slate-900">DP vs. Others</h2>
+                    <p class="text-slate-500">Why Differential Privacy is the gold standard.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <table class="min-w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4">Method</th>
+                                <th class="px-6 py-4">Technique</th>
+                                <th class="px-6 py-4">Vulnerability</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-6 py-4 font-bold text-slate-800">Anonymization</td>
+                                <td class="px-6 py-4 text-slate-600">Removing names/IDs</td>
+                                <td class="px-6 py-4 text-rose-600">Linkage Attacks (Netflix Prize)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-6 py-4 font-bold text-slate-800">K-Anonymity</td>
+                                <td class="px-6 py-4 text-slate-600">Grouping k-users together</td>
+                                <td class="px-6 py-4 text-rose-600">Homogeneity Attacks</td>
+                            </tr>
+                            <tr class="bg-blue-50/50 hover:bg-blue-50 transition">
+                                <td class="px-6 py-4 font-bold text-blue-800">Differential Privacy</td>
+                                <td class="px-6 py-4 text-slate-600">Adding Mathematical Noise</td>
+                                <td class="px-6 py-4 text-emerald-600 font-medium">Provably Secure</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="p-6 bg-slate-50 text-xs text-slate-500">
+                        * Comparison shows that removing identifiers is insufficient. DP provides a mathematical guarantee regardless of auxiliary information an attacker might possess.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Steps -->
+        <section class="bg-slate-800 rounded-3xl p-8 sm:p-12 text-white">
+            <h2 class="text-3xl font-bold mb-8 text-center">How to Apply (The Recipe)</h2>
+            <div class="grid sm:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+                    <h4 class="font-bold text-lg mb-2">Identify Sensitivity</h4>
+                    <p class="text-slate-300 text-sm">Determine the "Sensitivity" of your query. How much can one person change the result? (e.g., for a count query, sensitivity is 1).</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+                    <h4 class="font-bold text-lg mb-2">Set Budget (ε)</h4>
+                    <p class="text-slate-300 text-sm">Choose your Epsilon based on privacy needs. Common values are between 0.1 (strict) and 10 (loose).</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+                    <h4 class="font-bold text-lg mb-2">Add Noise</h4>
+                    <p class="text-slate-300 text-sm">Sample from the mechanism (Laplace/Gaussian) and add it to the final aggregate result. Never release raw data.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- LOGIC -->
+    <script>
+        // --- Navigation ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Section 1: Randomized Response Game ---
+        let coinState = null; // 'heads' or 'tails'
+        let subFlip = null;   // Secondary flip for tails case
+        let rrData = {
+            honestYes: 30, // True hidden stat (e.g., 30% cheaters)
+            totalCount: 0,
+            reportedYes: 0,
+            reportedNo: 0
+        };
+
+        const coinBtn = document.getElementById('coinBtn');
+        const coinResult = document.getElementById('coinResult');
+        const actionArea = document.getElementById('actionArea');
+        const instructionText = document.getElementById('instructionText');
+        const userCountSpan = document.getElementById('userCount');
+
+        // Init RR Chart
+        const ctxRR = document.getElementById('rrChart').getContext('2d');
+        const rrChart = new Chart(ctxRR, {
+            type: 'bar',
+            data: {
+                labels: ['Reported YES', 'Reported NO', 'Est. True YES'],
+                datasets: [{
+                    label: 'Responses',
+                    data: [0, 0, 0],
+                    backgroundColor: ['#3b82f6', '#cbd5e1', '#10b981'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        function flipCoin() {
+            // Visual Animation
+            coinBtn.style.transform = "rotateY(360deg)";
+            setTimeout(() => coinBtn.style.transform = "rotateY(0deg)", 200);
+
+            // Logic
+            const isHeads = Math.random() > 0.5;
+            coinState = isHeads ? 'Heads' : 'Tails';
+            
+            coinResult.textContent = `Result: ${coinState}`;
+            actionArea.classList.remove('hidden');
+            actionArea.classList.add('opacity-100');
+
+            if (isHeads) {
+                instructionText.innerHTML = `Coin is <span class="font-bold text-blue-600">HEADS</span>. <br>Please answer <span class="font-bold underline">TRUTHFULLY</span>.`;
+            } else {
+                // Determine the "random" answer internally
+                subFlip = Math.random() > 0.5 ? 'Yes' : 'No';
+                instructionText.innerHTML = `Coin is <span class="font-bold text-blue-600">TAILS</span>. <br>Ignore truth. Answer <span class="font-bold underline">"${subFlip.toUpperCase()}"</span> (randomly chosen).`;
+            }
+        }
+
+        function submitResponse(response) {
+            // In a real scenario, the user clicks based on instruction. 
+            // Here we verify if they clicked correctly based on the simulation rules, 
+            // or we just simulate the math regardless of what they clicked to keep it simple.
+            // Let's simulation the process of a "True" user having a 30% chance of being Yes-property.
+            
+            rrData.totalCount++;
+            
+            // Logic check: Did the user click what they were supposed to?
+            // For the sake of the 'simulation', we will treat the button click as the recorded response.
+            // However, to make the chart look right, we need to simulate the underlying truth distribution interacting with the coin.
+            
+            // Let's assume the user playing IS the data point.
+            // But to make the chart converge, let's inject "Auto" logic for the click, or just record the click.
+            // Let's record the click directly.
+            
+            if(response === 'Yes') rrData.reportedYes++;
+            else rrData.reportedNo++;
+
+            updateRRChart();
+            resetCoin();
+        }
+
+        function resetCoin() {
+            coinResult.textContent = "Click to flip";
+            actionArea.classList.add('hidden');
+            userCountSpan.innerText = rrData.totalCount;
+        }
+
+        function updateRRChart() {
+            // Estimate Truth: p = (observed_p - 0.25) / 0.5
+            // Because 50% answer truth, 50% answer random (25% yes, 25% no)
+            // Reported_Yes = 0.5 * True_Yes + 0.25
+            // True_Yes = 2 * (Reported_Yes_Rate - 0.25)
+            
+            const total = rrData.totalCount;
+            if (total === 0) return;
+
+            const repYesRate = rrData.reportedYes / total;
+            let estTrueYes = 2 * (repYesRate - 0.25);
+            if (estTrueYes < 0) estTrueYes = 0; // clamp
+            if (estTrueYes > 1) estTrueYes = 1;
+
+            rrChart.data.datasets[0].data = [
+                rrData.reportedYes, 
+                rrData.reportedNo, 
+                Math.round(estTrueYes * total)
+            ];
+            rrChart.update();
+        }
+
+        function autoSimulate() {
+            // Simulate 100 users with a 30% True Yes rate
+            const trueRate = 0.3;
+            for(let i=0; i<100; i++) {
+                const isTrueYes = Math.random() < trueRate;
+                const coin = Math.random() > 0.5 ? 'Heads' : 'Tails';
+                
+                let response;
+                if(coin === 'Heads') {
+                    response = isTrueYes ? 'Yes' : 'No';
+                } else {
+                    response = Math.random() > 0.5 ? 'Yes' : 'No';
+                }
+                
+                if(response === 'Yes') rrData.reportedYes++;
+                else rrData.reportedNo++;
+                rrData.totalCount++;
+            }
+            updateRRChart();
+            userCountSpan.innerText = rrData.totalCount;
+        }
+
+
+        // --- Section 2: Laplace Mechanism / Epsilon ---
+        const epsilonSlider = document.getElementById('epsilonSlider');
+        const epsilonValue = document.getElementById('epsilonValue');
+        const dpValueDisplay = document.getElementById('dpValue');
+        const errorValueDisplay = document.getElementById('errorValue');
+        
+        const trueMean = 75000;
+        const sensitivity = 1000; // Simplified sensitivity
+        
+        // Init Laplace Chart
+        const ctxLap = document.getElementById('laplaceChart').getContext('2d');
+        
+        // Generate Laplace Distribution Curve Data
+        function getLaplacePDF(x, mu, b) {
+            return (1 / (2 * b)) * Math.exp(-Math.abs(x - mu) / b);
+        }
+
+        function generateChartData(epsilon) {
+            const b = sensitivity / epsilon; // Scale parameter
+            const labels = [];
+            const data = [];
+            
+            // Range +/- 3000 around 0
+            for(let i = -4000; i <= 4000; i += 100) {
+                labels.push(i);
+                data.push(getLaplacePDF(i, 0, b));
+            }
+            return { labels, data, b };
+        }
+
+        let laplaceChart = new Chart(ctxLap, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Noise Probability',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        fill: true,
+                        pointRadius: 0,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Sampled Noise',
+                        data: [], // Single bar
+                        type: 'bar',
+                        backgroundColor: '#f97316',
+                        barThickness: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { display: false },
+                    x: { 
+                        ticks: { callback: function(val, index) { 
+                            // Reduce tick density
+                            return index % 10 === 0 ? this.getLabelForValue(val) : '';
+                        }},
+                        grid: { display: false } 
+                    }
+                },
+                plugins: {
+                    tooltip: { enabled: false }
+                }
+            }
+        });
+
+        function updateLaplaceVis() {
+            const eps = parseFloat(epsilonSlider.value);
+            epsilonValue.innerText = eps.toFixed(1);
+            
+            const { labels, data, b } = generateChartData(eps);
+            
+            // Update Curve
+            laplaceChart.data.labels = labels;
+            laplaceChart.data.datasets[0].data = data;
+            
+            // Generate single noise sample
+            // Laplace noise generation: X = mu - b * sgn(U) * ln(1 - 2|U|) where U is uniform(-0.5, 0.5)
+            const u = Math.random() - 0.5;
+            const noise = -b * Math.sign(u) * Math.log(1 - 2 * Math.abs(u));
+            
+            // Update Text stats
+            const noisyVal = trueMean + noise;
+            const error = Math.abs(noise / trueMean) * 100;
+            
+            dpValueDisplay.innerText = "$" + Math.round(noisyVal).toLocaleString();
+            errorValueDisplay.innerText = error.toFixed(2) + "%";
+            
+            // Update Bar position on chart (mapped to x-axis bins)
+            // We create a sparse array for the bar dataset
+            const barData = new Array(labels.length).fill(null);
+            
+            // Find closest index
+            let closestIdx = 0;
+            let minDiff = Infinity;
+            labels.forEach((l, i) => {
+                const diff = Math.abs(l - noise);
+                if(diff < minDiff) {
+                    minDiff = diff;
+                    closestIdx = i;
+                }
+            });
+            
+            // Height of bar arbitrary for visualization
+            barData[closestIdx] = Math.max(...data) * 0.8; 
+            
+            laplaceChart.data.datasets[1].data = barData;
+            laplaceChart.update();
+        }
+
+        function regenerateNoise() {
+            updateLaplaceVis();
+        }
+
+        epsilonSlider.addEventListener('input', updateLaplaceVis);
+
+        // Init
+        updateLaplaceVis();
+
+    </script>
+
+</body></html>

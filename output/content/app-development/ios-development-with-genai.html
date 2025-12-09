@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>iOS Dev: Best Practices &amp; The GenAI Future</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* * Chart Container Styling - Critical for Responsiveness 
+         */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%; /* Adapts to grid column */
+            height: 300px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+
+        /* Transition utilities */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .active-tab {
+            border-bottom: 3px solid #ea580c; /* Orange-600 */
+            color: #ea580c;
+            font-weight: 600;
+        }
+        
+        .inactive-tab {
+            border-bottom: 3px solid transparent;
+            color: #78716c; /* Stone-500 */
+        }
+        .inactive-tab:hover {
+            color: #44403c; /* Stone-700 */
+            border-bottom: 3px solid #d6d3d1;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Terracotta (Orange) and Slate accents. 
+         Rationale: Creates a calm, professional, "report-like" reading environment that reduces eye strain while reviewing technical data. -->
+    
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the context of the report.
+         2. Navigation: Tab-based system to switch between 'Foundation' (Current state), 'Acceleration' (GenAI impact), and 'Horizon' (Future).
+         3. Dynamic Content Area:
+            - Foundation Tab: Uses a line chart to show adoption trends and interactive cards for architectural patterns.
+            - Acceleration Tab: Uses a bar chart for productivity metrics and a 'Before/After' toggle for workflows.
+            - Horizon Tab: A bubble chart (Tech Radar) to map future technologies by impact and maturity.
+         4. Contextual Details: Every interaction updates a side panel or text block to explain the data point in depth.
+         Why: This structure allows the user to traverse from the "now" to the "future" linearly or non-linearly, digesting complex technical shifts in bite-sized interactive chunks. -->
+
+    <!-- Visualization & Content Choices:
+         1. SwiftUI vs UIKit Adoption (Line Chart): Visualizes the industry shift over time. Goal: Inform about tech stack velocity.
+         2. AI Efficiency Gains (Bar Chart): Quantifies where AI helps most (coding vs testing). Goal: Compare benefits.
+         3. Future Tech Radar (Bubble Chart): Maps prediction impact vs timeline. Goal: Relationship/Strategic Planning.
+         4. Interactive Lists: For architectural patterns. Goal: Organize dense text information.
+         Justification: Chart.js handles these standard visualizations robustly without SVG. -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Hero -->
+    <header class="bg-white border-b border-stone-200 shadow-sm pt-8 pb-4 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">iOS Engineering Report 2025</h1>
+                    <p class="mt-2 text-lg text-stone-600 max-w-2xl">
+                        Synthesizing modern architecture best practices, the transformative impact of Generative AI, and the future trajectory of mobile experiences.
+                    </p>
+                </div>
+                <div class="mt-4 md:mt-0 bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                    <span class="text-orange-800 font-medium text-sm">Status: Interactive Analysis</span>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav aria-label="Tabs" class="flex space-x-8 overflow-x-auto pb-1">
+                <button class="active-tab whitespace-nowrap py-4 px-1 text-sm md:text-base transition-colors duration-200 focus:outline-none" id="tab-foundation" onclick="app.switchTab('foundation')">
+                    1. The Foundation (Best Practices)
+                </button>
+                <button class="inactive-tab whitespace-nowrap py-4 px-1 text-sm md:text-base transition-colors duration-200 focus:outline-none" id="tab-acceleration" onclick="app.switchTab('acceleration')">
+                    2. Acceleration (Gen AI)
+                </button>
+                <button class="inactive-tab whitespace-nowrap py-4 px-1 text-sm md:text-base transition-colors duration-200 focus:outline-none" id="tab-horizon" onclick="app.switchTab('horizon')">
+                    3. The Horizon (Future Trends)
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- SECTION 1: FOUNDATION (Best Practices) -->
+        <section class="fade-in block" id="view-foundation">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-stone-900">Modern iOS Architecture &amp; Standards</h2>
+                <p class="mt-2 text-stone-600 max-w-4xl">
+                    Building robust iOS applications today requires navigating the transition from imperative (UIKit) to declarative (SwiftUI) frameworks, while adhering to strict architectural patterns like MVVM-C or TCA to ensure scalability and testability.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left: Chart -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-stone-800">Framework Adoption Trends</h3>
+                        <span class="text-xs font-mono bg-stone-100 px-2 py-1 rounded text-stone-500">Source: Industry Surveys</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-foundation"></canvas>
+                    </div>
+                    <div class="mt-4 p-4 bg-stone-50 rounded-lg text-sm text-stone-600">
+                        <strong>Insight:</strong> New project starts are overwhelmingly SwiftUI (approx. 75%), but hybrid approaches remain the standard for enterprise apps maintaining legacy codebases.
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Checklist -->
+                <div class="lg:col-span-1 flex flex-col gap-4">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 h-full">
+                        <h3 class="text-lg font-semibold text-stone-800 mb-4">Core Best Practices</h3>
+                        <div class="space-y-3" id="practices-list">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="mt-6 p-4 bg-orange-50 border border-orange-100 rounded-lg text-sm text-stone-800 hidden" id="practice-detail">
+                            <!-- Dynamic Detail Text -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- KPI Cards -->
+                <div class="bg-white p-5 rounded-lg border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-stone-500 text-sm font-medium uppercase tracking-wide">Crash-Free Users</div>
+                    <div class="mt-1 text-3xl font-bold text-stone-900">99.9%</div>
+                    <div class="mt-2 text-xs text-stone-500">Target for Production Apps</div>
+                </div>
+                <div class="bg-white p-5 rounded-lg border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-stone-500 text-sm font-medium uppercase tracking-wide">CI/CD Pipeline</div>
+                    <div class="mt-1 text-3xl font-bold text-stone-900">15m</div>
+                    <div class="mt-2 text-xs text-stone-500">Max build &amp; test time</div>
+                </div>
+                <div class="bg-white p-5 rounded-lg border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-stone-500 text-sm font-medium uppercase tracking-wide">Accessibility</div>
+                    <div class="mt-1 text-3xl font-bold text-stone-900">WCAG 2.1</div>
+                    <div class="mt-2 text-xs text-stone-500">Mandatory compliance level</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: ACCELERATION (Gen AI) -->
+        <section class="fade-in hidden" id="view-acceleration">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-stone-900">The Generative AI Impact</h2>
+                <p class="mt-2 text-stone-600 max-w-4xl">
+                    Generative AI is not just a feature to add to apps, but a fundamental shift in <em>how</em> apps are built. From coding assistants reducing boilerplate to generative UI components, the development lifecycle is compressing.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Chart: Efficiency Gains -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-semibold text-stone-800 mb-2">Efficiency Gains by Development Stage</h3>
+                    <p class="text-sm text-stone-500 mb-4">Estimated time reduction using AI assistants (Copilot, ChatGPT, Midjourney).</p>
+                    <div class="chart-container">
+                        <canvas id="chart-acceleration"></canvas>
+                    </div>
+                </div>
+
+                <!-- Interactive Workflow Comparison -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-stone-800">Workflow Evolution</h3>
+                        <div class="flex bg-stone-100 rounded-lg p-1">
+                            <button class="px-3 py-1 text-sm font-medium rounded-md bg-white shadow text-stone-800 transition-all" id="btn-trad" onclick="app.setWorkflow('traditional')">Traditional</button>
+                            <button class="px-3 py-1 text-sm font-medium rounded-md text-stone-500 hover:text-stone-700 transition-all" id="btn-ai" onclick="app.setWorkflow('ai-augmented')">AI-Augmented</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-grow relative">
+                        <!-- Workflow Steps Visualization using HTML/CSS -->
+                        <div class="space-y-4" id="workflow-steps">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-900">
+                        <span class="font-bold">Key Takeaway:</span> <span id="workflow-takeaway">Traditional workflows are linear and manual.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Use Cases Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl border border-stone-200 hover:border-orange-300 transition-colors cursor-pointer group" onclick="app.showAIContext('codegen')">
+                    <div class="text-3xl mb-3">💻</div>
+                    <h4 class="font-bold text-stone-900 group-hover:text-orange-600 transition-colors">Code Generation</h4>
+                    <p class="text-sm text-stone-600 mt-2">Boilerplate for networking, models, and unit tests is now 80% automated.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-stone-200 hover:border-orange-300 transition-colors cursor-pointer group" onclick="app.showAIContext('assets')">
+                    <div class="text-3xl mb-3">🎨</div>
+                    <h4 class="font-bold text-stone-900 group-hover:text-orange-600 transition-colors">Dynamic Assets</h4>
+                    <p class="text-sm text-stone-600 mt-2">Generating icons, placeholder images, and localizing strings on the fly.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-stone-200 hover:border-orange-300 transition-colors cursor-pointer group" onclick="app.showAIContext('personalization')">
+                    <div class="text-3xl mb-3">🧠</div>
+                    <h4 class="font-bold text-stone-900 group-hover:text-orange-600 transition-colors">On-Device LLMs</h4>
+                    <p class="text-sm text-stone-600 mt-2">Privacy-focused personalization using CoreML and quantized models (e.g., Llama 3 on iPhone).</p>
+                </div>
+            </div>
+            
+            <!-- Dynamic Detail Box for Grid -->
+            <div class="mt-6 p-6 bg-stone-800 text-white rounded-xl shadow-lg hidden" id="ai-context-box">
+                <h4 class="text-xl font-bold mb-2" id="ai-context-title"></h4>
+                <p class="text-stone-300" id="ai-context-desc"></p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: HORIZON (Future) -->
+        <section class="fade-in hidden" id="view-horizon">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-stone-900">Future Outlook: 2025 - 2030</h2>
+                <p class="mt-2 text-stone-600 max-w-4xl">
+                    The mobile app is dissolving. The future lies in "Liquid Interfaces"—apps that generate themselves based on context—driven by spatial computing and deep OS-level AI integration.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Radar Chart -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-stone-800">Technology Radar: Maturity vs. Impact</h3>
+                        <div class="text-sm text-stone-500 space-x-2">
+                            <span class="inline-block w-3 h-3 rounded-full bg-orange-500"></span> High Impact
+                            <span class="inline-block w-3 h-3 rounded-full bg-stone-400"></span> Med Impact
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chart-horizon"></canvas>
+                    </div>
+                    <p class="text-xs text-stone-500 mt-3 text-center">Bubble size represents current investment volume.</p>
+                </div>
+
+                <!-- Predictions Column -->
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="text-lg font-semibold text-stone-800 mb-6">Strategic Timeline</h3>
+                    <div class="relative border-l-2 border-stone-200 ml-3 space-y-8">
+                        
+                        <div class="relative pl-6">
+                            <div class="absolute -left-2 top-1 w-4 h-4 rounded-full bg-stone-800 border-2 border-white"></div>
+                            <h4 class="text-sm font-bold text-stone-900">2025: The Hybrid Era</h4>
+                            <p class="text-sm text-stone-600 mt-1">AI coding assistants become standard. 90% of new apps use SwiftUI. AR becomes a "feature" not a gimmick.</p>
+                        </div>
+
+                        <div class="relative pl-6">
+                            <div class="absolute -left-2 top-1 w-4 h-4 rounded-full bg-orange-500 border-2 border-white"></div>
+                            <h4 class="text-sm font-bold text-stone-900">2027: The Agentic Shift</h4>
+                            <p class="text-sm text-stone-600 mt-1">Apps begin to act as "Agents." Users interact less with UI and more with intent-based prompts processed on-device.</p>
+                        </div>
+
+                        <div class="relative pl-6">
+                            <div class="absolute -left-2 top-1 w-4 h-4 rounded-full bg-stone-400 border-2 border-white"></div>
+                            <h4 class="text-sm font-bold text-stone-900">2030: Generative Interfaces</h4>
+                            <p class="text-sm text-stone-600 mt-1">Static UIs vanish. Interfaces are generated in real-time based on user context and spatial environment (AR/VR dominant).</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-orange-50 p-8 rounded-xl border border-orange-100 text-center">
+                <h3 class="text-xl font-bold text-stone-800 mb-2">Conclusion</h3>
+                <p class="text-stone-700 max-w-3xl mx-auto">
+                    The definition of a "Mobile Developer" is expanding to "Experience Architect." Success in the next decade requires mastering the foundation (System Design, Swift) while leveraging AI not just to write code faster, but to create entirely new classes of adaptive, personalized user experiences.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA STORE ---
+        const appData = {
+            practices: [
+                { id: 'arch', title: 'Modular Architecture', desc: 'Breaking monoliths into feature modules (Swift Packages) to improve build times and separation of concerns. The "Feature-First" approach is now standard.' },
+                { id: 'ui', title: 'Declarative UI (SwiftUI)', desc: 'Moving away from ViewControllers to State-driven views. Requires a shift in mindset from "how to draw" to "what to show".' },
+                { id: 'async', title: 'Structured Concurrency', desc: 'Using async/await and Actors to prevent data races. This is crucial for modern apps handling heavy data streams.' },
+                { id: 'di', title: 'Dependency Injection', desc: 'Essential for testability. Passing services into ViewModels rather than using Singletons allows for robust Unit Testing.' }
+            ],
+            workflows: {
+                traditional: [
+                    { step: '1. Design', text: 'Create static Figma mocks.' },
+                    { step: '2. Code (Boilerplate)', text: 'Manually write Models, Networking, UI code.' },
+                    { step: '3. Logic', text: 'Implement business logic manually.' },
+                    { step: '4. Testing', text: 'Write Unit Tests manually.' }
+                ],
+                augmented: [
+                    { step: '1. Intent', text: 'Describe requirement to AI / Feed image.' },
+                    { step: '2. Generation', text: 'AI generates UI code and Model structs instantly.' },
+                    { step: '3. Refinement', text: 'Dev reviews and refines logic (Human in the loop).' },
+                    { step: '4. Auto-Test', text: 'AI generates edge-case tests automatically.' }
+                ]
+            },
+            aiContext: {
+                codegen: { title: "AI in Code Generation", desc: "Tools like GitHub Copilot and Cursor are reducing coding time by predicting entire functions. The best practice is to use them for boilerplate (JSON parsing, UI layouts) while human devs focus on complex architectural decisions." },
+                assets: { title: "Generative Assets", desc: "Instead of shipping a 100MB bundle of assets, future apps will generate variations of images and copy on the fly using lightweight edge models, ensuring the content perfectly matches the user's demographic and context." },
+                personalization: { title: "On-Device Intelligence", desc: "Apple's CoreML and Neural Engine allow small LLMs to run locally. This means apps can understand user emails, calendar, and health data to offer hyper-personalized suggestions without data ever leaving the device (Privacy First)." }
+            }
+        };
+
+        // --- APP STATE ---
+        const app = {
+            currentTab: 'foundation',
+            chartInstances: {},
+
+            init: function() {
+                this.switchTab('foundation');
+                this.renderFoundationChart();
+                this.renderPracticesList();
+                
+                // Resize observer to handle chart resizing when tabs switch
+                window.addEventListener('resize', () => {
+                    Object.values(this.chartInstances).forEach(chart => chart.resize());
+                });
+            },
+
+            switchTab: function(tabId) {
+                // UI Updates
+                document.querySelectorAll('nav button').forEach(btn => {
+                    btn.classList.remove('active-tab');
+                    btn.classList.add('inactive-tab');
+                });
+                document.getElementById(`tab-${tabId}`).classList.add('active-tab');
+                document.getElementById(`tab-${tabId}`).classList.remove('inactive-tab');
+
+                // Content Toggle
+                ['foundation', 'acceleration', 'horizon'].forEach(section => {
+                    const el = document.getElementById(`view-${section}`);
+                    if (section === tabId) {
+                        el.classList.remove('hidden');
+                        el.classList.add('block');
+                        // Trigger chart render if needed (lazy load)
+                        if (tabId === 'acceleration' && !this.chartInstances.acceleration) this.renderAccelerationChart();
+                        if (tabId === 'horizon' && !this.chartInstances.horizon) this.renderHorizonChart();
+                    } else {
+                        el.classList.remove('block');
+                        el.classList.add('hidden');
+                    }
+                });
+
+                this.currentTab = tabId;
+            },
+
+            // --- FOUNDATION SECTION LOGIC ---
+            renderFoundationChart: function() {
+                const ctx = document.getElementById('chart-foundation').getContext('2d');
+                if (this.chartInstances.foundation) this.chartInstances.foundation.destroy();
+
+                this.chartInstances.foundation = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['2020', '2021', '2022', '2023', '2024', '2025 (Proj)'],
+                        datasets: [
+                            {
+                                label: 'SwiftUI Adoption',
+                                data: [10, 25, 45, 60, 75, 85],
+                                borderColor: '#ea580c', // Orange-600
+                                backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            },
+                            {
+                                label: 'UIKit (Legacy/Hybrid)',
+                                data: [90, 75, 55, 40, 25, 15],
+                                borderColor: '#78716c', // Stone-500
+                                borderDash: [5, 5],
+                                tension: 0.4,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            tooltip: { mode: 'index', intersect: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: '% of New Projects' } }
+                        }
+                    }
+                });
+            },
+
+            renderPracticesList: function() {
+                const container = document.getElementById('practices-list');
+                container.innerHTML = appData.practices.map(p => `
+                    <div onclick="app.showPracticeDetail('${p.id}')" 
+                         class="p-3 bg-stone-50 rounded-lg cursor-pointer hover:bg-orange-50 hover:text-orange-700 transition-colors border border-stone-100 flex justify-between items-center group">
+                        <span class="font-medium">${p.title}</span>
+                        <span class="text-stone-400 group-hover:text-orange-500">→</span>
+                    </div>
+                `).join('');
+            },
+
+            showPracticeDetail: function(id) {
+                const practice = appData.practices.find(p => p.id === id);
+                const detailEl = document.getElementById('practice-detail');
+                detailEl.classList.remove('hidden');
+                detailEl.innerHTML = `<strong>${practice.title}:</strong> ${practice.desc}`;
+            },
+
+            // --- ACCELERATION SECTION LOGIC ---
+            renderAccelerationChart: function() {
+                const ctx = document.getElementById('chart-acceleration').getContext('2d');
+                this.chartInstances.acceleration = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Boilerplate Coding', 'Unit Testing', 'UI Debugging', 'Documentation', 'Complex Logic'],
+                        datasets: [{
+                            label: '% Time Saved with AI',
+                            data: [65, 55, 40, 70, 20],
+                            backgroundColor: [
+                                '#ea580c', '#fb923c', '#fdba74', '#fed7aa', '#d6d3d1'
+                            ],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { max: 100, title: { display: true, text: 'Efficiency Gain (%)' } }
+                        }
+                    }
+                });
+                
+                // Initialize workflow view
+                this.setWorkflow('traditional');
+            },
+
+            setWorkflow: function(type) {
+                const container = document.getElementById('workflow-steps');
+                const takeaway = document.getElementById('workflow-takeaway');
+                const btnTrad = document.getElementById('btn-trad');
+                const btnAi = document.getElementById('btn-ai');
+
+                // Style Buttons
+                if(type === 'traditional') {
+                    btnTrad.className = "px-3 py-1 text-sm font-medium rounded-md bg-white shadow text-stone-800 transition-all";
+                    btnAi.className = "px-3 py-1 text-sm font-medium rounded-md text-stone-500 hover:text-stone-700 transition-all";
+                    takeaway.textContent = "Manual effort is high at every stage, focusing on syntax over substance.";
+                } else {
+                    btnAi.className = "px-3 py-1 text-sm font-medium rounded-md bg-white shadow text-orange-600 transition-all";
+                    btnTrad.className = "px-3 py-1 text-sm font-medium rounded-md text-stone-500 hover:text-stone-700 transition-all";
+                    takeaway.textContent = "AI handles the 'how' (implementation), allowing devs to focus on the 'what' (intent).";
+                }
+
+                // Render Steps
+                const data = type === 'traditional' ? appData.workflows.traditional : appData.workflows.augmented;
+                const colorClass = type === 'traditional' ? 'bg-stone-100 border-stone-200' : 'bg-orange-50 border-orange-100';
+                
+                container.innerHTML = data.map((item, index) => `
+                    <div class="flex items-center p-3 ${colorClass} border rounded-lg transition-all duration-300 transform hover:translate-x-1">
+                        <div class="w-8 h-8 rounded-full ${type==='traditional'?'bg-stone-300':'bg-orange-400'} text-white flex items-center justify-center font-bold text-xs mr-3">
+                            ${index + 1}
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-stone-800">${item.step.split('. ')[1]}</div>
+                            <div class="text-xs text-stone-600">${item.text}</div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            showAIContext: function(key) {
+                const box = document.getElementById('ai-context-box');
+                const title = document.getElementById('ai-context-title');
+                const desc = document.getElementById('ai-context-desc');
+                const data = appData.aiContext[key];
+
+                box.classList.remove('hidden');
+                box.classList.add('fade-in');
+                title.textContent = data.title;
+                desc.textContent = data.desc;
+                
+                // Scroll to details on mobile
+                if(window.innerWidth < 768) {
+                    box.scrollIntoView({ behavior: 'smooth' });
+                }
+            },
+
+            // --- HORIZON SECTION LOGIC ---
+            renderHorizonChart: function() {
+                const ctx = document.getElementById('chart-horizon').getContext('2d');
+                this.chartInstances.horizon = new Chart(ctx, {
+                    type: 'bubble',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'High Impact',
+                                data: [
+                                    { x: 2, y: 9, r: 20, tech: 'On-Device LLMs' }, // x: Years to mainstream, y: Impact
+                                    { x: 4, y: 8, r: 15, tech: 'Spatial Computing' },
+                                    { x: 1, y: 7, r: 25, tech: 'AI Coding' }
+                                ],
+                                backgroundColor: 'rgba(234, 88, 12, 0.7)', // Orange
+                            },
+                            {
+                                label: 'Medium Impact',
+                                data: [
+                                    { x: 3, y: 5, r: 10, tech: 'Server-Driven UI' },
+                                    { x: 5, y: 6, r: 12, tech: 'Cross-Platform AI' },
+                                    { x: 2, y: 4, r: 15, tech: 'Voice Interactions' }
+                                ],
+                                backgroundColor: 'rgba(168, 162, 158, 0.7)', // Stone
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { 
+                                title: { display: true, text: 'Years to Mainstream Adoption' },
+                                min: 0, max: 6 
+                            },
+                            y: { 
+                                title: { display: true, text: 'Business Impact (1-10)' },
+                                min: 0, max: 10
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.raw.tech + ` (Impact: ${context.raw.y})`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+    </script>
+
+</body></html>

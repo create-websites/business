@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="A comprehensive interactive guide for maintaining muscle mass after age 50. Learn about sarcopenia, calculate protein needs, and discover the optimal exercise and nutrition protocols for healthy aging." name="description"/>
+    <meta content="muscle after 50, sarcopenia, hypertrophy for seniors, protein calculator, resistance training over 50, healthy aging, zone 2 cardio, anabolic resistance, nutrition for seniors" name="keywords"/>
+    <title>Muscle Health After 50: The Strategic Blueprint</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome (for icons, avoiding SVG usage) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Merriweather:ital,wght@0,300;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        /* Custom Font Application */
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', serif; }
+
+        /* Chart Container Strict Styling per Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px; /* Constrains width on large screens */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px; /* Adjusted for mobile */
+            }
+        }
+
+        /* Custom Scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #ea580c; /* Orange-600 */
+            color: #ea580c;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            color: #78716c; /* Stone-500 */
+        }
+    </style>
+
+    <!-- 
+    Placeholder Comments Required:
+    
+    <!-- Chosen Palette: Warm Neutrals (Stone/Sand) with Energetic Accents (Burnt Orange for Action, Sage Green for Health). This creates a calm, medical-but-approachable aesthetic suitable for the demographic. -->
+    
+    <!-- Application Structure Plan: 
+         1. The Reality (Data Visualization): Interactive line chart showing muscle decline (Sarcopenia) to establish urgency.
+         2. The Calculator (Personalization): Inputs for weight/activity to generate specific Protein and Water goals, making the data actionable.
+         3. The Protocol (Education): A tabbed interface breaking down Exercise, Nutrition, and Recovery with specific visualizations for each (Bar charts for protein timing, Doughnut for training split).
+         4. The Summary (Synthesis): Key takeaways list.
+         This structure follows a "Why -> How -> What" flow, moving from abstract data to concrete personal application. 
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Sarcopenia Curve (Line Chart): Visualizes the "use it or lose it" concept over decades. Goal: Inform & Motivate.
+         2. Training Split (Doughnut Chart): Shows the ratio of Cardio vs. Strength. Goal: Organize.
+         3. Protein Timing (Bar Chart): Compares "Backloaded" vs. "Optimized" intake to explain Anabolic Resistance. Goal: Compare.
+         4. Interactive Calculator: JS logic to compute grams of protein based on 1.6g/kg guideline. Goal: Inform/Personalize.
+         NO SVG graphics used. NO Mermaid JS used.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    </head><body class="bg-stone-50 text-stone-800 antialiased selection:bg-orange-100 selection:text-orange-900">--&gt;
+
+
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-heart-pulse text-orange-600 text-2xl mr-3"></i>
+                    <span class="font-serif text-xl font-bold text-stone-900 tracking-tight">SilverStrength<span class="text-orange-600">.</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                    <button class="hover:text-orange-600 transition" onclick="scrollToSection('sarcopenia')">The Science</button>
+                    <button class="hover:text-orange-600 transition" onclick="scrollToSection('calculator')">Your Calculator</button>
+                    <button class="hover:text-orange-600 transition" onclick="scrollToSection('protocol')">The Protocol</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-stone-100 py-12 sm:py-20">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl sm:text-5xl font-bold text-stone-900 mb-6 leading-tight">
+                Defying the <span class="text-orange-600">1% Decline</span>.
+            </h1>
+            <p class="text-lg sm:text-xl text-stone-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                After age 50, the body enters a state of natural muscle loss called Sarcopenia. 
+                The rules of engagement change. What worked in your 30s is no longer sufficient. 
+                Explore the data below to build your maintenance blueprint.
+            </p>
+            <div class="flex justify-center gap-4">
+                <button class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition transform hover:-translate-y-0.5" onclick="scrollToSection('calculator')">
+                    Build My Plan
+                </button>
+                <button class="bg-white hover:bg-stone-50 text-stone-700 border border-stone-300 px-6 py-3 rounded-lg font-semibold transition" onclick="scrollToSection('sarcopenia')">
+                    See the Data
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
+
+        <!-- SECTION 1: THE REALITY (Sarcopenia) -->
+        <section class="scroll-mt-24" id="sarcopenia">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <div class="mb-4">
+                        <span class="text-xs font-bold uppercase tracking-widest text-orange-600">The Problem</span>
+                        <h2 class="text-3xl font-bold mt-2 mb-4">The Sarcopenia Curve</h2>
+                    </div>
+                    <p class="text-stone-600 mb-6 leading-relaxed">
+                        Research indicates that without intervention, adults lose approximately <strong>3-8% of muscle mass per decade</strong> after age 30, accelerating significantly after 50. This chart contrasts the trajectory of a sedentary lifestyle versus one with active resistance training.
+                    </p>
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-arrow-trend-down text-red-500 mt-1 mr-3"></i>
+                            <span class="text-sm text-stone-600"><strong>Sedentary:</strong> Rapid loss of Type II (fast-twitch) muscle fibers, leading to frailty.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-shield-halved text-emerald-600 mt-1 mr-3"></i>
+                            <span class="text-sm text-stone-600"><strong>Resistance Trained:</strong> Maintains functional mass, bone density, and metabolic rate.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Chart Container -->
+                <div class="order-1 md:order-2 bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                    <div class="chart-container">
+                        <canvas id="muscleDeclineChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-stone-400 mt-2">Source: Synthesized Longitudinal Aging Studies</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE CALCULATOR (Interaction) -->
+        <section class="scroll-mt-24 bg-stone-900 rounded-3xl p-8 sm:p-12 text-stone-50 relative overflow-hidden" id="calculator">
+            <!-- Background Decoration -->
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-stone-800 rounded-full opacity-50 blur-3xl"></div>
+
+            <div class="relative z-10 grid lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-1">
+                    <span class="text-xs font-bold uppercase tracking-widest text-orange-400">Personalize</span>
+                    <h2 class="text-3xl font-bold mt-2 mb-4 text-white">Your Daily Targets</h2>
+                    <p class="text-stone-400 mb-6 text-sm">
+                        As we age, we develop "Anabolic Resistance." We need <strong>more protein</strong> to trigger the same muscle-building response as a younger person. Use this tool to find your baseline.
+                    </p>
+                    
+                    <!-- Input Form -->
+                    <div class="space-y-4 bg-stone-800 p-6 rounded-xl border border-stone-700">
+                        <div>
+                            <label class="block text-xs font-semibold text-stone-400 uppercase mb-2">Weight (lbs)</label>
+                            <input class="w-full bg-stone-900 border border-stone-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition" id="userWeight" placeholder="e.g. 180" type="number"/>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-stone-400 uppercase mb-2">Activity Level</label>
+                            <select class="w-full bg-stone-900 border border-stone-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition" id="userActivity">
+                                <option value="1.2">Sedentary (Office job, little exercise)</option>
+                                <option value="1.5">Moderate (Exercise 2-3x/week)</option>
+                                <option value="1.8">Active (Exercise 4+x/week)</option>
+                            </select>
+                        </div>
+                        <button class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-lg transition shadow-lg" id="calcBtn">
+                            Calculate Needs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Display -->
+                <div class="lg:col-span-2 grid sm:grid-cols-2 gap-6 items-center">
+                    <!-- Protein Card -->
+                    <div class="bg-stone-800 p-6 rounded-2xl border-l-4 border-orange-500 h-full flex flex-col justify-center">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Protein Target</h3>
+                            <i class="fa-solid fa-drumstick-bite text-stone-500"></i>
+                        </div>
+                        <div class="text-4xl font-bold text-white mb-2">
+                            <span id="proteinResult">--</span> <span class="text-lg text-stone-400 font-normal">g/day</span>
+                        </div>
+                        <p class="text-sm text-stone-400">
+                            Aim for <strong>1.6g per kg</strong> of bodyweight. This combats anabolic resistance.
+                        </p>
+                    </div>
+
+                    <!-- Water Card -->
+                    <div class="bg-stone-800 p-6 rounded-2xl border-l-4 border-blue-500 h-full flex flex-col justify-center">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Hydration</h3>
+                            <i class="fa-solid fa-glass-water text-stone-500"></i>
+                        </div>
+                        <div class="text-4xl font-bold text-white mb-2">
+                            <span id="waterResult">--</span> <span class="text-lg text-stone-400 font-normal">oz/day</span>
+                        </div>
+                        <p class="text-sm text-stone-400">
+                            Muscle is 75% water. Dehydration reduces strength output by up to 10%.
+                        </p>
+                    </div>
+
+                    <!-- Insight Box -->
+                    <div class="sm:col-span-2 bg-stone-800/50 p-6 rounded-xl border border-dashed border-stone-600 mt-4">
+                        <h4 class="text-stone-300 font-bold mb-2"><i class="fa-solid fa-lightbulb text-yellow-500 mr-2"></i>Key Insight</h4>
+                        <p class="text-sm text-stone-400 italic" id="calcInsight">
+                            Enter your details to see a personalized recommendation based on current geriatric nutrition guidelines.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE PROTOCOL (Tabbed Interaction) -->
+        <section class="scroll-mt-24" id="protocol">
+            <div class="text-center mb-10">
+                <span class="text-xs font-bold uppercase tracking-widest text-orange-600">The Blueprint</span>
+                <h2 class="text-3xl font-bold mt-2">The Three Pillars of Maintenance</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto mt-3">
+                    Click the tabs below to explore the specific requirements for Exercise, Nutrition, and Lifestyle.
+                </p>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="flex justify-center border-b border-stone-200 mb-8 overflow-x-auto">
+                <button class="tab-btn tab-active px-6 py-3 text-sm md:text-base whitespace-nowrap" data-tab="exercise">
+                    1. Resistance &amp; Cardio
+                </button>
+                <button class="tab-btn tab-inactive px-6 py-3 text-sm md:text-base whitespace-nowrap" data-tab="nutrition">
+                    2. Strategic Nutrition
+                </button>
+                <button class="tab-btn tab-inactive px-6 py-3 text-sm md:text-base whitespace-nowrap" data-tab="recovery">
+                    3. Recovery &amp; Hormones
+                </button>
+            </div>
+
+            <!-- Tab Content: Exercise -->
+            <div class="tab-content grid md:grid-cols-2 gap-10 animate-fade-in" id="exercise-content">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Movement is Medicine</h3>
+                    <p class="text-stone-600 mb-6">
+                        The goal after 50 is not max-effort powerlifting, but <strong>controlled hypertrophy</strong> and cardiovascular health. You need a mix of Zone 2 cardio (for mitochondria) and Heavy Resistance (for bone/muscle).
+                    </p>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-100 hover:border-orange-200 transition cursor-pointer group">
+                            <h4 class="font-bold text-stone-800 group-hover:text-orange-600">🏋️ Resistance Training</h4>
+                            <p class="text-sm text-stone-500 mt-1">2-3 days/week. Focus on compound movements (Squats, Hinges, Presses). Aim for 8-12 reps near failure.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-100 hover:border-orange-200 transition cursor-pointer group">
+                            <h4 class="font-bold text-stone-800 group-hover:text-orange-600">🏃 Cardio (Zone 2)</h4>
+                            <p class="text-sm text-stone-500 mt-1">150 mins/week. Low intensity (can hold a conversation). Improves insulin sensitivity.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-100 hover:border-orange-200 transition cursor-pointer group">
+                            <h4 class="font-bold text-stone-800 group-hover:text-orange-600">🧘 Impact &amp; Mobility</h4>
+                            <p class="text-sm text-stone-500 mt-1">Jump rope or brisk walking for bone density. Stretching for joint range of motion.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center justify-center bg-white p-6 rounded-2xl border border-stone-100">
+                    <h4 class="text-sm font-bold text-stone-400 uppercase mb-4 text-center">Recommended Weekly Volume</h4>
+                    <div class="chart-container">
+                        <canvas id="exerciseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Nutrition -->
+            <div class="tab-content hidden grid md:grid-cols-2 gap-10 animate-fade-in" id="nutrition-content">
+                <div class="order-2 md:order-1 flex flex-col items-center justify-center bg-white p-6 rounded-2xl border border-stone-100">
+                    <h4 class="text-sm font-bold text-stone-400 uppercase mb-4 text-center">Protein Synthesis Potential</h4>
+                    <div class="chart-container">
+                        <canvas id="proteinChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-stone-400 mt-3 max-w-sm">
+                        Older muscles require a higher dose (threshold) of Leucine to trigger growth. The "Spread" approach is superior.
+                    </p>
+                </div>
+                <div class="order-1 md:order-2">
+                    <h3 class="text-2xl font-bold mb-4">The Leucine Threshold</h3>
+                    <p class="text-stone-600 mb-6">
+                        Most people eat little protein at breakfast and a huge amount at dinner. <strong>This fails after 50.</strong> Your body can only use ~30-40g per sitting for muscle synthesis. You must hit the "Leucine Threshold" (approx 3g) multiple times a day.
+                    </p>
+                    <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg mb-6">
+                        <p class="text-sm text-orange-800 font-semibold">
+                            <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+                            Rule: Eat 30g+ of protein at EVERY meal, especially breakfast.
+                        </p>
+                    </div>
+                    <ul class="space-y-3 text-stone-600">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Creatine Monohydrate:</strong> 5g daily. Supports cognitive function and strength.</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Vitamin D3 + K2:</strong> Essential for calcium absorption into bone, not arteries.</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Omega-3s:</strong> Reduces systemic inflammation that inhibits muscle growth.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab Content: Recovery -->
+            <div class="tab-content hidden grid md:grid-cols-2 gap-10 animate-fade-in" id="recovery-content">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Recovery is When You Grow</h3>
+                    <p class="text-stone-600 mb-6">
+                        You do not build muscle in the gym; you break it down. You build muscle while you sleep. As we age, recovery takes longer. Sleep architecture fragments, making sleep hygiene critical.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-stone-200 text-center">
+                            <i class="fa-solid fa-bed text-indigo-500 text-2xl mb-2"></i>
+                            <h4 class="font-bold">7-8 Hours</h4>
+                            <p class="text-xs text-stone-500">Non-negotiable sleep duration</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-stone-200 text-center">
+                            <i class="fa-solid fa-droplet text-blue-500 text-2xl mb-2"></i>
+                            <h4 class="font-bold">Hormones</h4>
+                            <p class="text-xs text-stone-500">Monitor Testosterone &amp; Estrogen</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-stone-800 text-white p-8 rounded-2xl flex flex-col justify-center">
+                    <h4 class="font-serif text-xl mb-4 text-orange-400">The "Other" Factors Checklist</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <input checked="" class="mt-1 mr-3 accent-orange-500" disabled="" type="checkbox"/>
+                            <div>
+                                <span class="block font-bold">Manage Stress (Cortisol)</span>
+                                <span class="text-sm text-stone-400">High cortisol eats muscle. Practice meditation or breathwork.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <input checked="" class="mt-1 mr-3 accent-orange-500" disabled="" type="checkbox"/>
+                            <div>
+                                <span class="block font-bold">Alcohol Reduction</span>
+                                <span class="text-sm text-stone-400">Alcohol inhibits muscle protein synthesis by up to 30%.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <input checked="" class="mt-1 mr-3 accent-orange-500" disabled="" type="checkbox"/>
+                            <div>
+                                <span class="block font-bold">Annual Bloodwork</span>
+                                <span class="text-sm text-stone-400">Check CRP (inflammation) and Free Testosterone levels.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. STATE MANAGEMENT & DATA ---
+        const appState = {
+            weight: 0,
+            activity: 1.2,
+            currentTab: 'exercise'
+        };
+
+        const chartColors = {
+            sedentary: 'rgba(239, 68, 68, 0.7)', // Red-500
+            active: 'rgba(16, 185, 129, 0.7)',    // Emerald-500
+            primary: 'rgba(234, 88, 12, 0.8)',    // Orange-600
+            secondary: 'rgba(120, 113, 108, 0.5)' // Stone-500
+        };
+
+        // --- 2. CHART INITIALIZATION ---
+        
+        // Chart 1: Sarcopenia Curve
+        const initMuscleChart = () => {
+            const ctx = document.getElementById('muscleDeclineChart').getContext('2d');
+            
+            // Generate data points
+            const ages = [30, 40, 50, 60, 70, 80, 90];
+            const activeData = [100, 98, 95, 90, 85, 78, 70];
+            const sedentaryData = [100, 95, 85, 75, 60, 45, 30];
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ages,
+                    datasets: [
+                        {
+                            label: 'Active (Resistance Training)',
+                            data: activeData,
+                            borderColor: '#10b981', // Emerald
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Sedentary Lifestyle',
+                            data: sedentaryData,
+                            borderColor: '#ef4444', // Red
+                            backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                            fill: true,
+                            tension: 0.4,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '% Muscle Mass';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: '% Muscle Mass Baseline' },
+                            min: 0,
+                            max: 110
+                        },
+                        x: {
+                            title: { display: true, text: 'Age' }
+                        }
+                    }
+                }
+            });
+        };
+
+        // Chart 2: Exercise Mix (Doughnut)
+        const initExerciseChart = () => {
+            const ctx = document.getElementById('exerciseChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Zone 2 Cardio', 'Strength Training', 'Mobility/Warmup'],
+                    datasets: [{
+                        data: [150, 90, 30], // Minutes per week
+                        backgroundColor: [
+                            '#f97316', // Orange (Cardio)
+                            '#44403c', // Dark Stone (Strength)
+                            '#a8a29e'  // Light Stone (Mobility)
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw} mins/week`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        // Chart 3: Protein Timing (Bar)
+        const initProteinChart = () => {
+            const ctx = document.getElementById('proteinChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Breakfast', 'Lunch', 'Dinner'],
+                    datasets: [
+                        {
+                            label: 'Typical Diet',
+                            data: [10, 15, 60],
+                            backgroundColor: '#d6d3d1', // Light Gray
+                        },
+                        {
+                            label: 'Optimal (Over 50)',
+                            data: [30, 30, 30],
+                            backgroundColor: '#f97316', // Orange
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Protein (grams)' },
+                            grid: { display: false }
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    yMin: 30,
+                                    yMax: 30,
+                                    borderColor: 'rgb(255, 99, 132)',
+                                    borderWidth: 2,
+                                    borderDash: [6, 6],
+                                    label: {
+                                        content: 'Leucine Threshold (~30g)',
+                                        enabled: true,
+                                        position: 'end'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        // --- 3. CALCULATOR LOGIC ---
+        
+        const calculateNeeds = () => {
+            const weightInput = document.getElementById('userWeight').value;
+            const activityInput = document.getElementById('userActivity').value;
+            
+            if (!weightInput) return;
+
+            // Convert lbs to kg
+            const weightKg = weightInput * 0.453592;
+            
+            // Protein Calculation: 1.6g per kg is the gold standard for sarcopenia prevention
+            const proteinNeeds = Math.round(weightKg * 1.6);
+            
+            // Water Calculation: Rough estimate weight(lbs) / 2
+            const waterNeeds = Math.round(weightInput * 0.6); // Slightly higher for active seniors
+
+            // Update DOM with animation effect
+            animateValue(document.getElementById('proteinResult'), 0, proteinNeeds, 1000);
+            animateValue(document.getElementById('waterResult'), 0, waterNeeds, 1000);
+
+            // Update Insight
+            const insightText = document.getElementById('calcInsight');
+            if (activityInput > 1.5) {
+                insightText.innerHTML = `Great! You are active. Your protein need is higher (${proteinNeeds}g) to repair muscle damage from exercise. Spread this across 3-4 meals.`;
+            } else {
+                insightText.innerHTML = `Since activity is lower, dietary protein is your main defense against muscle loss. Try to hit ${proteinNeeds}g even on rest days.`;
+            }
+        };
+
+        // Number animation helper
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- 4. NAVIGATION & TABS ---
+
+        const scrollToSection = (id) => {
+            const element = document.getElementById(id);
+            if(element) element.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        const setupTabs = () => {
+            const tabs = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => {
+                        t.classList.remove('tab-active');
+                        t.classList.add('tab-inactive');
+                    });
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('tab-active');
+                    tab.classList.remove('tab-inactive');
+
+                    // Hide all content
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+                    // Show target content
+                    const target = tab.getAttribute('data-tab');
+                    document.getElementById(`${target}-content`).classList.remove('hidden');
+                });
+            });
+        };
+
+        // --- 5. INITIALIZATION ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Charts
+            initMuscleChart();
+            initExerciseChart();
+            initProteinChart();
+            
+            // Initialize Interactions
+            setupTabs();
+            
+            // Calculator Event Listener
+            document.getElementById('calcBtn').addEventListener('click', calculateNeeds);
+        });
+
+    </script>
+
+</body></html>

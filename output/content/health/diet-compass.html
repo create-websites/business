@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Explore an interactive comparison of Keto, Low Carb, Paleo, and Mediterranean diets. Visualize macronutrients, analyze sustainability vs. speed, and find your perfect fit with our recommendation wizard." name="description"/>
+    <meta content="diet analysis, keto, paleo, low carb, mediterranean diet, weight loss routine, health comparison, macronutrients, sustainable diet, interactive nutrition guide" name="keywords"/>
+    <title>Dietary Compass: Analysis of Weight Loss Routines</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAF9; /* Stone-50 */
+            color: #44403C; /* Stone-700 */
+        }
+
+        /* Custom Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+        .chart-wrapper {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom Scrollbar for side panel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+
+        .active-tab {
+            background-color: #EA580C; /* Orange-600 */
+            color: white;
+        }
+        
+        .inactive-tab {
+            background-color: #E7E5E4; /* Stone-200 */
+            color: #44403C;
+        }
+        
+        .inactive-tab:hover {
+            background-color: #D6D3D1; /* Stone-300 */
+        }
+
+        .quiz-option {
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .quiz-option.selected {
+            border-color: #EA580C;
+            background-color: #FFEDD5;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Terracotta/Burnt Orange Accents for a grounded, organic feel suited for health topics. -->
+    <!-- Application Structure Plan: The app uses a dashboard approach. 
+         1. 'The Landscape': High-level data visualization comparing macronutrients and sustainability/speed metrics.
+         2. 'Deep Dive': An interactive tab system allowing users to explore specific diet details without page reloads.
+         3. 'Suitability Wizard': A functional interactive tool that filters data based on user preferences to recommend a starting point.
+         This structure moves from abstract data -> specific details -> personal application. -->
+    <!-- Visualization & Content Choices: 
+         1. Stacked Bar Chart (Chart.js): Visualizes the "Macro Wars" (Fat/Protein/Carb ratios) because relative proportions are the defining characteristic of these diets.
+         2. Bubble Chart (Chart.js): Compares Speed of Weight Loss (Y) vs. Sustainability (X) with Bubble Size representing Strictness. This helps users visualize the trade-off between fast results and ease of life.
+         3. Dynamic HTML Cards: Used for Pros/Cons to allow easy reading of text-heavy qualitative data.
+         4. Interactive Quiz: Uses JS logic to score user inputs against diet attributes. 
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-stone-800 tracking-tight">Dietary Compass 🍎</h1>
+                <p class="text-sm text-stone-500">Interactive Analysis of Weight Loss Protocols</p>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <button class="text-stone-600 hover:text-orange-600 font-medium transition" onclick="scrollToSection('landscape')">Data Landscape</button>
+                <button class="text-stone-600 hover:text-orange-600 font-medium transition" onclick="scrollToSection('deep-dive')">Protocol Details</button>
+                <button class="text-stone-600 hover:text-orange-600 font-medium transition" onclick="scrollToSection('wizard')">Find Your Fit</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-12">
+
+        <!-- Introduction Block -->
+        <section class="bg-orange-50 rounded-xl p-6 border border-orange-100">
+            <h2 class="text-lg font-semibold text-orange-800 mb-2">About This Analysis</h2>
+            <p class="text-stone-700 leading-relaxed">
+                Weight loss is not one-size-fits-all. This interactive report synthesizes current nutritional data to compare four dominant dietary strategies: <strong>Ketogenic (Keto)</strong>, <strong>General Low Carb</strong>, <strong>Paleolithic (Paleo)</strong>, and the <strong>Mediterranean Diet</strong>. Use the visualizations below to understand the physiological demands of each (Macronutrient Ratios) and the behavioral trade-offs (Sustainability vs. Speed).
+            </p>
+        </section>
+
+        <!-- Section 1: The Landscape (Visualizations) -->
+        <section id="landscape">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-800">The Data Landscape</h2>
+                <p class="text-stone-600 mt-2 max-w-3xl">
+                    Before choosing a routine, it is critical to understand the nutritional composition and the expected trajectory of results. The charts below contrast the strict chemical requirements of Keto against the more balanced approach of Mediterranean.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Macro Chart Wrapper -->
+                <div class="chart-wrapper">
+                    <div class="mb-4">
+                        <h3 class="font-semibold text-stone-800">Macronutrient Composition</h3>
+                        <p class="text-xs text-stone-500">Breakdown of Fat, Protein, and Carbohydrates by calories.</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="macroChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-xs text-stone-500 italic bg-stone-50 p-2 rounded">
+                        *Note: Keto requires strict adherence to high fat to induce ketosis, whereas Low Carb offers more flexibility with protein intake.
+                    </div>
+                </div>
+
+                <!-- Matrix Chart Wrapper -->
+                <div class="chart-wrapper">
+                    <div class="mb-4">
+                        <h3 class="font-semibold text-stone-800">Efficiency Matrix</h3>
+                        <p class="text-xs text-stone-500">Speed of Loss vs. Long-term Sustainability (Size = Strictness Level)</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="matrixChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-xs text-stone-500 italic bg-stone-50 p-2 rounded">
+                        *Trend Analysis: Diets that produce faster initial results often score lower on long-term sustainability due to restrictiveness.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Deep Dive (Detail View) -->
+        <section class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden" id="deep-dive">
+            <div class="p-6 border-b border-stone-200 bg-stone-50">
+                <h2 class="text-2xl font-bold text-stone-800">Protocol Deep Dive</h2>
+                <p class="text-stone-600 mt-2">
+                    Click through the tabs below to examine the specific rules, biological mechanisms, and pros/cons of each methodology.
+                </p>
+            </div>
+
+            <div class="flex flex-col md:flex-row min-h-[500px]">
+                <!-- Sidebar Tabs -->
+                <div class="md:w-1/4 bg-stone-100 p-4 space-y-2 border-r border-stone-200">
+                    <button class="w-full text-left px-4 py-3 rounded-lg font-medium transition active-tab shadow-sm" id="tab-keto" onclick="renderDetail('keto')">
+                        🥩 Ketogenic
+                    </button>
+                    <button class="w-full text-left px-4 py-3 rounded-lg font-medium transition inactive-tab" id="tab-lowcarb" onclick="renderDetail('lowcarb')">
+                        🥗 Low Carb
+                    </button>
+                    <button class="w-full text-left px-4 py-3 rounded-lg font-medium transition inactive-tab" id="tab-paleo" onclick="renderDetail('paleo')">
+                        🍖 Paleo
+                    </button>
+                    <button class="w-full text-left px-4 py-3 rounded-lg font-medium transition inactive-tab" id="tab-mediterranean" onclick="renderDetail('mediterranean')">
+                        🫒 Mediterranean
+                    </button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="md:w-3/4 p-6 md:p-8" id="detail-content">
+                    <!-- Dynamic Content Loaded via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Wizard (Recommendation) -->
+        <section class="bg-stone-800 rounded-2xl p-8 text-stone-100 shadow-xl" id="wizard">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-white mb-4">Find Your Strategic Fit</h2>
+                    <p class="text-stone-400">
+                        The "best" diet is the one you can stick to. Answer three simple questions about your lifestyle and preferences to see which protocol aligns with your behavioral profile.
+                    </p>
+                </div>
+
+                <!-- Quiz Container -->
+                <div class="space-y-8" id="quiz-container">
+                    <!-- Question 1 -->
+                    <div class="bg-stone-700 p-6 rounded-xl">
+                        <p class="font-semibold text-lg mb-4">1. What is your primary timeline goal?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="quiz-option p-4 bg-stone-600 rounded-lg hover:bg-stone-500" id="q1-fast" onclick="selectOption(1, 'fast')">
+                                <span class="text-2xl block mb-2">🚀</span>
+                                <strong>Rapid Results</strong>
+                                <p class="text-sm text-stone-300">I need to see the scale move quickly to stay motivated, even if it's hard.</p>
+                            </div>
+                            <div class="quiz-option p-4 bg-stone-600 rounded-lg hover:bg-stone-500" id="q1-steady" onclick="selectOption(1, 'steady')">
+                                <span class="text-2xl block mb-2">🐢</span>
+                                <strong>Steady &amp; Sustainable</strong>
+                                <p class="text-sm text-stone-300">I want a lifestyle change I can keep up with for years.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="bg-stone-700 p-6 rounded-xl">
+                        <p class="font-semibold text-lg mb-4">2. How do you feel about cooking and tracking?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="quiz-option p-4 bg-stone-600 rounded-lg hover:bg-stone-500" id="q2-strict" onclick="selectOption(2, 'strict')">
+                                <span class="text-2xl block mb-2">📏</span>
+                                <strong>Analytical</strong>
+                                <p class="text-sm text-stone-300">I don't mind counting macros/calories and reading strict labels.</p>
+                            </div>
+                            <div class="quiz-option p-4 bg-stone-600 rounded-lg hover:bg-stone-500" id="q2-flexible" onclick="selectOption(2, 'flexible')">
+                                <span class="text-2xl block mb-2">🧘</span>
+                                <strong>Intuitive</strong>
+                                <p class="text-sm text-stone-300">I prefer general guidelines over strict mathematics.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="bg-stone-700 p-6 rounded-xl">
+                        <p class="font-semibold text-lg mb-4">3. Which food group would you miss the most?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="quiz-option p-4 bg-stone-600 rounded-lg hover:bg-stone-500" id="q3-carbs" onclick="selectOption(3, 'carbs')">
+                                <span class="text-2xl block mb-2">🍞</span>
+                                <strong>Bread &amp; Pasta</strong>
+                            </div>
+                            <div class="quiz-option p-4 bg-stone-600 rounded-lg hover:bg-stone-500" id="q3-dairy" onclick="selectOption(3, 'dairy')">
+                                <span class="text-2xl block mb-2">🧀</span>
+                                <strong>Cheese &amp; Dairy</strong>
+                            </div>
+                            <div class="quiz-option p-4 bg-stone-600 rounded-lg hover:bg-stone-500" id="q3-sweets" onclick="selectOption(3, 'sweets')">
+                                <span class="text-2xl block mb-2">🍭</span>
+                                <strong>Sugar &amp; Processed Snacks</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xl rounded-xl shadow-lg transform transition hover:scale-[1.01]" onclick="calculateResult()">
+                        Reveal Recommendation
+                    </button>
+                </div>
+
+                <!-- Result Container (Hidden initially) -->
+                <div class="hidden bg-stone-700 p-8 rounded-xl text-center border-2 border-orange-500" id="quiz-result">
+                    <h3 class="text-2xl font-bold mb-2">Your Recommended Path:</h3>
+                    <div class="text-4xl font-extrabold text-orange-400 mb-4" id="result-title">--</div>
+                    <p class="text-lg text-stone-300 mb-6 max-w-2xl mx-auto" id="result-desc">--</p>
+                    <button class="text-stone-400 hover:text-white underline" onclick="resetQuiz()">Start Over</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // --- Data Layer ---
+        const dietData = {
+            keto: {
+                title: "Ketogenic Diet (Keto)",
+                icon: "🥩",
+                summary: "A very low-carb, high-fat diet that shares many similarities with the Atkins and low-carb diets. It involves drastically reducing carbohydrate intake and replacing it with fat to put your body into a metabolic state called ketosis.",
+                mechanism: "In ketosis, your body becomes incredibly efficient at burning fat for energy. It also turns fat into ketones in the liver, which can supply energy for the brain.",
+                pros: [
+                    "Rapid initial weight loss",
+                    "Reduced appetite and hunger levels",
+                    "Increased insulin sensitivity",
+                    "May reduce seizures in epileptic children"
+                ],
+                cons: [
+                    "The 'Keto Flu' (initial fatigue, brain fog)",
+                    "Strict adherence required (one cheat meal can break ketosis)",
+                    "Potential nutrient deficiency (lack of fruits)",
+                    "Digestive issues (constipation)"
+                ],
+                foods: {
+                    eat: ["Meat", "Fatty Fish", "Eggs", "Butter/Cream", "Cheese", "Nuts/Seeds", "Healthy Oils", "Avocados"],
+                    avoid: ["Sugary foods", "Grains/Starches", "Fruit (except berries)", "Beans/Legumes", "Root Vegetables"]
+                }
+            },
+            lowcarb: {
+                title: "General Low Carb",
+                icon: "🥗",
+                summary: "A diet that limits carbohydrates, such as those found in grains, starchy vegetables, and fruit, and emphasizes foods high in protein and fat. Unlike Keto, it is not strictly defined by ketosis.",
+                mechanism: "Minimizes insulin spikes by reducing sugar/starch intake. By removing high-calorie carbs, calorie intake often drops naturally without strict counting.",
+                pros: [
+                    "Easier to sustain socially than Keto",
+                    "Significant reduction in blood triglycerides",
+                    "Increases 'good' HDL cholesterol",
+                    "Flexible carbohydrate limits (50-100g/day)"
+                ],
+                cons: [
+                    "Potential for low energy initially",
+                    "Risk of over-consuming unhealthy fats if not monitored",
+                    "Limited fruit intake",
+                    "Can be difficult for endurance athletes"
+                ],
+                foods: {
+                    eat: ["Meat", "Fish", "Eggs", "Vegetables", "Fruits (moderate)", "Nuts", "Fats"],
+                    avoid: ["Sugar", "Wheat", "High-fructose corn syrup", "Trans fats", "Highly processed foods"]
+                }
+            },
+            paleo: {
+                title: "Paleolithic (Paleo)",
+                icon: "🍖",
+                summary: "Designed to resemble what human hunter-gatherer ancestors ate thousands of years ago. Although it’s impossible to know exactly what human ancestors ate in different parts of the world, researchers believe their diets consisted of whole foods.",
+                mechanism: "Eliminates processed foods, sugar, and grains, which are primary drivers of modern obesity. Focuses on nutrient density and satiety.",
+                pros: [
+                    "Eliminates processed foods and added sugars",
+                    "High in fiber, potassium, and antioxidants",
+                    "Naturally leads to lower calorie intake",
+                    "No calorie counting required"
+                ],
+                cons: [
+                    "Eliminates entire healthy food groups (grains, legumes, dairy)",
+                    "Can be expensive (organic/grass-fed focus)",
+                    "Difficult for vegetarians",
+                    "Lack of dairy leads to calcium concerns"
+                ],
+                foods: {
+                    eat: ["Meat", "Fish", "Eggs", "Vegetables", "Fruits", "Nuts", "Seeds", "Herbs", "Spices"],
+                    avoid: ["Processed foods", "Sugar", "Soft drinks", "Grains", "Most Dairy", "Legumes", "Artificial Sweeteners"]
+                }
+            },
+            mediterranean: {
+                title: "Mediterranean Diet",
+                icon: "🫒",
+                summary: "Based on the traditional foods that people used to eat in countries like Italy and Greece back in 1960. Researchers noted that these people were exceptionally healthy compared to Americans and had a low risk of many lifestyle diseases.",
+                mechanism: "Focuses on heart-healthy fats (olive oil), fiber, and moderate protein. It is a lifestyle pattern rather than a strict 'diet'.",
+                pros: [
+                    "Most sustainable long-term",
+                    "Extensively studied benefits for heart health",
+                    "No strict food bans",
+                    "Socially easy to maintain"
+                ],
+                cons: [
+                    "Weight loss is slower than low-carb options",
+                    "Requires portion control (calories are not restricted)",
+                    "Olive oil and nuts are calorie-dense",
+                    "Requires cooking knowledge"
+                ],
+                foods: {
+                    eat: ["Vegetables", "Fruits", "Nuts", "Seeds", "Legumes", "Potatoes", "Whole Grains", "Breads", "Herbs", "Spices", "Fish", "Seafood", "Extra Virgin Olive Oil"],
+                    avoid: ["Sugar-sweetened beverages", "Added sugars", "Processed meat", "Refined grains", "Refined oils"]
+                }
+            }
+        };
+
+        // --- Logic: Navigation ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Logic: Charts ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initMacroChart();
+            initMatrixChart();
+            renderDetail('keto'); // Load initial detail view
+        });
+
+        function initMacroChart() {
+            const ctx = document.getElementById('macroChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Keto', 'Low Carb', 'Paleo', 'Mediterranean'],
+                    datasets: [
+                        { label: 'Fat', data: [75, 50, 40, 35], backgroundColor: '#FDBA74' }, // Orange-300
+                        { label: 'Protein', data: [20, 30, 35, 20], backgroundColor: '#FB923C' }, // Orange-400
+                        { label: 'Carbs', data: [5, 20, 25, 45], backgroundColor: '#A8A29E' }  // Stone-400
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, min: 0, max: 100, title: { display: true, text: '% of Daily Calories' } }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { mode: 'index', intersect: false }
+                    }
+                }
+            });
+        }
+
+        function initMatrixChart() {
+            const ctx = document.getElementById('matrixChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Keto',
+                            data: [{ x: 3, y: 9, r: 15 }], // Low sustain, High speed, High strictness
+                            backgroundColor: '#C2410C' // Dark Orange
+                        },
+                        {
+                            label: 'Low Carb',
+                            data: [{ x: 6, y: 7, r: 10 }], // Mid sustain, Mid speed
+                            backgroundColor: '#F97316'
+                        },
+                        {
+                            label: 'Paleo',
+                            data: [{ x: 5, y: 6, r: 12 }],
+                            backgroundColor: '#A8A29E'
+                        },
+                        {
+                            label: 'Mediterranean',
+                            data: [{ x: 9, y: 4, r: 8 }], // High sustain, Low speed
+                            backgroundColor: '#65A30D' // Green
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'Sustainability & Ease (1-10)' },
+                            min: 0, max: 11 
+                        },
+                        y: { 
+                            title: { display: true, text: 'Speed of Weight Loss (1-10)' },
+                            min: 0, max: 11 
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': (Sustain: ' + context.raw.x + ', Speed: ' + context.raw.y + ')';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Logic: Detailed View ---
+        function renderDetail(dietKey) {
+            const data = dietData[dietKey];
+            const container = document.getElementById('detail-content');
+            
+            // Update Tabs UI
+            ['keto', 'lowcarb', 'paleo', 'mediterranean'].forEach(key => {
+                const btn = document.getElementById(`tab-${key}`);
+                if (key === dietKey) {
+                    btn.classList.remove('inactive-tab');
+                    btn.classList.add('active-tab', 'shadow-sm');
+                } else {
+                    btn.classList.add('inactive-tab');
+                    btn.classList.remove('active-tab', 'shadow-sm');
+                }
+            });
+
+            // Build HTML
+            let html = `
+                <div class="animate-fade-in">
+                    <div class="flex items-center mb-6">
+                        <span class="text-5xl mr-4">${data.icon}</span>
+                        <div>
+                            <h3 class="text-3xl font-bold text-stone-800">${data.title}</h3>
+                            <span class="inline-block mt-1 px-3 py-1 bg-stone-100 text-stone-600 text-xs font-semibold uppercase tracking-wide rounded-full border border-stone-200">Analysis Mode</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-lg text-stone-600 mb-6 leading-relaxed border-l-4 border-orange-500 pl-4 bg-orange-50 py-2 rounded-r">
+                        ${data.summary}
+                    </p>
+
+                    <div class="mb-8">
+                        <h4 class="font-bold text-stone-800 mb-2">🧬 The Mechanism</h4>
+                        <p class="text-stone-600">${data.mechanism}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <h4 class="font-bold text-green-700 mb-3 flex items-center">
+                                <span class="mr-2">✅</span> Pros
+                            </h4>
+                            <ul class="space-y-2">
+                                ${data.pros.map(p => `<li class="flex items-start text-sm text-stone-700"><span class="mr-2">•</span>${p}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-red-700 mb-3 flex items-center">
+                                <span class="mr-2">⚠️</span> Cons
+                            </h4>
+                            <ul class="space-y-2">
+                                ${data.cons.map(c => `<li class="flex items-start text-sm text-stone-700"><span class="mr-2">•</span>${c}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-stone-50 p-5 rounded-xl border border-stone-200">
+                        <h4 class="font-bold text-stone-800 mb-4 text-center">Snapshot: What's on the Plate?</h4>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-center">
+                                <span class="block font-semibold text-green-700 mb-2">DO EAT</span>
+                                <p class="text-stone-600">${data.foods.eat.slice(0, 5).join(', ')}</p>
+                            </div>
+                            <div class="text-center border-l border-stone-300">
+                                <span class="block font-semibold text-red-700 mb-2">AVOID</span>
+                                <p class="text-stone-600">${data.foods.avoid.slice(0, 5).join(', ')}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        // --- Logic: Quiz ---
+        let userChoices = { 1: null, 2: null, 3: null };
+
+        function selectOption(qNum, value) {
+            userChoices[qNum] = value;
+            
+            // UI Update
+            const options = document.querySelectorAll(`[id^="q${qNum}-"]`);
+            options.forEach(el => el.classList.remove('selected'));
+            document.getElementById(`q${qNum}-${value}`).classList.add('selected');
+        }
+
+        function calculateResult() {
+            if (!userChoices[1] || !userChoices[2] || !userChoices[3]) {
+                alert("Please answer all questions to get a recommendation.");
+                return;
+            }
+
+            let winner = '';
+            let desc = '';
+
+            // Simple Decision Tree Logic
+            if (userChoices[1] === 'fast') {
+                if (userChoices[2] === 'strict') {
+                    winner = 'keto';
+                    desc = "You prioritize speed and have the discipline for strict tracking. Keto will give you the rapid results you want, provided you can adhere to the carb limits.";
+                } else {
+                    winner = 'lowcarb';
+                    desc = "You want fast results but prefer intuition over math. A general Low Carb approach gives you most of Keto's benefits with more flexibility.";
+                }
+            } else { // Steady
+                if (userChoices[3] === 'carbs' || userChoices[3] === 'sweets') {
+                    winner = 'mediterranean';
+                    desc = "Sustainability is your goal, and cutting out entire food groups (like grains) might make you quit. The Mediterranean diet offers a balanced, healthy path for the long haul.";
+                } else if (userChoices[3] === 'dairy') {
+                    winner = 'paleo';
+                    desc = "Since you'd miss dairy least (which Paleo excludes) and want a sustainable lifestyle focused on whole foods, Paleo is a strong match.";
+                } else {
+                    winner = 'mediterranean'; // Default fallback
+                    desc = "The Mediterranean diet is statistically the most sustainable lifestyle change for long-term health and steady weight management.";
+                }
+            }
+
+            // Show Result
+            document.getElementById('quiz-container').classList.add('hidden');
+            const resDiv = document.getElementById('quiz-result');
+            resDiv.classList.remove('hidden');
+            
+            const data = dietData[winner];
+            document.getElementById('result-title').innerText = data.icon + " " + data.title;
+            document.getElementById('result-desc').innerText = desc;
+            
+            // Animation effect
+            resDiv.classList.add('animate-pulse');
+            setTimeout(() => resDiv.classList.remove('animate-pulse'), 500);
+        }
+
+        function resetQuiz() {
+            userChoices = { 1: null, 2: null, 3: null };
+            document.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+        }
+
+    </script>
+
+</body></html>

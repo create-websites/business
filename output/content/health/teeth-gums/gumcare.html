@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>GingivaGuard: Complete Gum Care Guide</title>
+    
+    <!-- Meta Data -->
+    <meta content="An interactive comprehensive guide to periodontal health. Assess symptoms, understand gum disease progression, build a personalized care routine, and compare cleaning tool efficacy based on clinical data." name="description"/>
+    <meta content="gum health, periodontal disease, gingivitis, periodontitis, oral hygiene, flossing, interdental brushes, dental care, gum recession, bleeding gums, dental routine builder" name="keywords"/>
+    <meta content="GingivaGuard" name="author"/>
+    
+    <!-- Open Graph / Social Media -->
+    <meta content="GingivaGuard: The Interactive Guide to Periodontal Health" property="og:title"/>
+    <meta content="Master your oral hygiene routine with our interactive dashboard. Check symptoms, visualize disease stages, and explore clinical data." property="og:description"/>
+    <meta content="website" property="og:type"/>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Scrollbar for cleaner UI */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+
+        /* Chart Container Styling - MANDATORY PER REQUIREMENTS */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom animation for interactions */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .active-nav {
+            background-color: #e7e5e4; /* stone-200 */
+            border-left: 4px solid #0d9488; /* teal-600 */
+            font-weight: 600;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Teal (Health) and Amber (Warning) accents. Minimalistic and calming. -->
+    <!-- Application Structure Plan: 
+        1. Dashboard/Overview: Quick introduction and a 'Symptom Checker' tool for immediate engagement.
+        2. The Disease Spectrum: Interactive tabs showing the progression from Healthy -> Gingivitis -> Periodontitis. Explains the 'Why'.
+        3. The Routine: A checklist-style interactive section detailing the 'How' (Brushing, Flossing, Rinsing) with time estimates.
+        4. Efficacy Data: Data visualization section comparing tools (Floss vs. Water Flosser vs. Interdental Brushes) to help users choose the right equipment.
+        5. Nutrition & Prevention: Card-based layout for dietary inputs and risk factors. 
+        Why: This structure moves from Problem Identification (Symptoms) -> Understanding (Spectrum) -> Action (Routine) -> Optimization (Data). 
+    -->
+    <!-- Visualization & Content Choices:
+        1. Symptom Checker: Interactive Toggle Buttons -> Goal: Inform/Diagnose -> User selects symptoms, JS logic suggests urgency.
+        2. Disease Timeline: Tabbed Content Pane -> Goal: Change/Education -> Users click stages to see text/visual changes.
+        3. Tool Effectiveness: Bar Chart (Chart.js) -> Goal: Compare -> Shows plaque removal efficacy of different tools based on clinical studies.
+        4. Risk Factor Analysis: Doughnut Chart (Chart.js) -> Goal: Relationships -> Shows contribution of smoking/genetics/hygiene to gum disease.
+        5. Daily Routine Builder: Checkboxes with Progress Bar -> Goal: Organize -> Gamifies the daily hygiene process.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-teal-100">
+
+    <!-- Main Layout Container -->
+    <div class="min-h-screen flex flex-col md:flex-row max-w-7xl mx-auto border-x border-stone-200 shadow-sm bg-white">
+
+        <!-- Navigation Sidebar -->
+        <nav class="w-full md:w-64 bg-stone-100 border-b md:border-b-0 md:border-r border-stone-200 flex-shrink-0 p-6 flex flex-col justify-between z-10 sticky top-0 md:h-screen overflow-y-auto">
+            <div>
+                <div class="mb-8 flex items-center space-x-2">
+                    <span class="text-3xl text-teal-600">⦿</span>
+                    <h1 class="text-2xl font-bold tracking-tight text-stone-700">Gingiva<span class="text-teal-600">Guard</span></h1>
+                </div>
+                
+                <div class="space-y-2">
+                    <button class="nav-item active-nav w-full text-left px-4 py-3 rounded-r-lg hover:bg-stone-200 transition-colors" id="nav-dashboard" onclick="navigate('dashboard')">
+                        Dashboard &amp; Symptoms
+                    </button>
+                    <button class="nav-item w-full text-left px-4 py-3 rounded-r-lg hover:bg-stone-200 transition-colors" id="nav-progression" onclick="navigate('progression')">
+                        Disease Progression
+                    </button>
+                    <button class="nav-item w-full text-left px-4 py-3 rounded-r-lg hover:bg-stone-200 transition-colors" id="nav-routine" onclick="navigate('routine')">
+                        The Care Routine
+                    </button>
+                    <button class="nav-item w-full text-left px-4 py-3 rounded-r-lg hover:bg-stone-200 transition-colors" id="nav-data" onclick="navigate('data')">
+                        Data &amp; Tool Efficacy
+                    </button>
+                    <button class="nav-item w-full text-left px-4 py-3 rounded-r-lg hover:bg-stone-200 transition-colors" id="nav-nutrition" onclick="navigate('nutrition')">
+                        Nutrition &amp; Risks
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-stone-300 text-xs text-stone-500">
+                <p>Source Data: Clinical Periodontology Consensus Reports.</p>
+                <p class="mt-2">Disclaimer: Educational use only. See a dentist for diagnosis.</p>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-white relative">
+            
+            <!-- SECTION 1: DASHBOARD & SYMPTOMS -->
+            <section class="p-6 md:p-10 fade-in" id="dashboard">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light text-stone-800 mb-2">Health Dashboard</h2>
+                    <p class="text-stone-600 max-w-2xl leading-relaxed">
+                        Welcome to your interactive guide for gum health. Periodontal health is a window to your overall well-being. 
+                        Use this dashboard to assess your current symptoms and understand the urgency of care.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Symptom Checker -->
+                    <div class="bg-stone-50 border border-stone-200 rounded-xl p-6 shadow-sm">
+                        <h3 class="text-xl font-semibold mb-4 text-stone-700 flex items-center">
+                            <span class="bg-teal-100 text-teal-700 px-2 py-1 rounded text-sm mr-2">Interactive</span>
+                            Symptom Checker
+                        </h3>
+                        <p class="text-sm text-stone-500 mb-4">Select all that apply to see a risk assessment.</p>
+                        
+                        <div class="space-y-2 mb-6" id="symptom-list">
+                            <!-- Buttons generated by JS -->
+                        </div>
+
+                        <div class="hidden p-4 rounded-lg bg-stone-200 border-l-4 border-stone-500 transition-all" id="diagnosis-box">
+                            <h4 class="font-bold text-lg" id="diagnosis-title">Assessment Pending</h4>
+                            <p class="text-sm mt-1" id="diagnosis-text">Select symptoms above.</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="bg-teal-50 border border-teal-100 rounded-xl p-6 shadow-sm flex flex-col justify-center">
+                        <h3 class="text-xl font-semibold mb-2 text-teal-800">Did you know?</h3>
+                        <div class="text-4xl font-bold text-teal-600 mb-2">47.2%</div>
+                        <p class="text-stone-700 mb-4">of adults aged 30 years and older have some form of periodontal disease.</p>
+                        <div class="w-full bg-teal-200 h-2 rounded-full overflow-hidden">
+                            <div class="bg-teal-600 h-full" style="width: 47.2%"></div>
+                        </div>
+                        <p class="text-xs text-teal-700 mt-2 text-right">Source: CDC / EKE Surveillance</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: DISEASE PROGRESSION -->
+            <section class="p-6 md:p-10 hidden fade-in" id="progression">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light text-stone-800 mb-2">The Spectrum of Gum Disease</h2>
+                    <p class="text-stone-600 max-w-2xl leading-relaxed">
+                        Gum disease isn't binary; it's a progression. Understanding where you stand on this spectrum is critical for effective treatment. 
+                        Click the stages below to explore the physiological changes.
+                    </p>
+                </header>
+
+                <div class="flex flex-col space-y-6">
+                    <!-- Interactive Tabs -->
+                    <div class="flex flex-wrap gap-2 md:gap-4 p-1 bg-stone-100 rounded-lg w-fit">
+                        <button class="px-6 py-2 rounded-md text-sm font-semibold transition-all shadow-sm bg-white text-teal-700" id="stage-btn-0" onclick="setStage(0)">Healthy Gums</button>
+                        <button class="px-6 py-2 rounded-md text-sm font-semibold transition-all text-stone-500 hover:text-stone-700" id="stage-btn-1" onclick="setStage(1)">Gingivitis</button>
+                        <button class="px-6 py-2 rounded-md text-sm font-semibold transition-all text-stone-500 hover:text-stone-700" id="stage-btn-2" onclick="setStage(2)">Periodontitis</button>
+                        <button class="px-6 py-2 rounded-md text-sm font-semibold transition-all text-stone-500 hover:text-stone-700" id="stage-btn-3" onclick="setStage(3)">Advanced</button>
+                    </div>
+
+                    <!-- Dynamic Content Container -->
+                    <div class="border border-stone-200 rounded-xl p-8 bg-white shadow-sm grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-300">
+                        <div class="md:col-span-1 flex flex-col items-center justify-center p-6 bg-stone-50 rounded-lg border border-stone-100 text-center">
+                            <div class="text-6xl mb-4" id="stage-icon">🦷</div>
+                            <h3 class="text-2xl font-bold text-stone-800" id="stage-title">Healthy Gums</h3>
+                            <span class="mt-2 inline-block px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-full" id="stage-reversibility">REVERSIBLE</span>
+                        </div>
+                        <div class="md:col-span-2 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-stone-400 uppercase tracking-wider">Visual Signs</h4>
+                                <p class="text-stone-700" id="stage-signs">Pale pink, firm, stippled texture (like an orange peel). No bleeding during brushing.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-stone-400 uppercase tracking-wider">What's Happening</h4>
+                                <p class="text-stone-700" id="stage-desc">The gum tissue fits tightly around the tooth. The bone level is intact, holding the tooth firmly in place. There are no pockets deeper than 3mm.</p>
+                            </div>
+                            <div class="pt-4 border-t border-stone-100">
+                                <h4 class="text-sm font-bold text-stone-400 uppercase tracking-wider">Required Action</h4>
+                                <p class="text-stone-700 font-medium" id="stage-action">Maintain routine: Brush 2x daily, floss 1x daily, professional cleaning every 6 months.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: THE ROUTINE -->
+            <section class="p-6 md:p-10 hidden fade-in" id="routine">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light text-stone-800 mb-2">The Optimal Routine</h2>
+                    <p class="text-stone-600 max-w-2xl leading-relaxed">
+                        Consistency beats intensity. A perfect routine takes about 5-7 minutes. 
+                        Use this interactive checklist to audit your current habits.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- The Steps List -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <!-- Step 1 -->
+                        <div class="group border border-stone-200 rounded-lg p-5 hover:border-teal-400 transition-colors bg-white">
+                            <label class="flex items-start cursor-pointer">
+                                <input class="routine-check mt-1 w-5 h-5 text-teal-600 rounded border-stone-300 focus:ring-teal-500" data-points="20" type="checkbox"/>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-stone-800">Step 1: Interdental Cleaning (Flossing)</h4>
+                                    <span class="text-xs font-mono text-stone-400">PRIOR TO BRUSHING</span>
+                                    <p class="text-sm text-stone-600 mt-2">Dislodge debris between teeth before brushing. Use string floss, interdental brushes, or a water flosser. Ensure you curve the floss around the tooth (C-shape).</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="group border border-stone-200 rounded-lg p-5 hover:border-teal-400 transition-colors bg-white">
+                            <label class="flex items-start cursor-pointer">
+                                <input class="routine-check mt-1 w-5 h-5 text-teal-600 rounded border-stone-300 focus:ring-teal-500" data-points="40" type="checkbox"/>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-stone-800">Step 2: The Modified Bass Technique</h4>
+                                    <span class="text-xs font-mono text-stone-400">2 MINUTES</span>
+                                    <p class="text-sm text-stone-600 mt-2">Angle brush 45° towards the gumline. Use gentle circular motions. Do not scrub horizontally. Cover all surfaces (outer, inner, chewing).</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="group border border-stone-200 rounded-lg p-5 hover:border-teal-400 transition-colors bg-white">
+                            <label class="flex items-start cursor-pointer">
+                                <input class="routine-check mt-1 w-5 h-5 text-teal-600 rounded border-stone-300 focus:ring-teal-500" data-points="10" type="checkbox"/>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-stone-800">Step 3: Tongue Cleaning</h4>
+                                    <span class="text-xs font-mono text-stone-400">10 SECONDS</span>
+                                    <p class="text-sm text-stone-600 mt-2">Bacteria on the tongue contributes to gum disease and halitosis. Sweep from back to front.</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="group border border-stone-200 rounded-lg p-5 hover:border-teal-400 transition-colors bg-white">
+                            <label class="flex items-start cursor-pointer">
+                                <input class="routine-check mt-1 w-5 h-5 text-teal-600 rounded border-stone-300 focus:ring-teal-500" data-points="30" type="checkbox"/>
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-stone-800">Step 4: Spit, Don't Rinse</h4>
+                                    <span class="text-xs font-mono text-stone-400">CRITICAL</span>
+                                    <p class="text-sm text-stone-600 mt-2">Spit out excess toothpaste but do not rinse with water immediately. Allow the fluoride to sit on the teeth and gums to remineralize enamel.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Score Card -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-stone-800 text-white rounded-xl p-6 sticky top-6">
+                            <h3 class="text-lg font-semibold mb-4">Routine Efficacy Score</h3>
+                            <div class="flex items-end mb-2">
+                                <span class="text-5xl font-bold text-teal-400" id="routine-score">0</span>
+                                <span class="text-xl text-stone-400 mb-1">/100</span>
+                            </div>
+                            <div class="w-full bg-stone-600 h-2 rounded-full overflow-hidden mb-4">
+                                <div class="bg-teal-400 h-full transition-all duration-500" id="routine-bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-sm text-stone-300 italic" id="routine-feedback">Select steps to calculate your routine's protection level.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: DATA & EFFICACY -->
+            <section class="p-6 md:p-10 hidden fade-in" id="data">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light text-stone-800 mb-2">Data-Driven Care</h2>
+                    <p class="text-stone-600 max-w-2xl leading-relaxed">
+                        Not all tools are created equal. We've visualized clinical data to help you select the most effective methods for interdental cleaning and understanding risk factors.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
+                    
+                    <!-- Chart 1: Plaque Removal -->
+                    <div class="bg-white border border-stone-200 p-6 rounded-xl shadow-sm">
+                        <h3 class="text-lg font-bold text-stone-700 mb-2">Plaque Removal Effectiveness</h3>
+                        <p class="text-sm text-stone-500 mb-6">Comparison of interdental cleaning methods in reducing gingival bleeding and plaque.</p>
+                        
+                        <!-- Chart Container as required -->
+                        <div class="chart-container">
+                            <canvas id="efficacyChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">Data approximated from Cochrane Reviews on Interdental Brushing vs Flossing.</p>
+                    </div>
+
+                    <!-- Chart 2: Risk Factors -->
+                    <div class="bg-white border border-stone-200 p-6 rounded-xl shadow-sm">
+                        <h3 class="text-lg font-bold text-stone-700 mb-2">Contributors to Periodontitis</h3>
+                        <p class="text-sm text-stone-500 mb-6">Relative impact of various risk factors on disease progression.</p>
+                        
+                        <!-- Chart Container as required -->
+                        <div class="chart-container">
+                            <canvas id="riskChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">Based on generalized periodontal risk assessment models.</p>
+                    </div>
+
+                </div>
+
+                <div class="mt-10 bg-teal-50 border border-teal-100 p-6 rounded-lg">
+                    <h3 class="font-bold text-teal-800 mb-2">Key Takeaway</h3>
+                    <p class="text-teal-900 text-sm">
+                        While dental floss is the most common tool, data suggests that <strong>Interdental Brushes</strong> are significantly more effective at plaque removal where space permits. However, technique is the primary driver of success across all tools.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 5: NUTRITION & RISKS -->
+            <section class="p-6 md:p-10 hidden fade-in" id="nutrition">
+                <header class="mb-8">
+                    <h2 class="text-3xl font-light text-stone-800 mb-2">Nutrition &amp; Risk Factors</h2>
+                    <p class="text-stone-600 max-w-2xl leading-relaxed">
+                        Gum health is built from the inside out. Deficiencies can weaken gum tissue, while systemic habits can accelerate bone loss.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Column 1: Nutrition -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-xl text-stone-700 border-b pb-2">The Gum Health Diet</h3>
+                        
+                        <div class="bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">🍊</span>
+                                <h4 class="font-bold text-stone-800">Vitamin C</h4>
+                            </div>
+                            <p class="text-sm text-stone-600">Essential for collagen production. A deficiency causes gums to weaken and bleed (scurvy effect). <br/><span class="text-teal-600 text-xs font-bold">Eat: Citrus, Bell Peppers, Kiwi.</span></p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">🥬</span>
+                                <h4 class="font-bold text-stone-800">Vitamin K</h4>
+                            </div>
+                            <p class="text-sm text-stone-600">Crucial for blood clotting. Helps reduce bleeding during cleaning. <br/><span class="text-teal-600 text-xs font-bold">Eat: Spinach, Kale, Leafy Greens.</span></p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">💧</span>
+                                <h4 class="font-bold text-stone-800">Hydration</h4>
+                            </div>
+                            <p class="text-sm text-stone-600">Saliva is nature's defense against bacteria. Dehydration leads to dry mouth, increasing plaque acidity.<br/><span class="text-teal-600 text-xs font-bold">Action: Drink water after every meal.</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Risks -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-xl text-stone-700 border-b pb-2">The Danger Zone</h3>
+                        
+                        <div class="bg-amber-50 p-4 rounded-lg border border-amber-100 shadow-sm">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">🚬</span>
+                                <h4 class="font-bold text-amber-800">Smoking / Vaping</h4>
+                            </div>
+                            <p class="text-sm text-stone-700">The #1 risk factor. Nicotine constricts blood vessels, masking bleeding signs while accelerating bone destruction.</p>
+                        </div>
+
+                        <div class="bg-stone-100 p-4 rounded-lg border border-stone-200 shadow-sm">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">🍬</span>
+                                <h4 class="font-bold text-stone-800">Sugar &amp; Starch</h4>
+                            </div>
+                            <p class="text-sm text-stone-600">Sugar feeds the specific bacteria (Streptococcus mutans) that create the acid and toxins causing gingivitis.</p>
+                        </div>
+
+                        <div class="bg-stone-100 p-4 rounded-lg border border-stone-200 shadow-sm">
+                            <div class="flex items-center mb-2">
+                                <span class="text-2xl mr-3">😬</span>
+                                <h4 class="font-bold text-stone-800">Bruxism (Grinding)</h4>
+                            </div>
+                            <p class="text-sm text-stone-600">Excessive force on teeth can damage the periodontal ligament and bone, worsening existing gum disease.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Logic Layer -->
+    <script>
+        // --- Navigation Logic ---
+        function navigate(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('main section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            // Show selected
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update Nav Styles
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('active-nav', 'bg-stone-200', 'text-stone-900');
+                btn.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`nav-${sectionId}`);
+            activeBtn.classList.add('active-nav', 'text-stone-900');
+            activeBtn.classList.remove('text-stone-500');
+
+            // Trigger charts if data section
+            if(sectionId === 'data') {
+                renderCharts();
+            }
+        }
+
+        // --- Symptom Checker Logic ---
+        const symptoms = [
+            { id: 'bleed', label: 'Bleeding when brushing', risk: 2 },
+            { id: 'swoll', label: 'Red, swollen, or tender gums', risk: 2 },
+            { id: 'badbreath', label: 'Persistent bad breath', risk: 1 },
+            { id: 'recede', label: 'Gums pulling away (long teeth)', risk: 3 },
+            { id: 'loose', label: 'Loose or separating teeth', risk: 4 },
+            { id: 'bite', label: 'Change in bite fit', risk: 3 }
+        ];
+
+        let selectedSymptoms = [];
+
+        function initSymptomChecker() {
+            const container = document.getElementById('symptom-list');
+            symptoms.forEach(sym => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left px-4 py-3 rounded border border-stone-200 text-stone-600 hover:bg-stone-50 transition-colors flex justify-between items-center mb-2';
+                btn.innerHTML = `<span>${sym.label}</span> <span class="w-4 h-4 rounded-full border border-stone-300"></span>`;
+                btn.onclick = () => toggleSymptom(btn, sym);
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleSymptom(btn, symptom) {
+            const idx = selectedSymptoms.indexOf(symptom);
+            const indicator = btn.querySelector('span:last-child');
+            
+            if (idx === -1) {
+                selectedSymptoms.push(symptom);
+                btn.classList.add('bg-teal-50', 'border-teal-300', 'text-teal-800');
+                indicator.classList.remove('border-stone-300');
+                indicator.classList.add('bg-teal-500', 'border-teal-500');
+            } else {
+                selectedSymptoms.splice(idx, 1);
+                btn.classList.remove('bg-teal-50', 'border-teal-300', 'text-teal-800');
+                indicator.classList.add('border-stone-300');
+                indicator.classList.remove('bg-teal-500', 'border-teal-500');
+            }
+            evaluateRisk();
+        }
+
+        function evaluateRisk() {
+            const box = document.getElementById('diagnosis-box');
+            const title = document.getElementById('diagnosis-title');
+            const text = document.getElementById('diagnosis-text');
+
+            if (selectedSymptoms.length === 0) {
+                box.classList.add('hidden');
+                return;
+            }
+
+            box.classList.remove('hidden');
+            
+            let totalRisk = selectedSymptoms.reduce((sum, s) => sum + s.risk, 0);
+            
+            if (selectedSymptoms.some(s => s.risk >= 4) || totalRisk > 6) {
+                box.className = 'p-4 rounded-lg bg-red-50 border-l-4 border-red-500 transition-all';
+                title.innerText = 'High Priority: Consult a Dentist';
+                title.className = 'font-bold text-lg text-red-800';
+                text.innerText = 'Your symptoms suggest advanced periodontitis. Professional intervention is likely required to prevent tooth loss.';
+            } else if (totalRisk >= 2) {
+                box.className = 'p-4 rounded-lg bg-amber-50 border-l-4 border-amber-500 transition-all';
+                title.innerText = 'Warning Signs Detected';
+                title.className = 'font-bold text-lg text-amber-800';
+                text.innerText = 'These are classic signs of gingivitis or early gum disease. Improve your routine immediately and schedule a cleaning.';
+            } else {
+                box.className = 'p-4 rounded-lg bg-stone-100 border-l-4 border-stone-400 transition-all';
+                title.innerText = 'Monitor Closely';
+                title.className = 'font-bold text-lg text-stone-800';
+                text.innerText = 'Keep an eye on these symptoms. If they persist for more than 2 weeks, see a professional.';
+            }
+        }
+
+        // --- Disease Progression Logic ---
+        const stages = [
+            {
+                title: "Healthy Gums",
+                reversible: true,
+                color: "bg-teal-100 text-teal-800",
+                icon: "🦷",
+                signs: "Pale pink, firm, stippled texture (like an orange peel). No bleeding during brushing.",
+                desc: "The gum tissue fits tightly around the tooth. The bone level is intact. There are no pockets deeper than 3mm.",
+                action: "Maintain routine: Brush 2x daily, floss 1x daily, professional cleaning every 6 months."
+            },
+            {
+                title: "Gingivitis",
+                reversible: true,
+                color: "bg-amber-100 text-amber-800",
+                icon: "🩸",
+                signs: "Redness, puffiness, bleeding when brushing/flossing. Bad breath.",
+                desc: "Plaque accumulation causes inflammation of the gums. The bone is still intact, but gums may begin to pull away slightly.",
+                action: "CRITICAL WINDOW. Improve hygiene immediately. Use antiseptic mouthwash. See dentist to remove tartar."
+            },
+            {
+                title: "Periodontitis",
+                reversible: false,
+                color: "bg-orange-100 text-orange-800",
+                icon: "📉",
+                signs: "Receding gums, pockets forming between teeth/gums, persistent bad breath.",
+                desc: "Infection spreads to the bone. The inner layer of gum and bone pull away from teeth forming pockets (4-5mm) that collect debris.",
+                action: "Requires professional Deep Cleaning (Scaling & Root Planing). Damage to bone is irreversible but manageable."
+            },
+            {
+                title: "Advanced Periodontitis",
+                reversible: false,
+                color: "bg-red-100 text-red-800",
+                icon: "⚠️",
+                signs: "Loose teeth, pus visible, changes in bite, pain when chewing.",
+                desc: "Connective tissue and bone are destroyed. Teeth may shift or loosen. Pockets are deep (>6mm). Immune system is stressed.",
+                action: "Surgery (flap surgery, grafts) or extraction likely needed. Systemic health (heart, diabetes) is now at risk."
+            }
+        ];
+
+        function setStage(index) {
+            const stage = stages[index];
+            
+            // Update Text
+            document.getElementById('stage-title').innerText = stage.title;
+            document.getElementById('stage-icon').innerText = stage.icon;
+            document.getElementById('stage-signs').innerText = stage.signs;
+            document.getElementById('stage-desc').innerText = stage.desc;
+            document.getElementById('stage-action').innerText = stage.action;
+
+            // Update Badge
+            const badge = document.getElementById('stage-reversibility');
+            badge.innerText = stage.reversible ? "REVERSIBLE" : "IRREVERSIBLE DAMAGE";
+            badge.className = `mt-2 inline-block px-3 py-1 text-xs font-bold rounded-full ${stage.color}`;
+
+            // Update Buttons State
+            for(let i=0; i<4; i++) {
+                const btn = document.getElementById(`stage-btn-${i}`);
+                if (i === index) {
+                    btn.classList.remove('text-stone-500', 'bg-transparent');
+                    btn.classList.add('bg-white', 'text-teal-700', 'shadow-sm');
+                } else {
+                    btn.classList.add('text-stone-500', 'bg-transparent');
+                    btn.classList.remove('bg-white', 'text-teal-700', 'shadow-sm');
+                }
+            }
+        }
+
+        // --- Routine Checker Logic ---
+        document.querySelectorAll('.routine-check').forEach(chk => {
+            chk.addEventListener('change', updateRoutineScore);
+        });
+
+        function updateRoutineScore() {
+            let score = 0;
+            const checkboxes = document.querySelectorAll('.routine-check');
+            checkboxes.forEach(chk => {
+                if(chk.checked) {
+                    score += parseInt(chk.dataset.points);
+                }
+            });
+
+            // Cap at 100 just in case
+            if (score > 100) score = 100;
+
+            const scoreDisplay = document.getElementById('routine-score');
+            const bar = document.getElementById('routine-bar');
+            const feedback = document.getElementById('routine-feedback');
+
+            // Animation for number
+            animateValue(scoreDisplay, parseInt(scoreDisplay.innerText), score, 500);
+            
+            bar.style.width = score + '%';
+
+            // Feedback Text
+            if(score === 100) {
+                feedback.innerText = "Perfect! Keep this up for optimal health.";
+                bar.className = "bg-teal-500 h-full transition-all duration-500";
+            } else if (score >= 60) {
+                feedback.innerText = "Good start, but missing critical steps.";
+                bar.className = "bg-amber-400 h-full transition-all duration-500";
+            } else {
+                feedback.innerText = "Routine insufficient to prevent disease.";
+                bar.className = "bg-red-400 h-full transition-all duration-500";
+            }
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- Chart.js Initialization ---
+        let chartsInitialized = false;
+
+        function renderCharts() {
+            if (chartsInitialized) return;
+            
+            // Efficacy Chart (Bar)
+            const ctx1 = document.getElementById('efficacyChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['String Floss', 'Water Flosser', 'Interdental Brush'],
+                    datasets: [{
+                        label: 'Plaque Removal % (Interproximal)',
+                        data: [45, 60, 85],
+                        backgroundColor: ['#d6d3d1', '#5eead4', '#0d9488'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + '% Effective';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Effectiveness (%)' }
+                        }
+                    }
+                }
+            });
+
+            // Risk Chart (Doughnut)
+            const ctx2 = document.getElementById('riskChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Poor Hygiene', 'Smoking', 'Genetics', 'Systemic Disease (Diabetes)', 'Stress/Other'],
+                    datasets: [{
+                        data: [40, 25, 15, 10, 10],
+                        backgroundColor: ['#0d9488', '#f59e0b', '#a8a29e', '#ef4444', '#e7e5e4'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+
+            chartsInitialized = true;
+        }
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initSymptomChecker();
+        });
+
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

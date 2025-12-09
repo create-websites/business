@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="An interactive guide to understanding and managing Frozen Shoulder (Adhesive Capsulitis). Visualize the stages of stiffness and pain, assess risk factors, and access a curated library of recovery exercises." name="description"/>
+    <meta content="Frozen Shoulder, Adhesive Capsulitis, Shoulder Pain, Shoulder Stiffness, Physical Therapy, Rehabilitation Exercises, Shoulder Joint, Health Guide, Recovery Timeline" name="keywords"/>
+    <title>Understanding Frozen Shoulder: An Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfbf7; /* Warm neutral background */
+            color: #4a4a4a;
+        }
+
+        /* Custom Chart Container Styling as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar for internal lists */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        .active-tab {
+            border-bottom: 3px solid #0f766e; /* Teal-700 */
+            color: #0f766e;
+            font-weight: 600;
+        }
+        
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+
+        .exercise-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .exercise-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .exercise-card.selected {
+            border: 2px solid #0f766e;
+            background-color: #f0fdfa;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals & Teal -->
+    <!-- Primary: Teal (#0f766e) for calmness and healing -->
+    <!-- Background: Off-white/Cream (#fdfbf7) for readability and warmth -->
+    <!-- Accents: Soft Amber (#d97706) for highlights/warnings -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: Immediate definition and emotional connection.
+         2. The Trajectory (Stages): Interactive Chart.js visualization showing the relationship between Pain and Stiffness over time. This is critical for managing expectations.
+         3. Interactive Symptom Checker: A functional checklist to help users identify potential risk factors, making the data personal.
+         4. Management & Care (The "Remedy" dashboard): A split-view interactive section. Users select exercises or treatments to see detailed steps and tips.
+         5. Recovery Timeline: A visual summary of the long-term outlook.
+         Rationale: This structure moves from "What is it?" to "Do I have it?" to "How do I fix it?", following the user's natural anxiety-to-action journey.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Pain vs. Stiffness Line Chart (Chart.js):
+            - Goal: Inform/Change Expectations.
+            - Viz: Multi-line chart.
+            - Interaction: Clicking a time point highlights the specific stage description.
+            - Justification: Users often don't understand that stiffness increases as pain decreases in the middle stage. A visual curve explains this paradox best.
+         2. Risk Factor Calculator (JS/DOM):
+            - Goal: Relationships/Inform.
+            - Viz: Dynamic text feedback based on checkbox inputs.
+            - Interaction: Toggling checkboxes updates a "Risk Profile" text block.
+            - Justification: Makes static list data interactive and personal.
+         3. Exercise Library (Grid + JS Detail View):
+            - Goal: Inform/Organize.
+            - Viz: Card grid + Detail panel.
+            - Interaction: Click card to load steps/tips.
+            - Justification: Exercises are complex; showing them all at once is overwhelming. A master-detail view keeps the UI clean.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-teal-800 tracking-tight">Recover<span class="text-teal-600">Well</span></span>
+                    <span class="ml-2 text-sm text-gray-500 border-l pl-2 border-gray-300 hidden sm:block">Frozen Shoulder Guide</span>
+                </div>
+                <div class="flex items-center space-x-8">
+                    <button class="text-gray-600 hover:text-teal-700 text-sm font-medium transition" onclick="scrollToSection('stages-section')">Stages</button>
+                    <button class="text-gray-600 hover:text-teal-700 text-sm font-medium transition" onclick="scrollToSection('symptoms-section')">Symptoms</button>
+                    <button class="text-gray-600 hover:text-teal-700 text-sm font-medium transition" onclick="scrollToSection('care-section')">Care &amp; Exercises</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-b from-teal-50 to-[#fdfbf7] py-16 sm:py-24">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-6">
+                Adhesive Capsulitis <br/>
+                <span class="text-teal-700 font-normal italic text-3xl sm:text-4xl">"Frozen Shoulder"</span>
+            </h1>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                A condition characterized by stiffness and pain in your shoulder joint. 
+                Signs and symptoms typically begin gradually, worsen over time and then resolve, usually within one to three years.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <button class="px-6 py-3 bg-teal-700 text-white rounded-lg shadow hover:bg-teal-800 transition font-medium" onclick="scrollToSection('stages-section')">
+                    Explore the Timeline
+                </button>
+                <button class="px-6 py-3 bg-white text-teal-700 border border-teal-200 rounded-lg shadow-sm hover:bg-gray-50 transition font-medium" onclick="scrollToSection('care-section')">
+                    View Exercises
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: The Three Stages (Visualization) -->
+    <section class="py-16 bg-white border-t border-gray-100" id="stages-section">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">The Course of the Condition</h2>
+                <p class="text-gray-600">
+                    Understanding the three distinct stages is crucial for recovery. This interactive chart visualizes the inverse relationship often seen between active pain and joint stiffness. Hover over the chart points or click the stage buttons below to understand what happens when.
+                </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 shadow-inner border border-gray-200">
+                <!-- Chart Container -->
+                <div class="chart-container mb-8">
+                    <canvas id="stageChart"></canvas>
+                </div>
+
+                <!-- Interactive Stage Details -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8" id="stage-details-container">
+                    <!-- Cards will be highlighted via JS based on chart interaction -->
+                    <div class="stage-card p-6 bg-white rounded-xl shadow-sm border border-gray-200 transition-all hover:shadow-md cursor-pointer" id="card-stage-1" onclick="highlightStage(0)">
+                        <div class="flex items-center mb-3">
+                            <span class="w-8 h-8 flex items-center justify-center bg-red-100 text-red-600 rounded-full font-bold mr-3">1</span>
+                            <h3 class="font-bold text-gray-800">Freezing Stage</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2"><strong>Duration:</strong> 2 to 9 months</p>
+                        <p class="text-sm text-gray-500">Any movement of your shoulder causes pain, and your shoulder's range of motion starts to become limited.</p>
+                    </div>
+
+                    <div class="stage-card p-6 bg-white rounded-xl shadow-sm border border-gray-200 transition-all hover:shadow-md cursor-pointer" id="card-stage-2" onclick="highlightStage(1)">
+                        <div class="flex items-center mb-3">
+                            <span class="w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full font-bold mr-3">2</span>
+                            <h3 class="font-bold text-gray-800">Frozen Stage</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2"><strong>Duration:</strong> 4 to 12 months</p>
+                        <p class="text-sm text-gray-500">Pain may begin to diminish during this stage. However, your shoulder becomes stiffer, and using it becomes more difficult.</p>
+                    </div>
+
+                    <div class="stage-card p-6 bg-white rounded-xl shadow-sm border border-gray-200 transition-all hover:shadow-md cursor-pointer" id="card-stage-3" onclick="highlightStage(2)">
+                        <div class="flex items-center mb-3">
+                            <span class="w-8 h-8 flex items-center justify-center bg-green-100 text-green-600 rounded-full font-bold mr-3">3</span>
+                            <h3 class="font-bold text-gray-800">Thawing Stage</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2"><strong>Duration:</strong> 5 to 24 months</p>
+                        <p class="text-sm text-gray-500">The range of motion in your shoulder begins to improve. Strength returns slowly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Symptoms & Risk (Interactive Checklist) -->
+    <section class="py-16 bg-[#fdfbf7]" id="symptoms-section">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                
+                <!-- Left: Static Info -->
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Risk Factors &amp; Symptoms</h2>
+                    <p class="text-gray-600 mb-6">
+                        Frozen shoulder usually develops slowly and in three stages. The exact cause is unknown, but certain factors may increase your risk. 
+                        [Image of shoulder anatomy diagram]
+                    </p>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="font-bold text-teal-800 mb-3 text-lg">Common Signs</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mr-2 text-xl">•</span>
+                                <span class="text-gray-700">Dull or aching pain in the outer shoulder area.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mr-2 text-xl">•</span>
+                                <span class="text-gray-700">Pain that worsens when you move your arm.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mr-2 text-xl">•</span>
+                                <span class="text-gray-700">Pain causing sleep disruption (lying on the side).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mr-2 text-xl">•</span>
+                                <span class="text-gray-700">Severe limitation in rotation (e.g., reaching back pocket).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Risk Checker -->
+                <div class="bg-teal-900 text-white p-8 rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold mb-2">Am I at Risk?</h3>
+                    <p class="text-teal-200 mb-6 text-sm">Select factors that apply to you to see how they relate to Frozen Shoulder incidence.</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input class="risk-checkbox w-5 h-5 text-teal-500 rounded focus:ring-teal-400" type="checkbox" value="Age"/>
+                            <span>Age (40 to 60 years old)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input class="risk-checkbox w-5 h-5 text-teal-500 rounded focus:ring-teal-400" type="checkbox" value="Gender"/>
+                            <span>Female Gender (Statistically higher risk)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input class="risk-checkbox w-5 h-5 text-teal-500 rounded focus:ring-teal-400" type="checkbox" value="Diabetes"/>
+                            <span>Diabetes (10% to 20% risk increase)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input class="risk-checkbox w-5 h-5 text-teal-500 rounded focus:ring-teal-400" type="checkbox" value="Immobility"/>
+                            <span>Recent Immobility (Surgery/Stroke/Injury)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input class="risk-checkbox w-5 h-5 text-teal-500 rounded focus:ring-teal-400" type="checkbox" value="Endocrine"/>
+                            <span>Thyroid Issues (Hyper or Hypothyroidism)</span>
+                        </label>
+                    </div>
+
+                    <div class="bg-teal-800 p-4 rounded-lg border border-teal-700 hidden" id="risk-result">
+                        <h4 class="font-bold text-amber-400 mb-1">Risk Profile</h4>
+                        <p class="text-sm text-gray-200 leading-relaxed" id="risk-text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Care & Exercises (Interactive Dashboard) -->
+    <section class="py-16 bg-white" id="care-section">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Taking Care &amp; Remedies</h2>
+                <p class="text-gray-600 max-w-3xl">
+                    Most frozen shoulder treatment involves controlling shoulder pain and preserving as much range of motion as possible. Below is an interactive guide to common physical therapy exercises. 
+                    <br/><em class="text-sm text-teal-600">Note: Always consult a doctor before starting exercises. Warm up your shoulder with a heat pad for 10-15 minutes prior.</em>
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Left: Exercise Selector List -->
+                <div class="w-full lg:w-1/3">
+                    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Therapy Routine</h3>
+                    <div class="space-y-3" id="exercise-list">
+                        <!-- Populated by JS -->
+                    </div>
+                    
+                    <div class="mt-8 p-4 bg-amber-50 rounded-lg border border-amber-100">
+                        <h4 class="text-amber-800 font-bold text-sm mb-1">Medical Treatments</h4>
+                        <p class="text-xs text-amber-700 mb-2">If exercises aren't enough:</p>
+                        <ul class="list-disc pl-4 text-xs text-amber-700 space-y-1">
+                            <li>Corticosteroid injections</li>
+                            <li>Joint distension (hydrodilatation)</li>
+                            <li>Physical Therapy manipulation</li>
+                            <li>Surgery (Arthroscopic capsular release) - Rare</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right: Exercise Detail View -->
+                <div class="w-full lg:w-2/3">
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 h-full flex flex-col justify-center items-center text-center" id="exercise-detail">
+                        <p class="text-gray-400">Select an exercise from the list to view instructions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // --- Data Definitions ---
+
+        // Chart Data representing the general medical consensus on Frozen Shoulder progression
+        // X-axis: Months (approximate)
+        // Y-axis: Severity (0-10)
+        const stageData = {
+            labels: ['0', '2', '4', '6', '9', '12', '15', '18', '21', '24'],
+            datasets: [
+                {
+                    label: 'Pain Level',
+                    data: [2, 6, 8, 9, 7, 5, 3, 2, 1, 0],
+                    borderColor: '#ef4444', // Red-500
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                },
+                {
+                    label: 'Stiffness/Limitation',
+                    data: [0, 2, 5, 8, 10, 10, 8, 5, 2, 0],
+                    borderColor: '#0f766e', // Teal-700
+                    backgroundColor: 'rgba(15, 118, 110, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }
+            ]
+        };
+
+        const exercises = [
+            {
+                id: 'pendulum',
+                title: 'Pendulum Stretch',
+                duration: 'Warm-up',
+                difficulty: 'Easy',
+                icon: '⟲',
+                description: 'Relax your shoulders. Stand and lean over slightly, allowing the affected arm to hang down. Swing the arm in a small circle.',
+                steps: [
+                    'Lean over a table with your good arm for support.',
+                    'Let the affected arm hang down freely.',
+                    'Swing arm in a small circle (about 1 foot diameter).',
+                    'Perform 10 revolutions in each direction.',
+                    'Increase diameter as flexibility improves.'
+                ]
+            },
+            {
+                id: 'towel',
+                title: 'Towel Stretch',
+                duration: 'Daily',
+                difficulty: 'Medium',
+                icon: '↕',
+                description: 'Hold one end of a towel behind your back and grab the opposite end with your other hand. Pull the towel upward.',
+                steps: [
+                    'Hold a 3-foot-long towel behind your back horizontally.',
+                    'Use your good arm to pull the towel upward, which pulls the affected arm upward also.',
+                    'Hold the stretch for 10 to 20 seconds.',
+                    'Repeat 10 to 20 times a day.'
+                ]
+            },
+            {
+                id: 'finger',
+                title: 'Finger Walk',
+                duration: 'Daily',
+                difficulty: 'Easy',
+                icon: '⇑',
+                description: 'Face a wall and use your fingers to "walk" up the wall, raising your arm as high as comfortable.',
+                steps: [
+                    'Face a wall, standing about three-quarters of an arm\'s length away.',
+                    'Touch the wall at waist level with the fingertips of the affected arm.',
+                    'Slowly walk your fingers up the wall, spider-like, until you’ve raised your arm as far as you can comfortably.',
+                    'Your fingers should be doing the work, not your shoulder muscles.',
+                    'Slowly lower the arm (with help from the good arm if needed).'
+                ]
+            },
+            {
+                id: 'crossbody',
+                title: 'Cross-Body Reach',
+                duration: 'Daily',
+                difficulty: 'Medium',
+                icon: '↔',
+                description: 'Use your good arm to lift your affected arm at the elbow, and bring it up and across your body.',
+                steps: [
+                    'Sit or stand comfortably.',
+                    'Use your good arm to lift your affected arm at the elbow.',
+                    'Bring it up and across your body, exerting gentle pressure to stretch the shoulder.',
+                    'Hold the stretch for 15 to 20 seconds.',
+                    'Repeat 10 to 20 times a day.'
+                ]
+            },
+            {
+                id: 'armpit',
+                title: 'Armpit Stretch',
+                duration: 'Daily',
+                difficulty: 'Medium',
+                icon: '↘',
+                description: 'Using a shelf or counter, stretch the armpit area by bending your knees.',
+                steps: [
+                    'Lift the affected arm onto a shelf about breast-high.',
+                    'Gently bend your knees, opening up the armpit.',
+                    'Deepen your knee bend slightly, gently stretching the armpit.',
+                    'Straighten up and relax.',
+                    'Repeat 10-20 times.'
+                ]
+            }
+        ];
+
+        // --- Initialization ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            initRiskChecker();
+            initExercises();
+            // Load first exercise by default
+            selectExercise(0); 
+        });
+
+        // --- Chart Logic ---
+
+        let myChart;
+
+        function initChart() {
+            const ctx = document.getElementById('stageChart').getContext('2d');
+            
+            // Custom plugin to draw vertical lines for stages
+            const stagePlugin = {
+                id: 'stagePlugin',
+                beforeDraw: (chart) => {
+                    const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+                    
+                    // Stage 1 -> 2 split (around month 6-9, index 3-4)
+                    const x1 = x.getPixelForValue('9');
+                    // Stage 2 -> 3 split (around month 12-15, index 5-6)
+                    const x2 = x.getPixelForValue('15');
+
+                    ctx.save();
+                    ctx.strokeStyle = '#cbd5e1'; // slate-300
+                    ctx.setLineDash([5, 5]);
+                    ctx.lineWidth = 2;
+
+                    // Draw Line 1
+                    ctx.beginPath();
+                    ctx.moveTo(x1, top);
+                    ctx.lineTo(x1, bottom);
+                    ctx.stroke();
+
+                    // Draw Line 2
+                    ctx.beginPath();
+                    ctx.moveTo(x2, top);
+                    ctx.lineTo(x2, bottom);
+                    ctx.stroke();
+
+                    // Add Labels
+                    ctx.font = 'bold 12px Inter';
+                    ctx.fillStyle = '#64748b';
+                    ctx.textAlign = 'center';
+                    
+                    // Stage Labels positioned relative to pixels
+                    ctx.fillText('FREEZING', x.getPixelForValue('4'), top + 20);
+                    ctx.fillText('FROZEN', x.getPixelForValue('12'), top + 20);
+                    ctx.fillText('THAWING', x.getPixelForValue('21'), top + 20);
+
+                    ctx.restore();
+                }
+            };
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: stageData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { family: 'Inter', size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#111827',
+                            bodyColor: '#4b5563',
+                            borderColor: '#e5e7eb',
+                            borderWidth: 1,
+                            padding: 12,
+                            titleFont: { family: 'Inter', weight: 'bold' },
+                            bodyFont: { family: 'Inter' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 12,
+                            title: {
+                                display: true,
+                                text: 'Severity Level (Conceptual)',
+                                color: '#9ca3af'
+                            },
+                            grid: { display: false },
+                            ticks: { display: false } // Hide numbers as it's qualitative
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Months since onset',
+                                color: '#9ca3af'
+                            },
+                            grid: { display: false }
+                        }
+                    },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            // Map generic month index to stage logic
+                            if (index <= 4) highlightStage(0); // Freezing
+                            else if (index <= 6) highlightStage(1); // Frozen
+                            else highlightStage(2); // Thawing
+                        }
+                    }
+                },
+                plugins: [stagePlugin]
+            });
+        }
+
+        function highlightStage(stageIndex) {
+            // Remove highlighting from all
+            document.querySelectorAll('.stage-card').forEach(el => {
+                el.classList.remove('ring-2', 'ring-teal-500', 'bg-teal-50');
+            });
+            
+            // Add to selected
+            const selectedCard = document.getElementById(`card-stage-${stageIndex + 1}`);
+            selectedCard.classList.add('ring-2', 'ring-teal-500', 'bg-teal-50');
+            
+            // Scroll to details on mobile if needed
+            if (window.innerWidth < 768) {
+                selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // --- Risk Checker Logic ---
+
+        function initRiskChecker() {
+            const checkboxes = document.querySelectorAll('.risk-checkbox');
+            const resultBox = document.getElementById('risk-result');
+            const resultText = document.getElementById('risk-text');
+
+            checkboxes.forEach(box => {
+                box.addEventListener('change', () => {
+                    const checked = Array.from(checkboxes).filter(c => c.checked).map(c => c.value);
+                    
+                    if (checked.length === 0) {
+                        resultBox.classList.add('hidden');
+                        return;
+                    }
+
+                    resultBox.classList.remove('hidden');
+                    let message = "";
+                    
+                    if (checked.includes('Diabetes')) {
+                        message = "<strong>Diabetes is a significant risk factor.</strong> People with diabetes are at a higher risk of developing frozen shoulder, and it often tends to be stiffer and last longer.";
+                    } else if (checked.includes('Immobility')) {
+                        message = "<strong>Immobility increases risk.</strong> Keeping a shoulder still for a long period (due to recovery from surgery or injury) is a primary trigger.";
+                    } else if (checked.includes('Age') || checked.includes('Gender')) {
+                        message = "<strong>Demographics align.</strong> Frozen shoulder most commonly affects people between the ages of 40 and 60, and occurs more often in women.";
+                    } else {
+                        message = "You have selected factors associated with Frozen Shoulder. Consult a doctor for early intervention.";
+                    }
+
+                    if (checked.length > 1) {
+                        message += " <br><br><em>Having multiple risk factors may increase likelihood.</em>";
+                    }
+
+                    resultText.innerHTML = message;
+                });
+            });
+        }
+
+        // --- Exercise Logic ---
+
+        function initExercises() {
+            const listContainer = document.getElementById('exercise-list');
+            
+            exercises.forEach((ex, index) => {
+                const item = document.createElement('div');
+                item.className = `exercise-card p-4 rounded-lg bg-white border border-gray-200 flex items-center justify-between ${index === 0 ? 'selected' : ''}`;
+                item.onclick = () => selectExercise(index);
+                item.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-lg mr-3">${ex.icon}</span>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">${ex.title}</h4>
+                            <span class="text-xs text-gray-500">${ex.difficulty} • ${ex.duration}</span>
+                        </div>
+                    </div>
+                    <span class="text-teal-600 font-bold">&rarr;</span>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function selectExercise(index) {
+            // UI Highlight
+            const cards = document.querySelectorAll('.exercise-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            cards[index].classList.add('selected');
+
+            // Render Detail
+            const ex = exercises[index];
+            const detailContainer = document.getElementById('exercise-detail');
+            
+            // Creating a simple visual representation using pure CSS/HTML shapes for "no SVG" rule
+            // This is abstract but fits the minimal styling
+            
+            detailContainer.innerHTML = `
+                <div class="w-full h-full flex flex-col items-start text-left animate-fade-in">
+                    <div class="w-full flex justify-between items-start mb-6 border-b border-gray-200 pb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">${ex.title}</h3>
+                            <p class="text-gray-600 mt-1">${ex.description}</p>
+                        </div>
+                        <div class="w-16 h-16 bg-teal-100 text-teal-700 flex items-center justify-center rounded-lg text-3xl shadow-inner">
+                            ${ex.icon}
+                        </div>
+                    </div>
+                    
+                    <div class="w-full mb-6">
+                        <h4 class="font-bold text-teal-800 uppercase text-xs tracking-wider mb-3">Instructions</h4>
+                        <ol class="space-y-4">
+                            ${ex.steps.map((step, i) => `
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-gray-200 text-gray-700 rounded-full text-xs font-bold mr-3 mt-0.5">${i+1}</span>
+                                    <span class="text-gray-700 text-sm leading-relaxed">${step}</span>
+                                </li>
+                            `).join('')}
+                        </ol>
+                    </div>
+
+                    <div class="mt-auto w-full bg-teal-50 p-4 rounded-lg border border-teal-100">
+                        <h4 class="font-bold text-teal-800 text-xs uppercase mb-1">Pro Tip</h4>
+                        <p class="text-teal-700 text-sm">Perform these gently. If pain is sharp (not just a stretch), reduce range of motion.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Utility ---
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+    </script>
+
+</body></html>

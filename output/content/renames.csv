@@ -23,6 +23,8 @@ ab-testing\ab-testing-stats-guide.html,ab-testing\ab-testing-stats-guide.html,ye
 ab-testing\chi-squared-test-calculator.html,ab-testing\chi-squared-test-calculator.html,yes,merged
 ab-testing\two-sample-t-test-analyzer.html,ab-testing\two-sample-t-test-analyzer.html,yes,merged
 ai-agents\use-cases\ecommerce-ai-agent.html,ai-agents\use-cases\index.html,yes,merged
+app-development\andoid-development-with-genai.html,app-development\andoid-development-with-genai.html,yes,merged
+app-development\ios-development-with-genai.html,app-development\ios-development-with-genai.html,yes,merged
 architecture-webpages\cloud-architecture.html,architecture-webpages\cloud-architecture.html,yes,merged
 band-website\music-band.html,band-website\music-band.html,yes,merged
 band-website\musician.html,band-website\index.html,yes,merged
@@ -51,6 +53,12 @@ games-pages\casino-games-guide.html,games-pages\index.html,yes,merged
 gardner\gardner-landscaper.html,gardner\index.html,yes,merged
 genai-cost-calculation\gemini-model-pricing-calculator-multi-modal.html,genai-cost-calculation\gemini-model-pricing-calculator-multi-modal.html,yes,merged
 genai-cost-calculation\gemini-model-pricing-calculator.html,genai-cost-calculation\index.html,yes,merged
+health\diet-compass.html,health\diet-compass.html,yes,merged
+health\back\frozen-shoulder.html,health\back\frozen-shoulder.html,yes,merged
+health\back\lower-back.html,health\back\lower-back.html,yes,merged
+health\back\muscle-care-after-50.html,health\back\muscle-care-after-50.html,yes,merged
+health\heart\cardio-exercise-for-heart.html,health\heart\cardio-exercise-for-heart.html,yes,merged
+health\teeth-gums\gumcare.html,health\teeth-gums\gumcare.html,yes,merged
 infographic-webpages\acive-learning-infographics.html,infographic-webpages\acive-learning-infographics.html,yes,merged
 infographic-webpages\data-centric-playbook-info.html,infographic-webpages\data-centric-playbook-info.html,yes,merged
 infographic-webpages\data-governance-for-ai-info.html,infographic-webpages\data-governance-for-ai-info.html,yes,merged
@@ -76,6 +84,7 @@ playbook-webpages\architecting-document-intellgence-info-2.html,playbook-webpage
 playbook-webpages\data-centric-ai-playbook.html,playbook-webpages\data-centric-ai-playbook.html,yes,merged
 playbook-webpages\dataproduct-vs-data-as-product.html,playbook-webpages\dataproduct-vs-data-as-product.html,yes,merged
 playbook-webpages\optimal-transport.html,playbook-webpages\optimal-transport.html,yes,merged
+privacy-webpages\differential-privacy.html,privacy-webpages\differential-privacy.html,yes,merged
 privacy-webpages\privacy-ai-assistant.html,privacy-webpages\privacy-ai-assistant.html,yes,merged
 product-management-style\data-signal-movie-review.html,product-management-style\data-signal-movie-review.html,yes,merged
 product-management-style\data-signals-vunerability-management.html,product-management-style\data-signals-vunerability-management.html,yes,merged
@@ -90,5 +99,6 @@ social-media-and-promotions\linkedin-premium-business.html,social-media-and-prom
 social-media-and-promotions\preventing-competitive-inquiries.html,social-media-and-promotions\preventing-competitive-inquiries.html,yes,merged
 tattoo-studio\tatto-studio.html,tattoo-studio\index.html,yes,merged
 tax-consultant\tax-consultant.html,tax-consultant\index.html,yes,merged
+tech-startup\example-tech-startup.html,tech-startup\example-tech-startup.html,yes,merged
 tutorial-webpages\data-signal-movie-review.html,tutorial-webpages\data-signal-movie-review.html,yes,merged
 yoga-instructor\yoga-instructor.html,yoga-instructor\index.html,yes,merged

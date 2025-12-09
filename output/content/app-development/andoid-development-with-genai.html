@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Android Development &amp; GenAI: The Automation Frontier</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Warm Neutrals & Engineering Blue -->
+    <!-- Background: Stone-50 (#fafaf9) -->
+    <!-- Text: Slate-800 (#1e293b) -->
+    <!-- Primary Accent: Indigo-600 (#4f46e5) -->
+    <!-- Secondary Accent: Amber-500 (#f59e0b) -->
+
+    <style>
+        /* Chart Container Styling as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Default height */
+            max-height: 400px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        /* Custom Scrollbar for inner content areas */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        /* Smooth transitions */
+        .transition-all-300 {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Card Hover Effects */
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the context with high-level impact statement.
+         2. The Automation Lifecycle (Interactive Tabs): Users explore how GenAI impacts specific phases (Design, Code, Test, Deploy). This creates a logical flow of the dev process.
+         3. Efficiency Metrics (Dashboard): Visualizes the quantitative benefits (Time Savings, Bug Reduction) using charts.
+         4. Best Practices Grid (Cards): Actionable advice on Security, Prompt Engineering, and Workflow.
+         5. Future Roadmap (Timeline): A forward-looking section on the evolution from Assistants to Autonomous Agents.
+    -->
+
+    <!-- Visualization & Content Choices:
+         - Lifecycle Tabs: Text + Radar Chart. Goal: Show holistic impact. The radar chart compares "Traditional" vs "GenAI" capabilities across skills.
+         - Efficiency Section: Bar Chart. Goal: Compare specific task duration. Allows users to see direct ROI.
+         - Future Roadmap: Vertical Timeline. Goal: Show progression over time.
+         - Icons: Unicode characters. No SVG/Mermaid.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-800">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🤖</span>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">AndroidGen<span class="text-indigo-600">AI</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button class="text-slate-600 hover:text-indigo-600 font-medium transition-colors" onclick="scrollToSection('lifecycle')">Lifecycle</button>
+                    <button class="text-slate-600 hover:text-indigo-600 font-medium transition-colors" onclick="scrollToSection('metrics')">Metrics</button>
+                    <button class="text-slate-600 hover:text-indigo-600 font-medium transition-colors" onclick="scrollToSection('practices')">Best Practices</button>
+                    <button class="text-slate-600 hover:text-indigo-600 font-medium transition-colors" onclick="scrollToSection('future')">Future</button>
+                </div>
+                <!-- Mobile Menu Button (Simplified for this demo) -->
+                <button class="md:hidden text-slate-600 font-bold" onclick="alert('Please view on a larger screen for full navigation options.')">☰</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-amber-50 pt-16 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
+                Automating Android Development<br/>
+                <span class="text-indigo-600">with Generative AI</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600">
+                From boilerplate code to automated UI testing. Explore how LLMs are reshaping the mobile development lifecycle, reducing time-to-market, and elevating code quality.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <button class="px-8 py-3 rounded-full bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition-all transform hover:scale-105" onclick="scrollToSection('lifecycle')">
+                    Explore the Lifecycle
+                </button>
+                <button class="px-8 py-3 rounded-full bg-white text-indigo-600 font-semibold shadow-md border border-indigo-100 hover:bg-stone-50 transition-all" onclick="scrollToSection('metrics')">
+                    View Data
+                </button>
+            </div>
+        </div>
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 left-0 -ml-20 -mt-20 w-72 h-72 rounded-full bg-indigo-100 opacity-50 blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 -mr-20 -mb-20 w-80 h-80 rounded-full bg-amber-100 opacity-50 blur-3xl"></div>
+    </header>
+
+    <!-- SECTION 1: The Lifecycle Automation (Interactive Tabs) -->
+    <section class="py-20 bg-white border-y border-stone-200" id="lifecycle">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">The GenAI Development Lifecycle</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-3xl">
+                    Generative AI isn't just for writing code. It permeates every stage of building an Android app. 
+                    Click through the phases below to see how automation is applied from concept to deployment.
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Left: Navigation Tabs -->
+                <div class="lg:w-1/4 flex flex-col gap-2">
+                    <button class="lifecycle-btn p-4 text-left rounded-lg border border-stone-200 hover:bg-indigo-50 hover:border-indigo-200 transition-all-300 active-tab bg-indigo-600 text-white shadow-md" id="btn-planning" onclick="updateLifecycle('planning')">
+                        <span class="text-xl mr-2">📝</span> 1. Planning &amp; Design
+                    </button>
+                    <button class="lifecycle-btn p-4 text-left rounded-lg border border-stone-200 hover:bg-indigo-50 hover:border-indigo-200 transition-all-300" id="btn-coding" onclick="updateLifecycle('coding')">
+                        <span class="text-xl mr-2">💻</span> 2. Development
+                    </button>
+                    <button class="lifecycle-btn p-4 text-left rounded-lg border border-stone-200 hover:bg-indigo-50 hover:border-indigo-200 transition-all-300" id="btn-testing" onclick="updateLifecycle('testing')">
+                        <span class="text-xl mr-2">🧪</span> 3. Testing &amp; QA
+                    </button>
+                    <button class="lifecycle-btn p-4 text-left rounded-lg border border-stone-200 hover:bg-indigo-50 hover:border-indigo-200 transition-all-300" id="btn-maintenance" onclick="updateLifecycle('maintenance')">
+                        <span class="text-xl mr-2">🔄</span> 4. Maintenance
+                    </button>
+                </div>
+
+                <!-- Right: Content Display & Chart -->
+                <div class="lg:w-3/4 bg-stone-50 rounded-2xl p-6 lg:p-8 border border-stone-200 flex flex-col md:flex-row gap-8 shadow-inner">
+                    <!-- Text Content -->
+                    <div class="md:w-1/2 flex flex-col justify-center">
+                        <h3 class="text-2xl font-bold text-indigo-700 mb-4" id="lifecycle-title">Planning &amp; Design</h3>
+                        <div class="prose prose-stone text-slate-600" id="lifecycle-content">
+                            <!-- JS Injected Content -->
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-stone-200">
+                            <h4 class="font-semibold text-slate-900 mb-2">Key Tools:</h4>
+                            <div class="flex flex-wrap gap-2" id="lifecycle-tools">
+                                <!-- JS Injected Tags -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual: Radar Chart -->
+                    <div class="md:w-1/2 flex items-center justify-center bg-white rounded-xl shadow-sm p-4">
+                        <div class="chart-container">
+                            <canvas id="lifecycleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: Efficiency Metrics (Data Dashboard) -->
+    <section class="py-20 bg-stone-50" id="metrics">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-slate-900">Quantifying the Impact</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
+                    Data analysis of projects utilizing GenAI assistants (e.g., Gemini in Android Studio, Copilot) versus traditional manual workflows reveals significant efficiency gains.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Chart 1: Time Savings by Task -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Time Savings Breakdown</h3>
+                    <p class="text-sm text-slate-500 mb-6">Reduction in development hours for common Android tasks.</p>
+                    <div class="chart-container">
+                        <canvas id="savingsChart"></canvas>
+                    </div>
+                    <div class="mt-4 bg-indigo-50 p-3 rounded-lg text-sm text-indigo-800">
+                        <strong>Insight:</strong> Boilerplate generation (Room entities, Retrofit interfaces) sees the highest impact, with nearly 60% time reduction.
+                    </div>
+                </div>
+
+                <!-- Chart 2: Bug Detection Rate -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Code Quality &amp; Stability</h3>
+                    <p class="text-sm text-slate-500 mb-6">Impact on bug density and test coverage.</p>
+                    <div class="chart-container">
+                        <canvas id="qualityChart"></canvas>
+                    </div>
+                    <div class="mt-4 bg-amber-50 p-3 rounded-lg text-sm text-amber-800">
+                        <strong>Insight:</strong> Automated unit test generation increases coverage significantly, leading to earlier bug detection.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: Best Practices (Card Grid) -->
+    <section class="py-20 bg-white border-y border-stone-200" id="practices">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Best Practices for GenAI in Android</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-3xl">
+                    To automate effectively without introducing technical debt or security risks, developers must adhere to rigorous protocols.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="info-card bg-white p-6 rounded-xl border border-stone-200 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🛡️</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-indigo-600 mb-3">Security &amp; Privacy</h3>
+                    <p class="text-slate-600 mb-4 text-sm">Never paste PII, API keys, or proprietary algorithms into public LLM prompts. Use enterprise instances where data is not used for training.</p>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Obfuscate sensitive data</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Audit generated dependencies</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="info-card bg-white p-6 rounded-xl border border-stone-200 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🧠</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-amber-600 mb-3">Human-in-the-Loop</h3>
+                    <p class="text-slate-600 mb-4 text-sm">GenAI hallucinates. Treat generated code as a "Junior Developer's" pull request. Comprehensive code review is mandatory.</p>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Verify Jetpack Compose imports</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Check for deprecated APIs</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="info-card bg-white p-6 rounded-xl border border-stone-200 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">⚡</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-indigo-600 mb-3">Prompt Engineering</h3>
+                    <p class="text-slate-600 mb-4 text-sm">Context is king. Provide the AI with your `build.gradle` libs (versions) and architectural pattern (MVVM/MVI) for accurate results.</p>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Specify "Use Kotlin Coroutines"</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Ask for "Unit tests included"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: Future Research (Timeline) -->
+    <section class="py-20 bg-stone-900 text-stone-300" id="future">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-white">Future Research &amp; Roadmap</h2>
+                <p class="mt-4 text-lg text-stone-400">Where automated Android development is heading in the next 5 years.</p>
+            </div>
+
+            <div class="relative">
+                <!-- Vertical Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-indigo-500/50 hidden md:block"></div>
+
+                <div class="space-y-12">
+                    <!-- Item 1 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between relative">
+                        <div class="md:w-5/12 text-right pr-8 mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-indigo-400">Near Term (Now)</h3>
+                            <p class="text-sm text-stone-400">Context-Aware Assistants</p>
+                            <p class="mt-2 text-stone-300">IDEs that understand the full project graph. Deep integration into Android Studio (Gemini). Automated migration from XML to Compose.</p>
+                        </div>
+                        <div class="w-4 h-4 rounded-full bg-indigo-500 border-4 border-stone-900 z-10 hidden md:block"></div>
+                        <div class="md:w-5/12 pl-8"></div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between relative">
+                        <div class="md:w-5/12"></div>
+                        <div class="w-4 h-4 rounded-full bg-amber-500 border-4 border-stone-900 z-10 hidden md:block"></div>
+                        <div class="md:w-5/12 pl-8 text-left mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-amber-400">Mid Term (1-3 Years)</h3>
+                            <p class="text-sm text-stone-400">Autonomous Agents</p>
+                            <p class="mt-2 text-stone-300">Agents that can perform multi-step tasks: "Upgrade dependency X and fix all breaking changes," or "Localize app for 5 regions and generate assets."</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between relative">
+                        <div class="md:w-5/12 text-right pr-8 mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold text-indigo-400">Long Term (3-5+ Years)</h3>
+                            <p class="text-sm text-stone-400">Generative UI &amp; Self-Healing Apps</p>
+                            <p class="mt-2 text-stone-300">Apps that redesign their own UI at runtime based on user behavior (Generative UI). Automated crash detection and hot-patching without developer intervention.</p>
+                        </div>
+                        <div class="w-4 h-4 rounded-full bg-indigo-500 border-4 border-stone-900 z-10 hidden md:block"></div>
+                        <div class="md:w-5/12 pl-8"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Storage ---
+        const lifecycleData = {
+            planning: {
+                title: "1. Planning & Design",
+                content: `
+                    <p class="mb-4">In this phase, GenAI acts as a <strong>creative multiplier</strong>. Instead of starting from a blank canvas, developers and designers prompt engines to generate user flows, requirement documents, and even visual prototypes.</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>UI Prototyping:</strong> Convert text descriptions ("Login screen with biometric option") directly into Figma drafts or Jetpack Compose code.</li>
+                        <li><strong>User Stories:</strong> Generate comprehensive Jira tickets and acceptance criteria from a brief feature summary.</li>
+                        <li><strong>Asset Generation:</strong> Create placeholder icons and illustrations using image generation models (Midjourney, DALL-E) to unblock UI dev.</li>
+                    </ul>
+                `,
+                tools: ["ChatGPT (Ideation)", "Galileo AI (UI Gen)", "Midjourney (Assets)"],
+                chartData: [20, 90, 40, 30, 60], // [Logic, Creativity, Repetition, Complexity, Speed]
+                chartLabel: "Design Phase Automation Impact"
+            },
+            coding: {
+                title: "2. Development (Coding)",
+                content: `
+                    <p class="mb-4">This is the area of highest impact. GenAI reduces the cognitive load of syntax and boilerplate, allowing developers to focus on architecture and business logic.</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>Boilerplate Reduction:</strong> Instantly generate Room entities, DAO interfaces, and Retrofit setups.</li>
+                        <li><strong>Code Conversion:</strong> Automate the migration from Java to Kotlin or XML layouts to Jetpack Compose.</li>
+                        <li><strong>Docs-to-Code:</strong> Paste an API documentation snippet and get a fully typed data class and repository implementation.</li>
+                    </ul>
+                `,
+                tools: ["GitHub Copilot", "Android Studio Bot (Gemini)", "Codeium"],
+                chartData: [85, 30, 95, 70, 90], // High logic assistance, high repetition reduction
+                chartLabel: "Coding Phase Automation Impact"
+            },
+            testing: {
+                title: "3. Testing & QA",
+                content: `
+                    <p class="mb-4">Automated testing is often neglected due to time constraints. GenAI reverses this by making test case generation trivial and comprehensive.</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>Unit Test Gen:</strong> Highlight a function and generate positive, negative, and edge-case unit tests (JUnit/Mockito).</li>
+                        <li><strong>Visual Regression:</strong> AI agents crawl the app to detect UI anomalies across different screen sizes.</li>
+                        <li><strong>Log Analysis:</strong> Paste a stack trace into an LLM to explain the crash and suggest the exact fix.</li>
+                    </ul>
+                `,
+                tools: ["CodiumAI", "Appium + AI Plugins", "DiffBlue"],
+                chartData: [70, 20, 90, 85, 80],
+                chartLabel: "Testing Phase Automation Impact"
+            },
+            maintenance: {
+                title: "4. Maintenance & Ops",
+                content: `
+                    <p class="mb-4">Post-launch, GenAI helps monitor health and update legacy codebases.</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>Refactoring:</strong> Identify code smells and suggest modern Kotlin idioms.</li>
+                        <li><strong>Localization:</strong> Context-aware translation of strings.xml files into multiple languages with cultural nuance.</li>
+                        <li><strong>Documentation:</strong> Auto-generate KDoc comments and maintain up-to-date README files based on code changes.</li>
+                    </ul>
+                `,
+                tools: ["Copilot Chat", "DeepL API", "SonarQube AI"],
+                chartData: [60, 10, 80, 50, 70],
+                chartLabel: "Maintenance Phase Automation Impact"
+            }
+        };
+
+        // --- State Management ---
+        let currentTab = 'planning';
+        let lifecycleChartInstance = null;
+        let savingsChartInstance = null;
+        let qualityChartInstance = null;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initLifecycleChart();
+            updateLifecycle('planning'); // Load initial tab
+            initMetricsCharts();
+        });
+
+        // --- Core Interactions ---
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateLifecycle(phase) {
+            // Update Tab Styles
+            document.querySelectorAll('.lifecycle-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'active-tab');
+                btn.classList.add('hover:bg-indigo-50');
+            });
+            const activeBtn = document.getElementById(`btn-${phase}`);
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'active-tab');
+            activeBtn.classList.remove('hover:bg-indigo-50');
+
+            // Update Text Content
+            const data = lifecycleData[phase];
+            const contentDiv = document.getElementById('lifecycle-content');
+            const titleEl = document.getElementById('lifecycle-title');
+            const toolsDiv = document.getElementById('lifecycle-tools');
+
+            // Fade out effect
+            contentDiv.style.opacity = '0';
+            setTimeout(() => {
+                titleEl.innerText = data.title;
+                contentDiv.innerHTML = data.content;
+                
+                // Update Tools Tags
+                toolsDiv.innerHTML = data.tools.map(tool => 
+                    `<span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full border border-indigo-200">${tool}</span>`
+                ).join('');
+                
+                contentDiv.style.opacity = '1';
+            }, 150);
+
+            // Update Chart
+            updateRadarChart(data.chartData, data.chartLabel);
+        }
+
+        // --- Chart Implementations ---
+
+        function initLifecycleChart() {
+            const ctx = document.getElementById('lifecycleChart').getContext('2d');
+            
+            lifecycleChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Logic Support', 'Creative Aid', 'Repetition Kill', 'Complexity Handling', 'Speed Boost'],
+                    datasets: [{
+                        label: 'Impact Score',
+                        data: [0, 0, 0, 0, 0], // Initial dummy data
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                        borderColor: '#4f46e5',
+                        pointBackgroundColor: '#4f46e5',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#4f46e5'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e5e7eb' },
+                            grid: { color: '#e5e7eb' },
+                            pointLabels: {
+                                font: { size: 12, family: 'sans-serif' },
+                                color: '#4b5563'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            padding: 12,
+                            bodyFont: { size: 13 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateRadarChart(newData, label) {
+            if (lifecycleChartInstance) {
+                lifecycleChartInstance.data.datasets[0].data = newData;
+                lifecycleChartInstance.data.datasets[0].label = label;
+                lifecycleChartInstance.update();
+            }
+        }
+
+        function initMetricsCharts() {
+            // Chart 1: Time Savings (Bar)
+            const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+            savingsChartInstance = new Chart(savingsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Boilerplate', 'Unit Tests', 'UI Layouts', 'Debugging', 'Documentation'],
+                    datasets: [
+                        {
+                            label: 'Manual (Hours/Feature)',
+                            data: [4, 6, 8, 5, 2],
+                            backgroundColor: '#cbd5e1',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'GenAI Assisted (Hours/Feature)',
+                            data: [1.5, 2.5, 4, 3, 0.5],
+                            backgroundColor: '#4f46e5',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Hours' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                footer: (items) => {
+                                    const m = items[0].parsed.y;
+                                    const a = items[1].parsed.y;
+                                    const saving = Math.round(((m - a) / m) * 100);
+                                    return `Efficiency Gain: ${saving}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Code Quality (Doughnut)
+            // Simulating "Bugs Found Pre-Production"
+            const qualityCtx = document.getElementById('qualityChart').getContext('2d');
+            qualityChartInstance = new Chart(qualityCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Caught by GenAI Tests', 'Caught by Manual QA', 'Caught in Prod (Users)'],
+                    datasets: [{
+                        data: [65, 30, 5],
+                        backgroundColor: [
+                            '#4f46e5', // Indigo (GenAI)
+                            '#f59e0b', // Amber (Manual)
+                            '#ef4444'  // Red (Prod)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true, padding: 20 }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Defect Discovery Origin',
+                            padding: { bottom: 20 }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</body></html>

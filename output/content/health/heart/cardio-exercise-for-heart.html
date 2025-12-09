@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Explore the science of cardiovascular exercise with CardioLogic. Calculate your personalized heart rate zones, compare running vs. cycling vs. HIIT, and learn about polarized training (80/20 rule) in this interactive guide." name="description"/>
+    <meta content="cardio exercise, heart rate zones, zone 2 training, polarized training, 80/20 rule, running vs cycling, HIIT benefits, aerobic exercise, VO2 max calculator, fitness science" name="keywords"/>
+    <title>CardioLogic: Exercise Science Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAF9; color: #44403C; }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 600px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px; 
+            max-height: 400px; 
+        } 
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
+        .nav-active { border-bottom: 2px solid #EA580C; color: #EA580C; }
+        .btn-interaction { transition: all 0.2s; }
+        .btn-interaction:hover { transform: translateY(-1px); }
+        .zone-card { transition: all 0.3s ease; }
+        .zone-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals & Calm Harmony. Background: Stone-50 (#FAFAF9). Text: Stone-700 (#44403C). Accents: Orange-600 (Energetic but warm), Teal-600 (Calm/Health). -->
+    <!-- Application Structure Plan: A dashboard-style layout organized into three logical stages of the user journey: 1. Assessment (Inputs & Physiology), 2. Selection (Comparing Modalities), and 3. Execution (Structure & Safety). This structure moves from 'Self-Knowledge' to 'Decision Making' to 'Action'. -->
+    <!-- Visualization & Content Choices: 
+         1. HR Zones -> Goal: Inform/Personalize -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Updates based on Age Input -> Justification: Shows relative intensity clearly.
+         2. Modality Comparison -> Goal: Compare -> Viz: Radar Chart (Chart.js) -> Interaction: Toggle activities -> Justification: Best for multivariate comparison (Impact vs Burn vs Cost).
+         3. Training Mix -> Goal: Strategy -> Viz: Doughnut Chart (80/20 Rule) -> Interaction: Hover for details -> Justification: visualizes the volume distribution concept.
+         4. Calorie Est -> Goal: Inform -> Viz: Bar Chart -> Interaction: Updates on weight/intensity.
+         -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 text-stone-700">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold tracking-tight text-orange-600">Cardio<span class="text-stone-800">Logic</span></span>
+                </div>
+                <div class="hidden sm:flex space-x-8 items-center">
+                    <button class="text-stone-600 hover:text-orange-600 px-3 py-2 text-sm font-medium transition-colors" onclick="scrollToSection('physiology')">Physiology</button>
+                    <button class="text-stone-600 hover:text-orange-600 px-3 py-2 text-sm font-medium transition-colors" onclick="scrollToSection('modalities')">Modalities</button>
+                    <button class="text-stone-600 hover:text-orange-600 px-3 py-2 text-sm font-medium transition-colors" onclick="scrollToSection('strategy')">Strategy</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Personalization -->
+    <div class="bg-white border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-stone-900 mb-6 leading-tight">
+                        Optimize Your <span class="text-orange-600">Heart Health</span> Through Science
+                    </h1>
+                    <p class="text-lg text-stone-600 mb-8 leading-relaxed">
+                        Cardiovascular exercise is more than just running. It involves understanding your body's energy systems, managing heart rate zones, and selecting the right modality for your goals. Start by personalizing the data below.
+                    </p>
+                    
+                    <!-- Personalization Inputs -->
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200 shadow-sm">
+                        <h3 class="text-sm font-semibold text-stone-500 uppercase tracking-wider mb-4">Personalize The Dashboard</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-stone-700 mb-1">Age</label>
+                                <input class="w-full px-4 py-2 rounded-lg border border-stone-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" id="userAge" onchange="updateDashboard()" type="number" value="30"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-stone-700 mb-1">Weight (kg)</label>
+                                <input class="w-full px-4 py-2 rounded-lg border border-stone-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" id="userWeight" onchange="updateDashboard()" type="number" value="75"/>
+                            </div>
+                        </div>
+                        <button class="mt-4 w-full bg-stone-800 text-white py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20" onclick="updateDashboard()">
+                            Generate My Analysis
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats / Intro Viz -->
+                <div class="bg-orange-50 rounded-2xl p-8 border border-orange-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-orange-200 rounded-full opacity-50 blur-xl"></div>
+                    <h3 class="text-xl font-bold text-stone-800 mb-2">Why Cardio?</h3>
+                    <ul class="space-y-3 mt-4">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-orange-200 text-orange-700 text-xs font-bold mt-0.5">1</span>
+                            <span class="ml-3 text-stone-600"><strong>Heart Efficiency:</strong> Lowers resting heart rate and increases stroke volume.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-orange-200 text-orange-700 text-xs font-bold mt-0.5">2</span>
+                            <span class="ml-3 text-stone-600"><strong>Metabolic Health:</strong> Improves insulin sensitivity and mitochondrial density.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-orange-200 text-orange-700 text-xs font-bold mt-0.5">3</span>
+                            <span class="ml-3 text-stone-600"><strong>Mental Clarity:</strong> Releases endorphins and BDNF (Brain-Derived Neurotrophic Factor).</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT GRID -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+        <!-- SECTION 1: PHYSIOLOGY (Target HR) -->
+        <section class="scroll-mt-24" id="physiology">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-stone-900">1. The Physiology: Heart Rate Zones</h2>
+                <p class="mt-2 text-stone-600 max-w-3xl">
+                    Effective cardio isn't just about "going hard." It's about targeting specific energy systems. Based on your age (<span class="font-bold text-orange-600" id="dispAge">30</span>), we've calculated your specific heart rate zones. The "Best Approach" often involves spending 80% of your time in Zone 2.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Zone Explanation Cards -->
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="zone-card bg-white p-5 rounded-xl border-l-4 border-teal-500 shadow-sm cursor-pointer" onclick="highlightZone(0)">
+                        <h4 class="font-bold text-stone-800">Zone 2: Endurance</h4>
+                        <p class="text-sm text-stone-500 mt-1">60-70% Max HR. Builds mitochondrial efficiency and fat metabolism. You should be able to hold a conversation.</p>
+                    </div>
+                    <div class="zone-card bg-white p-5 rounded-xl border-l-4 border-yellow-500 shadow-sm cursor-pointer" onclick="highlightZone(1)">
+                        <h4 class="font-bold text-stone-800">Zone 3: Aerobic</h4>
+                        <p class="text-sm text-stone-500 mt-1">70-80% Max HR. Increases blood circulation and skeletal muscle strength. Harder breathing.</p>
+                    </div>
+                    <div class="zone-card bg-white p-5 rounded-xl border-l-4 border-red-500 shadow-sm cursor-pointer" onclick="highlightZone(2)">
+                        <h4 class="font-bold text-stone-800">Zone 4/5: VO2 Max</h4>
+                        <p class="text-sm text-stone-500 mt-1">80-95% Max HR. High intensity. Increases maximum oxygen uptake and speed. Sustainable for short bursts only.</p>
+                    </div>
+                </div>
+
+                <!-- HR Chart -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold text-stone-800">Your Personalized HR Zones (BPM)</h3>
+                        <span class="text-xs text-stone-400 bg-stone-100 px-2 py-1 rounded">Est. Max HR: <span id="dispMaxHR">190</span></span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="hrZoneChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-stone-400 mt-2">Formula: Tanaka (208 - 0.7 × age) or Standard (220 - age) used as baseline.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: MODALITIES (Comparison) -->
+        <section class="scroll-mt-24 border-t border-stone-200 pt-16" id="modalities">
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end">
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-900">2. Modalities: Choosing Your Vehicle</h2>
+                    <p class="mt-2 text-stone-600 max-w-2xl">
+                        There is no single "best" exercise. The best approach depends on your specific constraints: joint health, time availability, and enjoyment. Compare the most common forms below.
+                    </p>
+                </div>
+                
+                <!-- Filter Controls -->
+                <div class="mt-4 md:mt-0 bg-stone-100 p-1 rounded-lg flex space-x-1">
+                    <button class="px-3 py-1 text-sm rounded-md bg-white shadow-sm text-stone-800 font-medium" id="btn-radar">Radar Comparison</button>
+                    <!-- <button class="px-3 py-1 text-sm rounded-md text-stone-500 hover:text-stone-800" id="btn-cal">Calorie Burn</button> --> 
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Radar Chart -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                    <div class="mb-4">
+                        <h3 class="font-semibold text-stone-800 text-center">Multi-Factor Analysis</h3>
+                        <p class="text-xs text-stone-500 text-center">Comparing Impact, Burn Rate, Accessibility, &amp; Social Aspect</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="modalityRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Analysis Text -->
+                <div class="space-y-6">
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <div class="flex items-center mb-3">
+                            <span class="text-2xl mr-3">🏃</span>
+                            <h3 class="font-bold text-stone-800">Running</h3>
+                        </div>
+                        <ul class="text-sm text-stone-600 space-y-2 list-disc list-inside">
+                            <li><strong>Pros:</strong> Highest calorie burn per hour, builds bone density, requires minimal gear.</li>
+                            <li><strong>Cons:</strong> High impact forces (2.5x body weight), higher injury risk for beginners.</li>
+                            <li><strong>Best For:</strong> Weight loss, convenience, bone health.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <div class="flex items-center mb-3">
+                            <span class="text-2xl mr-3">🚴</span>
+                            <h3 class="font-bold text-stone-800">Cycling</h3>
+                        </div>
+                        <ul class="text-sm text-stone-600 space-y-2 list-disc list-inside">
+                            <li><strong>Pros:</strong> Very low impact, can sustain for long durations, explores distance.</li>
+                            <li><strong>Cons:</strong> Equipment cost, safety on roads, lower bone density benefits.</li>
+                            <li><strong>Best For:</strong> Endurance, joint issues, recovery days.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <div class="flex items-center mb-3">
+                            <span class="text-2xl mr-3">⏱️</span>
+                            <h3 class="font-bold text-stone-800">HIIT</h3>
+                        </div>
+                        <ul class="text-sm text-stone-600 space-y-2 list-disc list-inside">
+                            <li><strong>Pros:</strong> Time efficient (20 mins), "Afterburn" effect (EPOC), improves VO2 max rapidly.</li>
+                            <li><strong>Cons:</strong> High central nervous system fatigue, not for daily use.</li>
+                            <li><strong>Best For:</strong> Busy schedules, metabolic flexibility.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: STRATEGY (80/20 Rule) -->
+        <section class="scroll-mt-24 border-t border-stone-200 pt-16" id="strategy">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-900">3. The Best Approach: Polarized Training</h2>
+                    <p class="mt-4 text-stone-600 leading-relaxed">
+                        Research suggests the "Best Approach" for almost all goals (health, longevity, or performance) is <strong>Polarized Training</strong>, often called the 80/20 rule.
+                    </p>
+                    
+                    <div class="mt-8 space-y-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-8 h-8 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center font-bold">80</div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-stone-800">% Low Intensity (Zone 2)</h4>
+                                <p class="text-stone-600 text-sm">Builds the "engine." Increases capillary density and mitochondrial function without accumulating stress hormones. This allows for consistency.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">20</div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-stone-800">% High Intensity (Zone 4/5)</h4>
+                                <p class="text-stone-600 text-sm">Sharpens the "blade." Stimulates heart pumping capacity and fast-twitch muscle fibers. This should be very hard effort.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-stone-100 p-4 rounded-lg mt-4">
+                            <h4 class="font-bold text-xs uppercase tracking-wide text-stone-500 mb-2">How to measure without tech?</h4>
+                            <p class="text-sm text-stone-700 italic">"If you can speak in full sentences but can't sing, you are in the sweet spot (Zone 2)."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm flex flex-col justify-center items-center">
+                    <h3 class="font-semibold text-stone-800 mb-4 self-start w-full text-center">Weekly Volume Visualization</h3>
+                    <div class="chart-container" style="max-height: 300px;">
+                        <canvas id="strategyChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-stone-400 mt-4">Typical elite endurance breakdown applied to general health.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: SAFETY & STARTING -->
+        <section class="border-t border-stone-200 pt-16 pb-12">
+            <h2 class="text-2xl font-bold text-stone-900 mb-8 text-center">Essential Safety &amp; Gear Checklist</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Step 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-100 hover:border-orange-200 transition-colors">
+                    <div class="text-3xl mb-4">👟</div>
+                    <h3 class="font-bold text-stone-800 mb-2">Footwear</h3>
+                    <p class="text-sm text-stone-600">Running shoes last 300-500 miles. For lifting/HIIT, use flat stable shoes. Wrong shoes are the #1 cause of shin splints.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-100 hover:border-orange-200 transition-colors">
+                    <div class="text-3xl mb-4">💧</div>
+                    <h3 class="font-bold text-stone-800 mb-2">Hydration</h3>
+                    <p class="text-sm text-stone-600">Drink 16-20oz of water 4 hours before exercise. Weigh yourself before and after; replace every lb lost with 16oz fluid.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-100 hover:border-orange-200 transition-colors">
+                    <div class="text-3xl mb-4">📈</div>
+                    <h3 class="font-bold text-stone-800 mb-2">Progressive Overload</h3>
+                    <p class="text-sm text-stone-600">Increase weekly volume by no more than 10% to prevent overuse injuries. Consistency beats intensity.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            age: 30,
+            weight: 75, // kg
+            maxHR: 190,
+            charts: {}
+        };
+
+        // --- Core Interaction Logic ---
+        
+        function updateDashboard() {
+            // 1. Get Inputs
+            const ageInput = document.getElementById('userAge').value;
+            const weightInput = document.getElementById('userWeight').value;
+            
+            // Validation
+            if(ageInput < 10 || ageInput > 100) return; // Simple validation
+            
+            state.age = parseInt(ageInput);
+            state.weight = parseInt(weightInput);
+            
+            // 2. Calculate Physiology
+            // Tanaka Formula: 208 - (0.7 * age) is often more accurate than 220-age
+            state.maxHR = Math.round(208 - (0.7 * state.age));
+            
+            // Update DOM text
+            document.getElementById('dispAge').innerText = state.age;
+            document.getElementById('dispMaxHR').innerText = state.maxHR;
+
+            // 3. Update Charts
+            updateHRChart();
+            updateModalityChart(); // Re-render to refresh tooltips if needed
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Chart 1: Heart Rate Zones (Horizontal Bar) ---
+        function initHRChart() {
+            const ctx = document.getElementById('hrZoneChart').getContext('2d');
+            
+            // Calculate Zones based on initial state
+            const z2_low = Math.round(state.maxHR * 0.60);
+            const z2_high = Math.round(state.maxHR * 0.70);
+            const z3_high = Math.round(state.maxHR * 0.80);
+            const z4_high = Math.round(state.maxHR * 0.90);
+            const z5_high = state.maxHR;
+
+            state.charts.hr = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Zone 2 (Endurance)', 'Zone 3 (Aerobic)', 'Zone 4/5 (Max Performance)'],
+                    datasets: [{
+                        label: 'Min BPM',
+                        data: [z2_low, z2_high, z3_high],
+                        backgroundColor: 'transparent', // Spacer
+                        barPercentage: 0.6,
+                        stack: 'Stack 0',
+                    }, {
+                        label: 'Heart Rate Range',
+                        data: [z2_high - z2_low, z3_high - z2_high, z5_high - z3_high], // Width of the bar
+                        backgroundColor: [
+                            'rgba(20, 184, 166, 0.7)', // Teal (Zone 2)
+                            'rgba(234, 179, 8, 0.7)',  // Yellow (Zone 3)
+                            'rgba(239, 68, 68, 0.7)'   // Red (Zone 4/5)
+                        ],
+                        borderRadius: 6,
+                        stack: 'Stack 0',
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Horizontal bar
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    // Custom tooltip to show the actual range
+                                    const index = context.dataIndex;
+                                    let min, max;
+                                    if(index === 0) { min=Math.round(state.maxHR*0.6); max=Math.round(state.maxHR*0.7); }
+                                    if(index === 1) { min=Math.round(state.maxHR*0.7); max=Math.round(state.maxHR*0.8); }
+                                    if(index === 2) { min=Math.round(state.maxHR*0.8); max=state.maxHR; }
+                                    return `Target: ${min} - ${max} BPM`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 60, // Start slightly above 0 for better visibility
+                            title: { display: true, text: 'Beats Per Minute (BPM)' },
+                            grid: { color: '#e7e5e4' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateHRChart() {
+            if (!state.charts.hr) return;
+
+            const chart = state.charts.hr;
+            const z2_low = Math.round(state.maxHR * 0.60);
+            const z2_high = Math.round(state.maxHR * 0.70);
+            const z3_high = Math.round(state.maxHR * 0.80);
+            const z5_high = state.maxHR;
+
+            // Update spacer data
+            chart.data.datasets[0].data = [z2_low, z2_high, z3_high];
+            // Update range width data
+            chart.data.datasets[1].data = [z2_high - z2_low, z3_high - z2_high, z5_high - z3_high];
+            
+            chart.update();
+        }
+
+        // --- Chart 2: Modality Radar ---
+        function initRadarChart() {
+            const ctx = document.getElementById('modalityRadarChart').getContext('2d');
+            
+            state.charts.radar = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Calorie Burn', 'Joint Impact', 'Accessibility', 'Muscle Building', 'Social Factor'],
+                    datasets: [{
+                        label: 'Running',
+                        data: [90, 90, 85, 60, 50],
+                        fill: true,
+                        backgroundColor: 'rgba(234, 88, 12, 0.2)', // Orange
+                        borderColor: 'rgb(234, 88, 12)',
+                        pointBackgroundColor: 'rgb(234, 88, 12)',
+                        pointHoverBorderColor: 'rgb(234, 88, 12)'
+                    }, {
+                        label: 'Cycling',
+                        data: [70, 20, 50, 65, 70],
+                        fill: true,
+                        backgroundColor: 'rgba(20, 184, 166, 0.2)', // Teal
+                        borderColor: 'rgb(20, 184, 166)',
+                        pointBackgroundColor: 'rgb(20, 184, 166)',
+                        pointHoverBorderColor: 'rgb(20, 184, 166)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { tension: 0.3 } },
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e7e5e4' },
+                            grid: { color: '#e7e5e4' },
+                            pointLabels: {
+                                font: { size: 12, family: 'Inter' },
+                                color: '#44403C'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { family: 'Inter' } } }
+                    }
+                }
+            });
+        }
+        
+        function updateModalityChart() {
+            if (!state.charts.radar) return;
+            // Function placeholder for potential interactivity filters later
+            state.charts.radar.update();
+        }
+
+        // --- Chart 3: Strategy Doughnut ---
+        function initStrategyChart() {
+            const ctx = document.getElementById('strategyChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Low Intensity (Zone 2)', 'High Intensity (Zone 4/5)'],
+                    datasets: [{
+                        data: [80, 20],
+                        backgroundColor: [
+                            'rgba(20, 184, 166, 0.8)', // Teal
+                            'rgba(234, 88, 12, 0.8)'   // Orange
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}% of Weekly Volume`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Interaction Helper: Highlight Zones ---
+        function highlightZone(index) {
+            // Visual feedback on chart when clicking cards
+            const chart = state.charts.hr;
+            const originalColors = [
+                'rgba(20, 184, 166, 0.7)', 
+                'rgba(234, 179, 8, 0.7)',  
+                'rgba(239, 68, 68, 0.7)'
+            ];
+            
+            // Dim others
+            const newColors = originalColors.map((c, i) => i === index ? c.replace('0.7', '1') : c.replace('0.7', '0.2'));
+            chart.data.datasets[1].backgroundColor = newColors;
+            chart.update();
+
+            // Reset after 2 seconds
+            setTimeout(() => {
+                chart.data.datasets[1].backgroundColor = originalColors;
+                chart.update();
+            }, 2000);
+        }
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDashboard(); // Run once to set initial values
+            initHRChart();
+            initRadarChart();
+            initStrategyChart();
+        });
+
+    </script>
+
+</body></html>
