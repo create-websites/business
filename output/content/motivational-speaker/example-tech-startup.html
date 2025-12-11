@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- Meta Description & Keywords -->
+    <meta content="Ignite the fire within. KREATE is a world-class motivational speaker empowering audiences to break barriers, redefine success, and achieve greatness through action. Book for keynotes, leadership coaching, and corporate workshops." name="description"/>
+    <meta content="motivational speaker, keynote speaker, leadership coaching, corporate workshops, business success, resilience training, public speaker, event speaker, KREATE" name="keywords"/>
+    <meta content="KREATE" name="author"/>
+
+    <title>KREATE | Motivational Speaker &amp; Leadership Coach</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Styles for Animations -->
+    <style>
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s ease-out forwards;
+            opacity: 0; 
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ef4444;
+        }
+        
+        .page-section {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px; /* Space for fixed nav */
+        }
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        /* Home section needs specific handling to remove padding for hero */
+        #home.page-section {
+            padding-top: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-100 font-sans selection:bg-red-600 selection:text-white overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-transparent py-6" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold tracking-tighter text-white cursor-pointer uppercase" onclick="navigateTo('home')">
+                    KREATE<span class="text-red-500">.</span>
+                </div>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex space-x-8">
+                    <button class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 uppercase text-gray-300 hover:text-white" data-target="home" onclick="navigateTo('home')">Home</button>
+                    <button class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 uppercase text-gray-300 hover:text-white" data-target="gallery" onclick="navigateTo('gallery')">Gallery</button>
+                    <button class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 uppercase text-gray-300 hover:text-white" data-target="blog" onclick="navigateTo('blog')">Blog</button>
+                    <button class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 uppercase text-gray-300 hover:text-white" data-target="contact" onclick="navigateTo('contact')">Contact</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="text-white" id="mobile-menu-btn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div class="hidden md:hidden bg-black/95 absolute w-full top-full left-0 border-t border-gray-800" id="mobile-menu">
+            <div class="px-4 pt-2 pb-8 space-y-2">
+                <button class="block w-full text-left px-3 py-4 text-base font-medium border-b border-gray-800 text-gray-300 hover:text-white" onclick="navigateTo('home')">Home</button>
+                <button class="block w-full text-left px-3 py-4 text-base font-medium border-b border-gray-800 text-gray-300 hover:text-white" onclick="navigateTo('gallery')">Gallery</button>
+                <button class="block w-full text-left px-3 py-4 text-base font-medium border-b border-gray-800 text-gray-300 hover:text-white" onclick="navigateTo('blog')">Blog</button>
+                <button class="block w-full text-left px-3 py-4 text-base font-medium border-b border-gray-800 text-gray-300 hover:text-white" onclick="navigateTo('contact')">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- HOME PAGE -->
+        <section class="page-section active" id="home">
+            <!-- Hero -->
+            <div class="relative h-screen flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 z-0">
+                    <img alt="Speaker on Stage" class="w-full h-full object-cover opacity-60" src="https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker1.jpg"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                </div>
+                
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 class="text-red-500 font-bold tracking-widest uppercase mb-4 animate-fade-in-up">Motivational Speaker</h2>
+                    <h1 class="text-5xl md:text-7xl lg:text-9xl font-black text-white tracking-tighter mb-8 animate-fade-in-up delay-100">
+                        IGNITE THE <br/> <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-600">FIRE WITHIN</span>
+                    </h1>
+                    <p class="max-w-2xl mx-auto text-xl text-gray-300 mb-10 font-light leading-relaxed animate-fade-in-up delay-200">
+                        Empowering audiences worldwide to break barriers, redefine success, and achieve greatness through action.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up delay-300">
+                        <button class="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold tracking-wider uppercase transition-all transform hover:scale-105" onclick="navigateTo('contact')">
+                            Book Now
+                        </button>
+                        <button class="px-8 py-4 border border-white text-white hover:bg-white hover:text-black font-bold tracking-wider uppercase transition-all" onclick="navigateTo('gallery')">
+                            View Gallery
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <section class="py-24 bg-black text-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                        <div class="group p-8 border border-gray-800 hover:border-red-600 transition-colors duration-300">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i class="text-white" data-lucide="quote"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Keynote Speaking</h3>
+                            <p class="text-gray-400 leading-relaxed">High-energy presentations that challenge conventional thinking and inspire immediate action in your organization.</p>
+                        </div>
+                        <div class="group p-8 border border-gray-800 hover:border-red-600 transition-colors duration-300">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i class="text-white" data-lucide="arrow-right"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Leadership Coaching</h3>
+                            <p class="text-gray-400 leading-relaxed">Direct mentorship for executives and team leaders looking to elevate their impact and drive sustainable growth.</p>
+                        </div>
+                        <div class="group p-8 border border-gray-800 hover:border-red-600 transition-colors duration-300">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i class="text-white" data-lucide="globe"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Corporate Workshops</h3>
+                            <p class="text-gray-400 leading-relaxed">Interactive sessions designed to build team cohesion, improve communication, and foster a winning culture.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slideshow -->
+            <div class="relative w-full h-[600px] bg-black overflow-hidden group" id="slideshow-container">
+                <div class="absolute inset-0 transition-transform duration-700 ease-in-out flex" id="slideshow-track">
+                    <!-- Slides inserted via JS -->
+                </div>
+
+                <button class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-600 text-white p-3 backdrop-blur-sm transition-colors z-20" id="prev-slide">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-red-600 text-white p-3 backdrop-blur-sm transition-colors z-20" id="next-slide">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- CTA Section -->
+            <section class="py-24 bg-gray-900">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 class="text-3xl font-bold text-white mb-6 uppercase">Ready to Transform Your Event?</h2>
+                    <button class="px-8 py-4 bg-transparent border-2 border-red-600 text-red-500 hover:bg-red-600 hover:text-white font-bold tracking-wider uppercase transition-all" onclick="navigateTo('contact')">
+                        Get in Touch
+                    </button>
+                </div>
+            </section>
+        </section>
+
+        <!-- GALLERY PAGE -->
+        <section class="page-section bg-black" id="gallery">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-16">
+                    <h2 class="text-red-500 font-bold tracking-widest uppercase mb-2">Moments</h2>
+                    <h1 class="text-4xl md:text-6xl font-black text-white uppercase">Gallery</h1>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-grid">
+                    <!-- Gallery items injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOG PAGE -->
+        <section class="page-section bg-black" id="blog">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-16">
+                    <h2 class="text-red-500 font-bold tracking-widest uppercase mb-2">Insights</h2>
+                    <h1 class="text-4xl md:text-6xl font-black text-white uppercase">Latest Articles</h1>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="blog-grid">
+                    <!-- Blog items injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section class="page-section bg-black" id="contact">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div>
+                        <h2 class="text-red-500 font-bold tracking-widest uppercase mb-2">Get in Touch</h2>
+                        <h1 class="text-4xl md:text-6xl font-black text-white uppercase mb-8">Let's Create<br/>Impact Together</h1>
+                        <p class="text-gray-400 text-lg mb-12 leading-relaxed">
+                            Ready to elevate your next event? Reach out to discuss availability, speaking topics, and how we can tailor a transformative experience for your audience.
+                        </p>
+
+                        <div class="space-y-8">
+                            <div class="flex items-start">
+                                <i class="text-red-500 mt-1 mr-4" data-lucide="phone"></i>
+                                <div>
+                                    <h3 class="text-white font-bold uppercase mb-1">Phone</h3>
+                                    <p class="text-gray-400">4253411111</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="text-red-500 mt-1 mr-4" data-lucide="mail"></i>
+                                <div>
+                                    <h3 class="text-white font-bold uppercase mb-1">Email</h3>
+                                    <p class="text-gray-400">contact@kreate.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="text-red-500 mt-1 mr-4" data-lucide="globe"></i>
+                                <div>
+                                    <h3 class="text-white font-bold uppercase mb-1">Website</h3>
+                                    <a class="text-gray-400 hover:text-white transition-colors" href="https://business.kreate.com/motivational-speaker">https://business.kreate.com/motivational-speaker</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 p-8 border border-gray-800">
+                        <form class="space-y-6" onsubmit="event.preventDefault(); alert('Message sent! (Demo)');">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Name</label>
+                                    <input class="w-full bg-black border border-gray-800 text-white p-3 focus:border-red-500 focus:outline-none transition-colors" placeholder="John Doe" type="text"/>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email</label>
+                                    <input class="w-full bg-black border border-gray-800 text-white p-3 focus:border-red-500 focus:outline-none transition-colors" placeholder="john@example.com" type="email"/>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Subject</label>
+                                <select class="w-full bg-black border border-gray-800 text-white p-3 focus:border-red-500 focus:outline-none transition-colors">
+                                    <option>Booking Inquiry</option>
+                                    <option>Media Request</option>
+                                    <option>General Question</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Message</label>
+                                <textarea class="w-full bg-black border border-gray-800 text-white p-3 focus:border-red-500 focus:outline-none transition-colors" placeholder="Tell us about your event..." rows="4"></textarea>
+                            </div>
+                            <button class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 uppercase tracking-wider transition-all">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Lightbox Modal -->
+    <div class="fixed inset-0 z-[60] bg-black/95 hidden items-center justify-center p-4 cursor-pointer" id="lightbox" onclick="closeLightbox()">
+        <div class="relative max-w-5xl w-full h-full flex items-center justify-center" onclick="event.stopPropagation()">
+            <button class="absolute top-4 right-4 text-white hover:text-red-500" onclick="closeLightbox()">
+                <i data-lucide="x" height="32" width="32"></i>
+            </button>
+            <img alt="Full view" class="max-h-full max-w-full object-contain" id="lightbox-img" src=""/>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Data
+        const images = [
+            "https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker1.jpg",
+            "https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker2.jpg",
+            "https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker3.jpg",
+            "https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker4.jpg",
+            "https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker5.jpg",
+            "https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker6.jpg",
+            "https://storage.googleapis.com/imagesu/motivational-speaker/motivational-speaker7.jpg"
+        ];
+
+        const posts = [
+            {
+                title: "The Art of Resilience",
+                date: "Oct 12, 2023",
+                category: "Mindset",
+                excerpt: "True strength isn't about never falling; it's about how quickly you get back up. In this post, we explore the mechanics of mental toughness.",
+                image: images[2]
+            },
+            {
+                title: "Leading from the Front",
+                date: "Sep 28, 2023",
+                category: "Leadership",
+                excerpt: "Leadership is a verb, not a title. Discover the daily habits that separate true leaders from mere managers in the modern corporate landscape.",
+                image: images[4]
+            },
+            {
+                title: "Silence the Noise",
+                date: "Sep 15, 2023",
+                category: "Productivity",
+                excerpt: "In a world of constant distraction, focus is the new superpower. Learn techniques to reclaim your attention and amplify your output.",
+                image: images[6]
+            }
+        ];
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderGallery();
+            renderBlog();
+            renderSlideshow();
+            startSlideshow();
+            
+            // Initial Active State for Nav
+            updateActiveNav('home');
+        });
+
+        // --- Navigation Logic ---
+        function navigateTo(pageId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            const target = document.getElementById(pageId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+
+            // Update Nav State
+            updateActiveNav(pageId);
+        }
+
+        function updateActiveNav(pageId) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.dataset.target === pageId) {
+                    link.classList.add('text-red-500');
+                    link.classList.remove('text-gray-300');
+                } else {
+                    link.classList.remove('text-red-500');
+                    link.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/90', 'backdrop-blur-md', 'py-4', 'shadow-lg');
+                navbar.classList.remove('bg-transparent', 'py-6');
+            } else {
+                navbar.classList.remove('bg-black/90', 'backdrop-blur-md', 'py-4', 'shadow-lg');
+                navbar.classList.add('bg-transparent', 'py-6');
+            }
+        });
+
+        // --- Gallery Logic ---
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = images.map((img, index) => `
+                <div onclick="openLightbox('${img}')"
+                    class="group relative overflow-hidden cursor-pointer ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''}">
+                    <div class="aspect-w-16 aspect-h-9 h-full min-h-[300px]">
+                        <img src="${img}" alt="Gallery ${index + 1}" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 filter grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p class="text-white font-bold tracking-wider uppercase border border-white px-6 py-2">View Full</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Lightbox
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+        }
+
+        // --- Blog Logic ---
+        function renderBlog() {
+            const grid = document.getElementById('blog-grid');
+            grid.innerHTML = posts.map((post, index) => `
+                <div class="bg-gray-900 group cursor-pointer overflow-hidden border border-gray-800 hover:border-red-900 transition-all">
+                    <div class="h-48 overflow-hidden">
+                        <img src="${post.image}" alt="${post.title}" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100">
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center text-xs text-red-500 font-bold uppercase tracking-wider mb-3">
+                            <span>${post.category}</span>
+                            <span class="mx-2">•</span>
+                            <span>${post.date}</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-red-500 transition-colors">${post.title}</h3>
+                        <p class="text-gray-400 mb-6 leading-relaxed line-clamp-3">${post.excerpt}</p>
+                        <div class="flex items-center text-white font-medium group-hover:translate-x-2 transition-transform">
+                            Read More <i data-lucide="chevron-right" width="16" class="ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            // Re-init icons for dynamic content
+            lucide.createIcons();
+        }
+
+        // --- Slideshow Logic ---
+        let slideIndex = 0;
+        const track = document.getElementById('slideshow-track');
+        
+        function renderSlideshow() {
+            track.innerHTML = images.map((img, index) => `
+                <div class="w-full flex-shrink-0 relative">
+                    <img src="${img}" alt="Slide ${index}" class="w-full h-full object-cover opacity-60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-12 w-full">
+                        <div class="max-w-7xl mx-auto">
+                            <h2 class="text-4xl font-bold text-white uppercase mb-2">Live Events</h2>
+                            <p class="text-red-500 font-bold tracking-widest uppercase">Capturing the Energy</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function moveSlide(direction) {
+            slideIndex = (slideIndex + direction + images.length) % images.length;
+            track.style.transform = `translateX(-${slideIndex * 100}%)`;
+        }
+
+        function startSlideshow() {
+            setInterval(() => moveSlide(1), 5000);
+            document.getElementById('prev-slide').addEventListener('click', () => moveSlide(-1));
+            document.getElementById('next-slide').addEventListener('click', () => moveSlide(1));
+        }
+
+    </script>
+
+</body></html>

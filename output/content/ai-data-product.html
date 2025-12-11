@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+  <title>The AI Data Product Master Guide</title>
+
+  <meta content="An interactive guide to building AI Data Products: use LLMs/GenAI to generate and enrich data, and Agent AI to keep pipelines fresh with continuous monitoring, auto-fixes, and governance. Learn the end-to-end lifecycle with practical checklists and fit assessments." name="description"/>
+  <meta content="AI data product, GenAI data generation, LLM data enrichment, agentic AI, autonomous data pipelines, data product lifecycle, data mesh, DATSIS, AI data contracts, data contracts, data observability, synthetic data, data quality, pipeline monitoring, schema drift, freshness SLAs, governance" name="keywords"/>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fdfbf7; /* Warm neutral background */
+      color: #1f2937;
+      scroll-behavior: smooth;
+    }
+
+    /* Chart Container Styling */
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      max-height: 400px;
+    }
+
+    /* Custom Scrollbar */
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+    /* Interactive Elements */
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    }
+
+    /* Animation */
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+
+<body class="antialiased min-h-screen flex flex-col">
+
+  <!-- Navigation -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100 backdrop-blur-md bg-opacity-90">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 flex items-center gap-2">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">AI</div>
+            <span class="font-bold text-xl text-gray-800">Data Product Master Guide</span>
+          </div>
+        </div>
+        <div class="hidden lg:flex sm:items-center sm:space-x-6">
+          <button class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium" onclick="scrollToSection('define')">1. Define</button>
+          <button class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium" onclick="scrollToSection('build')">2. Build</button>
+          <button class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium" onclick="scrollToSection('evaluate')">3. Evaluate</button>
+          <button class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium" onclick="scrollToSection('validate')">4. Validate</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="bg-white pb-12 pt-10 px-4 sm:px-6 lg:px-8 border-b border-gray-200">
+    <div class="max-w-4xl mx-auto text-center">
+      <span class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-indigo-600 uppercase bg-indigo-50 rounded-full">
+        AI Data Product Framework (GenAI + Agent AI)
+      </span>
+
+      <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+        E2E Lifecycle of an <span class="text-indigo-600">AI Data Product</span>
+      </h1>
+
+      <p class="mt-5 max-w-2xl mx-auto text-xl text-gray-500">
+        Use LLMs/GenAI to generate &amp; enrich data signals, and Agent AI to keep pipelines fresh with continuous monitoring,
+        automated triage, safe fixes, and strong governance.
+      </p>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+
+    <!-- ========================================== -->
+    <!-- SECTION 1: DEFINE -->
+    <!-- ========================================== -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50" id="define">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-gray-900">1. Define an AI Data Product</h2>
+          <p class="text-gray-600 mt-2">From “data as asset” → “data as product” → “AI data product” (GenAI signals + agent-managed freshness).</p>
+        </div>
+
+        <!-- Toggle UI -->
+        <div class="flex justify-center mb-8">
+          <div class="relative inline-flex items-center cursor-pointer group" onclick="toggleMindset()">
+            <span class="mr-3 text-lg font-semibold text-gray-900 transition-colors" id="label-project">Pipeline Mindset</span>
+            <div class="w-14 h-7 bg-gray-200 rounded-full relative">
+              <div class="absolute top-1 left-1 bg-indigo-600 w-5 h-5 rounded-full transition-all duration-300" id="toggle-ball"></div>
+            </div>
+            <span class="ml-3 text-lg font-medium text-gray-500 transition-colors" id="label-product">AI Data Product Mindset</span>
+          </div>
+        </div>
+
+        <!-- Mindset Content -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto transition-all duration-500 border border-gray-100 mb-16" id="mindset-content">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- DATSIS Framework -->
+        <div class="mb-12 mt-16">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Core Characteristics (DATSIS) — upgraded for AI</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="datsis-grid">
+            <!-- Injected via JS -->
+          </div>
+          <div class="mt-8 p-6 bg-indigo-50 rounded-xl border border-indigo-100 hidden" id="datsis-detail">
+            <!-- Detail view -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 2: BUILD -->
+    <!-- ========================================== -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200" id="build">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-gray-900">2. Build: Pipelines + GenAI + Agents</h2>
+          <p class="text-gray-600 mt-2">Engineer the product surface, then add agentic operations that keep it current, compliant, and stable.</p>
+        </div>
+
+        <!-- Lifecycle Interactive -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+          <div class="lg:col-span-4 flex flex-col gap-2" id="lifecycle-tabs">
+            <!-- Generated JS Tabs -->
+          </div>
+          <div class="lg:col-span-8 bg-gray-50 p-8 rounded-xl border border-gray-200" id="lifecycle-detail">
+            <!-- Generated Content -->
+          </div>
+        </div>
+
+        <!-- Team & Roles -->
+        <div class="bg-indigo-50 rounded-2xl p-8 border border-indigo-100">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 class="text-2xl font-bold text-indigo-900 mb-4">The AI Data Product Enablement Team</h3>
+              <p class="text-indigo-800 mb-6">
+                AI Data Products require cross-functional skills across data engineering, evaluation, governance,
+                UX, and agentic operations. Use the role mix below to compare staffing.
+              </p>
+
+              <select class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-white p-2 mb-4" id="role-selector" onchange="renderTeamChart(this.value)">
+                <option value="pm">Data Product Manager</option>
+                <option value="ds">Data Scientist / ML</option>
+                <option value="eng">Data Engineer</option>
+                <option value="do">Domain Expert</option>
+                <option value="ux">UX Designer (or tool like Kreate)</option>
+              </select>
+
+              <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h4 class="font-bold text-gray-800 mb-2">Role Focus:</h4>
+                <p class="text-sm text-gray-600" id="role-desc">Select a role to see details.</p>
+              </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm h-[350px]">
+              <canvas id="teamChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 3: EVALUATE -->
+    <!-- ========================================== -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200" id="evaluate">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-gray-900">3. Evaluate Fit &amp; Utility (with AI)</h2>
+          <p class="text-gray-600 mt-2">Test signal validity + user utility, and verify GenAI outputs are reliable, explainable, and cost-effective.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <!-- Signal Validity -->
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <h3 class="font-bold text-lg text-teal-700 mb-4">Criterion 1: Signal Validity (Is the “Chocolate Bar” Real?)</h3>
+            <p class="text-sm text-gray-600 mb-4">
+              When we combine raw data into an abstracted indicator (e.g., “Device Health”), we must ensure the abstraction matches reality.
+              For AI data products, that also means checking the *generated/derived* parts: are GenAI enrichments stable, grounded, and consistent?
+              A good signal stays stable when nothing changes, reacts when something truly changes, is explainable (“which ingredients drove it?”),
+              and is verifiable against outcomes.
+            </p>
+
+            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-teal-600 mb-4" id="algo-slider" max="100" min="0" type="range" value="50"/>
+
+            <div class="h-[200px] w-full">
+              <canvas id="signalChart"></canvas>
+            </div>
+
+            <div class="mt-2 flex justify-between text-sm font-bold text-teal-800">
+              <span>Noise</span>
+              <span id="signal-score-val">50/100</span>
+              <span>Signal</span>
+            </div>
+          </div>
+
+          <!-- User Utility -->
+          <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <h3 class="font-bold text-lg text-indigo-700 mb-4">Criterion 2: User Utility</h3>
+            <p class="text-sm text-gray-600 mb-4">
+              Does it solve a real problem? Select utility drivers. For AI data products, include “trust + explainability”
+              and operational readiness so users aren’t surprised by changes.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 mb-4" id="utility-checklist">
+              <!-- JS Generated -->
+            </div>
+
+            <div class="h-[20px] w-full bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-indigo-600 transition-all duration-500" id="utility-bar" style="width: 0%"></div>
+            </div>
+
+            <div class="mt-2 text-right text-sm font-bold text-indigo-800" id="utility-score-val">0/100</div>
+          </div>
+        </div>
+
+        <!-- Decision Matrix / Fit -->
+        <div class="bg-gray-800 rounded-xl p-8 text-white">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 class="text-2xl font-bold mb-2">Product Fit Assessment</h3>
+              <p class="text-gray-400 mb-6">Based on signal + utility, here’s a recommendation for what to do next.</p>
+              <div class="p-6 bg-gray-700 rounded-lg border-l-4 border-gray-500" id="recommendation-box">
+                <h4 class="font-bold text-lg mb-1" id="rec-title">ADJUST INPUTS</h4>
+                <p class="text-sm text-gray-300" id="rec-desc">Interact with the tools above to get a strategic recommendation.</p>
+              </div>
+            </div>
+            <div class="h-[250px]">
+              <canvas id="decisionChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 4: VALIDATE -->
+    <!-- ========================================== -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200" id="validate">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-gray-900">4. Validate, Launch &amp; Keep Fresh</h2>
+          <p class="text-gray-600 mt-2">Trustworthiness + consumability + discoverability—plus agent-driven freshness, drift response, and continuous QA.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          <div class="bg-orange-50 p-6 rounded-xl border border-orange-100">
+            <div class="text-3xl mb-3">💎</div>
+            <h3 class="font-bold text-orange-900 mb-2">Trustworthy</h3>
+            <p class="text-sm text-orange-800">
+              Grounded generation, evaluation suites, and data/LLM quality gates—continuously monitored by agents.
+            </p>
+          </div>
+          <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+            <div class="text-3xl mb-3">📦</div>
+            <h3 class="font-bold text-blue-900 mb-2">Consumable</h3>
+            <p class="text-sm text-blue-800">
+              Explicit contracts + schemas + docs, plus stable endpoints and versioning for data, prompts, and models.
+            </p>
+          </div>
+          <div class="bg-green-50 p-6 rounded-xl border border-green-100">
+            <div class="text-3xl mb-3">🔭</div>
+            <h3 class="font-bold text-green-900 mb-2">Discoverable</h3>
+            <p class="text-sm text-green-800">
+              Catalog + “AI Card” metadata: what is generated vs sourced, grounding rules, evals, owners, and SLOs.
+            </p>
+          </div>
+        </div>
+
+        <!-- Validation Lifecycle Flow -->
+        <div class="mb-16">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">The Validation Lifecycle</h3>
+          <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <button class="flex-1 p-4 rounded-lg border border-gray-200 hover:border-orange-500 bg-gray-50 text-center transition-all val-step-btn active" data-step="design" onclick="renderValidationStep('design')">
+              <span class="block text-2xl mb-1">📐</span>
+              <span class="font-bold">Design Contract</span>
+            </button>
+            <button class="flex-1 p-4 rounded-lg border border-gray-200 hover:border-orange-500 bg-gray-50 text-center transition-all val-step-btn" data-step="build" onclick="renderValidationStep('build')">
+              <span class="block text-2xl mb-1">🏗️</span>
+              <span class="font-bold">Build &amp; Test</span>
+            </button>
+            <button class="flex-1 p-4 rounded-lg border border-gray-200 hover:border-orange-500 bg-gray-50 text-center transition-all val-step-btn" data-step="run" onclick="renderValidationStep('run')">
+              <span class="block text-2xl mb-1">⚙️</span>
+              <span class="font-bold">Run &amp; Monitor</span>
+            </button>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm" id="validation-content">
+            <!-- Content -->
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Readiness Assessment -->
+          <div class="bg-gray-900 rounded-xl p-8 text-white">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-xl font-bold">AI Readiness Checklist</h3>
+              <div class="text-2xl font-bold text-orange-400" id="readiness-score">0%</div>
+            </div>
+            <div class="space-y-3" id="readiness-list">
+              <!-- JS Checklist -->
+            </div>
+          </div>
+
+          <!-- Quality Metrics Radar -->
+          <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Quality Metrics</h3>
+            <div class="h-[300px]">
+              <canvas id="qualityRadarChart"></canvas>
+            </div>
+            <div class="mt-4 text-center">
+              <button class="text-sm text-indigo-600 hover:underline" onclick="randomizeRadar()">Simulate Audit</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // === GLOBAL STATE ===
+    const state = {
+      mindset: 'project',
+      currentArchetype: 'source',
+      validationStep: 'design',
+      signalScore: 50,
+      utilityScore: 0,
+      readinessItems: [
+        { id: 'r1', text: 'Clear Business Owner + on-call/ops owner defined', checked: false },
+        { id: 'r2', text: 'Freshness/Quality SLOs defined (and how measured)', checked: false },
+        { id: 'r3', text: 'Data contract + schema validation enforced in pipeline', checked: false },
+        { id: 'r4', text: 'AI contract defined (grounding, allowed sources, human review points)', checked: false },
+        { id: 'r5', text: 'GenAI eval suite exists (gold set + regression tests)', checked: false },
+        { id: 'r6', text: 'PII/Sensitive data tagged + prompt/output filtering enforced', checked: false },
+        { id: 'r7', text: 'Lineage includes data + prompts + model versions', checked: false },
+        { id: 'r8', text: 'Agent monitoring enabled (drift, anomalies, schema breaks, freshness)', checked: false },
+        { id: 'r9', text: 'Rollback + incident runbooks for data + AI failures', checked: false }
+      ],
+      utilityDrivers: {
+        'pain': { label: 'Solves Pain Point', value: 25, active: false },
+        'workflow': { label: 'Fits Workflow', value: 20, active: false },
+        'time': { label: 'Saves Time', value: 20, active: false },
+        'trust': { label: 'Trust + Explainability', value: 20, active: false },
+        'ops': { label: 'Operationally Reliable', value: 15, active: false }
+      }
+    };
+
+    // === DATA DEFINITIONS ===
+
+    const mindsetData = {
+      project: {
+        title: "Pipeline Mindset",
+        features: [
+          { icon: "⚙️", title: "Success", text: "Ship a pipeline or dataset; declare done." },
+          { icon: "🧯", title: "Quality", text: "Manual checks; issues found by downstream teams." },
+          { icon: "🕒", title: "Freshness", text: "Best-effort schedules; breaks after upstream changes." },
+          { icon: "📄", title: "Docs", text: "Documentation drifts over time." }
+        ]
+      },
+      product: {
+        title: "AI Data Product Mindset",
+        features: [
+          { icon: "🎯", title: "Success", text: "Adoption + measurable decision impact over time." },
+          { icon: "✨", title: "GenAI Leverage", text: "Generate/enrich signals (labels, entities, mappings) and tag as derived." },
+          { icon: "🤖", title: "Agent Operations", text: "Monitor freshness/drift/anomalies and propose safe fixes (tickets/PRs/backfills)." },
+          { icon: "🧾", title: "AI Card", text: "Grounding rules, evals, limitations, and versioning are explicit." }
+        ]
+      }
+    };
+
+    const datsisData = [
+      { L: "D", W: "Discoverable",     T: "Catalog + AI Card (what’s generated, grounded, owners, SLOs)", C: "bg-blue-50 border-blue-200" },
+      { L: "A", W: "Addressable",     T: "Stable endpoints + prompt/model versions + feature/embedding IDs", C: "bg-green-50 border-green-200" },
+      { L: "T", W: "Trustworthy",     T: "Grounding + evals + data/LLM quality gates, monitored by agents", C: "bg-orange-50 border-orange-200" },
+      { L: "S", W: "Self-describing", T: "Schema + semantic defs + lineage (data + prompts + models)", C: "bg-purple-50 border-purple-200" },
+      { L: "I", W: "Interoperable",   T: "Global IDs + standards; retrieval-ready formats; tool/API-first", C: "bg-red-50 border-red-200" },
+      { L: "S", W: "Secure",          T: "PII controls + prompt/output filtering + audit logs + least privilege", C: "bg-indigo-50 border-indigo-200" }
+    ];
+
+    const datsisDetailData = {
+      Discoverable: {
+        why: "People can’t use what they can’t find—or what they don’t understand.",
+        includes: [
+          "Catalog entry + owners + on-call + SLOs (freshness/quality)",
+          "AI Card: generated vs sourced, grounding rules, eval scorecards",
+          "Sample queries, API examples, and known limitations"
+        ]
+      },
+      Addressable: {
+        why: "Stable references make automation and reproducibility possible.",
+        includes: [
+          "Stable dataset/API URI + versioning",
+          "Prompt/model version pinned in metadata",
+          "Stable entity/feature/embedding identifiers"
+        ]
+      },
+      Trustworthy: {
+        why: "AI data products must be correct enough to act on.",
+        includes: [
+          "Grounding requirements + citations where applicable",
+          "Automated evals (gold sets, regression tests, hallucination checks)",
+          "Agent monitoring for drift, freshness breaches, schema breaks, anomalies"
+        ]
+      },
+      "Self-describing": {
+        why: "Semantics prevent misuse and confusion.",
+        includes: [
+          "Schema + definitions + units + edge-case behavior",
+          "Lineage for data + prompts + models + tools",
+          "Docs auto-refreshed by agents"
+        ]
+      },
+      Interoperable: {
+        why: "Reuse requires standards and consistent IDs.",
+        includes: [
+          "Conformed dimensions / global IDs",
+          "Outputs shaped for downstream tools (tables, APIs, vector indexes)",
+          "Contract tests for compatibility"
+        ]
+      },
+      Secure: {
+        why: "AI can leak sensitive data unless controlled.",
+        includes: [
+          "RBAC + row/column security + retention",
+          "Prompt/output filters and policy enforcement",
+          "Audit logs for accesses and generations"
+        ]
+      }
+    };
+
+    const lifecycleData = {
+      ideation: {
+        title: "1. Discovery",
+        content:
+          "Start with the decision workflow and define the AI leverage: what should be predicted, summarized, generated, classified, or enriched? Validate demand with fast prototypes (LLM-assisted labeling, retrieval-augmented drafts, synthetic edge cases), and define success metrics (adoption, time-to-decision, error rate, cost-to-serve). Confirm permissions and ground-truth signals, and document where GenAI is allowed (augmentation) vs. not allowed (authoritative truth)."
+      },
+      design: {
+        title: "2. Design",
+        content:
+          "Design the product contract: entities, schemas, semantics, and acceptance tests—plus an AI contract (allowed sources, grounding requirements, confidence/uncertainty, explanations, and human review points). Define SLAs/SLOs for freshness, latency, and quality; add policies for PII, retention, and auditability. Specify guardrails, evaluation datasets, rollback strategy, and versioning for both data and model behaviors."
+      },
+      build: {
+        title: "3. Build",
+        content:
+          "Implement reproducible pipelines with CI/CD and quality gates. Use GenAI where it adds leverage: auto-labeling, entity resolution suggestions, schema mapping, missing-field inference, and synthetic data for rare scenarios—always tagged as generated/derived. Add agentic operations: continuous monitoring, schema drift detection, anomaly triage, auto-created tickets/PRs, and auto-refresh of documentation and catalog metadata. Bake in observability, lineage, and least-privilege security."
+      },
+      launch: {
+        title: "4. Launch",
+        content:
+          "Ship with transparency: what is generated vs. sourced, how it’s grounded, known limitations, and how to interpret confidence. Enable staged rollout and human-in-the-loop review for high-risk outputs. Publish runbooks for both data incidents (freshness/quality) and AI incidents (hallucination spikes, retrieval failures, prompt regressions)."
+      },
+      iterate: {
+        title: "5. Iterate",
+        content:
+          "Continuously optimize outcomes and cost: monitor usage, business impact, quality signals, and AI reliability metrics (accuracy vs. gold, hallucination rate, calibration, drift). Let agents keep the system fresh: detect upstream changes, propose fixes, and retrigger backfills. Manage versions like software: changelogs, deprecations, offline evals, and controlled experiments."
+      }
+    };
+
+    const teamData = {
+      pm:  { data: [90, 40, 50, 80, 95, 85], desc: "Focuses on business outcomes, adoption, contracts, and cross-team alignment." },
+      ds:  { data: [40, 60, 95, 35, 55, 45], desc: "Focuses on evaluation, modeling, reliability metrics, and signal design." },
+      eng: { data: [30, 95, 45, 25, 45, 55], desc: "Focuses on pipeline stability, observability, scalability, and data contracts." },
+      do:  { data: [95, 40, 50, 30, 95, 40], desc: "Ensures abstractions match reality and the signal captures domain truth." },
+      ux:  { data: [50, 70, 60, 95, 70, 50], desc: "Makes outputs actionable, interpretable, and safe in user workflows." }
+    };
+
+    const validationContent = {
+      design: `
+        <strong>Design Phase:</strong> Define both the <em>data contract</em> and the <em>AI contract</em>.
+        Specify what is sourced vs generated, grounding requirements, confidence/uncertainty expectations,
+        evaluation datasets, and freshness SLOs. Decide where humans must approve outputs and what triggers rollback.
+      `,
+      build: `
+        <strong>Build Phase:</strong> Add quality gates for data + GenAI outputs.
+        Include schema/contract tests, unit tests for transformations, retrieval tests, prompt regression tests,
+        and automated evals (accuracy, hallucination rate, calibration). Agents should open tickets/PRs for detected issues.
+      `,
+      run: `
+        <strong>Run Phase:</strong> Run it like a living product.
+        Agents monitor freshness, drift, anomalies, upstream changes, and GenAI reliability signals.
+        Auto-triage incidents, suggest fixes, re-run backfills, and keep docs/catalog metadata updated.
+      `
+    };
+
+    // === CHART INSTANCES ===
+    let teamChart, signalChart, decisionChart, qualityRadar;
+
+    // === INITIALIZATION ===
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMindset();
+      renderDatsis();
+      renderLifecycle();
+      initCharts();
+      renderUtilityChecklist();
+      updateEvaluation();
+      renderValidationStep('design');
+      renderReadiness();
+    });
+
+    // === SECTION 1: DEFINE LOGIC ===
+    function toggleMindset() {
+      state.mindset = state.mindset === 'project' ? 'product' : 'project';
+      const ball = document.getElementById('toggle-ball');
+
+      if (state.mindset === 'product') {
+        ball.style.transform = 'translateX(100%)';
+        document.getElementById('label-product').classList.add('text-indigo-900', 'font-bold');
+        document.getElementById('label-project').classList.remove('text-gray-900', 'font-bold');
+      } else {
+        ball.style.transform = 'translateX(0)';
+        document.getElementById('label-project').classList.add('text-gray-900', 'font-bold');
+        document.getElementById('label-product').classList.remove('text-indigo-900', 'font-bold');
+      }
+      renderMindset();
+    }
+
+    function renderMindset() {
+      const data = mindsetData[state.mindset];
+      const container = document.getElementById('mindset-content');
+
+      container.innerHTML = `
+        <div class="flex flex-col md:flex-row h-full">
+          <div class="md:w-1/3 p-8 ${state.mindset === 'product' ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-white'} flex flex-col justify-center items-center text-center">
+            <h3 class="text-3xl font-bold mb-2">${data.title}</h3>
+          </div>
+          <div class="md:w-2/3 p-8 bg-white">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              ${data.features.map(f => `
+                <div class="flex items-start">
+                  <span class="text-2xl mr-3">${f.icon}</span>
+                  <div>
+                    <h4 class="font-bold text-sm uppercase tracking-wide text-gray-500">${f.title}</h4>
+                    <p class="text-base font-medium mt-1 text-gray-800">${f.text}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="mt-6 p-5 rounded-xl border border-gray-200 bg-gray-50">
+              <h4 class="font-bold text-gray-900 mb-2">What changes in practice?</h4>
+              <div class="grid md:grid-cols-3 gap-4 text-sm text-gray-700">
+                <div>
+                  <div class="font-semibold text-gray-900">GenAI in the pipeline</div>
+                  <div>Enrichment, auto-labeling, entity resolution hints, schema mapping—guardrailed and evaluated.</div>
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-900">Agent AI for operations</div>
+                  <div>Detect drift, broken sources, freshness SLA breaches; propose fixes and trigger safe backfills.</div>
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-900">Contracts + evals</div>
+                  <div>Data contracts + AI contracts + regression evals keep the product stable across change.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDatsis() {
+      const grid = document.getElementById('datsis-grid');
+      grid.innerHTML = datsisData.map(item => `
+        <button
+          class="p-6 rounded-xl border ${item.C} flex items-center gap-4 bg-white bg-opacity-60 text-left hover:shadow-sm transition card-hover"
+          onclick="showDatsisDetail('${item.W}')"
+          type="button"
+        >
+          <div class="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm font-bold text-xl text-gray-800">
+            ${item.L}
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-gray-800">${item.W}</h3>
+            <p class="text-xs text-gray-500">${item.T}</p>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function showDatsisDetail(key) {
+      const detail = document.getElementById('datsis-detail');
+      const data = datsisDetailData[key];
+      if (!data) return;
+
+      detail.classList.remove('hidden');
+      detail.innerHTML = `
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h4 class="text-lg font-bold text-indigo-900 mb-1">${key}</h4>
+            <p class="text-sm text-indigo-800 mb-4">${data.why}</p>
+            <ul class="list-disc pl-5 text-sm text-indigo-900 space-y-1">
+              ${data.includes.map(x => `<li>${x}</li>`).join('')}
+            </ul>
+          </div>
+          <button class="text-indigo-700 hover:underline text-sm" onclick="document.getElementById('datsis-detail').classList.add('hidden')">Close</button>
+        </div>
+      `;
+      detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // === SECTION 2: BUILD LOGIC ===
+    function renderLifecycle() {
+      const tabs = document.getElementById('lifecycle-tabs');
+      const keys = Object.keys(lifecycleData);
+
+      tabs.innerHTML = keys.map((key, index) => `
+        <button onclick="updateLifecycle('${key}')" class="p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors ${index === 0 ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}" id="tab-${key}">
+          <span class="font-bold text-gray-800 block">${lifecycleData[key].title}</span>
+        </button>
+      `).join('');
+
+      updateLifecycle('ideation');
+    }
+
+    function updateLifecycle(key) {
+      document.querySelectorAll('#lifecycle-tabs button').forEach(b => {
+        b.classList.remove('border-indigo-500', 'bg-indigo-50');
+        b.classList.add('border-gray-200');
+      });
+      document.getElementById(`tab-${key}`).classList.remove('border-gray-200');
+      document.getElementById(`tab-${key}`).classList.add('border-indigo-500', 'bg-indigo-50');
+
+      const detail = document.getElementById('lifecycle-detail');
+      detail.innerHTML = `
+        <h3 class="text-2xl font-bold text-indigo-900 mb-4">${lifecycleData[key].title}</h3>
+        <p class="text-lg text-gray-700 leading-relaxed">${lifecycleData[key].content}</p>
+      `;
+    }
+
+    function renderTeamChart(role) {
+      document.getElementById('role-selector').value = role;
+      document.getElementById('role-desc').innerText = teamData[role].desc;
+
+      teamChart.data.datasets[0].data = teamData[role].data;
+      teamChart.data.datasets[0].label = role.toUpperCase();
+      teamChart.update();
+    }
+
+    // === SECTION 3: EVALUATE LOGIC ===
+    function updateSignal(val) {
+      state.signalScore = parseInt(val);
+      document.getElementById('signal-score-val').innerText = `${val}/100`;
+
+      const labels = Array.from({length: 50}, (_, i) => i);
+      const newData = labels.map(x => {
+        const signal = Math.sin(x * 0.2) * 10;
+        const noiseFactor = (100 - val) / 100 * 15;
+        return signal + ((Math.random() - 0.5) * 2 * noiseFactor);
+      });
+
+      signalChart.data.datasets[0].data = newData;
+      signalChart.update();
+      updateEvaluation();
+    }
+
+    function renderUtilityChecklist() {
+      const container = document.getElementById('utility-checklist');
+      container.innerHTML = Object.keys(state.utilityDrivers).map(key => `
+        <div onclick="toggleUtility('${key}')" class="cursor-pointer p-3 rounded border ${state.utilityDrivers[key].active ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'} text-xs font-bold text-center transition-colors">
+          ${state.utilityDrivers[key].label}
+        </div>
+      `).join('');
+
+      let total = 0;
+      Object.values(state.utilityDrivers).forEach(d => { if(d.active) total += d.value; });
+      state.utilityScore = Math.min(total, 100);
+
+      document.getElementById('utility-score-val').innerText = `${state.utilityScore}/100`;
+      document.getElementById('utility-bar').style.width = `${state.utilityScore}%`;
+
+      updateEvaluation();
+    }
+
+    function toggleUtility(key) {
+      state.utilityDrivers[key].active = !state.utilityDrivers[key].active;
+      renderUtilityChecklist();
+    }
+
+    function updateEvaluation() {
+      const tech = state.signalScore;
+      const util = state.utilityScore;
+
+      decisionChart.data.datasets[0].data = [{x: tech, y: util}];
+
+      let color = '#fbbf24';
+      if (tech > 60 && util > 60) color = '#34d399';
+      if (tech < 40 && util < 40) color = '#f87171';
+      decisionChart.data.datasets[0].backgroundColor = color;
+      decisionChart.update();
+
+      const titleEl = document.getElementById('rec-title');
+      const descEl = document.getElementById('rec-desc');
+      const box = document.getElementById('recommendation-box');
+
+      box.classList.remove('border-emerald-500', 'border-red-500', 'border-amber-500', 'border-gray-500');
+
+      if (tech > 60 && util > 60) {
+        titleEl.innerText = "GO: SCALE PRODUCT";
+        descEl.innerText = "Strong signal and high utility. Add evals + agent ops and proceed to production rollout.";
+        box.classList.add('border-emerald-500');
+      } else if (tech < 40 && util < 40) {
+        titleEl.innerText = "NO GO: DISCARD";
+        descEl.innerText = "Weak signal and no user value. Don’t automate; revisit the problem framing.";
+        box.classList.add('border-red-500');
+      } else if (tech > 60) {
+        titleEl.innerText = "PAUSE: FIND USERS";
+        descEl.innerText = "Good signal, unclear adoption. Improve UX, onboarding, and distribution.";
+        box.classList.add('border-amber-500');
+      } else {
+        titleEl.innerText = "PAUSE: R&D NEEDED";
+        descEl.innerText = "Users want it, but the signal isn’t robust. Improve data + grounding + eval coverage.";
+        box.classList.add('border-amber-500');
+      }
+    }
+
+    // === SECTION 4: VALIDATE LOGIC ===
+    function renderValidationStep(step) {
+      document.querySelectorAll('.val-step-btn').forEach(b => {
+        b.classList.remove('border-orange-500', 'bg-orange-50');
+        b.classList.add('border-gray-200', 'bg-gray-50');
+      });
+      const btn = document.querySelector(`button[data-step="${step}"]`);
+      if(btn) {
+        btn.classList.remove('border-gray-200', 'bg-gray-50');
+        btn.classList.add('border-orange-500', 'bg-orange-50');
+      }
+
+      document.getElementById('validation-content').innerHTML = `
+        <p class="text-gray-700 text-lg">${validationContent[step]}</p>
+      `;
+    }
+
+    function renderReadiness() {
+      const list = document.getElementById('readiness-list');
+      list.innerHTML = state.readinessItems.map((item, idx) => `
+        <div onclick="toggleReadiness(${idx})" class="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-gray-800 transition-colors">
+          <div class="w-5 h-5 rounded border ${item.checked ? 'bg-green-500 border-green-500' : 'border-gray-500'} flex items-center justify-center">
+            ${item.checked ? '✓' : ''}
+          </div>
+          <span class="${item.checked ? 'text-green-200' : 'text-gray-400'} text-sm">${item.text}</span>
+        </div>
+      `).join('');
+
+      const count = state.readinessItems.filter(i => i.checked).length;
+      const score = Math.round((count / state.readinessItems.length) * 100);
+      document.getElementById('readiness-score').innerText = `${score}%`;
+    }
+
+    function toggleReadiness(index) {
+      state.readinessItems[index].checked = !state.readinessItems[index].checked;
+      renderReadiness();
+    }
+
+    function randomizeRadar() {
+      const newData = Array.from({length: 6}, () => Math.floor(Math.random() * 50) + 50);
+      qualityRadar.data.datasets[0].data = newData;
+      qualityRadar.update();
+    }
+
+    // === CHARTS INIT ===
+    function initCharts() {
+      // 1. Team Radar Chart
+      const teamCtx = document.getElementById('teamChart').getContext('2d');
+      teamChart = new Chart(teamCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Business', 'Data Eng', 'Stats/ML', 'UX', 'Comms', 'Project Mgmt'],
+          datasets: [{
+            label: 'Data Product Manager',
+            data: teamData.pm.data,
+            backgroundColor: 'rgba(79, 70, 229, 0.2)',
+            borderColor: '#4f46e5',
+            pointBackgroundColor: '#4f46e5'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              suggestedMin: 0, suggestedMax: 100,
+              grid: { color: '#e5e7eb' },
+              pointLabels: { font: { size: 10 } }
+            }
+          }
+        }
+      });
+
+      // 2. Signal Chart (Line)
+      const signalCtx = document.getElementById('signalChart').getContext('2d');
+      signalChart = new Chart(signalCtx, {
+        type: 'line',
+        data: {
+          labels: Array.from({length: 50}, (_, i) => i),
+          datasets: [{
+            label: 'Signal Output',
+            data: [],
+            borderColor: '#0d9488',
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { display: false }, y: { min: -15, max: 15, display: false } }
+        }
+      });
+
+      // 3. Decision Matrix (Scatter)
+      const decisionCtx = document.getElementById('decisionChart').getContext('2d');
+      decisionChart = new Chart(decisionCtx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            data: [{x: 50, y: 0}],
+            backgroundColor: '#fbbf24',
+            pointRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { min: 0, max: 100, title: {display: true, text: 'Tech Validity (Signal)', color: '#9ca3af'}, grid: {color: '#374151'} },
+            y: { min: 0, max: 100, title: {display: true, text: 'User Utility (Value)', color: '#9ca3af'}, grid: {color: '#374151'} }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      // 4. Quality Radar
+      const qualCtx = document.getElementById('qualityRadarChart').getContext('2d');
+      qualityRadar = new Chart(qualCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Accuracy', 'Completeness', 'Consistency', 'Timeliness', 'Validity', 'Uniqueness'],
+          datasets: [{
+            label: 'Current Score',
+            data: [80, 75, 90, 60, 85, 95],
+            backgroundColor: 'rgba(234, 88, 12, 0.2)',
+            borderColor: '#ea580c',
+            pointBackgroundColor: '#ea580c'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { r: { suggestedMin: 0, suggestedMax: 100, grid: { color: '#e5e7eb' }, pointLabels: { font: { size: 10 } } } },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      updateSignal(50);
+      document.getElementById('algo-slider').addEventListener('input', (e) => updateSignal(e.target.value));
+    }
+
+    // === UTILS ===
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  </script>
+
+
+
+</body></html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="AI TaxFlow Analyst Agent - Interactive dashboard for analyzing e-commerce tax product performance, user funnel conversion, feature usage, and market event correlations." name="description"/>
+    <meta content="Tax Software Analytics, AI Agent, E-commerce Dashboard, User Funnel Analysis, Churn Rate, Product Intelligence, Data Visualization" name="keywords"/>
+    <title>TaxFlow AI: E-commerce &amp; Product Analyst</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Navy & Emerald Trust -->
+    <!-- Application Structure Plan: Sidebar navigation for clear context switching. Four distinct views: Dashboard (Daily Focus), Funnel (Conversion), Features (Product), and Correlations (External Factors). Dashboard acts as the "Daily Output" of the agent. -->
+    <!-- Visualization & Content Choices: 
+         1. Funnel: Bar chart to show absolute drop-off clearly.
+         2. Features: Radar chart to compare multi-dimensional feature usage between user segments.
+         3. Correlations: Line chart with mixed annotations.
+         4. Dashboard: Line chart comparing Current Year vs Last Year traffic.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* Slate 100 */
+        }
+
+        /* Chart Container Styling - Critical for Responsiveness */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Max width to prevent stretching */
+            height: 350px;
+            max-height: 400px;
+            margin: 0 auto; /* Center horizontally */
+        }
+        
+        /* Smaller height for mobile */
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        /* Custom Scrollbar for insights panel */
+        .insight-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .insight-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .insight-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+
+        .nav-item.active {
+            background-color: #e2e8f0;
+            color: #0f172a;
+            border-left: 4px solid #10b981; /* Emerald 500 */
+        }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex-col hidden md:flex shadow-sm z-10">
+        <div class="p-6 border-b border-slate-100">
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight">TaxFlow <span class="text-emerald-600">AI Agent</span></h1>
+            <p class="text-xs text-slate-500 mt-1">E-commerce Intelligence</p>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <button class="nav-item active w-full text-left px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" id="nav-dashboard" onclick="router('dashboard')">
+                        📊 Daily Pulse
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" id="nav-funnel" onclick="router('funnel')">
+                        📉 Funnel &amp; Churn
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" id="nav-features" onclick="router('features')">
+                        🧩 Product Usage
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" id="nav-correlations" onclick="router('correlations')">
+                        📅 Event Correlation
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-slate-100 bg-slate-50">
+            <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xs">AI</div>
+                <div>
+                    <p class="text-sm font-medium">Status: Online</p>
+                    <p class="text-xs text-slate-500">Last run: 14 mins ago</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden absolute top-0 left-0 right-0 h-16 bg-white border-b flex items-center px-4 justify-between z-20">
+        <h1 class="font-bold text-slate-900">TaxFlow AI</h1>
+        <button class="text-slate-600 p-2 border rounded" onclick="toggleMobileMenu()">Menu</button>
+    </div>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="fixed inset-0 bg-white z-30 hidden flex-col pt-20 px-4" id="mobile-menu">
+        <button class="w-full text-left py-4 border-b" onclick="router('dashboard'); toggleMobileMenu()">📊 Daily Pulse</button>
+        <button class="w-full text-left py-4 border-b" onclick="router('funnel'); toggleMobileMenu()">📉 Funnel &amp; Churn</button>
+        <button class="w-full text-left py-4 border-b" onclick="router('features'); toggleMobileMenu()">🧩 Product Usage</button>
+        <button class="w-full text-left py-4 border-b" onclick="router('correlations'); toggleMobileMenu()">📅 Event Correlation</button>
+        <button class="mt-4 w-full py-2 bg-slate-100 rounded text-center" onclick="toggleMobileMenu()">Close</button>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-8 pt-20 md:pt-8 w-full">
+        
+        <!-- DASHBOARD VIEW -->
+        <section class="space-y-6 animate-fade-in" id="view-dashboard">
+            <header class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Daily Analysis Report</h2>
+                <p class="text-slate-500 mt-2">Executive summary generated for <span class="font-semibold text-slate-700" id="current-date"></span>.</p>
+            </header>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <p class="text-sm text-slate-500 font-medium uppercase">Daily Conversion Rate</p>
+                    <div class="flex items-baseline mt-2">
+                        <span class="text-3xl font-bold text-slate-900">4.2%</span>
+                        <span class="ml-2 text-sm font-medium text-emerald-600">↑ 0.8% vs avg</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">Sign-up to Paid conversion</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <p class="text-sm text-slate-500 font-medium uppercase">Filings Completed</p>
+                    <div class="flex items-baseline mt-2">
+                        <span class="text-3xl font-bold text-slate-900">1,248</span>
+                        <span class="ml-2 text-sm font-medium text-red-500">↓ 12% vs yesterday</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">Paid users who filed today</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <p class="text-sm text-slate-500 font-medium uppercase">Est. Revenue Risk</p>
+                    <div class="flex items-baseline mt-2">
+                        <span class="text-3xl font-bold text-slate-900">$14.2k</span>
+                        <span class="ml-2 text-sm font-medium text-emerald-600">Recoverable</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">Abandoned carts (Last 24h)</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- AI Narrative Column -->
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-100 h-full">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <h3 class="font-bold text-slate-800">Agent Findings</h3>
+                    </div>
+                    <div class="space-y-4 text-sm text-slate-600 insight-scroll overflow-y-auto max-h-[400px]">
+                        <div class="p-3 bg-slate-50 rounded border border-slate-100">
+                            <strong class="text-slate-900 block mb-1">Theme of the Month:</strong>
+                            "The Procrastination Wave." Traffic has increased by 40% week-over-week as the deadline approaches, but session duration has dropped. Users are skimming, not filing.
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-100">
+                            <strong class="text-slate-900 block mb-1">Critical Insight:</strong>
+                            Users engaging with the "Crypto Calculator" feature are 3x more likely to convert to the Premium Plan, yet only 15% of free tier users discover this tool.
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded border border-slate-100">
+                            <strong class="text-slate-900 block mb-1">Anomaly Detected:</strong>
+                            Spike in drop-offs at "State Return" step for users in California. Potential UI bug or complexity issue with CA specific forms.
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 py-2 border border-slate-200 text-slate-600 rounded text-sm hover:bg-slate-50" onclick="router('funnel')">Deep Dive into Churn</button>
+                </div>
+
+                <!-- Main Dashboard Chart -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-800 mb-4">Traffic Trend (Year over Year)</h3>
+                    <div class="chart-container">
+                        <canvas id="dashboardChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FUNNEL VIEW -->
+        <section class="space-y-6 hidden" id="view-funnel">
+            <header class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Funnel &amp; Churn Analysis</h2>
+                <p class="text-slate-500 mt-2">Tracing user flow from Landing Page to IRS Acceptance.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-800">Conversion Funnel</h3>
+                        <select class="text-sm border rounded p-1" id="funnel-segment" onchange="updateFunnelData()">
+                            <option value="all">All Traffic</option>
+                            <option value="mobile">Mobile Users</option>
+                            <option value="desktop">Desktop Users</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="funnelChart"></canvas>
+                    </div>
+                    <div class="mt-4 grid grid-cols-4 gap-2 text-center text-xs text-slate-500">
+                        <div>Visitor</div>
+                        <div>Signup</div>
+                        <div>Payment</div>
+                        <div>Filed</div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-800 mb-4">Top Drop-off Points</h3>
+                    <div class="space-y-4">
+                        <!-- Drop off Item 1 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium text-slate-700">1. Pricing Page</span>
+                                <span class="text-red-500 font-bold">42% Churn</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2">
+                                <div class="bg-red-400 h-2 rounded-full" style="width: 42%"></div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Users are price sensitive. Agent suggests A/B testing a "Pay from Refund" option prominently.</p>
+                        </div>
+                        <!-- Drop off Item 2 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium text-slate-700">2. Document Upload</span>
+                                <span class="text-red-500 font-bold">28% Churn</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2">
+                                <div class="bg-red-400 h-2 rounded-full" style="width: 28%"></div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">OCR failures reported. Suggest promoting manual entry fallback earlier.</p>
+                        </div>
+                        <!-- Drop off Item 3 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium text-slate-700">3. Review Screen</span>
+                                <span class="text-red-500 font-bold">15% Churn</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2">
+                                <div class="bg-red-400 h-2 rounded-full" style="width: 15%"></div>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">"Fear of Audit" triggers hesitation. Suggest highlighting "Audit Defense Included" here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES VIEW -->
+        <section class="space-y-6 hidden" id="view-features">
+            <header class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Product Feature Intelligence</h2>
+                <p class="text-slate-500 mt-2">Correlating feature adoption with successful filing.</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-800 mb-4">Feature Usage: Filed vs. Dropped</h3>
+                    <p class="text-sm text-slate-500 mb-4">This chart compares which features were engaged with by users who successfully filed taxes versus those who abandoned.</p>
+                    <div class="chart-container">
+                        <canvas id="featureChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-800 mb-4">Feature Impact Analysis</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3 p-3 bg-emerald-50 rounded border border-emerald-100">
+                            <span class="text-xl">🏆</span>
+                            <div>
+                                <h4 class="font-bold text-emerald-800 text-sm">Most Valuable Feature: W-2 Import</h4>
+                                <p class="text-xs text-emerald-700 mt-1">88% of users who successfully use the W-2 photo import go on to file. It reduces friction significantly.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3 p-3 bg-amber-50 rounded border border-amber-100">
+                            <span class="text-xl">⚠️</span>
+                            <div>
+                                <h4 class="font-bold text-amber-800 text-sm">Friction Point: 1099-B (Crypto)</h4>
+                                <p class="text-xs text-amber-700 mt-1">High usage, but also high drop-off. The UI for matching transactions is reported as "confusing."</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3 p-3 bg-slate-50 rounded border border-slate-100">
+                            <span class="text-xl">💡</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Opportunity: Deduction Finder</h4>
+                                <p class="text-xs text-slate-600 mt-1">Only 30% of freelancers use the guided deduction finder, but those who do have a 95% satisfaction score.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CORRELATIONS VIEW -->
+        <section class="space-y-6 hidden" id="view-correlations">
+            <header class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Market Event Correlation</h2>
+                <p class="text-slate-500 mt-2">Analyzing external drivers (IRS dates, News) against internal metrics.</p>
+            </header>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-800">Traffic vs. Public Events (Q1)</h3>
+                    <div class="space-x-2">
+                        <span class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">IRS Event</span>
+                        <span class="text-xs px-2 py-1 bg-slate-100 text-slate-700 rounded">Traffic Vol</span>
+                    </div>
+                </div>
+                <div class="chart-container" style="max-width: 1000px;">
+                    <canvas id="correlationChart"></canvas>
+                </div>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-slate-50 rounded border border-slate-100">
+                        <strong class="block text-sm text-slate-900">Event A: IRS Opens Filing</strong>
+                        <p class="text-xs text-slate-500 mt-1">Jan 29. Resulted in 200% spike in logins, but low immediate filing (users gathering docs).</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded border border-slate-100">
+                        <strong class="block text-sm text-slate-900">Event B: News "CTC Expansion"</strong>
+                        <p class="text-xs text-slate-500 mt-1">Feb 14. Support chat volume spiked 5x with questions about Child Tax Credit eligibility.</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded border border-slate-100">
+                        <strong class="block text-sm text-slate-900">Event C: Corp Deadline</strong>
+                        <p class="text-xs text-slate-500 mt-1">Mar 15. Slight dip in individual consumer traffic, spike in "Schedule C" related queries.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- DATA STORE (Simulating Source Report) ---
+        const reportData = {
+            dailyStats: {
+                dates: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                visitors: [12000, 14500, 13200, 16800, 19000, 11000, 9500],
+                visitorsLastYear: [9500, 11200, 10800, 13500, 15000, 9000, 8200], // Last year same week
+                signups: [3000, 3800, 3100, 4200, 4900, 2500, 2100],
+                purchases: [600, 850, 720, 950, 1100, 500, 450]
+            },
+            funnel: {
+                labels: ['Site Visits', 'Free Signup', 'Profile Setup', 'Product Select', 'Payment', 'Filed'],
+                all: [100000, 25000, 18000, 12000, 5000, 4800],
+                mobile: [60000, 10000, 6000, 3000, 800, 750], // Higher dropoff on mobile
+                desktop: [40000, 15000, 12000, 9000, 4200, 4050]
+            },
+            features: {
+                labels: ['W-2 Import', 'Crypto Calc', 'Deduction Finder', 'Audit Defense', 'Live Chat', 'Prev Year Import'],
+                filedUsers: [88, 45, 70, 60, 25, 80],
+                churnedUsers: [40, 65, 30, 10, 55, 30] // Churned users use Chat more (problems) and Crypto (confusion)
+            },
+            events: {
+                labels: ['Jan 15', 'Jan 22', 'Jan 29', 'Feb 05', 'Feb 12', 'Feb 19', 'Feb 26', 'Mar 05', 'Mar 12', 'Mar 19'],
+                traffic: [5000, 5500, 15000, 12000, 11000, 18000, 13000, 14000, 13500, 16000],
+                annotations: [
+                    { index: 2, label: 'IRS Opens' },
+                    { index: 5, label: 'News: CTC' },
+                    { index: 8, label: 'Corp Deadline' }
+                ]
+            }
+        };
+
+        // --- STATE MANAGEMENT ---
+        let charts = {};
+        const state = {
+            currentView: 'dashboard',
+            funnelSegment: 'all'
+        };
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            // Render default view charts
+            initDashboardChart();
+            initFunnelChart();
+            initFeatureChart();
+            initCorrelationChart();
+            
+            // Mobile menu toggle
+            window.toggleMobileMenu = function() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('flex');
+            };
+
+            // Router
+            window.router = function(viewName) {
+                // Update State
+                state.currentView = viewName;
+
+                // Update UI Navigation
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                const activeNav = document.getElementById(`nav-${viewName}`);
+                if(activeNav) activeNav.classList.add('active');
+
+                // Update View Visibility
+                document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`view-${viewName}`).classList.remove('hidden');
+
+                // Trigger Chart Resize/Update if needed (Chart.js sometimes needs this on display:block)
+                if(charts[viewName]) {
+                    charts[viewName].resize();
+                }
+            };
+        });
+
+        // --- CHART GENERATION FUNCTIONS ---
+
+        function initDashboardChart() {
+            const ctx = document.getElementById('dashboardChart').getContext('2d');
+            charts['dashboard'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: reportData.dailyStats.dates,
+                    datasets: [
+                        {
+                            label: 'Unique Visitors (Current)',
+                            data: reportData.dailyStats.visitors,
+                            borderColor: '#3b82f6', // Blue 500
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Visitors (Last Year)',
+                            data: reportData.dailyStats.visitorsLastYear,
+                            borderColor: '#94a3b8', // Slate 400
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            fill: false,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Paid Conversions',
+                            data: reportData.dailyStats.purchases,
+                            borderColor: '#10b981', // Emerald 500
+                            backgroundColor: '#10b981',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: { display: false }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { borderDash: [2, 4] }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initFunnelChart() {
+            const ctx = document.getElementById('funnelChart').getContext('2d');
+            charts['funnel'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: reportData.funnel.labels,
+                    datasets: [{
+                        label: 'User Count',
+                        data: reportData.funnel.all,
+                        backgroundColor: [
+                            '#e2e8f0', // Visitors
+                            '#94a3b8', // Signup
+                            '#64748b', // Profile
+                            '#475569', // Product
+                            '#10b981', // Payment (Success color)
+                            '#059669'  // Filed
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // Horizontal bar to look like funnel steps
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    // Calc drop off from previous step
+                                    let val = context.raw;
+                                    let index = context.dataIndex;
+                                    let prev = index > 0 ? context.dataset.data[index - 1] : val;
+                                    let conversion = index > 0 ? Math.round((val / prev) * 100) : 100;
+                                    return `${val.toLocaleString()} users (${conversion}% retention from prev step)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        window.updateFunnelData = function() {
+            const segment = document.getElementById('funnel-segment').value;
+            const newData = reportData.funnel[segment];
+            charts['funnel'].data.datasets[0].data = newData;
+            charts['funnel'].update();
+        };
+
+        function initFeatureChart() {
+            const ctx = document.getElementById('featureChart').getContext('2d');
+            charts['features'] = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: reportData.features.labels,
+                    datasets: [
+                        {
+                            label: 'Successful Filers',
+                            data: reportData.features.filedUsers,
+                            fill: true,
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald
+                            borderColor: '#10b981',
+                            pointBackgroundColor: '#10b981'
+                        },
+                        {
+                            label: 'Churned Users',
+                            data: reportData.features.churnedUsers,
+                            fill: true,
+                            backgroundColor: 'rgba(239, 68, 68, 0.2)', // Red
+                            borderColor: '#ef4444',
+                            pointBackgroundColor: '#ef4444'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e2e8f0' },
+                            grid: { color: '#e2e8f0' },
+                            pointLabels: {
+                                font: { size: 11, family: 'Inter' }
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function initCorrelationChart() {
+            const ctx = document.getElementById('correlationChart').getContext('2d');
+            
+            // Create event annotation lines
+            // Since we can't use complex plugins easily, we will use a mixed chart type
+            // A line for traffic, and bars for "Events"
+            
+            const eventData = reportData.events.traffic.map((val, idx) => {
+                const event = reportData.events.annotations.find(e => e.index === idx);
+                return event ? reportData.events.traffic[idx] : 0; // Only show bar where event exists
+            });
+
+            charts['correlations'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: reportData.events.labels,
+                    datasets: [
+                        {
+                            label: 'Traffic Volume',
+                            data: reportData.events.traffic,
+                            borderColor: '#3b82f6', // Blue 500
+                            tension: 0.3,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Major Events',
+                            data: eventData,
+                            type: 'bar',
+                            backgroundColor: 'rgba(245, 158, 11, 0.5)', // Amber
+                            barThickness: 5,
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataset.type === 'bar' && context.raw > 0) {
+                                        const event = reportData.events.annotations.find(e => e.index === context.dataIndex);
+                                        return `Event: ${event ? event.label : ''}`;
+                                    }
+                                    return `Traffic: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- SEO Meta Tags -->
+    <meta content="Welcome to Kreate Kids Kindergarten - A safe, nurturing, and creative environment for early childhood education. Enroll now for play-based learning and expert care." name="description"/>
+    <meta content="kindergarten, preschool, early childhood education, play-based learning, child care, day care, Kreate Kids, creative learning, toddler programs" name="keywords"/>
+    <meta content="Kreate Kids" name="author"/>
+    
+    <title>Kreate Kids Kindergarten | Where Little Minds Dream Big</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Animations */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-out forwards;
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.5s ease-out forwards;
+        }
+        
+        /* Hide scrollbar for clean modal */
+        .no-scroll {
+            overflow: hidden;
+        }
+
+        /* Tab visibility handling */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-50 min-h-screen flex flex-col text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center cursor-pointer" onclick="switchTab('home')">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <div class="bg-yellow-400 p-2 rounded-full">
+                            <i class="h-8 w-8 text-white" data-lucide="smile"></i>
+                        </div>
+                        <span class="font-bold text-2xl text-gray-800 tracking-tight">Kreate<span class="text-yellow-500">Kids</span></span>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <button class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 capitalize text-gray-600 hover:text-yellow-500 hover:bg-gray-50" data-tab="home" onclick="switchTab('home')">Home</button>
+                    <button class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 capitalize text-gray-600 hover:text-yellow-500 hover:bg-gray-50" data-tab="gallery" onclick="switchTab('gallery')">Gallery</button>
+                    <button class="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 capitalize text-gray-600 hover:text-yellow-500 hover:bg-gray-50" data-tab="blog" onclick="switchTab('blog')">Blog</button>
+                    <a class="bg-yellow-400 text-white px-5 py-2.5 rounded-full font-medium hover:bg-yellow-500 transition-colors shadow-lg shadow-yellow-200" href="#contact">
+                        Contact Us
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-600 hover:text-gray-900 focus:outline-none p-2" id="mobile-menu-btn">
+                        <i class="h-6 w-6" data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button class="block w-full text-left px-3 py-4 rounded-md text-base font-medium capitalize text-gray-600 hover:text-yellow-500 hover:bg-gray-50" onclick="switchTab('home'); toggleMobileMenu()">Home</button>
+                <button class="block w-full text-left px-3 py-4 rounded-md text-base font-medium capitalize text-gray-600 hover:text-yellow-500 hover:bg-gray-50" onclick="switchTab('gallery'); toggleMobileMenu()">Gallery</button>
+                <button class="block w-full text-left px-3 py-4 rounded-md text-base font-medium capitalize text-gray-600 hover:text-yellow-500 hover:bg-gray-50" onclick="switchTab('blog'); toggleMobileMenu()">Blog</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+        
+        <!-- HOME SECTION -->
+        <div class="tab-content active" id="home">
+            
+            <!-- Hero Slideshow -->
+            <div class="relative h-[600px] overflow-hidden bg-gray-900">
+                <!-- Slides Container -->
+                <div id="hero-slides">
+                    <!-- Images injected via JS -->
+                </div>
+                
+                <!-- Hero Text Overlay -->
+                <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                    <div class="text-center px-4 max-w-4xl mx-auto pointer-events-auto">
+                        <div class="inline-block px-4 py-1 mb-6 bg-yellow-400 rounded-full text-white text-sm font-bold uppercase tracking-wider animate-fade-in-up">
+                            Enrolling for Fall 2025
+                        </div>
+                        <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg animate-fade-in-up" style="animation-delay: 0.1s;">
+                            Where Little Minds <br/>
+                            <span class="text-yellow-400">Dream Big</span>
+                        </h1>
+                        <p class="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-light animate-fade-in-up" style="animation-delay: 0.2s;">
+                            A safe, colorful, and creative environment designed to inspire the next generation of thinkers.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style="animation-delay: 0.3s;">
+                            <button class="bg-yellow-400 text-gray-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-300 transition-transform transform hover:scale-105 shadow-xl" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+                                Schedule a Tour
+                            </button>
+                            <button class="bg-white/10 backdrop-blur-md border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/20 transition-transform transform hover:scale-105" onclick="switchTab('blog')">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide Indicators -->
+                <div class="absolute bottom-8 left-0 right-0 flex justify-center space-x-3 z-20" id="slide-indicators">
+                    <!-- Indicators injected via JS -->
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-yellow-500 font-bold tracking-wide uppercase text-sm mb-3">Why Choose Us</h2>
+                        <h3 class="text-4xl font-bold text-gray-900">Nurturing Growth &amp; Creativity</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Card 1 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-transparent hover:border-yellow-400 transition-all duration-300 transform hover:-translate-y-1 group">
+                            <div class="w-14 h-14 bg-red-400 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i class="h-7 w-7 text-white" data-lucide="star"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Play-Based Learning</h3>
+                            <p class="text-gray-600 leading-relaxed">Our curriculum is designed around the natural curiosity of children, making learning a fun adventure.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-transparent hover:border-yellow-400 transition-all duration-300 transform hover:-translate-y-1 group">
+                            <div class="w-14 h-14 bg-blue-400 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i class="h-7 w-7 text-white" data-lucide="heart"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Loving Environment</h3>
+                            <p class="text-gray-600 leading-relaxed">Our teachers are dedicated to creating a warm, safe, and inclusive space for every child.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-transparent hover:border-yellow-400 transition-all duration-300 transform hover:-translate-y-1 group">
+                            <div class="w-14 h-14 bg-green-400 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                <i class="h-7 w-7 text-white" data-lucide="user"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Expert Educators</h3>
+                            <p class="text-gray-600 leading-relaxed">Certified and experienced staff who are passionate about early childhood development.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mini Gallery Preview -->
+            <section class="py-20 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-end mb-12">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-900 mb-4">Life at Kreate Kids</h2>
+                            <p class="text-gray-600 max-w-xl">See what our little ones are up to! From painting to playground fun, every day is a new story.</p>
+                        </div>
+                        <button class="hidden md:flex items-center text-yellow-600 font-semibold hover:text-yellow-700 transition-colors" onclick="switchTab('gallery')">
+                            View Full Gallery <i class="ml-2 h-5 w-5" data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-96">
+                        <div class="col-span-2 md:col-span-2 row-span-2 relative group overflow-hidden rounded-2xl">
+                            <img alt="Gallery Main" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school1.jpg"/>
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                        </div>
+                        <div class="col-span-1 relative group overflow-hidden rounded-2xl">
+                            <img alt="Gallery 2" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school2.jpg"/>
+                        </div>
+                        <div class="col-span-1 relative group overflow-hidden rounded-2xl">
+                            <img alt="Gallery 3" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school3.jpg"/>
+                        </div>
+                        <div class="col-span-2 md:col-span-2 relative group overflow-hidden rounded-2xl">
+                           <img alt="Gallery 4" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school4.jpg"/>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center md:hidden">
+                       <button class="inline-flex items-center text-yellow-600 font-semibold hover:text-yellow-700" onclick="switchTab('gallery')">
+                        View Full Gallery <i class="ml-2 h-5 w-5" data-lucide="arrow-right"></i>
+                      </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="py-24 bg-yellow-400 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-64 h-64 bg-white opacity-10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                <div class="absolute bottom-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full translate-x-1/3 translate-y-1/3"></div>
+                
+                <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+                    <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-8">Ready to start the journey?</h2>
+                    <p class="text-xl text-gray-800 mb-10 max-w-2xl mx-auto">Enrollment for the upcoming term is now open. Schedule a visit to meet our teachers and see our classrooms.</p>
+                    <button class="bg-white text-yellow-500 px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-gray-50 transition-all transform hover:-translate-y-1 cursor-pointer" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+                        Contact Us Today
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- GALLERY SECTION -->
+        <div class="tab-content" id="gallery">
+            <div class="py-12 bg-gray-50 min-h-screen animate-fade-in">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h1 class="text-4xl font-bold text-gray-900 mb-4">Our Gallery</h1>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Moments of joy, discovery, and friendship captured in our classrooms.</p>
+                    </div>
+
+                    <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6" id="gallery-grid">
+                        <!-- Gallery items injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOG SECTION -->
+        <div class="tab-content" id="blog">
+            <div class="py-12 bg-white min-h-screen animate-fade-in">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h1 class="text-4xl font-bold text-gray-900 mb-4">Latest News</h1>
+                        <p class="text-gray-600 max-w-2xl mx-auto">Updates, tips, and stories from the Kreate Kids community.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10" id="blog-grid">
+                        <!-- Blog posts injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Lightbox Modal (Hidden by default) -->
+    <div class="fixed inset-0 z-[60] bg-black/90 backdrop-blur-sm hidden items-center justify-center p-4 animate-fade-in" id="lightbox" onclick="closeLightbox()">
+        <button class="absolute top-6 right-6 text-white hover:text-gray-300 z-50">
+            <i class="h-10 w-10" data-lucide="x"></i>
+        </button>
+        <img alt="Full size" class="max-h-[90vh] max-w-[95vw] rounded-lg shadow-2xl object-contain" id="lightbox-img" onclick="event.stopPropagation()" src=""/>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data
+        const images = [
+            "https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school1.jpg",
+            "https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school2.jpg",
+            "https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school3.jpg",
+            "https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school4.jpg",
+            "https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school5.jpg",
+            "https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school6.jpg",
+            "https://storage.googleapis.com/imagesu/kindergarden-school/kindergarden-school7.jpg"
+        ];
+
+        const blogPosts = [
+            {
+                id: 1,
+                title: "The Importance of Sensory Play",
+                date: "October 12, 2024",
+                author: "Sarah Johnson",
+                image: images[4],
+                excerpt: "Sensory play is a crucial part of early childhood development. It encourages scientific thinking and problem solving..."
+            },
+            {
+                id: 2,
+                title: "Healthy Snacks for Little Learners",
+                date: "September 28, 2024",
+                author: "Mike Peters",
+                image: images[5],
+                excerpt: "Keeping energy levels steady is key to a happy day. Here are 5 easy, nutritious snacks your kids will love..."
+            },
+            {
+                id: 3,
+                title: "Preparing for the First Day of School",
+                date: "August 15, 2024",
+                author: "Emily Davis",
+                image: images[6],
+                excerpt: "Separation anxiety is normal. Here are some tips to make the transition smooth for both parents and children..."
+            }
+        ];
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGallery();
+            renderBlog();
+            renderSlideshow();
+            startSlideshow();
+            lucide.createIcons();
+            
+            // Set initial active nav state
+            updateNavState('home');
+        });
+
+        // --- Navigation Logic ---
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+
+            updateNavState(tabId);
+        }
+
+        function updateNavState(activeTab) {
+            document.querySelectorAll('.nav-link').forEach(btn => {
+                if(btn.getAttribute('data-tab') === activeTab) {
+                    btn.classList.add('text-yellow-600', 'bg-yellow-50');
+                    btn.classList.remove('text-gray-600', 'hover:bg-gray-50');
+                } else {
+                    btn.classList.remove('text-yellow-600', 'bg-yellow-50');
+                    btn.classList.add('text-gray-600', 'hover:bg-gray-50');
+                }
+            });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.querySelector('#mobile-menu-btn i');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                menu.classList.add('hidden');
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        // --- Slideshow Logic ---
+        let currentSlide = 0;
+        const heroImages = images.slice(0, 3);
+        
+        function renderSlideshow() {
+            const container = document.getElementById('hero-slides');
+            const indicators = document.getElementById('slide-indicators');
+            
+            heroImages.forEach((img, idx) => {
+                // Create Slide
+                const slide = document.createElement('div');
+                slide.className = `absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === 0 ? 'opacity-60' : 'opacity-0'} hero-slide`;
+                slide.innerHTML = `<img src="${img}" alt="Slide ${idx}" class="w-full h-full object-cover" />`;
+                container.appendChild(slide);
+
+                // Create Indicator
+                const dot = document.createElement('button');
+                dot.onclick = () => setSlide(idx);
+                dot.className = `w-3 h-3 rounded-full transition-all duration-300 slide-dot ${idx === 0 ? 'bg-yellow-400 w-8' : 'bg-white/50 hover:bg-white'}`;
+                indicators.appendChild(dot);
+            });
+        }
+
+        function setSlide(idx) {
+            currentSlide = idx;
+            const slides = document.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.slide-dot');
+
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('opacity-60', i === currentSlide);
+                slide.classList.toggle('opacity-0', i !== currentSlide);
+            });
+
+            dots.forEach((dot, i) => {
+                if (i === currentSlide) {
+                    dot.className = 'w-3 h-3 rounded-full transition-all duration-300 slide-dot bg-yellow-400 w-8';
+                } else {
+                    dot.className = 'w-3 h-3 rounded-full transition-all duration-300 slide-dot bg-white/50 hover:bg-white';
+                }
+            });
+        }
+
+        function startSlideshow() {
+            setInterval(() => {
+                const next = (currentSlide + 1) % heroImages.length;
+                setSlide(next);
+            }, 5000);
+        }
+
+        // --- Gallery Logic ---
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            images.forEach((img, idx) => {
+                const item = document.createElement('div');
+                item.className = 'break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md cursor-pointer bg-white mb-6';
+                item.onclick = () => openLightbox(img);
+                item.innerHTML = `
+                    <img src="${img}" alt="School Moment ${idx + 1}" class="w-full h-auto transform transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <span class="text-white font-medium bg-black/30 px-4 py-2 rounded-full backdrop-blur-sm">View</span>
+                    </div>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // --- Blog Logic ---
+        function renderBlog() {
+            const grid = document.getElementById('blog-grid');
+            blogPosts.forEach(post => {
+                const article = document.createElement('article');
+                article.className = 'flex flex-col bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300';
+                article.innerHTML = `
+                    <div class="h-48 overflow-hidden">
+                        <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex items-center text-xs text-gray-500 mb-4 space-x-4">
+                            <span class="flex items-center"><i data-lucide="calendar" class="h-3 w-3 mr-1"></i> ${post.date}</span>
+                            <span class="flex items-center"><i data-lucide="user" class="h-3 w-3 mr-1"></i> ${post.author}</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3 hover:text-yellow-500 transition-colors cursor-pointer">${post.title}</h2>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-6 flex-1">${post.excerpt}</p>
+                        <button class="text-yellow-600 font-semibold text-sm hover:text-yellow-700 inline-flex items-center">
+                            Read Article <i data-lucide="arrow-right" class="h-4 w-4 ml-1"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(article);
+            });
+        }
+    </script>
+
+</body></html>

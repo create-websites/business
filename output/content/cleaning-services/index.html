@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Professional cleaning services in the Greater Metro Area. We offer residential, commercial, and move-in/move-out cleaning." name="description"/>
+    <meta content="cleaning service, house cleaning, office cleaning, janitorial services" name="keywords"/>
+    <title>Kreate Clean | Top Rated Residential &amp; Commercial Cleaning</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-enter { opacity: 0; }
+        .fade-enter-active { opacity: 1; transition: opacity 300ms ease-in; }
+        .slide-bg { transition: opacity 1s ease-in-out; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0f766e; }
+        
+        .nav-link.active { color: #14b8a6; }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-white selection:bg-teal-200 selection:text-teal-900">
+
+    <!-- SEO Data (Hidden, used by JS) -->
+    <script>
+        const SEO_DATA = {
+            home: {
+                title: "Kreate Clean | Top Rated Residential & Commercial Cleaning",
+                desc: "Professional cleaning services in the Greater Metro Area. We offer residential, commercial, and move-in/move-out cleaning. Get a free quote today!",
+                keywords: "cleaning service, house cleaning, office cleaning, janitorial services, move-out cleaning, deep cleaning, Kreate Clean"
+            },
+            gallery: {
+                title: "Our Work | Kreate Clean Gallery",
+                desc: "View our portfolio of sparkling clean homes and offices. See why Kreate Clean is the trusted choice for cleaning services.",
+                keywords: "cleaning gallery, before and after cleaning, cleaning portfolio, professional cleaning photos"
+            },
+            blog: {
+                title: "Cleaning Tips & News | Kreate Clean Blog",
+                desc: "Expert advice on home maintenance, green cleaning, and organization from the professionals at Kreate Clean.",
+                keywords: "cleaning tips, home maintenance, green cleaning, organization hacks, dust free home"
+            }
+        };
+    </script>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 py-5 bg-transparent" id="navbar">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 font-bold text-2xl cursor-pointer" onclick="router('home')">
+                <div class="p-2 rounded-lg bg-white text-teal-900 transition-colors" id="logo-bg">
+                    <i class="w-6 h-6" data-lucide="sparkles"></i>
+                </div>
+                <span class="text-white transition-colors" id="logo-text">
+                    Kreate<span class="text-teal-200 transition-colors" id="logo-accent">Clean</span>
+                </span>
+            </div>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center gap-8">
+                <button class="nav-btn font-medium transition-colors hover:text-teal-500 text-white/90" data-page="home" onclick="router('home')">Home</button>
+                <button class="nav-btn font-medium transition-colors hover:text-teal-500 text-white/90" data-page="gallery" onclick="router('gallery')">Gallery</button>
+                <button class="nav-btn font-medium transition-colors hover:text-teal-500 text-white/90" data-page="blog" onclick="router('blog')">Blog</button>
+                <button class="px-5 py-2 text-sm bg-white text-teal-800 hover:bg-gray-50 border border-teal-200 hover:shadow-md focus:ring-teal-500 rounded-full font-semibold transition-all duration-300" id="nav-cta" onclick="scrollToContact()">
+                    Book Now
+                </button>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button class="md:hidden text-white transition-colors" id="mobile-menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden absolute top-full left-0 w-full bg-white border-t shadow-xl" id="mobile-menu">
+            <div class="flex flex-col p-6 space-y-4">
+                <button class="text-left font-medium py-2 border-b border-gray-100 text-gray-600" onclick="router('home')">Home</button>
+                <button class="text-left font-medium py-2 border-b border-gray-100 text-gray-600" onclick="router('gallery')">Gallery</button>
+                <button class="text-left font-medium py-2 border-b border-gray-100 text-gray-600" onclick="router('blog')">Blog</button>
+                <button class="w-full mt-4 bg-teal-600 text-white px-6 py-3 rounded-full font-semibold" onclick="scrollToContact()">Book Now</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="min-h-screen">
+        
+        <!-- HOME PAGE -->
+        <div class="page-section" id="page-home">
+            <!-- Hero -->
+            <section class="relative h-[85vh] flex items-center justify-center text-white">
+                <!-- Slideshow Background -->
+                <div class="absolute inset-0 overflow-hidden z-0 bg-gray-900" id="hero-slideshow">
+                    <div class="absolute inset-0 bg-gradient-to-r from-teal-900/90 to-blue-900/40 z-10"></div>
+                    <!-- Slides inserted by JS -->
+                </div>
+
+                <div class="relative z-20 text-center px-4 max-w-4xl mx-auto">
+                    <div class="inline-block px-4 py-1 mb-6 border border-teal-300/30 rounded-full bg-teal-900/30 backdrop-blur-sm text-teal-200 text-sm font-medium tracking-wide uppercase">
+                        Top Rated Cleaning Service
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight tracking-tight">
+                        Experience the <span class="text-teal-400">Perfect Clean</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-10 text-gray-100 max-w-2xl mx-auto font-light">
+                        Professional, reliable, and detailed cleaning services tailored to your lifestyle. We make your space shine.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button class="bg-teal-600 text-white hover:bg-teal-700 hover:shadow-lg px-6 py-3 rounded-full font-semibold transition-all" onclick="scrollToContact()">
+                            Get a Free Quote
+                        </button>
+                        <button class="bg-transparent border-2 border-white text-white hover:bg-white/10 px-6 py-3 rounded-full font-semibold transition-all" onclick="router('gallery')">
+                            View Our Work
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="py-20 bg-white">
+                <div class="container mx-auto px-4">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose Kreate?</h2>
+                        <div class="w-20 h-1 bg-teal-500 mx-auto rounded-full"></div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-10">
+                        <!-- Service 1 -->
+                        <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-teal-100">
+                            <div class="w-14 h-14 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                                <i class="w-6 h-6" data-lucide="sparkles"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-gray-900">Residential Cleaning</h3>
+                            <p class="text-gray-600 leading-relaxed">Deep cleaning for homes, apartments, and condos. We make your living space sparkle.</p>
+                        </div>
+                        <!-- Service 2 -->
+                        <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-teal-100">
+                            <div class="w-14 h-14 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                                <i class="w-6 h-6" data-lucide="check-circle"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-gray-900">Commercial Services</h3>
+                            <p class="text-gray-600 leading-relaxed">Office cleaning, janitorial services, and building maintenance for a professional workspace.</p>
+                        </div>
+                        <!-- Service 3 -->
+                        <div class="group p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-teal-100">
+                            <div class="w-14 h-14 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-600 group-hover:text-white transition-colors">
+                                <i class="w-6 h-6" data-lucide="calendar"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-gray-900">Move-In / Move-Out</h3>
+                            <p class="text-gray-600 leading-relaxed">Comprehensive cleaning for transitions. Get your deposit back or prepare for new tenants.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Image Strip -->
+            <div class="grid grid-cols-2 md:grid-cols-4 h-64" id="home-image-strip">
+                <!-- Images injected by JS -->
+            </div>
+
+            <!-- Testimonials -->
+            <section class="py-20 bg-teal-50 text-center">
+                <div class="container mx-auto px-4 max-w-4xl">
+                    <div class="flex justify-center mb-6 text-yellow-400 gap-1">
+                        <i class="w-6 h-6 fill-current" data-lucide="star"></i>
+                        <i class="w-6 h-6 fill-current" data-lucide="star"></i>
+                        <i class="w-6 h-6 fill-current" data-lucide="star"></i>
+                        <i class="w-6 h-6 fill-current" data-lucide="star"></i>
+                        <i class="w-6 h-6 fill-current" data-lucide="star"></i>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-medium text-teal-900 mb-8 italic">
+                        "The team at Kreate transformed our office. They are punctual, thorough, and incredibly professional. Highly recommended!"
+                    </h3>
+                    <p class="font-bold text-gray-700 text-lg">- Sarah Mitchell, Business Owner</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- GALLERY PAGE -->
+        <div class="page-section hidden pt-24 pb-20 bg-white" id="page-gallery">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Work</h2>
+                    <p classname="text-xl text-gray-600 max-w-2xl mx-auto">
+                        See the difference a professional clean makes. Browse our portfolio of residential and commercial projects.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="gallery-grid">
+                    <!-- Gallery items injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOG PAGE -->
+        <div class="page-section hidden pt-24 pb-20 bg-gray-50" id="page-blog">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Cleaning Tips &amp; News</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        Expert advice on keeping your space clean, healthy, and organized.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto" id="blog-grid">
+                    <!-- Blog items injected by JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Contact Section (Always Visible) -->
+    <section class="py-24 bg-gray-900 text-white relative overflow-hidden" id="contact">
+        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-teal-600 rounded-full blur-3xl opacity-20"></div>
+        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-72 h-72 bg-blue-600 rounded-full blur-3xl opacity-20"></div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="inline-block px-4 py-1 mb-6 border border-teal-500/30 rounded-full bg-teal-900/30 text-teal-300 text-sm font-semibold tracking-wide uppercase">
+                        Get In Touch
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">Let's Make Your Space Shine</h2>
+                    <p class="text-gray-300 text-lg mb-10 max-w-md">
+                        Ready for a cleaner environment? Contact us today for a free estimate or to schedule your first service.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-all">
+                                <i class="w-5 h-5" data-lucide="phone"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">Call Us</p>
+                                <p class="text-xl font-semibold">425-341-1111</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-all">
+                                <i class="w-5 h-5" data-lucide="mail"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">Email Us</p>
+                                <p class="text-xl font-semibold">contact@kreate.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-all">
+                                <i class="w-5 h-5" data-lucide="map-pin"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">Service Area</p>
+                                <p class="text-xl font-semibold">Serving the Greater Metro Area</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="bg-white p-8 md:p-10 rounded-3xl shadow-2xl text-gray-900" onsubmit="event.preventDefault(); alert('Request sent! We will contact you shortly.');">
+                    <h3 class="text-2xl font-bold mb-6">Request a Quote</h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-gray-700">First Name</label>
+                                <input class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="John" type="text"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-gray-700">Last Name</label>
+                                <input class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="Doe" type="text"/>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">Email Address</label>
+                            <input class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="john@example.com" type="email"/>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">Service Needed</label>
+                            <select class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all">
+                                <option>Residential Cleaning</option>
+                                <option>Commercial Cleaning</option>
+                                <option>Move-In/Move-Out</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">Message</label>
+                            <textarea class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all" placeholder="Tell us about your cleaning needs..." rows="3"></textarea>
+                        </div>
+                        <button class="w-full mt-2 bg-teal-600 text-white px-6 py-3 rounded-full font-semibold transition-all hover:bg-teal-700 hover:shadow-lg">Send Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Lightbox Modal -->
+    <div class="fixed inset-0 z-[60] bg-black/95 hidden flex items-center justify-center p-4" id="lightbox">
+        <button class="absolute top-6 right-6 text-white hover:text-teal-400" onclick="closeLightbox()">
+            <i class="w-10 h-10" data-lucide="x"></i>
+        </button>
+        <img alt="Full view" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl" id="lightbox-img" src=""/>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data
+        const IMAGES = [
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service1.jpg",
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service2.jpg",
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service3.jpg",
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service4.jpg",
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service5.jpg",
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service6.jpg",
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service7.jpg",
+            "https://storage.googleapis.com/imagesu/cleaning-service/cleaning-service8.jpg"
+        ];
+
+        const BLOG_POSTS = [
+            {
+                id: 1,
+                title: "5 Tips for a Dust-Free Home",
+                excerpt: "Discover the professional secrets to keeping your home free of dust allergens all year round.",
+                date: "Oct 12, 2023",
+                image: IMAGES[2]
+            },
+            {
+                id: 2,
+                title: "The Benefits of Green Cleaning",
+                excerpt: "Why switching to eco-friendly products is better for your health and the environment.",
+                date: "Sep 28, 2023",
+                image: IMAGES[5]
+            },
+            {
+                id: 3,
+                title: "Preparing for Spring Cleaning",
+                excerpt: "A complete checklist to tackle the deep cleaning season effectively and efficiently.",
+                date: "Sep 15, 2023",
+                image: IMAGES[1]
+            }
+        ];
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderSlideshow();
+            renderImageStrip();
+            renderGallery();
+            renderBlog();
+            lucide.createIcons();
+            
+            // Start slideshow
+            startSlideshow();
+        });
+
+        // --- Navigation Router ---
+        function router(pageId) {
+            // Update SEO
+            const seo = SEO_DATA[pageId];
+            if(seo) {
+                document.title = seo.title;
+                document.querySelector('meta[name="description"]').content = seo.desc;
+                document.querySelector('meta[name="keywords"]').content = seo.keywords;
+            }
+
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
+            
+            // Show active page
+            const activePage = document.getElementById(`page-${pageId}`);
+            if (activePage) {
+                activePage.classList.remove('hidden');
+                activePage.classList.add('fade-enter');
+                setTimeout(() => activePage.classList.remove('fade-enter'), 10);
+            }
+
+            // Update Nav Styles
+            updateNavStyles(pageId);
+            
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToContact() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // --- Navbar Logic ---
+        const navbar = document.getElementById('navbar');
+        const logoBg = document.getElementById('logo-bg');
+        const logoText = document.getElementById('logo-text');
+        const logoAccent = document.getElementById('logo-accent');
+        const navCta = document.getElementById('nav-cta');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+        function updateNavStyles(pageId) {
+            const isHome = pageId === 'home';
+            const isScrolled = window.scrollY > 20;
+            const needsSolidNav = !isHome || isScrolled;
+
+            if (needsSolidNav) {
+                navbar.classList.add('bg-white', 'shadow-lg', 'py-3');
+                navbar.classList.remove('bg-transparent', 'py-5');
+                
+                logoBg.classList.replace('bg-white', 'bg-teal-600');
+                logoBg.classList.replace('text-teal-900', 'text-white');
+                
+                logoText.classList.replace('text-white', 'text-teal-900');
+                logoAccent.classList.replace('text-teal-200', 'text-teal-600');
+                
+                mobileMenuBtn.classList.replace('text-white', 'text-gray-900');
+
+                // Update Links
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('text-white/90');
+                    if(btn.dataset.page === pageId) {
+                        btn.classList.add('text-teal-600');
+                        btn.classList.remove('text-gray-600');
+                    } else {
+                        btn.classList.add('text-gray-600');
+                        btn.classList.remove('text-teal-600');
+                    }
+                });
+
+                // Update CTA Button
+                navCta.classList.replace('bg-white', 'bg-teal-600');
+                navCta.classList.replace('text-teal-800', 'text-white');
+                navCta.classList.replace('border-teal-200', 'border-transparent');
+                navCta.classList.add('hover:bg-teal-700');
+
+            } else {
+                navbar.classList.remove('bg-white', 'shadow-lg', 'py-3');
+                navbar.classList.add('bg-transparent', 'py-5');
+
+                logoBg.classList.replace('bg-teal-600', 'bg-white');
+                logoBg.classList.replace('text-white', 'text-teal-900');
+                
+                logoText.classList.replace('text-teal-900', 'text-white');
+                logoAccent.classList.replace('text-teal-600', 'text-teal-200');
+
+                mobileMenuBtn.classList.replace('text-gray-900', 'text-white');
+
+                // Update Links
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.add('text-white/90');
+                    btn.classList.remove('text-teal-600', 'text-gray-600');
+                    
+                    if(btn.dataset.page === pageId) {
+                        btn.classList.remove('text-white/90');
+                        btn.classList.add('text-teal-500');
+                    }
+                });
+
+                // Update CTA Button
+                navCta.classList.replace('bg-teal-600', 'bg-white');
+                navCta.classList.replace('text-white', 'text-teal-800');
+                navCta.classList.replace('border-transparent', 'border-teal-200');
+                navCta.classList.remove('hover:bg-teal-700');
+            }
+        }
+
+        // Scroll Event Listener
+        window.addEventListener('scroll', () => {
+            // Determine current page from visibility
+            const homeVisible = !document.getElementById('page-home').classList.contains('hidden');
+            updateNavStyles(homeVisible ? 'home' : 'other'); 
+        });
+
+        // Mobile Menu Toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // --- Render Functions ---
+
+        function renderSlideshow() {
+            const container = document.getElementById('hero-slideshow');
+            const slides = IMAGES.slice(0, 4);
+            
+            slides.forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = `absolute inset-0 bg-cover bg-center slide-bg ${idx === 0 ? 'opacity-100' : 'opacity-0'}`;
+                div.style.backgroundImage = `url(${img})`;
+                div.id = `slide-${idx}`;
+                container.appendChild(div);
+            });
+        }
+
+        function startSlideshow() {
+            let current = 0;
+            setInterval(() => {
+                document.getElementById(`slide-${current}`).classList.replace('opacity-100', 'opacity-0');
+                current = (current + 1) % 4;
+                document.getElementById(`slide-${current}`).classList.replace('opacity-0', 'opacity-100');
+            }, 5000);
+        }
+
+        function renderImageStrip() {
+            const container = document.getElementById('home-image-strip');
+            IMAGES.slice(4, 8).forEach(img => {
+                const div = document.createElement('div');
+                div.className = 'relative group overflow-hidden h-full';
+                div.innerHTML = `
+                    <img src="${img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Service">
+                    <div class="absolute inset-0 bg-teal-900/0 group-hover:bg-teal-900/40 transition-colors duration-300"></div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('gallery-grid');
+            IMAGES.forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = 'relative aspect-square group overflow-hidden rounded-xl cursor-pointer shadow-md hover:shadow-xl transition-all';
+                div.onclick = () => openLightbox(img);
+                div.innerHTML = `
+                    <img src="${img}" alt="Gallery ${idx}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
+                        <div class="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 bg-white p-3 rounded-full text-teal-600">
+                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderBlog() {
+            const container = document.getElementById('blog-grid');
+            BLOG_POSTS.forEach(post => {
+                const article = document.createElement('article');
+                article.className = 'bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col';
+                article.innerHTML = `
+                    <div class="h-56 overflow-hidden">
+                        <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="text-sm font-semibold text-teal-600 mb-2 uppercase tracking-wider">${post.date}</div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">${post.title}</h3>
+                        <p class="text-gray-600 mb-6 flex-1 line-clamp-3">${post.excerpt}</p>
+                        <a href="#" class="inline-flex items-center font-semibold text-teal-600 hover:text-teal-800 transition-colors group">
+                            Read Article <i data-lucide="arrow-right" class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                `;
+                container.appendChild(article);
+            });
+        }
+
+        // --- Lightbox ---
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+        }
+    </script>
+
+</body></html>

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Lumina Dermatology | Modern Skin Care</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#2c5f58', // Deep teal/sage
+                        'secondary': '#f3f4f6', // Light gray/white
+                        'accent': '#d4a373', // Soft gold/beige
+                        'text-dark': '#1f2937',
+                        'text-light': '#6b7280',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Playfair+Display:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        .fade-enter {
+            opacity: 0;
+            transform: scale(1.05);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 1s ease-in-out, transform 8s ease-out;
+        }
+        .fade-exit {
+            opacity: 1;
+        }
+        .fade-exit-active {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        /* Hide scrollbar for gallery horizontal scroll on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="font-sans text-text-dark antialiased bg-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <a class="font-serif text-2xl font-bold text-primary tracking-tight" href="#">Lumina<span class="text-accent">.</span></a>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a class="text-gray-600 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="#home">HOME</a>
+                    <a class="text-gray-600 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="#about">ABOUT</a>
+                    <a class="text-gray-600 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="#services">SERVICES</a>
+                    <a class="text-gray-600 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="#gallery">GALLERY</a>
+                    <a class="text-gray-600 hover:text-primary transition-colors text-sm font-medium tracking-wide" href="#blog">BLOG</a>
+                    <a class="px-5 py-2.5 bg-primary text-white text-sm font-medium rounded-full hover:bg-opacity-90 transition-all shadow-lg shadow-primary/20" href="#contact">Book Consultation</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-600 hover:text-primary focus:outline-none" id="mobile-menu-btn">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full" id="mobile-menu">
+            <div class="px-4 pt-2 pb-6 space-y-2 shadow-lg">
+                <a class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md" href="#home">Home</a>
+                <a class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md" href="#about">About</a>
+                <a class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md" href="#services">Services</a>
+                <a class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md" href="#gallery">Gallery</a>
+                <a class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md" href="#blog">Blog</a>
+                <a class="block px-3 py-3 text-base font-medium text-primary font-semibold" href="#contact">Book Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Slideshow -->
+    <section class="relative h-screen min-h-[600px] overflow-hidden" id="home">
+        <div class="absolute inset-0 w-full h-full" id="slideshow-container">
+            <!-- Slides will be inserted here by JS -->
+        </div>
+        
+        <div class="absolute inset-0 bg-black/20 z-10"></div>
+        
+        <div class="relative z-20 h-full flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto transform transition-all duration-1000 translate-y-0 opacity-100">
+                <p class="text-white/90 font-medium tracking-[0.2em] mb-4 uppercase text-sm md:text-base animate-fade-in-up">Dermatology &amp; Aesthetics</p>
+                <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-8 leading-tight animate-fade-in-up" style="animation-delay: 0.2s;">
+                    Radiance Starts <br/><span class="italic font-light">Below the Surface</span>
+                </h1>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <a class="px-8 py-4 bg-white text-primary font-semibold rounded-full hover:bg-gray-100 transition-all shadow-xl min-w-[180px]" href="#contact">
+                        Book Appointment
+                    </a>
+                    <a class="px-8 py-4 bg-transparent border border-white text-white font-semibold rounded-full hover:bg-white/10 transition-all backdrop-blur-sm min-w-[180px]" href="#services">
+                        Explore Services
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slider Controls -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30 flex space-x-3" id="slider-dots">
+            <!-- Dots injected by JS -->
+        </div>
+    </section>
+
+    <!-- Introduction / About -->
+    <section class="py-20 md:py-32 bg-white" id="about">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="relative">
+                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-primary/10 rounded-full z-0"></div>
+                    <img alt="Dermatologist consultation" class="relative z-10 rounded-2xl shadow-2xl w-full object-cover h-[500px]" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-4.jpg"/>
+                    <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl z-20 max-w-xs hidden md:block">
+                        <p class="font-serif text-3xl text-primary font-bold mb-1">15+</p>
+                        <p class="text-gray-500 text-sm">Years of Clinical Excellence</p>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-text-dark mb-6">Harmonizing Science &amp; <span class="text-primary italic">Artistry</span></h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        At Lumina, we believe that healthy skin is the foundation of confidence. Our clinic combines cutting-edge medical dermatology with bespoke aesthetic treatments to help you look and feel your absolute best.
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Whether you seek treatment for a medical condition or wish to rejuvenate your appearance, our expert team provides personalized care tailored to your unique skin profile.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-text-dark">Board Certified</h4>
+                                <p class="text-sm text-gray-500">Expert Medical Staff</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-primary mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-text-dark">Advanced Tech</h4>
+                                <p class="text-sm text-gray-500">Latest Laser Systems</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a class="text-primary font-semibold border-b-2 border-primary pb-1 hover:text-primary/80 transition-colors inline-block" href="#about">Learn More About Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="py-20 bg-secondary/50" id="services">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-primary font-medium tracking-widest text-sm uppercase">Our Expertise</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-text-dark mt-3 mb-6">Comprehensive Care</h2>
+                <p class="text-gray-600">From medical diagnosis to cosmetic refinement, we offer a full spectrum of dermatological services.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 group">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <i class="fas fa-user-md text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-dark mb-3">Medical Dermatology</h3>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Diagnosis and treatment of skin conditions including acne, eczema, psoriasis, and skin cancer screenings.</p>
+                    <a class="text-primary font-medium text-sm flex items-center group-hover:underline" href="#">View Details <i class="fas fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 group">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <i class="fas fa-sparkles text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-dark mb-3">Cosmetic Injectables</h3>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Restore volume and smooth lines with Botox, dermal fillers, and personalized facial contouring.</p>
+                    <a class="text-primary font-medium text-sm flex items-center group-hover:underline" href="#">View Details <i class="fas fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 group">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                        <i class="fas fa-laser text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-dark mb-3">Laser Treatments</h3>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Advanced laser therapy for hair removal, scar reduction, pigmentation correction, and skin resurfacing.</p>
+                    <a class="text-primary font-medium text-sm flex items-center group-hover:underline" href="#">View Details <i class="fas fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="py-20 bg-white" id="gallery">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div class="max-w-2xl">
+                    <span class="text-primary font-medium tracking-widest text-sm uppercase">Our Clinic</span>
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-text-dark mt-3">A Space for Healing</h2>
+                </div>
+                <div class="hidden md:block">
+                    <a class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" href="#">View All Gallery</a>
+                </div>
+            </div>
+
+            <!-- Masonry-style Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 h-[800px] md:h-[600px]">
+                <div class="col-span-1 md:col-span-2 row-span-2 relative group overflow-hidden rounded-xl cursor-pointer">
+                    <img alt="Clinic Interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-1.jpg"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                        <p class="text-white font-medium">Reception Lounge</p>
+                    </div>
+                </div>
+                <div class="col-span-1 md:col-span-1 row-span-1 relative group overflow-hidden rounded-xl cursor-pointer">
+                    <img alt="Treatment Room" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-2.jpg"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                        <p class="text-white font-medium">Treatment Suites</p>
+                    </div>
+                </div>
+                <div class="col-span-1 md:col-span-1 row-span-1 relative group overflow-hidden rounded-xl cursor-pointer">
+                    <img alt="Product Display" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-3.jpg"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                        <p class="text-white font-medium">Skincare Boutique</p>
+                    </div>
+                </div>
+                <div class="col-span-1 md:col-span-2 row-span-1 relative group overflow-hidden rounded-xl cursor-pointer">
+                    <img alt="Consultation" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-5.jpg"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                        <p class="text-white font-medium">Private Consultations</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:hidden mt-8 text-center">
+                 <a class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" href="#">View All Gallery</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Preview -->
+    <section class="py-20 bg-secondary/30" id="blog">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-primary font-medium tracking-widest text-sm uppercase">Skin Health Journal</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-text-dark mt-3">Latest Insights</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Blog Post 1 -->
+                <article class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden">
+                        <img alt="Skincare routine" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-6.jpg"/>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="text-xs text-primary font-semibold mb-2 uppercase tracking-wide">Skin Care 101</div>
+                        <h3 class="text-xl font-bold text-text-dark mb-3 line-clamp-2">The Ultimate Guide to Seasonal Skincare Transitions</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">As seasons change, so should your routine. Discover how to adapt your regimen for optimal hydration and protection.</p>
+                        <a class="text-primary font-medium text-sm mt-auto" href="#">Read Article</a>
+                    </div>
+                </article>
+
+                 <!-- Blog Post 2 -->
+                 <article class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden bg-gray-200">
+                         <img alt="Anti-aging" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-2.jpg"/>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="text-xs text-primary font-semibold mb-2 uppercase tracking-wide">Treatments</div>
+                        <h3 class="text-xl font-bold text-text-dark mb-3 line-clamp-2">Debunking Myths About Cosmetic Injectables</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">Separating fact from fiction when it comes to Botox, fillers, and achieving a natural look.</p>
+                        <a class="text-primary font-medium text-sm mt-auto" href="#">Read Article</a>
+                    </div>
+                </article>
+
+                 <!-- Blog Post 3 -->
+                 <article class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+                    <div class="h-48 overflow-hidden bg-gray-200">
+                        <img alt="Sun protection" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" src="https://storage.googleapis.com/imagesu/dermatologist/dermatologist-5.jpg"/>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="text-xs text-primary font-semibold mb-2 uppercase tracking-wide">Wellness</div>
+                        <h3 class="text-xl font-bold text-text-dark mb-3 line-clamp-2">How Stress Affects Your Skin Health</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">Understanding the gut-brain-skin axis and managing stress for a clearer complexion.</p>
+                        <a class="text-primary font-medium text-sm mt-auto" href="#">Read Article</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Footer -->
+    <section class="bg-primary text-white py-20 relative overflow-hidden" id="contact">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-serif font-bold mb-6">Start Your Journey to Radiant Skin</h2>
+                    <p class="text-gray-300 mb-8 max-w-md text-lg">Schedule your consultation today. We look forward to welcoming you to our clinic.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                                <i class="fas fa-phone-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-300 text-sm uppercase tracking-wide">Phone</h4>
+                                <p class="text-xl font-semibold">425-341-1111</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                                <i class="fas fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-300 text-sm uppercase tracking-wide">Email</h4>
+                                <a class="text-xl font-semibold hover:text-accent transition-colors" href="mailto:contact@kreate.com">contact@kreate.com</a>
+                            </div>
+                        </div>
+                         <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                                <i class="fas fa-globe text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-300 text-sm uppercase tracking-wide">Website</h4>
+                                <a class="text-xl font-semibold hover:text-accent transition-colors" href="https://business.kreate.com/dermatologist" target="_blank">business.kreate.com/dermatologist</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white text-gray-800 p-8 rounded-2xl shadow-2xl">
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                <input class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Jane" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                <input class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Doe" type="text"/>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="jane@example.com" type="email"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Service Interest</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all">
+                                <option>General Consultation</option>
+                                <option>Acne Treatment</option>
+                                <option>Botox / Fillers</option>
+                                <option>Laser Therapy</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <button class="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-opacity-90 transition-all shadow-lg transform hover:-translate-y-1" onclick="alert('Thank you! We will contact you shortly.')" type="button">
+                            Request Appointment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // Data for Slideshow
+        const slides = [
+            {
+                image: "https://storage.googleapis.com/imagesu/dermatologist/dermatologist-1.jpg",
+                alt: "Modern Clinic Reception"
+            },
+            {
+                image: "https://storage.googleapis.com/imagesu/dermatologist/dermatologist-2.jpg",
+                alt: "Pristine Treatment Room"
+            },
+            {
+                image: "https://storage.googleapis.com/imagesu/dermatologist/dermatologist-6.jpg",
+                alt: "Advanced Care"
+            }
+        ];
+
+        let currentSlide = 0;
+        const slideContainer = document.getElementById('slideshow-container');
+        const dotsContainer = document.getElementById('slider-dots');
+
+        // Initialize Slides
+        function initSlideshow() {
+            slides.forEach((slide, index) => {
+                // Create Image Element
+                const imgDiv = document.createElement('div');
+                imgDiv.className = `absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out transform ${index === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`;
+                imgDiv.style.backgroundImage = `url('${slide.image}')`;
+                imgDiv.id = `slide-${index}`;
+                slideContainer.appendChild(imgDiv);
+
+                // Create Dot
+                const dot = document.createElement('button');
+                dot.className = `w-3 h-3 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white w-8' : 'bg-white/50 hover:bg-white'}`;
+                dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                dot.onclick = () => goToSlide(index);
+                dotsContainer.appendChild(dot);
+            });
+
+            // Start Autoplay
+            setInterval(nextSlide, 5000);
+        }
+
+        function updateSlides() {
+            // Update Images
+            for (let i = 0; i < slides.length; i++) {
+                const el = document.getElementById(`slide-${i}`);
+                if (i === currentSlide) {
+                    el.classList.remove('opacity-0', 'scale-105');
+                    el.classList.add('opacity-100', 'scale-100');
+                } else {
+                    el.classList.remove('opacity-100', 'scale-100');
+                    el.classList.add('opacity-0', 'scale-105');
+                }
+            }
+
+            // Update Dots
+            const dots = dotsContainer.children;
+            for (let i = 0; i < dots.length; i++) {
+                if (i === currentSlide) {
+                    dots[i].classList.remove('bg-white/50', 'w-3');
+                    dots[i].classList.add('bg-white', 'w-8');
+                } else {
+                    dots[i].classList.remove('bg-white', 'w-8');
+                    dots[i].classList.add('bg-white/50', 'w-3');
+                }
+            }
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlides();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlides();
+        }
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
+        });
+
+        // Sticky Navbar Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md', 'py-0');
+            } else {
+                navbar.classList.remove('shadow-md', 'py-0');
+            }
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initSlideshow);
+
+    </script>
+
+</body></html>

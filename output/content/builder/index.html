@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kreate Construction | Premier House Contractor in Redmond, WA</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta content="Kreate Construction is a top-rated house contractor in Redmond, WA, specializing in modern home building, renovations, and luxury designs across the Pacific Northwest. Contact us at 425-341-1111." name="description"/>
+    <meta content="house contractor Redmond WA, home builder Redmond, modern home construction, luxury renovations, custom homes Washington, Kreate Construction, general contractor King County, residential architecture" name="keywords"/>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-enter { opacity: 0; }
+        .fade-enter-active { opacity: 1; transition: opacity 500ms ease-in; }
+        .slide-image {
+            transition: opacity 1000ms ease-in-out;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+        }
+        .slide-image.active { opacity: 1; }
+        .hidden-page { display: none; }
+        .block-page { display: block; }
+    </style>
+</head>
+<body class="bg-white text-slate-900">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-transparent py-6" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="cursor-pointer flex items-center gap-2" onclick="navigateTo('home')">
+                    <div class="h-8 w-8 rounded bg-orange-600 flex items-center justify-center text-white font-bold">K</div>
+                    <span class="text-2xl font-bold tracking-tighter text-white" id="nav-logo-text">KREATE</span>
+                </div>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex space-x-8">
+                    <button class="nav-link font-medium transition-colors hover:text-orange-500 text-white" data-page="home" onclick="navigateTo('home')">Home</button>
+                    <button class="nav-link font-medium transition-colors hover:text-orange-500 text-white" data-page="gallery" onclick="navigateTo('gallery')">Gallery</button>
+                    <button class="nav-link font-medium transition-colors hover:text-orange-500 text-white" data-page="blog" onclick="navigateTo('blog')">Blog</button>
+                    <button class="nav-link font-medium transition-colors hover:text-orange-500 text-white" onclick="scrollToContact()">Contact</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="text-white" id="mobile-menu-btn">
+                        <i class="w-7 h-7" data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div class="hidden md:hidden bg-white absolute top-full left-0 w-full shadow-lg py-4 px-4 flex flex-col space-y-4" id="mobile-menu">
+            <button class="flex items-center gap-3 text-lg font-medium text-slate-700 py-2 border-b border-slate-100" onclick="navigateTo('home')">
+                <i class="text-orange-500 w-5 h-5" data-lucide="home"></i> Home
+            </button>
+            <button class="flex items-center gap-3 text-lg font-medium text-slate-700 py-2 border-b border-slate-100" onclick="navigateTo('gallery')">
+                <i class="text-orange-500 w-5 h-5" data-lucide="image"></i> Gallery
+            </button>
+            <button class="flex items-center gap-3 text-lg font-medium text-slate-700 py-2 border-b border-slate-100" onclick="navigateTo('blog')">
+                <i class="text-orange-500 w-5 h-5" data-lucide="book-open"></i> Blog
+            </button>
+            <button class="flex items-center gap-3 text-lg font-medium text-slate-700 py-2 border-b border-slate-100" onclick="scrollToContact()">
+                <i class="text-orange-500 w-5 h-5" data-lucide="phone"></i> Contact
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="min-h-screen">
+
+        <!-- HOME PAGE -->
+        <div class="page-section block-page" id="page-home">
+            <!-- Hero Slideshow -->
+            <div class="relative h-screen w-full overflow-hidden">
+                <div class="absolute inset-0 w-full h-full bg-slate-900" id="slides-container">
+                    <!-- Slides injected by JS -->
+                </div>
+                
+                <!-- Content Overlay -->
+                <div class="absolute inset-0 z-20 flex flex-col justify-center items-center text-center px-4 pointer-events-none">
+                    <h2 class="text-orange-500 font-bold tracking-widest text-sm md:text-base uppercase mb-4 animate-fadeIn pointer-events-auto">Premier Contractor in Redmond, WA</h2>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight max-w-4xl pointer-events-auto">
+                        Building Visions, <br/> Creating Reality.
+                    </h1>
+                    <p class="text-gray-200 text-lg md:text-xl max-w-2xl mb-10 pointer-events-auto">
+                        Specializing in modern home construction, renovations, and luxury designs across the Pacific Northwest.
+                    </p>
+                    <button class="bg-orange-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-orange-700 transition-all transform hover:scale-105 flex items-center gap-2 pointer-events-auto cursor-pointer" onclick="scrollToContact()">
+                        Start Your Project <i class="w-5 h-5" data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Controls -->
+                <button class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white backdrop-blur-sm transition-all cursor-pointer" onclick="changeSlide(-1)">
+                    <i class="w-8 h-8" data-lucide="chevron-left"></i>
+                </button>
+                <button class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/10 hover:bg-white/20 p-3 rounded-full text-white backdrop-blur-sm transition-all cursor-pointer" onclick="changeSlide(1)">
+                    <i class="w-8 h-8" data-lucide="chevron-right"></i>
+                </button>
+
+                <!-- Dots -->
+                <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-3 pointer-events-auto" id="slide-dots">
+                    <!-- Dots injected by JS -->
+                </div>
+            </div>
+
+            <!-- Feature Section -->
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h3 class="text-orange-600 font-semibold uppercase tracking-wider mb-2">About Us</h3>
+                            <h2 class="text-4xl font-bold text-slate-900 mb-6">Redmond's Trusted Contracting Partner</h2>
+                            <p class="text-slate-600 mb-6 leading-relaxed">
+                                At Kreate, we understand that a home is more than just walls and a roof. It's where life happens. Based in the heart of Redmond, Washington, we bring years of expertise to every project, ensuring that your modern vision becomes a tangible, durable reality.
+                            </p>
+                            <ul class="space-y-4 mb-8 text-slate-700 font-medium">
+                                <li class="flex items-center gap-3"><div class="w-2 h-2 rounded-full bg-orange-500"></div>Custom Home Building</li>
+                                <li class="flex items-center gap-3"><div class="w-2 h-2 rounded-full bg-orange-500"></div>Full Home Renovations</li>
+                                <li class="flex items-center gap-3"><div class="w-2 h-2 rounded-full bg-orange-500"></div>Modern Kitchen &amp; Bath Remodels</li>
+                                <li class="flex items-center gap-3"><div class="w-2 h-2 rounded-full bg-orange-500"></div>Sustainable Building Practices</li>
+                            </ul>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <img alt="Interior" class="w-full h-64 object-cover rounded-2xl shadow-lg transform translate-y-8" id="feature-img-1"/>
+                            <img alt="Exterior" class="w-full h-64 object-cover rounded-2xl shadow-lg" id="feature-img-2"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Latest Projects Preview -->
+            <div class="bg-slate-50 py-20">
+                <div class="max-w-7xl mx-auto px-4 text-center">
+                    <h2 class="text-3xl font-bold mb-8">Latest Projects</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10" id="home-gallery-grid">
+                        <!-- Images injected by JS -->
+                    </div>
+                    <button class="inline-flex items-center gap-2 border-2 border-slate-900 px-6 py-2 rounded-full font-bold hover:bg-slate-900 hover:text-white transition-all" onclick="navigateTo('gallery')">
+                        View Full Gallery <i class="w-4 h-4" data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GALLERY PAGE -->
+        <div class="page-section hidden-page pt-24 pb-20 min-h-screen bg-slate-50" id="page-gallery">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Our Portfolio</h1>
+                    <p class="text-slate-600 max-w-2xl mx-auto">
+                        Explore our latest projects in Redmond and the Greater Seattle area. From modern minimalist designs to cozy renovations.
+                    </p>
+                </div>
+                <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6" id="full-gallery-grid">
+                    <!-- Images injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOG PAGE -->
+        <div class="page-section hidden-page pt-24 pb-20 min-h-screen bg-slate-50" id="page-blog">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Construction Insights</h1>
+                    <p class="text-slate-600 max-w-2xl mx-auto">
+                        Expert advice, market updates, and design inspiration from the Kreate team.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="blog-grid">
+                    <!-- Blog posts injected by JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <script>
+        // --- Data ---
+        const images = [
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor1.jpg",
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor2.jpg",
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor3.jpg",
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor4.jpg",
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor5.jpg",
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor6.jpg",
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor7.jpg",
+            "https://storage.googleapis.com/imagesu/house-contractor/house-contractor8.jpg"
+        ];
+
+        const blogPosts = [
+            {
+                title: "Top 5 Home Renovation Trends in Redmond for 2025",
+                category: "Trends",
+                date: "Oct 12, 2024",
+                image: images[6],
+                excerpt: "From sustainable materials to smart home integration, discover what's shaping the future of housing in the Pacific Northwest."
+            },
+            {
+                title: "Maximizing Space in Modern Urban Homes",
+                category: "Design",
+                date: "Sep 28, 2024",
+                image: images[7],
+                excerpt: "Living in the tech hub of Redmond often means getting creative with space. Here are our top architectural tips."
+            },
+            {
+                title: "The Cost of Building vs. Buying in King County",
+                category: "Market",
+                date: "Sep 15, 2024",
+                image: images[1],
+                excerpt: "An in-depth analysis of the current real estate market and why building a custom home might be your best investment."
+            }
+        ];
+
+        let currentPage = 'home';
+        let currentSlide = 0;
+        let slideInterval;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initSlideshow();
+            initFeatures();
+            initHomeGallery();
+            initFullGallery();
+            initBlog();
+            handleScroll(); // Initial check
+        });
+
+        // --- Navigation Logic ---
+        function navigateTo(pageId) {
+            currentPage = pageId;
+            
+            // Toggle visibility
+            document.querySelectorAll('.page-section').forEach(el => {
+                el.classList.add('hidden-page');
+                el.classList.remove('block-page');
+            });
+            document.getElementById(`page-${pageId}`).classList.remove('hidden-page');
+            document.getElementById(`page-${pageId}`).classList.add('block-page');
+
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Update Navbar State
+            updateNavbarStyle();
+            
+            // Update Active Link State
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.dataset.page === pageId) {
+                    link.classList.add('text-orange-500');
+                    link.classList.remove('text-white', 'text-slate-700');
+                } else {
+                    link.classList.remove('text-orange-500');
+                }
+            });
+        }
+
+        function scrollToContact() {
+            const footer = document.getElementById('contact-section');
+            
+            // If on mobile menu, close it
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+
+            footer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Mobile Menu ---
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        menuBtn.addEventListener('click', toggleMobileMenu);
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = menuBtn.querySelector('i'); // Get SVG or wrapper
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                // We'll rely on Lucide re-rendering if we were changing icons, 
+                // but simpler to just keep the menu icon or swap if needed. 
+                // For simplicity, just toggle list visibility.
+            } else {
+                menu.classList.add('hidden');
+            }
+            
+            // Check scroll state to ensure icon color is correct
+            updateNavbarStyle();
+        }
+
+        // --- Scroll Effect ---
+        window.addEventListener('scroll', handleScroll);
+
+        function handleScroll() {
+            updateNavbarStyle();
+        }
+
+        function updateNavbarStyle() {
+            const navbar = document.getElementById('navbar');
+            const logoText = document.getElementById('nav-logo-text');
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const isScrolled = window.scrollY > 50;
+            const isHome = currentPage === 'home';
+
+            if (isScrolled || !isHome) {
+                // Scrolled or internal page: White background, Dark text
+                navbar.classList.add('bg-white', 'shadow-md', 'py-4');
+                navbar.classList.remove('bg-transparent', 'py-6');
+                
+                logoText.classList.add('text-slate-900');
+                logoText.classList.remove('text-white');
+                
+                mobileBtn.classList.add('text-slate-900');
+                mobileBtn.classList.remove('text-white');
+
+                navLinks.forEach(link => {
+                    if (link.dataset.page === currentPage) return; // Keep active color
+                    link.classList.add('text-slate-700');
+                    link.classList.remove('text-white');
+                });
+            } else {
+                // Top of Home: Transparent background, White text
+                navbar.classList.remove('bg-white', 'shadow-md', 'py-4');
+                navbar.classList.add('bg-transparent', 'py-6');
+                
+                logoText.classList.add('text-white');
+                logoText.classList.remove('text-slate-900');
+                
+                mobileBtn.classList.add('text-white');
+                mobileBtn.classList.remove('text-slate-900');
+
+                navLinks.forEach(link => {
+                    if (link.dataset.page === currentPage) return;
+                    link.classList.add('text-white');
+                    link.classList.remove('text-slate-700');
+                });
+            }
+        }
+
+        // --- Slideshow ---
+        function initSlideshow() {
+            const container = document.getElementById('slides-container');
+            const dotsContainer = document.getElementById('slide-dots');
+            
+            // Create Slides (Using first 4 images)
+            images.slice(0, 4).forEach((img, idx) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = `slide-image ${idx === 0 ? 'active' : ''}`;
+                
+                // Overlay + Image
+                slideDiv.innerHTML = `
+                    <div class="absolute inset-0 bg-black/40 z-10"></div>
+                    <img src="${img}" class="w-full h-full object-cover" alt="Slide ${idx}">
+                `;
+                container.appendChild(slideDiv);
+
+                // Create Dots
+                const dot = document.createElement('button');
+                dot.className = `h-3 rounded-full transition-all ${idx === 0 ? 'bg-orange-500 w-8' : 'bg-white/50 w-3 hover:bg-white'}`;
+                dot.onclick = () => setSlide(idx);
+                dotsContainer.appendChild(dot);
+            });
+
+            startSlideTimer();
+        }
+
+        function startSlideTimer() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => changeSlide(1), 5000);
+        }
+
+        function changeSlide(direction) {
+            let nextIndex = (currentSlide + direction) % 4;
+            if (nextIndex < 0) nextIndex = 3;
+            setSlide(nextIndex);
+        }
+
+        function setSlide(index) {
+            currentSlide = index;
+            
+            // Update Slides
+            const slides = document.querySelectorAll('.slide-image');
+            slides.forEach((slide, idx) => {
+                if (idx === index) slide.classList.add('active');
+                else slide.classList.remove('active');
+            });
+
+            // Update Dots
+            const dots = document.getElementById('slide-dots').children;
+            Array.from(dots).forEach((dot, idx) => {
+                if (idx === index) {
+                    dot.classList.remove('bg-white/50', 'w-3');
+                    dot.classList.add('bg-orange-500', 'w-8');
+                } else {
+                    dot.classList.add('bg-white/50', 'w-3');
+                    dot.classList.remove('bg-orange-500', 'w-8');
+                }
+            });
+
+            startSlideTimer(); // Reset timer
+        }
+
+        // --- Content Injections ---
+        
+        function initFeatures() {
+            document.getElementById('feature-img-1').src = images[4];
+            document.getElementById('feature-img-2').src = images[5];
+        }
+
+        function initHomeGallery() {
+            const grid = document.getElementById('home-gallery-grid');
+            images.slice(0, 4).forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = "aspect-square rounded-xl overflow-hidden cursor-pointer group relative";
+                div.onclick = () => navigateTo('gallery');
+                div.innerHTML = `
+                    <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-black/30 group-hover:bg-black/0 transition-colors"></div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function initFullGallery() {
+            const grid = document.getElementById('full-gallery-grid');
+            images.forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = "break-inside-avoid relative group overflow-hidden rounded-xl shadow-md cursor-pointer mb-6";
+                div.innerHTML = `
+                    <img src="${img}" class="w-full h-auto transform transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://via.placeholder.com/600x400'">
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div class="text-center text-white p-4">
+                            <h3 class="text-xl font-bold mb-1">Modern Residence ${idx + 1}</h3>
+                            <p class="text-sm text-gray-300">Redmond, WA</p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function initBlog() {
+            const grid = document.getElementById('blog-grid');
+            blogPosts.forEach(post => {
+                const article = document.createElement('div');
+                article.className = "bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-slate-100";
+                article.innerHTML = `
+                    <div class="h-56 overflow-hidden">
+                        <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-4 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+                            <span class="text-orange-600">${post.category}</span>
+                            <span>•</span>
+                            <span>${post.date}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug hover:text-orange-600 cursor-pointer">${post.title}</h3>
+                        <p class="text-slate-600 mb-6 text-sm leading-relaxed">${post.excerpt}</p>
+                        <button class="text-orange-600 font-bold text-sm uppercase tracking-wide hover:underline flex items-center gap-1">
+                            Read Article <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(article);
+                
+                // Initialize new icons in dynamic content
+                lucide.createIcons();
+            });
+        }
+
+    </script>
+
+</body></html>

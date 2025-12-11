@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>DSAR AI Agent: Strategic Architecture Report</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Google Fonts (Inter for UI) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Terracotta/Orange Accents for a grounded, legal-tech feel. -->
+    <!-- Application Structure Plan:
+        The app is structured as a Strategic Decision Dashboard.
+        1. Executive Summary: Immediate context on the current bottleneck and the goal (Automation).
+        2. Architecture Lab: The core interactive section where users compare the three requested approaches (Raw LLM, RAG, Legal-Trained). This allows stakeholders to "feel" the trade-offs.
+        3. Risk & Compliance: A dedicated view for the legal team to understand safety mechanisms.
+        4. Implementation Roadmap: The path forward.
+        Rationale: This structure moves from the "Why" (problem) to the "How" (comparison) to the "Safety" (critical for legal apps).
+    -->
+    
+    <!-- Visualization & Content Choices:
+        1. Context Flow (HTML/CSS): Visualizes the manual vs. AI pipeline. Goal: Inform/Contrast. Interaction: None.
+        2. Model Trade-off Radar (Chart.js): Compares Raw LLM vs. RAG vs. Precedent RAG. Goal: Compare. Interaction: Buttons to switch models. Justification: Radar charts are excellent for multi-variate capability scoring.
+        3. Risk Heatmap (Plotly): Visualizes high-risk areas per model. Goal: Relationships/Risk Analysis. Interaction: Hover for details. Justification: Heatmaps quickly highlight "red zones" for legal review.
+        4. Cost Analysis (Chart.js): Bar chart for cost per request. Goal: Inform/Justify ROI. Interaction: None.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* Stone-100 */
+            color: #44403c; /* Stone-700 */
+        }
+
+        /* Custom Chart Container Styling as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px; /* Constrain width for readability */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px; /* Hard cap */
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Utilities */
+        .nav-active {
+            border-bottom: 2px solid #f97316; /* Orange-500 */
+            color: #c2410c; /* Orange-700 */
+            font-weight: 600;
+        }
+
+        .scenario-btn-active {
+            background-color: #f97316;
+            color: white;
+            border-color: #f97316;
+        }
+
+        /* Hide/Show logic */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .metric-card {
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-3xl mr-3">⚖️</span>
+                    <div>
+                        <h1 class="text-xl font-bold text-stone-800">DSAR Automation Agent</h1>
+                        <p class="text-xs text-stone-500 uppercase tracking-wide">Privacy &amp; Legal Engineering Task Force</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button class="nav-btn nav-active py-5 px-1 text-sm font-medium hover:text-orange-600 transition-colors" id="tab-overview" onclick="switchTab('overview')">Executive Summary</button>
+                    <button class="nav-btn py-5 px-1 text-sm font-medium hover:text-orange-600 transition-colors text-stone-500" id="tab-architecture" onclick="switchTab('architecture')">Model Architecture</button>
+                    <button class="nav-btn py-5 px-1 text-sm font-medium hover:text-orange-600 transition-colors text-stone-500" id="tab-risk" onclick="switchTab('risk')">Risk &amp; Compliance</button>
+                </div>
+                <!-- Mobile Menu Button Placeholder (Simplification) -->
+                <button class="md:hidden text-stone-500">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- TAB 1: EXECUTIVE SUMMARY -->
+        <section class="tab-content active" id="view-overview">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Intro Text -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                        <h2 class="text-lg font-semibold text-stone-800 mb-4 border-l-4 border-orange-500 pl-3">Project Scope &amp; Objective</h2>
+                        <p class="text-stone-600 mb-4 leading-relaxed">
+                            Current Data Subject Access Request (DSAR) fulfillment is a bottleneck. It involves high-cost legal experts manually reviewing databases to distinguish between PII (Personally Identifiable Information) that <strong>must be deleted</strong> versus data that <strong>must be retained</strong> for legal compliance (e.g., tax records, fraud logs).
+                        </p>
+                        <p class="text-stone-600 leading-relaxed">
+                            This research proposes an AI Agent architecture to automate the triage process. We analyzed three tiers of sophistication:
+                            <span class="inline-block bg-stone-100 px-2 py-1 rounded text-xs font-bold ml-1">1. Raw LLM</span>
+                            <span class="inline-block bg-stone-100 px-2 py-1 rounded text-xs font-bold ml-1">2. Guidance RAG</span>
+                            <span class="inline-block bg-stone-100 px-2 py-1 rounded text-xs font-bold ml-1">3. Legal Precedent Agent</span>.
+                        </p>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white p-5 rounded-lg shadow-sm border border-stone-200 metric-card">
+                            <div class="text-stone-400 text-sm font-medium mb-1">Current Cycle Time</div>
+                            <div class="text-2xl font-bold text-stone-800">14 Days</div>
+                            <div class="text-orange-500 text-xs mt-1">Manual Review</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-lg shadow-sm border border-stone-200 metric-card">
+                            <div class="text-stone-400 text-sm font-medium mb-1">Target Cycle Time</div>
+                            <div class="text-2xl font-bold text-stone-800">&lt; 24 Hours</div>
+                            <div class="text-green-600 text-xs mt-1">AI Augmented</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-lg shadow-sm border border-stone-200 metric-card">
+                            <div class="text-stone-400 text-sm font-medium mb-1">Est. Cost Reduction</div>
+                            <div class="text-2xl font-bold text-stone-800">68%</div>
+                            <div class="text-stone-500 text-xs mt-1">Per Request</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Visualization -->
+                <div class="lg:col-span-1">
+                    <div class="bg-stone-800 text-white p-6 rounded-lg shadow-lg h-full">
+                        <h3 class="font-bold text-lg mb-6">Workflow Transformation</h3>
+                        
+                        <div class="relative space-y-8 pl-4 border-l-2 border-stone-600">
+                            <!-- Step 1 -->
+                            <div class="relative">
+                                <div class="absolute -left-[25px] bg-orange-500 w-4 h-4 rounded-full border-2 border-stone-800"></div>
+                                <h4 class="font-bold text-orange-400 text-sm">Ingestion</h4>
+                                <p class="text-xs text-stone-300 mt-1">User submits deletion request via portal.</p>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="relative">
+                                <div class="absolute -left-[25px] bg-stone-600 w-4 h-4 rounded-full border-2 border-stone-800"></div>
+                                <h4 class="font-bold text-white text-sm">AI Triage Agent <span class="text-orange-400 text-xs">(New)</span></h4>
+                                <div class="bg-stone-700 p-2 mt-2 rounded text-xs text-stone-300">
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Retrieve Policy (RAG)</li>
+                                        <li>Check Prior Decisions</li>
+                                        <li>Classify Fields</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="relative">
+                                <div class="absolute -left-[25px] bg-stone-600 w-4 h-4 rounded-full border-2 border-stone-800"></div>
+                                <h4 class="font-bold text-white text-sm">Human Audit</h4>
+                                <p class="text-xs text-stone-300 mt-1">Legal only reviews "Low Confidence" flags.</p>
+                            </div>
+                            
+                            <!-- Step 4 -->
+                            <div class="relative">
+                                <div class="absolute -left-[25px] bg-green-500 w-4 h-4 rounded-full border-2 border-stone-800"></div>
+                                <h4 class="font-bold text-green-400 text-sm">Execution</h4>
+                                <p class="text-xs text-stone-300 mt-1">Automated deletion of approved fields.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Chart -->
+            <div class="mt-8 bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                <div class="mb-4">
+                    <h3 class="text-lg font-bold text-stone-800">Projected Cost Efficiency</h3>
+                    <p class="text-sm text-stone-500">Comparison of legal counsel billable hours vs. AI infrastructure costs per 100 requests.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: ARCHITECTURE COMPARISON -->
+        <section class="tab-content" id="view-architecture">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Controls Side (Left) -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-stone-800 mb-2">Select Architecture</h3>
+                        <p class="text-sm text-stone-500 mb-4">Click to simulate performance metrics.</p>
+                        
+                        <div class="space-y-2">
+                            <button class="scenario-btn w-full text-left px-4 py-3 rounded-md border border-stone-200 hover:border-orange-300 transition-all" id="btn-raw" onclick="updateRadar('raw')">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold">1. Raw LLM</span>
+                                    <span class="text-xs bg-stone-100 px-2 py-1 rounded text-stone-600">Baseline</span>
+                                </div>
+                                <p class="text-xs text-stone-500 mt-1">Standard GPT-4/Claude without context.</p>
+                            </button>
+
+                            <button class="scenario-btn w-full text-left px-4 py-3 rounded-md border border-stone-200 hover:border-orange-300 transition-all" id="btn-rag" onclick="updateRadar('rag')">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold">2. Policy RAG</span>
+                                    <span class="text-xs bg-blue-50 px-2 py-1 rounded text-blue-600">Standard</span>
+                                </div>
+                                <p class="text-xs text-stone-500 mt-1">Retrieval of specific company guidance PDF/Docs.</p>
+                            </button>
+
+                            <button class="scenario-btn w-full text-left px-4 py-3 rounded-md border border-stone-200 hover:border-orange-300 transition-all shadow-md scenario-btn-active" id="btn-agent" onclick="updateRadar('agent')">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold">3. Legal Precedent Agent</span>
+                                    <span class="text-xs bg-green-50 px-2 py-1 rounded text-green-600">Recommended</span>
+                                </div>
+                                <p class="text-xs text-stone-500 mt-1">RAG + Vector store of prior Legal Team approvals.</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Description -->
+                    <div class="bg-stone-100 p-5 rounded-lg border border-stone-200">
+                        <h4 class="font-bold text-stone-800 mb-2" id="arch-title">Legal Precedent Agent</h4>
+                        <p class="text-sm text-stone-600 mb-3" id="arch-desc">
+                            This architecture retrieves context from two vector stores: the static Company Privacy Policy and a dynamic database of historical DSAR decisions made by the legal team. This serves as "Few-Shot" prompting, drastically reducing hallucinations by mimicking verified legal logic.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs border border-stone-300 px-2 py-1 rounded">High Accuracy</span>
+                            <span class="text-xs border border-stone-300 px-2 py-1 rounded">Audit Trail</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization Side (Right) -->
+                <div class="lg:col-span-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 h-full flex flex-col items-center justify-center">
+                        <h3 class="text-lg font-bold text-stone-800 mb-2 w-full text-left">Capability Scoring</h3>
+                        <p class="text-sm text-stone-500 mb-6 w-full text-left">Comparing the selected architecture against 5 critical success factors.</p>
+                        
+                        <div class="chart-container">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                        
+                        <div class="mt-4 grid grid-cols-3 gap-4 w-full text-center text-xs text-stone-500">
+                            <div>
+                                <span class="block font-bold text-stone-700">Auditability</span>
+                                Ability to explain *why* a field was retained.
+                            </div>
+                            <div>
+                                <span class="block font-bold text-stone-700">Privacy Safety</span>
+                                Risk of accidentally leaking PII in reasoning.
+                            </div>
+                            <div>
+                                <span class="block font-bold text-stone-700">Nuance Handling</span>
+                                Understanding "Legal Hold" vs "Marketing Data".
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: RISK & COMPLIANCE -->
+        <section class="tab-content" id="view-risk">
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 mb-8">
+                <h2 class="text-lg font-semibold text-stone-800 mb-2 border-l-4 border-red-500 pl-3">Failure Mode Analysis</h2>
+                <p class="text-stone-600 mb-6 max-w-3xl">
+                    For DSAR automation, the cost of error is asymmetric. Deleting data required by law results in regulatory fines. Keeping data requested for deletion results in GDPR/CCPA violations. The <strong>Legal Precedent Agent</strong> minimizes these risks by anchoring decisions in past human judgments.
+                </p>
+
+                <!-- Plotly Heatmap Container -->
+                <div class="w-full overflow-hidden">
+                    <div class="w-full h-[450px]" id="riskHeatmap"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-orange-50 p-6 rounded-lg border border-orange-100">
+                    <h3 class="font-bold text-orange-800 mb-3">⚠️ Primary Risks Identified</h3>
+                    <ul class="space-y-3 text-sm text-stone-700">
+                        <li class="flex items-start">
+                            <span class="mr-2">1.</span>
+                            <span><strong>Hallucinated Legal Obligation:</strong> Raw LLMs may invent a law to justify retaining user data (e.g., citing a non-existent tax code).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">2.</span>
+                            <span><strong>Context Loss:</strong> Without specific company guidance, an LLM cannot know that "User ID 555" is linked to an active litigation hold.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg border border-green-100">
+                    <h3 class="font-bold text-green-800 mb-3">🛡️ Mitigation Strategy (Precedent Agent)</h3>
+                    <ul class="space-y-3 text-sm text-stone-700">
+                        <li class="flex items-start">
+                            <span class="mr-2">✓</span>
+                            <span><strong>RAG Grounding:</strong> Every decision must cite a specific paragraph from the internal "Data Retention Policy" document.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2">✓</span>
+                            <span><strong>Human-in-the-Loop Threshold:</strong> Any request with a confidence score &lt; 85% is automatically routed to human legal counsel.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Models ---
+        
+        // Scenario Data for Radar Chart
+        const scenarioData = {
+            raw: {
+                label: 'Raw LLM',
+                data: [40, 95, 30, 20, 60], // Accuracy, Speed, Compliance, Auditability, Cost Eff.
+                title: 'Raw LLM (Baseline)',
+                desc: 'Utilizing a foundational model (e.g., GPT-4) directly. While fast and cheap to implement, it lacks specific knowledge of company retention schedules and prone to legal hallucinations. Not recommended for production.'
+            },
+            rag: {
+                label: 'Policy RAG',
+                data: [75, 85, 80, 70, 75],
+                title: 'Standard RAG',
+                desc: 'Retrieval-Augmented Generation using the company\'s official Data Handling Guidelines. The model retrieves relevant policy sections before deciding. Significant improvement in compliance, but struggles with edge cases not explicitly written in policy.'
+            },
+            agent: {
+                label: 'Legal Precedent Agent',
+                data: [95, 75, 95, 90, 65],
+                title: 'Legal Precedent Agent (Recommended)',
+                desc: 'Advanced architecture. Uses RAG for policy PLUS a vector database of 5,000+ past DSAR decisions made by human legal teams. The AI mimics the *reasoning patterns* of valid decisions. Highest accuracy and safety.'
+            }
+        };
+
+        // --- Chart Initialization ---
+
+        let radarChartInstance = null;
+        let costChartInstance = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initRadarChart();
+            initCostChart();
+            initHeatmap();
+        });
+
+        // 1. Radar Chart Logic
+        function initRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Decision Accuracy', 'Processing Speed', 'Regulatory Compliance', 'Audit Trail Quality', 'Cost Efficiency'],
+                    datasets: [{
+                        label: scenarioData.agent.label,
+                        data: scenarioData.agent.data,
+                        fill: true,
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)', // Orange-500
+                        borderColor: 'rgba(249, 115, 22, 1)',
+                        pointBackgroundColor: 'rgba(249, 115, 22, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(249, 115, 22, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e7e5e4' }, // Stone-200
+                            grid: { color: '#e7e5e4' },
+                            pointLabels: {
+                                font: { size: 12, family: 'Inter' },
+                                color: '#44403c' // Stone-700
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.formattedValue + '/100 Score';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateRadar(key) {
+            // Update UI
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.classList.remove('scenario-btn-active', 'shadow-md');
+                btn.classList.add('border-stone-200');
+            });
+            const activeBtn = document.getElementById(`btn-${key}`);
+            activeBtn.classList.add('scenario-btn-active', 'shadow-md');
+            activeBtn.classList.remove('border-stone-200');
+
+            // Update Text
+            const data = scenarioData[key];
+            document.getElementById('arch-title').innerText = data.title;
+            document.getElementById('arch-desc').innerText = data.desc;
+
+            // Update Chart
+            radarChartInstance.data.datasets[0].data = data.data;
+            radarChartInstance.data.datasets[0].label = data.label;
+            
+            // Color logic for emphasis
+            if (key === 'raw') {
+                radarChartInstance.data.datasets[0].backgroundColor = 'rgba(120, 113, 108, 0.2)'; // Stone
+                radarChartInstance.data.datasets[0].borderColor = 'rgba(120, 113, 108, 1)';
+            } else if (key === 'rag') {
+                radarChartInstance.data.datasets[0].backgroundColor = 'rgba(59, 130, 246, 0.2)'; // Blue
+                radarChartInstance.data.datasets[0].borderColor = 'rgba(59, 130, 246, 1)';
+            } else {
+                radarChartInstance.data.datasets[0].backgroundColor = 'rgba(249, 115, 22, 0.2)'; // Orange
+                radarChartInstance.data.datasets[0].borderColor = 'rgba(249, 115, 22, 1)';
+            }
+            
+            radarChartInstance.update();
+        }
+
+        // 2. Cost Bar Chart
+        function initCostChart() {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            costChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Manual Legal Review', 'Raw LLM', 'RAG Agent (Proposed)'],
+                    datasets: [{
+                        label: 'Cost per 100 Requests ($)',
+                        data: [15000, 500, 2200], // Simulated Data
+                        backgroundColor: [
+                            '#78716c', // Stone-500
+                            '#d6d3d1', // Stone-300
+                            '#f97316'  // Orange-500
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.formattedValue;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { display: false },
+                            ticks: { callback: function(value) { return '$' + value; } }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 3. Plotly Heatmap (Risk Analysis)
+        function initHeatmap() {
+            const xValues = ['Raw LLM', 'Policy RAG', 'Precedent Agent'];
+            const yValues = ['Data Leakage', 'Over-Retention', 'Hallucination', 'Regulatory Fine Risk'];
+            
+            // Z values (Risk Score 1-10, where 10 is high risk)
+            const zValues = [
+                [8, 3, 2], // Data Leakage
+                [5, 4, 3], // Over-Retention
+                [9, 4, 1], // Hallucination
+                [9, 5, 2]  // Fine Risk
+            ];
+
+            const colorscaleValue = [
+                [0, '#ecfccb'], // Low risk (lime-100)
+                [0.5, '#fed7aa'], // Med risk (orange-200)
+                [1, '#ef4444']   // High risk (red-500)
+            ];
+
+            const data = [{
+                x: xValues,
+                y: yValues,
+                z: zValues,
+                type: 'heatmap',
+                colorscale: colorscaleValue,
+                showscale: true,
+                hovertemplate: '<b>%{y}</b><br>Architecture: %{x}<br>Risk Score: %{z}/10<extra></extra>'
+            }];
+
+            const layout = {
+                font: { family: 'Inter' },
+                margin: { t: 30, l: 150, r: 30, b: 50 },
+                xaxis: { title: 'Architecture Choice' },
+                yaxis: { title: '' }, // Self-explanatory
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            };
+
+            Plotly.newPlot('riskHeatmap', data, layout, {displayModeBar: false, responsive: true});
+        }
+
+        // --- Tab Navigation Logic ---
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            // Show selected
+            document.getElementById(`view-${tabId}`).classList.add('active');
+
+            // Update buttons
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('nav-active', 'text-orange-700');
+                el.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('nav-active');
+            activeBtn.classList.remove('text-stone-500');
+
+            // Force Chart resize if needed (sometimes canvas needs a nudge when unhidden)
+            if(tabId === 'architecture' && radarChartInstance) {
+                setTimeout(() => radarChartInstance.resize(), 50);
+            }
+            if(tabId === 'overview' && costChartInstance) {
+                setTimeout(() => costChartInstance.resize(), 50);
+            }
+            if(tabId === 'risk') {
+                 setTimeout(() => Plotly.Plots.resize('riskHeatmap'), 50);
+            }
+        }
+
+    </script>
+
+</body></html>

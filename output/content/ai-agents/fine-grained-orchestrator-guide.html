@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Fine-Grained Multi-Query RAG Orchestrator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Chart Container Logic per Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Architecture Flow Lines (Pure CSS, No SVG) */
+        .flow-line-vertical {
+            width: 2px;
+            background-color: #cbd5e1;
+            margin: 0 auto;
+            height: 20px;
+        }
+        .flow-line-horizontal {
+            height: 2px;
+            background-color: #cbd5e1;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            z-index: 0;
+        }
+
+        /* Interactive Element Styles */
+        .arch-node {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .arch-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .arch-node.active {
+            border-color: #0ea5e9;
+            background-color: #f0f9ff;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: Slate (Warm Neutral Background) + Sky Blue (Primary Action) + Emerald (Success/Data) -->
+    <!-- Application Structure Plan: 
+         1. Dashboard/Overview: High-level comparison of Standard vs. Multi-Query RAG to establish "Why".
+         2. Interactive Architecture: A clickable block diagram showing the data flow (User -> Decomposer -> Sub-queries).
+         3. Scenario Simulator: Users toggle between simple and complex queries to see how the orchestrator handles them.
+         4. Builder's Guide: A step-by-step logic flow for implementation.
+         Rationale: This structure moves from conceptual value (Why) to technical understanding (How it works) to practical application (When & How to build), catering to both architects and developers.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Concept: Bar Chart (Chart.js) -> Compares Accuracy/Recall between Standard & Orchestrated RAG. Goal: Inform/Persuade.
+         2. Architecture: HTML Grid/Flex diagram with click interactions. Goal: Organize/Explain system flow. No SVG/Mermaid used.
+         3. Scenarios: Dynamic text replacement. Goal: Change/Demonstrate logic.
+         4. Implementation: Progress Stepper (HTML/CSS). Goal: Inform/Guide.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-sky-200 selection:text-sky-900">
+
+    <div class="min-h-screen flex flex-col md:flex-row" id="app">
+        
+        <!-- Sidebar Navigation -->
+        <nav class="w-full md:w-64 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col h-auto md:h-screen sticky top-0 z-50">
+            <div class="p-6 border-b border-slate-100">
+                <h1 class="text-xl font-bold text-slate-900 tracking-tight">RAG <span class="text-sky-600">Orchestrator</span></h1>
+                <p class="text-xs text-slate-500 mt-1">Multi-Query &amp; Fine-Grained</p>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <button class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-sky-50 text-sky-700" id="nav-overview" onclick="navigateTo('overview')">
+                            📊 Concept &amp; Impact
+                        </button>
+                    </li>
+                    <li>
+                        <button class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" id="nav-architecture" onclick="navigateTo('architecture')">
+                            ⚙️ Architecture Logic
+                        </button>
+                    </li>
+                    <li>
+                        <button class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" id="nav-scenarios" onclick="navigateTo('scenarios')">
+                            🧪 Scenario Lab
+                        </button>
+                    </li>
+                    <li>
+                        <button class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" id="nav-build" onclick="navigateTo('build')">
+                            🛠️ Build Guide
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="p-4 border-t border-slate-100 text-xs text-slate-400">
+                <p>Interactive Guide</p>
+                <p>v1.0.0</p>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto h-screen scroll-smooth">
+            
+            <!-- SECTION 1: OVERVIEW -->
+            <section class="space-y-8 fade-in" id="overview">
+                <div class="max-w-4xl mx-auto">
+                    <header class="mb-8">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-4">Why Build an Orchestrator?</h2>
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                            Standard RAG (Retrieval-Augmented Generation) systems often fail when faced with complex, multi-faceted questions or broad documentation. 
+                            A <strong>Fine-Grained Multi-Query Orchestrator</strong> solves this by decomposing complex user prompts into specific, atomic sub-queries, 
+                            retrieving targeted granular chunks, and synthesizing the results. This interactive guide explores the architecture, performance benefits, and implementation strategy.
+                        </p>
+                    </header>
+
+                    <!-- Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-8">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-2">Performance Impact Analysis</h3>
+                        <p class="text-sm text-slate-500 mb-6">Comparing Standard RAG vs. Multi-Query Orchestration on complex reasoning tasks (Simulated Data).</p>
+                        
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                <div class="text-2xl font-bold text-sky-600">40%</div>
+                                <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 mt-1">Increase in Recall</div>
+                                <p class="text-xs text-slate-400 mt-2">Finds hidden details by asking multiple variations.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                <div class="text-2xl font-bold text-emerald-600">High</div>
+                                <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 mt-1">Granularity</div>
+                                <p class="text-xs text-slate-400 mt-2">Retrieves specific snippets, not just large blobs.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                <div class="text-2xl font-bold text-amber-500">+1.5s</div>
+                                <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 mt-1">Latency Trade-off</div>
+                                <p class="text-xs text-slate-400 mt-2">Slightly slower due to multi-step processing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: ARCHITECTURE -->
+            <section class="hidden space-y-8 fade-in" id="architecture">
+                <div class="max-w-5xl mx-auto">
+                    <header class="mb-8">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-4">System Architecture</h2>
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                            The orchestrator is not a single retrieval call. It is a workflow. 
+                            Click on the nodes in the diagram below to understand the responsibility of each component in the pipeline, from the Query Decomposer to the Final Synthesis.
+                        </p>
+                    </header>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Interactive Diagram -->
+                        <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border border-slate-200 relative">
+                            <div class="flex flex-col items-center space-y-2">
+                                
+                                <!-- Node 1 -->
+                                <div class="arch-node w-48 p-3 bg-slate-100 border-2 border-slate-300 rounded-lg text-center font-semibold text-slate-700 hover:border-sky-400" onclick="showArchDetail('user')">
+                                    👤 User Query
+                                </div>
+                                <div class="flow-line-vertical"></div>
+                                
+                                <!-- Node 2 -->
+                                <div class="arch-node w-48 p-3 bg-sky-50 border-2 border-sky-200 rounded-lg text-center font-semibold text-sky-800 hover:border-sky-500 shadow-sm" onclick="showArchDetail('decomposer')">
+                                    🧩 Query Decomposer
+                                </div>
+                                <div class="flow-line-vertical"></div>
+
+                                <!-- Branching -->
+                                <div class="relative w-full max-w-md h-8">
+                                    <div class="flow-line-horizontal"></div>
+                                    <div class="absolute left-0 top-0 w-2 h-8 bg-slate-300 mx-auto" style="left: 20%"></div> <!-- Left connection down -->
+                                    <div class="absolute right-0 top-0 w-2 h-8 bg-slate-300 mx-auto" style="right: 20%"></div> <!-- Right connection down -->
+                                </div>
+
+                                <div class="flex justify-between w-full max-w-md">
+                                    <!-- Node 3a -->
+                                    <div class="arch-node w-40 p-3 bg-white border-2 border-slate-200 rounded-lg text-center text-sm font-medium text-slate-600 hover:border-amber-400" onclick="showArchDetail('subquery')">
+                                        Sub-Query A
+                                    </div>
+                                    <!-- Node 3b -->
+                                    <div class="arch-node w-40 p-3 bg-white border-2 border-slate-200 rounded-lg text-center text-sm font-medium text-slate-600 hover:border-amber-400" onclick="showArchDetail('subquery')">
+                                        Sub-Query B
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between w-full max-w-md mt-2">
+                                    <div class="flow-line-vertical h-4"></div>
+                                    <div class="flow-line-vertical h-4"></div>
+                                </div>
+
+                                <!-- Node 4 -->
+                                <div class="arch-node w-64 p-3 bg-emerald-50 border-2 border-emerald-200 rounded-lg text-center font-semibold text-emerald-800 hover:border-emerald-500 shadow-sm" onclick="showArchDetail('retriever')">
+                                    🔍 Fine-Grained Retriever
+                                </div>
+                                <div class="flow-line-vertical"></div>
+
+                                <!-- Node 5 -->
+                                <div class="arch-node w-48 p-3 bg-slate-50 border-2 border-slate-300 rounded-lg text-center text-sm font-medium text-slate-600 hover:border-purple-400" onclick="showArchDetail('reranker')">
+                                    ⚖️ Reranker &amp; Filter
+                                </div>
+                                <div class="flow-line-vertical"></div>
+
+                                <!-- Node 6 -->
+                                <div class="arch-node w-48 p-3 bg-indigo-50 border-2 border-indigo-200 rounded-lg text-center font-semibold text-indigo-800 hover:border-indigo-500 shadow-sm" onclick="showArchDetail('synthesizer')">
+                                    🤖 LLM Synthesizer
+                                </div>
+
+                            </div>
+                            <div class="absolute top-4 right-4 text-xs text-slate-400 italic">Click nodes for details</div>
+                        </div>
+
+                        <!-- Details Panel -->
+                        <div class="lg:col-span-1 bg-slate-50 p-6 rounded-xl border border-slate-200 h-fit sticky top-4">
+                            <h3 class="text-xl font-bold text-slate-800 mb-2" id="arch-title">Select a Component</h3>
+                            <div class="text-slate-600 text-sm leading-relaxed space-y-4" id="arch-content">
+                                <p>Click on any block in the diagram to view its technical specification, input/output requirements, and implementation strategy.</p>
+                                <div class="p-4 bg-white rounded border border-slate-200 mt-4">
+                                    <h4 class="font-semibold text-slate-900 text-xs uppercase mb-2">Key Tech Stack</h4>
+                                    <ul class="list-disc pl-4 space-y-1">
+                                        <li>LangChain / LlamaIndex</li>
+                                        <li>Vector DB (Pinecone/Weaviate)</li>
+                                        <li>Small LLM (Fast) for Routing</li>
+                                        <li>Large LLM (Smart) for Synthesis</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: SCENARIOS -->
+            <section class="hidden space-y-8 fade-in" id="scenarios">
+                <div class="max-w-4xl mx-auto">
+                    <header class="mb-8">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-4">When to Use It?</h2>
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                            Fine-grained orchestration isn't for every query. It shines when questions are ambiguous, comparative, or require multi-hop reasoning. 
+                            Use the interactive simulator below to see how the system handles different types of requests.
+                        </p>
+                    </header>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <!-- Scenario Controls -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-semibold text-slate-800 mb-4">Choose a Scenario</h3>
+                            <div class="space-y-3">
+                                <button class="w-full text-left p-3 rounded border border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-all group" onclick="runScenario('simple')">
+                                    <div class="font-medium text-slate-700 group-hover:text-sky-700">Simple Fact Retrieval</div>
+                                    <div class="text-xs text-slate-400 mt-1">"What is the capital of France?"</div>
+                                </button>
+                                <button class="w-full text-left p-3 rounded border border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-all group" onclick="runScenario('compare')">
+                                    <div class="font-medium text-slate-700 group-hover:text-sky-700">Comparative Analysis</div>
+                                    <div class="text-xs text-slate-400 mt-1">"Compare AWS Lambda vs. Azure Functions pricing."</div>
+                                </button>
+                                <button class="w-full text-left p-3 rounded border border-slate-200 hover:border-sky-400 hover:bg-sky-50 transition-all group" onclick="runScenario('temporal')">
+                                    <div class="font-medium text-slate-700 group-hover:text-sky-700">Multi-Part / Temporal</div>
+                                    <div class="text-xs text-slate-400 mt-1">"How did Tesla's stock perform after the Cybertruck launch?"</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Simulation Output -->
+                        <div class="bg-slate-900 p-6 rounded-xl shadow-inner text-slate-300 font-mono text-sm overflow-hidden relative">
+                            <div class="absolute top-2 right-4 text-xs text-slate-500">System Log</div>
+                            <div class="space-y-2 mt-4 h-64 overflow-y-auto" id="console-output">
+                                <p class="text-emerald-400">&gt; System Ready.</p>
+                                <p class="opacity-50">Waiting for user input...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- SECTION 4: BUILD GUIDE -->
+             <section class="hidden space-y-8 fade-in" id="build">
+                <div class="max-w-4xl mx-auto">
+                    <header class="mb-8">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-4">How to Build</h2>
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                            Implementing this architecture requires a distinct shift from standard "Chunk &amp; Embed" workflows. 
+                            Here is the step-by-step implementation guide.
+                        </p>
+                    </header>
+
+                    <div class="space-y-6">
+                        <!-- Step 1 -->
+                        <div class="bg-white p-6 rounded-xl border border-slate-200">
+                            <div class="flex items-start">
+                                <div class="bg-sky-100 text-sky-700 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0">1</div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800">The Decomposer (Query Transformation)</h3>
+                                    <p class="text-slate-600 mt-2">
+                                        You need a "Router" LLM call before retrieval. Do not pass the raw query to the Vector DB.
+                                    </p>
+                                    <div class="bg-slate-50 p-3 rounded mt-3 border border-slate-200 text-sm font-mono text-slate-700">
+                                        prompt = "Break this complex query into 3 atomic sub-queries for search retrieval: {user_query}"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="bg-white p-6 rounded-xl border border-slate-200">
+                            <div class="flex items-start">
+                                <div class="bg-sky-100 text-sky-700 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0">2</div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800">Fine-Grained Indexing (Parent-Child)</h3>
+                                    <p class="text-slate-600 mt-2">
+                                        Standard RAG retrieves large chunks (500+ tokens). Fine-grained retrieval uses <strong>Small-to-Big</strong> retrieval.
+                                    </p>
+                                    <ul class="list-disc pl-5 mt-3 space-y-2 text-slate-600 text-sm">
+                                        <li><strong>Child Chunks:</strong> 128 tokens. Used for *search* (high semantic match).</li>
+                                        <li><strong>Parent Chunks:</strong> 512-1024 tokens. Used for *context* (what is actually sent to LLM).</li>
+                                        <li><strong>Linkage:</strong> Store Parent ID in Child metadata.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                         <!-- Step 3 -->
+                         <div class="bg-white p-6 rounded-xl border border-slate-200">
+                            <div class="flex items-start">
+                                <div class="bg-sky-100 text-sky-700 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-4 flex-shrink-0">3</div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800">Parallel Execution &amp; Fusion</h3>
+                                    <p class="text-slate-600 mt-2">
+                                        Execute sub-queries asynchronously.
+                                    </p>
+                                    <div class="grid grid-cols-2 gap-4 mt-3">
+                                        <div class="p-3 bg-slate-50 border border-slate-200 rounded">
+                                            <div class="font-semibold text-xs text-slate-500 uppercase">Reciprocal Rank Fusion</div>
+                                            <p class="text-sm mt-1">Combine results from multiple sub-queries into a single ranked list.</p>
+                                        </div>
+                                        <div class="p-3 bg-slate-50 border border-slate-200 rounded">
+                                            <div class="font-semibold text-xs text-slate-500 uppercase">Deduplication</div>
+                                            <p class="text-sm mt-1">Remove identical parent chunks retrieved by different sub-queries.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // State Management
+        let currentTab = 'overview';
+        
+        // Navigation Logic
+        function navigateTo(tabId) {
+            // Update UI State
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-sky-50', 'text-sky-700');
+                btn.classList.add('text-slate-600', 'hover:bg-slate-50', 'hover:text-slate-900');
+            });
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-50', 'hover:text-slate-900');
+            activeBtn.classList.add('bg-sky-50', 'text-sky-700');
+
+            // Show/Hide Sections
+            ['overview', 'architecture', 'scenarios', 'build'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === tabId) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            // Trigger Chart Resize if needed
+            if(tabId === 'overview' && window.myChart) {
+                window.myChart.resize();
+            }
+        }
+
+        // --- CHART CONFIGURATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            window.myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Context Precision', 'Context Recall', 'Answer Faithfulness', 'Latency (Inverse)'],
+                    datasets: [
+                        {
+                            label: 'Standard RAG',
+                            data: [65, 50, 70, 90],
+                            backgroundColor: '#94a3b8',
+                            borderRadius: 4,
+                            barPercentage: 0.6
+                        },
+                        {
+                            label: 'Multi-Query Orchestrator',
+                            data: [85, 92, 88, 60],
+                            backgroundColor: '#0284c7', // Sky 600
+                            borderRadius: 4,
+                            barPercentage: 0.6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: '#f1f5f9' },
+                            title: { display: true, text: 'Score (0-100)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            padding: 12,
+                            bodyFont: { size: 14 }
+                        }
+                    }
+                }
+            });
+        });
+
+        // --- ARCHITECTURE INTERACTION ---
+        const archDetails = {
+            'user': {
+                title: "User Query Input",
+                content: "The raw entry point. In complex scenarios, this query is often ambiguous ('How does X compare to Y?') or multi-faceted ('Summarize the impact of Z on A and B'). Standard RAG fails here because it embeds the whole confusing sentence."
+            },
+            'decomposer': {
+                title: "Query Decomposer (The Planner)",
+                content: "An LLM (usually a fast model like GPT-3.5 or Haiku) acts as a planner. It does not answer the question. It breaks the query into atomic, standalone sub-queries.\n\nExample: 'Compare Apple and MSFT revenue' -> 1. 'Apple revenue 2023', 2. 'MSFT revenue 2023'."
+            },
+            'subquery': {
+                title: "Sub-Query Execution",
+                content: "These queries run in parallel. Each sub-query targets a specific semantic space in the Vector DB. This dramatically increases 'Recall' because we search for 'Apple' and 'MSFT' separately, rather than a vector averaging both."
+            },
+            'retriever': {
+                title: "Fine-Grained Retriever",
+                content: "Instead of retrieving whole documents, we retrieve 'Child Chunks' (small, dense sentences) that match the sub-queries perfectly. \n\nTechnique: Parent-Document Retrieval. Match the small chunk, but return the larger 'Parent' chunk to the LLM to provide surrounding context."
+            },
+            'reranker': {
+                title: "Reranker & Deduplicator",
+                content: "Since we ran multiple queries, we likely have duplicates (both queries found the same doc). We de-duplicate and then use a Cross-Encoder (Reranker) to score the relevance of the found chunks against the original user question."
+            },
+            'synthesizer': {
+                title: "LLM Synthesizer",
+                content: "The final step. The LLM receives the original user question + a curated, deduplicated list of specific facts (chunks). It generates the final coherent answer, citing the sources found by the sub-queries."
+            }
+        };
+
+        function showArchDetail(key) {
+            const data = archDetails[key];
+            const titleEl = document.getElementById('arch-title');
+            const contentEl = document.getElementById('arch-content');
+            
+            // UI Feedback
+            titleEl.innerHTML = data.title;
+            contentEl.innerHTML = `<p>${data.content.replace(/\n\n/g, '</p><p class="mt-2">')}</p>`;
+            
+            // Highlight Animation
+            const panel = titleEl.parentElement;
+            panel.classList.remove('fade-in');
+            void panel.offsetWidth; // trigger reflow
+            panel.classList.add('fade-in');
+        }
+
+        // --- SCENARIO LOGIC ---
+        function typeWriter(text, elementId, speed = 30) {
+            const el = document.getElementById(elementId);
+            el.innerHTML += '<br/>> ';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    el.innerHTML += text.charAt(i);
+                    i++;
+                    el.scrollTop = el.scrollHeight; // Auto scroll
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        function runScenario(type) {
+            const consoleEl = document.getElementById('console-output');
+            consoleEl.innerHTML = '<span class="text-slate-500">Initializing...</span>';
+            
+            if (type === 'simple') {
+                setTimeout(() => typeWriter("User: 'What is the capital of France?'", 'console-output', 20), 100);
+                setTimeout(() => typeWriter("Analyst: Single fact query detected.", 'console-output', 20), 1500);
+                setTimeout(() => typeWriter("Action: Bypassing Decomposition.", 'console-output', 20), 2500);
+                setTimeout(() => typeWriter("Result: Retrieved 'Paris' directly. Latency: 200ms.", 'console-output', 20), 3500);
+            } 
+            else if (type === 'compare') {
+                setTimeout(() => typeWriter("User: 'Compare AWS Lambda and Azure Functions pricing.'", 'console-output', 10), 100);
+                setTimeout(() => typeWriter("Decomposer: Complex comparison detected.", 'console-output', 10), 1500);
+                setTimeout(() => typeWriter("Generating Sub-queries...", 'console-output', 10), 2500);
+                setTimeout(() => {
+                    const el = document.getElementById('console-output');
+                    el.innerHTML += `<div class="ml-4 text-sky-400 mt-1">
+                        ├─ Query A: "AWS Lambda pricing model"<br/>
+                        └─ Query B: "Azure Functions pricing model"
+                    </div>`;
+                    el.scrollTop = el.scrollHeight;
+                }, 3500);
+                setTimeout(() => typeWriter("Retriever: Fetching 3 chunks for A, 3 chunks for B.", 'console-output', 10), 4500);
+                setTimeout(() => typeWriter("Synthesizer: Aggregating pricing tables...", 'console-output', 10), 5500);
+                setTimeout(() => typeWriter("Result: Detailed comparison table generated.", 'console-output', 10), 6500);
+            }
+            else if (type === 'temporal') {
+                setTimeout(() => typeWriter("User: 'How did Tesla stock perform after Cybertruck launch?'", 'console-output', 10), 100);
+                setTimeout(() => typeWriter("Decomposer: Temporal dependency detected.", 'console-output', 10), 1500);
+                setTimeout(() => {
+                    const el = document.getElementById('console-output');
+                    el.innerHTML += `<div class="ml-4 text-emerald-400 mt-1">
+                        1. Find Date: "Cybertruck launch date"<br/>
+                        2. Dependency: "Tesla stock price November 2023"
+                    </div>`;
+                }, 3000);
+                setTimeout(() => typeWriter("Retriever: Found Date -> Nov 30, 2023.", 'console-output', 10), 4500);
+                setTimeout(() => typeWriter("Retriever: Fetching stock data for Dec 2023...", 'console-output', 10), 5500);
+                setTimeout(() => typeWriter("Result: Correlation analysis generated.", 'console-output', 10), 6500);
+            }
+        }
+
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>
