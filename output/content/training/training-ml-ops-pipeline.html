@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive MLOps training module. Learn to build automated ML pipelines, handle model drift, and master CI/CD/CT workflows." name="description"/>
+    <meta content="MLOps, Machine Learning Operations, CI/CD, Model Drift, ML Pipelines, DevOps for AI, Automation, Training" name="keywords"/>
+    <title>MLOps: The Factory of Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Styles */
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Pipeline Slot Styling */
+        .pipeline-slot {
+            transition: all 0.3s ease;
+        }
+        .pipeline-slot.filled {
+            border-color: #f97316; /* Orange-500 */
+            background-color: #fff7ed; /* Orange-50 */
+        }
+        .pipeline-slot.active {
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.2);
+        }
+
+        /* Console Text */
+        .console-text {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+    <!-- Chosen Palette: "Industrial Ops" -->
+    <!-- Primary: Slate-900 (Infrastructure), Accent: Orange-500 (Construction/Action), Info: Blue-500, Success: Emerald-500. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero: "Notebooks ≠ Production" - The core MLOps philosophy.
+         2. Maturity Model (Stepper): Visualizing the journey from Level 0 (Manual) to Level 2 (Automated CI/CD/CT).
+         3. The Pipeline Builder (Interactive Game): User clicks components (Validation, Training, Eval) to assemble a valid pipeline order. Incorrect order triggers errors.
+         4. Drift Monitor (Simulated Chart): User watches accuracy decay over time (Drift) and must hit "Retrain" to restore performance via the pipeline.
+         5. The "Rollback" Scenario: A bad model is deployed. User must identify the regression and execute a rollback.
+         6. Certification Quiz.
+    -->
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Nav -->
+    <nav class="bg-slate-900 border-b border-orange-500/30 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">🏭</span>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-white tracking-wide">MLOPS <span class="text-orange-500">ACADEMY</span></span>
+                        <span class="text-[10px] text-slate-400 uppercase tracking-widest">Engineering &amp; Ops</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-300">
+                    <button class="hover:text-orange-400 transition-colors" onclick="scrollToId('maturity')">Maturity Levels</button>
+                    <button class="hover:text-orange-400 transition-colors" onclick="scrollToId('pipeline')">Build Pipeline</button>
+                    <button class="hover:text-orange-400 transition-colors" onclick="scrollToId('drift')">Drift Monitor</button>
+                    <button class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-500 transition-colors font-bold" onclick="scrollToId('quiz')">Certification</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24">
+
+        <!-- Hero -->
+        <section class="text-center space-y-6 fade-in">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+                Stop Throwing Models <br/><span class="text-orange-600">Over The Wall</span>
+            </h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 leading-relaxed">
+                A Jupyter Notebook is a sandbox, not a factory. <strong>MLOps</strong> applies DevOps principles to Machine Learning, automating the path from data ingestion to model deployment.
+            </p>
+            
+            <div class="flex justify-center gap-8 mt-8">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">🧑‍💻</div>
+                    <div class="font-bold text-slate-700">Data Scientist</div>
+                    <div class="text-xs text-slate-500">Focus: Algorithms</div>
+                </div>
+                <div class="flex items-center text-slate-300 text-2xl">➕</div>
+                <div class="text-center">
+                    <div class="text-4xl mb-2">👷</div>
+                    <div class="font-bold text-slate-700">ML Engineer</div>
+                    <div class="text-xs text-slate-500">Focus: Scale &amp; Reliability</div>
+                </div>
+                <div class="flex items-center text-slate-300 text-2xl">🟰</div>
+                <div class="text-center">
+                    <div class="text-4xl mb-2">🚀</div>
+                    <div class="font-bold text-orange-600">MLOps</div>
+                    <div class="text-xs text-slate-500">Focus: Value Delivery</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Maturity Model -->
+        <section class="scroll-mt-24 fade-in" id="maturity">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-900">The Maturity Ladder</h2>
+                <p class="text-slate-600 mt-2">Where does our organization stand?</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Level 0 -->
+                <div class="bg-white p-6 rounded-xl border-l-8 border-slate-300 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Level 0: Manual</h3>
+                    <p class="text-sm text-slate-500 mb-4 font-mono bg-slate-100 p-2 rounded">script_final_v2_REAL.ipynb</p>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li>❌ No automated pipelines</li>
+                        <li>❌ Manual deployment</li>
+                        <li>❌ No active monitoring</li>
+                        <li>⚠️ High risk of failure</li>
+                    </ul>
+                </div>
+
+                <!-- Level 1 -->
+                <div class="bg-white p-6 rounded-xl border-l-8 border-orange-400 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Level 1: Pipeline Automation</h3>
+                    <p class="text-sm text-slate-500 mb-4 font-mono bg-slate-100 p-2 rounded">CT: Continuous Training</p>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li>✅ Automated Training Pipeline</li>
+                        <li>✅ Data Validation</li>
+                        <li>✅ Model Registry</li>
+                        <li>⚠️ Manual deployment of pipeline</li>
+                    </ul>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="bg-white p-6 rounded-xl border-l-8 border-emerald-500 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Level 2: CI/CD/CT</h3>
+                    <p class="text-sm text-slate-500 mb-4 font-mono bg-slate-100 p-2 rounded">Full Automation</p>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li>✅ CI: Test code &amp; components</li>
+                        <li>✅ CD: Auto-deploy pipelines</li>
+                        <li>✅ CT: Auto-trigger retraining</li>
+                        <li>🚀 Production Ready</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Pipeline Builder -->
+        <section class="scroll-mt-24 fade-in" id="pipeline">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">Lab: Assemble the Pipeline</h2>
+                    <p class="text-slate-600 mt-2">
+                        Click the components in the correct order to build a robust training pipeline.
+                        <br/><span class="text-xs text-orange-600 font-bold">Hint: Validate data before you train on it!</span>
+                    </p>
+                </div>
+
+                <!-- Game Interface -->
+                <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                    
+                    <!-- Visualization Area -->
+                    <div class="p-8 bg-slate-50 border-b border-slate-200 min-h-[160px] flex items-center justify-center space-x-2 md:space-x-4 overflow-x-auto" id="pipeline-slots">
+                        <!-- Slots generated by JS -->
+                        <div class="text-slate-400 text-sm italic">Pipeline empty. Select first step below.</div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="p-8">
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="component-bank">
+                            <button class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-blue-400 hover:text-blue-600 font-bold text-slate-700 text-sm transition-colors" onclick="addComponent('Data Ingestion')">
+                                📥 Data Ingestion
+                            </button>
+                            <button class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-blue-400 hover:text-blue-600 font-bold text-slate-700 text-sm transition-colors" onclick="addComponent('Data Validation')">
+                                🔍 Validation
+                            </button>
+                            <button class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-blue-400 hover:text-blue-600 font-bold text-slate-700 text-sm transition-colors" onclick="addComponent('Preprocessing')">
+                                ⚙️ Preprocessing
+                            </button>
+                            <button class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-blue-400 hover:text-blue-600 font-bold text-slate-700 text-sm transition-colors" onclick="addComponent('Model Training')">
+                                🧠 Training
+                            </button>
+                            <button class="p-3 bg-white border-2 border-slate-200 rounded-lg hover:border-blue-400 hover:text-blue-600 font-bold text-slate-700 text-sm transition-colors" onclick="addComponent('Model Eval')">
+                                ⚖️ Evaluation
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6 flex justify-between items-center">
+                            <button class="text-slate-500 hover:text-slate-700 text-sm underline" onclick="resetPipeline()">Reset Pipeline</button>
+                            <button class="px-6 py-2 bg-slate-900 text-white font-bold rounded hover:bg-slate-800 transition-colors" onclick="validatePipeline()">Run Pipeline</button>
+                        </div>
+
+                        <div class="mt-4 text-center font-bold text-sm h-6" id="pipeline-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Drift Monitor -->
+        <section class="scroll-mt-24 fade-in" id="drift">
+            <div class="bg-slate-900 text-white rounded-2xl p-8 shadow-xl">
+                <div class="flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="lg:w-1/3 space-y-6">
+                        <h2 class="text-2xl font-bold text-white">Drift Monitor</h2>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Models rot. As the real world changes ("Concept Drift") or input data changes ("Data Drift"), accuracy degrades.
+                            <br/><br/>
+                            <strong>Task:</strong> Monitor the chart. When accuracy drops below the red threshold, hit <strong>Trigger Retraining</strong> to execute the pipeline you built.
+                        </p>
+                        <div class="p-4 bg-slate-800 rounded-lg border border-slate-700">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs text-slate-400 uppercase">Current Accuracy</span>
+                                <span class="font-mono font-bold text-2xl text-emerald-400" id="acc-display">95%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                <div class="bg-emerald-500 h-2 rounded-full transition-all duration-300" id="acc-bar" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <button class="w-full py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg shadow-lg shadow-orange-900/50 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" id="btn-retrain" onclick="triggerRetrain()">
+                            ⚡ Trigger Retraining
+                        </button>
+                    </div>
+
+                    <div class="lg:w-2/3 w-full bg-slate-800 rounded-xl p-4 border border-slate-700">
+                        <div class="chart-container">
+                            <canvas id="driftChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Quiz -->
+        <section class="max-w-2xl mx-auto py-10 fade-in" id="quiz">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">MLOps Certification</h2>
+            <div class="bg-white border border-slate-200 rounded-xl p-8 shadow-lg">
+                <div class="space-y-6" id="quiz-container">
+                    <!-- Generated via JS -->
+                </div>
+                <div class="hidden text-center mt-6" id="quiz-result">
+                    <p class="text-xl font-bold text-slate-800" id="quiz-score"></p>
+                    <p class="text-slate-600 text-sm mt-2" id="quiz-feedback"></p>
+                    <button class="mt-4 text-orange-600 hover:underline text-sm" onclick="location.reload()">Reset Training</button>
+                </div>
+                <button class="w-full mt-6 bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition font-medium" id="btn-submit" onclick="submitQuiz()">Submit Answers</button>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Visualization & Content Choices:
+         1. Pipeline Builder (Interactive DOM): Report Info (Standard Pipeline Steps) -> Goal (Train/Verify) -> Sequencer Game -> Forces user to learn the logical order (Validation BEFORE Training).
+         2. Drift Chart (Real-time Chart.js): Report Info (Continuous Training) -> Goal (Visualize) -> Animated Line Chart -> Demonstrates the "Why" behind automated retraining.
+         3. Maturity Model (Cards): Report Info (Google Maturity Levels) -> Goal (Compare) -> Visual Cards -> Clear roadmap for organizational growth.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script>
+        // --- Navigation ---
+        function scrollToId(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Pipeline Builder Logic ---
+        const correctOrder = ['Data Ingestion', 'Data Validation', 'Preprocessing', 'Model Training', 'Model Eval'];
+        let currentPipeline = [];
+
+        function addComponent(name) {
+            if (currentPipeline.length >= 5) return;
+            currentPipeline.push(name);
+            renderPipeline();
+        }
+
+        function renderPipeline() {
+            const container = document.getElementById('pipeline-slots');
+            if (currentPipeline.length === 0) {
+                container.innerHTML = '<div class="text-slate-400 text-sm italic">Pipeline empty. Select first step below.</div>';
+                return;
+            }
+            
+            let html = '';
+            currentPipeline.forEach((step, idx) => {
+                html += `
+                    <div class="flex items-center slide-in">
+                        <div class="px-4 py-3 bg-white border-2 border-orange-500 text-slate-800 font-bold rounded-lg shadow-sm text-sm whitespace-nowrap">
+                            ${step}
+                        </div>
+                        ${idx < currentPipeline.length - 1 ? '<div class="text-slate-300 font-bold mx-2">→</div>' : ''}
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function resetPipeline() {
+            currentPipeline = [];
+            renderPipeline();
+            document.getElementById('pipeline-feedback').innerText = '';
+        }
+
+        function validatePipeline() {
+            const fb = document.getElementById('pipeline-feedback');
+            
+            // Check length
+            if (currentPipeline.length !== 5) {
+                fb.innerHTML = '<span class="text-orange-500">Incomplete Pipeline. You need 5 steps.</span>';
+                return;
+            }
+
+            // Check Order
+            let valid = true;
+            for(let i=0; i<5; i++) {
+                if(currentPipeline[i] !== correctOrder[i]) valid = false;
+            }
+
+            if (valid) {
+                fb.innerHTML = '<span class="text-emerald-600">✅ SUCCESS: Optimized Pipeline Assembled!</span>';
+            } else {
+                // Specific hints
+                if (!currentPipeline.includes('Data Validation')) {
+                    fb.innerHTML = '<span class="text-rose-600">❌ Error: You skipped Data Validation. Garbage In, Garbage Out!</span>';
+                } else if (currentPipeline.indexOf('Model Training') < currentPipeline.indexOf('Preprocessing')) {
+                    fb.innerHTML = '<span class="text-rose-600">❌ Error: You must Preprocess data BEFORE training.</span>';
+                } else {
+                    fb.innerHTML = '<span class="text-rose-600">❌ Error: Incorrect sequence. Try again.</span>';
+                }
+            }
+        }
+
+        // --- Drift Monitor Logic ---
+        let driftChart;
+        let driftInterval;
+        let accuracy = 95;
+        let day = 1;
+
+        function initDriftChart() {
+            const ctx = document.getElementById('driftChart').getContext('2d');
+            driftChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Model Accuracy',
+                        data: [],
+                        borderColor: '#10b981', // Emerald-500
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    scales: {
+                        y: { 
+                            min: 60, max: 100, 
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { display: false } // Hide days for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    yMin: 80,
+                                    yMax: 80,
+                                    borderColor: 'rgb(249, 115, 22)', // Orange
+                                    borderWidth: 2,
+                                    borderDash: [5, 5],
+                                    label: { content: 'Retrain Threshold', enabled: true, position: 'start' }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            startSimulation();
+        }
+
+        function startSimulation() {
+            driftInterval = setInterval(() => {
+                // Natural Decay
+                day++;
+                // Random drift downwards
+                const decay = Math.random() * 1.5; 
+                accuracy = Math.max(60, accuracy - decay);
+
+                // Update UI
+                updateChartUI();
+                
+            }, 800); // Update every 800ms
+        }
+
+        function updateChartUI() {
+            // Update Text
+            const disp = document.getElementById('acc-display');
+            const bar = document.getElementById('acc-bar');
+            
+            disp.innerText = accuracy.toFixed(1) + '%';
+            bar.style.width = accuracy + '%';
+
+            // Color logic
+            if (accuracy < 80) {
+                disp.className = "font-mono font-bold text-2xl text-rose-500";
+                bar.className = "bg-rose-500 h-2 rounded-full transition-all duration-300";
+                driftChart.data.datasets[0].borderColor = '#f43f5e'; // Rose
+            } else {
+                disp.className = "font-mono font-bold text-2xl text-emerald-400";
+                bar.className = "bg-emerald-500 h-2 rounded-full transition-all duration-300";
+                driftChart.data.datasets[0].borderColor = '#10b981'; // Emerald
+            }
+
+            // Update Chart Data
+            driftChart.data.labels.push(day);
+            driftChart.data.datasets[0].data.push(accuracy);
+            
+            // Keep chart window moving
+            if (driftChart.data.labels.length > 30) {
+                driftChart.data.labels.shift();
+                driftChart.data.datasets[0].data.shift();
+            }
+            
+            driftChart.update();
+        }
+
+        function triggerRetrain() {
+            const btn = document.getElementById('btn-retrain');
+            btn.disabled = true;
+            btn.innerText = "⚙️ Retraining Pipeline Running...";
+            
+            // Simulate pipeline delay
+            setTimeout(() => {
+                accuracy = 96; // Restoration
+                driftChart.data.datasets[0].borderColor = '#10b981'; // Reset color
+                btn.disabled = false;
+                btn.innerText = "⚡ Trigger Retraining";
+            }, 1500);
+        }
+
+        // --- Quiz Logic ---
+        const questions = [
+            { q: "What is the primary goal of MLOps?", opts: ["To write better algorithms", "To automate the ML lifecycle and ensure reliability", "To buy more GPU servers", "To replace Data Scientists"], a: 1 },
+            { q: "Why do we need 'Data Validation' in the pipeline?", opts: ["To make the pipeline look longer", "To ensure the input data matches the expected schema", "To compress the data", "To encrypt the data"], a: 1 },
+            { q: "What is 'Concept Drift'?", opts: ["When the code changes", "When the model gets deleted", "When the relationship between input data and target variable changes over time", "When the server crashes"], a: 2 }
+        ];
+
+        function initQuiz() {
+            const cont = document.getElementById('quiz-container');
+            let html = '';
+            questions.forEach((q, i) => {
+                html += `
+                    <div class="mb-6">
+                        <p class="font-bold text-slate-800 mb-2">${i+1}. ${q.q}</p>
+                        <div class="space-y-2">
+                            ${q.opts.map((o, oi) => `
+                                <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-50">
+                                    <input type="radio" name="q${i}" value="${oi}" class="text-orange-600 focus:ring-orange-500">
+                                    <span class="text-slate-600 text-sm">${o}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            cont.innerHTML = html;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, i) => {
+                const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                if (sel && parseInt(sel.value) === q.a) score++;
+            });
+            
+            const res = document.getElementById('quiz-result');
+            res.classList.remove('hidden');
+            document.getElementById('quiz-score').innerText = `You scored ${score}/${questions.length}`;
+            document.getElementById('quiz-feedback').innerText = score === questions.length ? "MLOps Certified!" : "Check the pipeline builder again.";
+            document.getElementById('btn-submit').classList.add('hidden');
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            initDriftChart();
+            initQuiz();
+        });
+    </script>
+
+</body></html>

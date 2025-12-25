@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Payslip Generator</title>
+
+  <!-- PDF generation libs (client-side) -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <style>
+    :root{
+      --border:#d7dbe0;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --bg:#f6f7fb;
+      --card:#ffffff;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+      color:var(--text);
+      background:var(--bg);
+    }
+    header{
+      padding:18px 16px;
+      border-bottom:1px solid var(--border);
+      background:#fff;
+    }
+    header h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:0.2px;
+    }
+    header p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:16px;
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .wrap{ grid-template-columns:1fr; }
+    }
+
+    .panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:14px;
+      color:#111827;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    .field label{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .field input, .field select, .field textarea{
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:10px 10px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    .field textarea{ min-height:64px; resize:vertical; }
+    .full{ grid-column: 1 / -1; }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+    button{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:14px;
+      background:#fff;
+      cursor:pointer;
+    }
+    button.primary{
+      background:#111827;
+      color:#fff;
+      border-color:#111827;
+    }
+    button.danger{
+      border-color:#ef4444;
+      color:#ef4444;
+      background:#fff;
+    }
+    button:active{ transform: translateY(1px); }
+
+    /* Payslip (preview) */
+    .sheet-wrap{
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+    .sheet{
+      width: 794px;         /* ~A4 width at 96dpi */
+      min-height: 1123px;   /* ~A4 height at 96dpi */
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:26px 26px 24px;
+      box-shadow: 0 8px 30px rgba(17,24,39,0.08);
+      position:relative;
+    }
+    .tiny-top{
+      font-size:11px;
+      color:var(--muted);
+      text-align:right;
+    }
+    .brand{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      margin-top:10px;
+      border-bottom:1px solid var(--border);
+      padding-bottom:14px;
+    }
+    .brand .left{
+      max-width:520px;
+    }
+    .company{
+      font-size:16px;
+      font-weight:700;
+      margin:0;
+    }
+    .addr{
+      margin:6px 0 0;
+      font-size:12px;
+      color:var(--muted);
+      white-space:pre-line;
+    }
+    .titlebox{
+      text-align:right;
+    }
+    .titlebox .title{
+      font-size:14px;
+      font-weight:700;
+      margin:0;
+    }
+    .titlebox .month{
+      margin:6px 0 0;
+      font-size:13px;
+      color:#111827;
+      font-weight:600;
+    }
+
+    .summary{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      margin-top:16px;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:14px;
+    }
+    .summary h3{
+      margin:0 0 10px;
+      font-size:12px;
+      color:#111827;
+      letter-spacing:0.4px;
+    }
+    .kv{
+      display:grid;
+      grid-template-columns: 140px 1fr;
+      gap:6px 12px;
+      font-size:12px;
+      color:#111827;
+    }
+    .k{ color:var(--muted); }
+    .netpay{
+      text-align:right;
+      min-width:220px;
+    }
+    .netpay .amount{
+      font-size:18px;
+      font-weight:800;
+      margin:2px 0 0;
+    }
+    .netpay .label{
+      font-size:12px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .tables{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){
+      .tables{ grid-template-columns:1fr; }
+      .sheet{ width:100%; min-height:auto; }
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      border:1px solid var(--border);
+      border-radius:12px;
+      overflow:hidden;
+    }
+    thead th{
+      background:#f9fafb;
+      font-size:12px;
+      text-align:left;
+      padding:10px;
+      border-bottom:1px solid var(--border);
+    }
+    tbody td{
+      font-size:12px;
+      padding:10px;
+      border-bottom:1px solid var(--border);
+    }
+    tbody tr:last-child td{ border-bottom:none; }
+    td.r{ text-align:right; }
+    tfoot td{
+      font-size:12px;
+      padding:10px;
+      font-weight:700;
+      background:#f9fafb;
+      border-top:1px solid var(--border);
+    }
+
+    .totals{
+      margin-top:14px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+    }
+    .totals .row{
+      display:flex;
+      justify-content:space-between;
+      font-size:12px;
+      margin:6px 0;
+    }
+    .totals .row strong{ font-size:13px; }
+    .words{
+      margin-top:8px;
+      font-size:12px;
+      color:#111827;
+    }
+    .foot{
+      margin-top:18px;
+      font-size:11px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .logoBox{
+      width:64px;height:64px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .logoBox img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:none;
+    }
+    .logoPlaceholder{
+      font-size:10px;
+      color:var(--muted);
+      text-align:center;
+      padding:6px;
+      line-height:1.2;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Payslip Generator</h1>
+    <p>Fill in employee + salary details, preview instantly, upload/remove logo, and export as PDF.</p>
+  </header>
+
+  <main class="wrap">
+    <!-- FORM -->
+    <section class="panel">
+      <h2>Company</h2>
+      <div class="grid">
+        <div class="field full">
+          <label>Company Name</label>
+          <input id="companyName" value="Dataknobs" />
+        </div>
+
+        <div class="field full">
+          <label>Company Logo (PNG/JPG)</label>
+          <input id="companyLogo" type="file" accept="image/*" />
+        </div>
+
+        <div class="actions" style="margin-top:0;">
+          <button class="danger" id="removeLogoBtn" type="button">Remove Logo</button>
+        </div>
+
+        <div class="field full">
+          <label>Company Address (multi-line)</label>
+          <textarea id="companyAddress">RPS Auria, Flat No-102, Tower - T2, First floor
+Faridabad India</textarea>
+        </div>
+        <div class="field">
+          <label>Payslip Month</label>
+          <input id="payslipMonth" value="September 2025" placeholder="e.g., September 2025" />
+        </div>
+        <div class="field">
+          <label>Pay Date</label>
+          <input id="payDate" type="date" value="2025-10-07" />
+        </div>
+      </div>
+
+      <h2 style="margin-top:14px;">Employee</h2>
+      <div class="grid">
+        <div class="field">
+          <label>Employee Name</label>
+          <input id="employeeName" value="Vinayak Gaikar" />
+        </div>
+        <div class="field">
+          <label>Employee ID</label>
+          <input id="employeeId" value="14" />
+        </div>
+        <div class="field full">
+          <label>Pay Period</label>
+          <input id="payPeriod" value="September 2025" />
+        </div>
+      </div>
+
+      <h2 style="margin-top:14px;">Earnings</h2>
+      <div class="grid">
+        <div class="field">
+          <label>Basic (₹)</label>
+          <input id="basic" type="number" value="25000" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label>House Rent Allowance (₹)</label>
+          <input id="hra" type="number" value="0" min="0" step="0.01" />
+        </div>
+        <div class="field full">
+          <label>Other Earnings (₹)</label>
+          <input id="otherEarnings" type="number" value="0" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <h2 style="margin-top:14px;">Deductions</h2>
+      <div class="grid">
+        <div class="field">
+          <label>Income Tax (₹)</label>
+          <input id="incomeTax" type="number" value="0" min="0" step="0.01" />
+        </div>
+        <div class="field">
+          <label>Provident Fund (₹)</label>
+          <input id="pf" type="number" value="0" min="0" step="0.01" />
+        </div>
+        <div class="field full">
+          <label>Other Deductions (₹)</label>
+          <input id="otherDeductions" type="number" value="0" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="downloadPdfBtn" type="button">Download PDF</button>
+        <button id="resetBtn" type="button" title="Reset to sample values">Reset</button>
+      </div>
+    </section>
+
+    <!-- PREVIEW -->
+    <section class="panel sheet-wrap" aria-label="Payslip preview">
+      <div id="payslip" class="sheet">
+        <div class="tiny-top">Payroll and compliance. Visit dataknobs.com</div>
+
+        <div class="brand">
+          <div style="display:flex; gap:14px; align-items:flex-start;">
+            <div class="logoBox" aria-label="Company logo box">
+              <img id="vCompanyLogo" alt="Company logo" />
+              <div id="vLogoPlaceholder" class="logoPlaceholder">No Logo</div>
+            </div>
+
+            <div class="left">
+              <p class="company" id="vCompanyName">Dataknobs</p>
+              <p class="addr" id="vCompanyAddress">RPS Auria, Flat No-102, Tower - T2, First floor&#10;Faridabad India</p>
+            </div>
+          </div>
+
+          <div class="titlebox">
+            <p class="title">Payslip For the Month</p>
+            <p class="month" id="vPayslipMonth">September 2025</p>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div>
+            <h3>EMPLOYEE SUMMARY</h3>
+            <div class="kv">
+              <div class="k">Employee Name</div><div id="vEmployeeName">Vinayak Gaikar</div>
+              <div class="k">Employee ID</div><div id="vEmployeeId">14</div>
+              <div class="k">Pay Period</div><div id="vPayPeriod">September 2025</div>
+              <div class="k">Pay Date</div><div id="vPayDate">07/10/2025</div>
+            </div>
+          </div>
+          <div class="netpay">
+            <p class="label">Total Net Pay</p>
+            <div class="amount" id="vNetPay">₹25,000.00</div>
+          </div>
+        </div>
+
+        <div class="tables">
+          <table>
+            <thead>
+              <tr><th>EARNINGS</th><th class="r">AMOUNT</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Basic</td><td class="r" id="vBasic">₹25,000.00</td></tr>
+              <tr><td>House Rent Allowance</td><td class="r" id="vHra">₹0.00</td></tr>
+              <tr><td>Other Earnings</td><td class="r" id="vOtherEarnings">₹0.00</td></tr>
+            </tbody>
+            <tfoot>
+              <tr><td>Gross Earnings</td><td class="r" id="vGross">₹25,000.00</td></tr>
+            </tfoot>
+          </table>
+
+          <table>
+            <thead>
+              <tr><th>DEDUCTIONS</th><th class="r">AMOUNT</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Income Tax</td><td class="r" id="vIncomeTax">₹0.00</td></tr>
+              <tr><td>Provident Fund</td><td class="r" id="vPf">₹0.00</td></tr>
+              <tr><td>Other Deductions</td><td class="r" id="vOtherDeductions">₹0.00</td></tr>
+            </tbody>
+            <tfoot>
+              <tr><td>Total Deductions</td><td class="r" id="vTotalDeductions">₹0.00</td></tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="totals">
+          <div class="row"><span>GROSS EARNINGS</span><span id="vGross2">₹25,000.00</span></div>
+          <div class="row"><span>TOTAL DEDUCTIONS</span><span id="vTotalDeductions2">₹0.00</span></div>
+          <div class="row"><strong>TOTAL NET PAYABLE</strong><strong id="vNetPay2">₹25,000.00</strong></div>
+          <div class="words"><span class="k">Amount In Words :</span> <span id="vWords">Indian Rupee Twenty-Five Thousand Only</span></div>
+        </div>
+
+        <div class="foot">-- This is a system-generated document. --</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---------- Helpers ----------
+    const INR = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" });
+
+    function n(id){
+      const v = Number(document.getElementById(id).value);
+      return Number.isFinite(v) ? v : 0;
+    }
+
+    function fmtINR(amount){
+      return INR.format(amount);
+    }
+
+    function fmtDateDDMMYYYY(dateStr){
+      if(!dateStr) return "";
+      const [y,m,d] = dateStr.split("-").map(Number);
+      if(!y || !m || !d) return "";
+      const dd = String(d).padStart(2,"0");
+      const mm = String(m).padStart(2,"0");
+      return `${dd}/${mm}/${y}`;
+    }
+
+    function safeSlug(s){
+      return (s || "")
+        .trim()
+        .replace(/[^\w\-]+/g, "_")
+        .replace(/_+/g, "_")
+        .replace(/^_+|_+$/g, "");
+    }
+
+    // Number to words (Indian system-ish) for rupees only.
+    function amountInWordsINR(amount){
+      const a = Math.round((amount + Number.EPSILON) * 100) / 100;
+      const rupees = Math.floor(a);
+      const paise = Math.round((a - rupees) * 100);
+
+      const ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+      const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+
+      function twoDigits(num){
+        if(num < 20) return ones[num];
+        const t = Math.floor(num/10), o = num%10;
+        return (tens[t] + (o ? "-" + ones[o] : "")).trim();
+      }
+
+      function threeDigits(num){
+        const h = Math.floor(num/100);
+        const r = num%100;
+        let out = "";
+        if(h) out += ones[h] + " Hundred";
+        if(r) out += (out ? " " : "") + twoDigits(r);
+        return out.trim();
+      }
+
+      function section(num){
+        const crore = Math.floor(num / 10000000);
+        num %= 10000000;
+        const lakh = Math.floor(num / 100000);
+        num %= 100000;
+        const thousand = Math.floor(num / 1000);
+        num %= 1000;
+        const rest = num;
+
+        const parts = [];
+        if(crore) parts.push(threeDigits(crore) + " Crore");
+        if(lakh) parts.push(threeDigits(lakh) + " Lakh");
+        if(thousand) parts.push(threeDigits(thousand) + " Thousand");
+        if(rest) parts.push(threeDigits(rest));
+        return parts.join(" ").trim();
+      }
+
+      let words = section(rupees);
+      if(!words) words = "Zero";
+      words = "Indian Rupee " + words + " Only";
+      if(paise){
+        words = words.replace(" Only", "");
+        words += " and " + twoDigits(paise) + " Paise Only";
+      }
+      return words;
+    }
+
+    // ---------- Logo State ----------
+    let logoDataUrl = "";     // used for PDF filename + persistence
+    let logoFileExt = "";     // "png"/"jpg"/...
+
+    const logoInput = document.getElementById("companyLogo");
+    const logoImg = document.getElementById("vCompanyLogo");
+    const logoPlaceholder = document.getElementById("vLogoPlaceholder");
+    const removeLogoBtn = document.getElementById("removeLogoBtn");
+
+    async function setLogoFromFile(file){
+      if(!file) return;
+
+      const ext = (file.name.split(".").pop() || "").toLowerCase();
+      logoFileExt = (ext === "jpeg") ? "jpg" : ext;
+
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      logoDataUrl = dataUrl;
+      logoImg.src = dataUrl;
+      logoImg.style.display = "block";
+      logoPlaceholder.style.display = "none";
+    }
+
+    function clearLogo(){
+      logoDataUrl = "";
+      logoFileExt = "";
+      logoInput.value = "";        // clears selected file in UI
+      logoImg.src = "";
+      logoImg.style.display = "none";
+      logoPlaceholder.style.display = "block";
+    }
+
+    logoInput.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if(!file) return clearLogo();
+      await setLogoFromFile(file);
+    });
+
+    removeLogoBtn.addEventListener("click", clearLogo);
+
+    // ---------- Bind UI -> Preview ----------
+    const ids = [
+      "companyName","companyAddress","payslipMonth","payDate",
+      "employeeName","employeeId","payPeriod",
+      "basic","hra","otherEarnings","incomeTax","pf","otherDeductions"
+    ];
+
+    function updatePreview(){
+      document.getElementById("vCompanyName").textContent = document.getElementById("companyName").value || "";
+      document.getElementById("vCompanyAddress").textContent = document.getElementById("companyAddress").value || "";
+      document.getElementById("vPayslipMonth").textContent = document.getElementById("payslipMonth").value || "";
+
+      document.getElementById("vEmployeeName").textContent = document.getElementById("employeeName").value || "";
+      document.getElementById("vEmployeeId").textContent = document.getElementById("employeeId").value || "";
+      document.getElementById("vPayPeriod").textContent = document.getElementById("payPeriod").value || "";
+      document.getElementById("vPayDate").textContent = fmtDateDDMMYYYY(document.getElementById("payDate").value);
+
+      const basic = n("basic");
+      const hra = n("hra");
+      const otherE = n("otherEarnings");
+      const tax = n("incomeTax");
+      const pf = n("pf");
+      const otherD = n("otherDeductions");
+
+      const gross = basic + hra + otherE;
+      const totalD = tax + pf + otherD;
+      const net = gross - totalD;
+
+      document.getElementById("vBasic").textContent = fmtINR(basic);
+      document.getElementById("vHra").textContent = fmtINR(hra);
+      document.getElementById("vOtherEarnings").textContent = fmtINR(otherE);
+
+      document.getElementById("vIncomeTax").textContent = fmtINR(tax);
+      document.getElementById("vPf").textContent = fmtINR(pf);
+      document.getElementById("vOtherDeductions").textContent = fmtINR(otherD);
+
+      document.getElementById("vGross").textContent = fmtINR(gross);
+      document.getElementById("vTotalDeductions").textContent = fmtINR(totalD);
+
+      document.getElementById("vGross2").textContent = fmtINR(gross);
+      document.getElementById("vTotalDeductions2").textContent = fmtINR(totalD);
+
+      document.getElementById("vNetPay").textContent = fmtINR(net);
+      document.getElementById("vNetPay2").textContent = fmtINR(net);
+
+      document.getElementById("vWords").textContent = amountInWordsINR(net);
+    }
+
+    ids.forEach(id => {
+      document.getElementById(id).addEventListener("input", updatePreview);
+      document.getElementById(id).addEventListener("change", updatePreview);
+    });
+
+    // ---------- PDF Download ----------
+    async function downloadPDF(){
+      const el = document.getElementById("payslip");
+      await new Promise(r => setTimeout(r, 50));
+
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff"
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const { jsPDF } = window.jspdf;
+
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pageWidth;
+      const imgHeight = canvas.height * (imgWidth / canvas.width);
+
+      let remaining = imgHeight;
+      let position = 0;
+
+      while(remaining > 0){
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        remaining -= pageHeight;
+        if(remaining > 0){
+          pdf.addPage();
+          position -= pageHeight;
+        }
+      }
+
+      // Filename: include company name + employee + month + logo tag (and ext hint)
+      const company = safeSlug(document.getElementById("companyName").value || "Company");
+      const employee = safeSlug(document.getElementById("employeeName").value || "Employee");
+      const month = safeSlug(document.getElementById("payslipMonth").value || "Payslip");
+
+      // You can't literally embed the logo file in a filename, so we include a clear marker.
+      const logoTag = logoDataUrl ? `with_logo_${(logoFileExt || "img")}` : "no_logo";
+
+      pdf.save(`Payslip_${company}_${employee}_${month}_${logoTag}.pdf`);
+    }
+
+    document.getElementById("downloadPdfBtn").addEventListener("click", downloadPDF);
+
+    // Reset to sample values
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("companyName").value = "Dataknobs";
+      document.getElementById("companyAddress").value = "RPS Auria, Flat No-102, Tower - T2, First floor\nFaridabad India";
+      document.getElementById("payslipMonth").value = "September 2025";
+      document.getElementById("payDate").value = "2025-10-07";
+      document.getElementById("employeeName").value = "Vinayak Gaikar";
+      document.getElementById("employeeId").value = "14";
+      document.getElementById("payPeriod").value = "September 2025";
+      document.getElementById("basic").value = "25000";
+      document.getElementById("hra").value = "0";
+      document.getElementById("otherEarnings").value = "0";
+      document.getElementById("incomeTax").value = "0";
+      document.getElementById("pf").value = "0";
+      document.getElementById("otherDeductions").value = "0";
+      clearLogo();
+      updatePreview();
+    });
+
+    // Initial render
+    updatePreview();
+  </script>
+</body>
+</html>

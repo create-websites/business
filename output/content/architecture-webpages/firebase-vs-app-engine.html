@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive guide comparing Firebase vs. Google App Engine for frontend hosting and application deployment. Features a decision engine for SPAs, SSR, and scalability." name="description"/>
+    <meta content="Firebase, Google App Engine, GAE, Frontend Hosting, SPA vs SSR, Cloud Architecture, Serverless, PaaS, BaaS, React Deployment, Next.js" name="keywords"/>
+    <title>Frontend Architect: Firebase vs. App Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #0f172a; /* slate-900 */
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 4px;
+        }
+
+        .nav-item.active {
+            background-color: #fff7ed; /* orange-50 */
+            border-left: 4px solid #f59e0b; /* amber-500 */
+            font-weight: 600;
+        }
+
+        /* Visual Elements */
+        .edge-node {
+            transition: all 0.3s ease;
+        }
+        .instance-box {
+            transition: all 0.3s ease;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+    <!-- Chosen Palette: Amber/Orange (Firebase), Blue (App Engine), Slate (Neutral) -->
+    <!-- Application Structure Plan: Dashboard Layout.
+         - Sidebar: Intro, Firebase (Static/CDN), App Engine (PaaS/SSR), Comparative Analysis, Decision Engine.
+         - Content Area: Dynamic injection.
+         - Logic: Distinguishes between "Static/SPA + BaaS" (Firebase) and "Dynamic/SSR + PaaS" (App Engine).
+    -->
+    <!-- Visualization & Content Choices:
+         - Firebase View: "Global CDN Simulator". Visualizes pushing content to edge nodes. Speed focus.
+         - App Engine View: "Auto-Scaler Simulator". Visualizes traffic spikes spawning server instances. Compute focus.
+         - Comparison: Radar Chart comparing Ease of Use, Cold Start, Config Control, SSR Power.
+         - Decision Engine: Form-based logic tree.
+         - CONFIRMATION: NO SVG graphics used (embedded SVG code is okay, no external files). NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Mobile Header -->
+    <header class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center shadow-md z-20">
+        <h1 class="text-lg font-bold"><i class="fas fa-cloud mr-2"></i>Frontend Architect</h1>
+        <button class="text-white focus:outline-none" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="bg-white w-64 flex-shrink-0 border-r border-slate-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10 h-full flex flex-col" id="sidebar">
+            <div class="p-6 border-b border-slate-200 hidden md:block">
+                <h1 class="text-2xl font-bold text-slate-800"><i class="fas fa-cloud mr-2 text-amber-500"></i>Cloud Deploy</h1>
+                <p class="text-xs text-slate-500 mt-2">Firebase vs. App Engine</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1">
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-amber-50 transition-colors flex items-center active" id="nav-intro" onclick="navigateTo('intro')">
+                            <i class="fas fa-info-circle w-6"></i> Introduction
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-amber-50 transition-colors flex items-center" id="nav-firebase" onclick="navigateTo('firebase')">
+                            <i class="fas fa-fire w-6 text-amber-500"></i> Firebase
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-amber-50 transition-colors flex items-center" id="nav-gae" onclick="navigateTo('gae')">
+                            <i class="fab fa-google w-6 text-blue-600"></i> App Engine
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-amber-50 transition-colors flex items-center" id="nav-compare" onclick="navigateTo('compare')">
+                            <i class="fas fa-balance-scale w-6"></i> Comparative Analysis
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-amber-50 transition-colors flex items-center" id="nav-decision" onclick="navigateTo('decision')">
+                            <i class="fas fa-calculator w-6 text-indigo-600"></i> Decision Engine
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="p-4 border-t border-slate-200 bg-slate-50">
+                <div class="text-xs text-slate-500">
+                    <p class="font-semibold">Current Context:</p>
+                    <p id="context-indicator">Introduction</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-8" id="main-content">
+            <!-- Content injected via JS -->
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden" id="overlay"></div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'intro',
+            decisionInputs: {
+                renderType: null,
+                backendLogic: null,
+                teamExp: null,
+                traffic: null
+            }
+        };
+
+        // --- Content Store ---
+        const contentData = {
+            intro: {
+                title: "Frontend Hosting: BaaS vs. PaaS",
+                content: `
+                    <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                        <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-slate-800">
+                            <h2 class="text-2xl font-bold text-slate-800 mb-4">The Google Cloud Duel</h2>
+                            <p class="text-slate-600 leading-relaxed text-lg">
+                                When deploying a modern web application on Google Cloud, two giants stand out. <strong>Firebase</strong> offers a developer-first, "Backend-as-a-Service" experience optimized for static assets and SPAs. <strong>App Engine</strong> offers a robust, scalable "Platform-as-a-Service" environment for full-stack applications and server-side rendering. Choosing correctly impacts your latency, cost, and developer happiness.
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-amber-500" onclick="navigateTo('firebase')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-3">
+                                        <i class="fas fa-fire"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">Firebase</h3>
+                                </div>
+                                <p class="text-slate-600 mb-4">The speed demon. Best for Single Page Apps (React, Vue) served from a global CDN. Integrated Auth, Database, and Functions.</p>
+                                <span class="text-amber-600 font-semibold text-sm">Explore Static Speed &rarr;</span>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-blue-500" onclick="navigateTo('gae')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                                        <i class="fab fa-google"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">App Engine</h3>
+                                </div>
+                                <p class="text-slate-600 mb-4">The heavy lifter. Best for Server Side Rendering (SSR) and monolithic apps requiring long-running processes or specific runtimes.</p>
+                                <span class="text-blue-600 font-semibold text-sm">Explore Scalability &rarr;</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-200 p-6 rounded-xl text-center mt-8">
+                            <h3 class="text-lg font-bold text-slate-700 mb-2">Building a new app?</h3>
+                            <button onclick="navigateTo('decision')" class="bg-slate-800 text-white px-6 py-3 rounded-lg shadow hover:bg-slate-700 transition-colors">
+                                Launch Decision Engine
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            firebase: {
+                title: "Firebase: Edge-First Delivery",
+                description: "Firebase Hosting is designed for the modern web. It pushes your static HTML, CSS, and JS to a global Content Delivery Network (CDN) automatically. Dynamic logic is handled via Serverless Functions, keeping the frontend fast and simple.",
+                vizScript: 'renderFirebaseViz'
+            },
+            gae: {
+                title: "App Engine: Server-Side Power",
+                description: "Google App Engine (Standard) allows you to deploy code (Node, Python, Go, Java) that runs on managed servers. It excels at auto-scaling based on CPU/Memory load and supports complex Server-Side Rendering (SSR) needs natively.",
+                vizScript: 'renderGAEViz'
+            },
+            compare: {
+                title: "Head-to-Head Comparison",
+                description: "Comparing the architectural trade-offs. Firebase wins on DX (Developer Experience) and global latency. App Engine wins on runtime control and massive scale.",
+                vizScript: 'renderComparisonChart'
+            },
+            decision: {
+                title: "Hosting Selector",
+                description: "Answer four questions about your rendering needs and backend complexity to receive a recommendation.",
+                vizScript: 'renderDecisionTool'
+            }
+        };
+
+        // --- Core Navigation ---
+        function navigateTo(sectionId) {
+            state.currentSection = sectionId;
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            document.getElementById('context-indicator').innerText = contentData[sectionId].title;
+
+            // Mobile menu close
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebar').classList.remove('translate-x-0');
+            document.getElementById('overlay').classList.add('hidden');
+
+            renderContent(sectionId);
+        }
+
+        function renderContent(sectionId) {
+            const main = document.getElementById('main-content');
+            const data = contentData[sectionId];
+
+            if (sectionId === 'intro') {
+                main.innerHTML = data.content;
+                return;
+            }
+
+            let html = `
+                <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">${data.title}</h2>
+                        <p class="text-slate-600">${data.description}</p>
+                    </div>
+            `;
+
+            if (sectionId === 'decision') {
+                html += `<div id="decision-container" class="grid md:grid-cols-3 gap-6"></div>`;
+            } else if (sectionId === 'firebase') {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-amber-600 mb-4">Global CDN Simulator</h3>
+                            
+                            <div class="flex-grow bg-slate-900 rounded-lg p-4 relative overflow-hidden" style="height: 300px;">
+                                <!-- Map Background (Abstract) -->
+                                <div class="absolute inset-0 opacity-20">
+                                    <div class="absolute top-1/2 left-1/2 w-48 h-48 bg-slate-500 rounded-full transform -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+                                </div>
+
+                                <!-- Origin -->
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 text-center">
+                                    <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center shadow-lg shadow-amber-500/50">
+                                        <i class="fas fa-home text-white"></i>
+                                    </div>
+                                    <div class="text-amber-500 text-xs mt-1 font-bold">Origin</div>
+                                </div>
+
+                                <!-- Edge Nodes -->
+                                <div id="edge-us" class="edge-node absolute top-1/4 left-1/4 w-3 h-3 bg-slate-600 rounded-full"></div>
+                                <div id="edge-eu" class="edge-node absolute top-1/4 right-1/4 w-3 h-3 bg-slate-600 rounded-full"></div>
+                                <div id="edge-asia" class="edge-node absolute bottom-1/4 right-1/3 w-3 h-3 bg-slate-600 rounded-full"></div>
+                                <div id="edge-sa" class="edge-node absolute bottom-1/4 left-1/3 w-3 h-3 bg-slate-600 rounded-full"></div>
+
+                                <div id="fb-status" class="absolute bottom-4 left-0 right-0 text-center text-slate-400 text-xs font-mono">Status: Idle</div>
+                            </div>
+                            
+                            <button onclick="runFirebaseSim()" class="mt-4 w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded transition-colors">
+                                <i class="fas fa-globe mr-2"></i> Deploy to Edge
+                            </button>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else if (sectionId === 'gae') {
+                 html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-blue-600 mb-4">Auto-Scaler Simulator</h3>
+                            
+                            <div class="flex-grow bg-slate-100 rounded-lg p-4 relative border border-slate-200" style="height: 300px;">
+                                <!-- Traffic Bar -->
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-xs text-slate-500 mb-1">
+                                        <span>Incoming Traffic Load</span>
+                                        <span id="traffic-val">0%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-300 rounded-full h-2">
+                                        <div id="traffic-bar" class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Server Pool -->
+                                <div class="text-xs text-slate-500 mb-2">Active Instances (F1 Standard)</div>
+                                <div id="instance-pool" class="grid grid-cols-4 gap-2">
+                                    <div class="instance-box w-full h-12 bg-blue-100 border-2 border-blue-500 rounded flex items-center justify-center text-blue-700 font-bold text-xs"><i class="fas fa-server"></i></div>
+                                </div>
+
+                                <div id="gae-status" class="absolute bottom-4 left-4 right-4 text-xs text-slate-500 text-center">Scaling based on CPU load...</div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 mt-4">
+                                <button onclick="adjustTraffic(20)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">
+                                    <i class="fas fa-arrow-up mr-2"></i> Increase Load
+                                </button>
+                                <button onclick="adjustTraffic(-20)" class="bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded transition-colors text-sm">
+                                    <i class="fas fa-arrow-down mr-2"></i> Decrease Load
+                                </button>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col justify-center">
+                            <h3 class="font-bold text-slate-700 mb-4 text-center">Visualization</h3>
+                            <div class="chart-container">
+                                <canvas id="mainChart"></canvas>
+                            </div>
+                            <p class="text-center text-xs text-slate-400 mt-2" id="chart-caption"></p>
+                        </div>
+                        <div class="space-y-6">
+                             ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            main.innerHTML = html;
+
+            if (data.vizScript === 'renderFirebaseViz') { /* Handled by HTML click */ }
+            if (data.vizScript === 'renderGAEViz') { window.trafficLevel = 0; }
+            if (data.vizScript === 'renderComparisonChart') renderComparisonChart();
+            if (data.vizScript === 'renderDecisionTool') renderDecisionTool();
+        }
+
+        function getDetailsHTML(sectionId) {
+            if (sectionId === 'firebase') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-amber-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-amber-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Zero Config:</strong> <code>firebase init</code> and <code>deploy</code>. Done.</li>
+                            <li><strong>Static Speed:</strong> Cached content served from edge locations closest to the user.</li>
+                            <li><strong>Ecosystem:</strong> Free SSL, built-in Auth, Analytics, and Firestore integration.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Limited Runtime:</strong> Logic must live in Cloud Functions (Cold starts possible).</li>
+                            <li><strong>SSR Complexity:</strong> Server-side rendering requires Cloud Functions setup (though frameworks like Next.js integrate well now).</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'gae') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-blue-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>True SSR:</strong> Runs a real Node/Python server. Perfect for dynamic meta tags and SEO.</li>
+                            <li><strong>Runtime Control:</strong> Install system binaries, use websockets, run background threads.</li>
+                            <li><strong>Scale to Zero:</strong> Cost-effective for low-traffic apps (Standard Environment).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Latency:</strong> Initial request goes to a specific region (e.g., us-central), not a global edge.</li>
+                            <li><strong>Deployment Time:</strong> Slower than Firebase. Building containers takes minutes.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'compare') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-4">The Verdict</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-amber-600 text-sm uppercase">Firebase (Amber)</h4>
+                                <p class="text-sm text-slate-600">The default choice for modern <strong>React/Vue/Angular SPAs</strong>. If your app is mostly client-side logic + APIs, use Firebase.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-blue-600 text-sm uppercase">App Engine (Blue)</h4>
+                                <p class="text-sm text-slate-600">The choice for <strong>Monoliths & Traditional SSR</strong>. If you are migrating a legacy Express app or need heavy server-side processing, use GAE.</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h4 class="font-bold text-indigo-600 text-sm uppercase">The Modern Hybrid</h4>
+                                <p class="text-sm text-slate-600">Today, Firebase Hosting can actually sit <em>in front</em> of Cloud Run or App Engine. This gives you Global CDN caching for static assets + Serverless power for dynamic routes.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Visualizations ---
+
+        // 1. Firebase Simulation
+        window.runFirebaseSim = function() {
+            const nodes = document.querySelectorAll('.edge-node');
+            const status = document.getElementById('fb-status');
+            
+            status.innerText = "Status: Uploading to Origin...";
+            
+            // Animation Sequence
+            setTimeout(() => {
+                status.innerText = "Status: Propagating to Global Edge...";
+                nodes.forEach(node => {
+                    node.classList.remove('bg-slate-600');
+                    node.classList.add('bg-green-400', 'shadow-lg', 'shadow-green-400/50', 'scale-125');
+                });
+            }, 1000);
+
+            setTimeout(() => {
+                status.innerText = "Status: Live! (Latency: <50ms)";
+                nodes.forEach(node => {
+                    node.classList.remove('scale-125');
+                });
+            }, 2000);
+
+            // Reset after a while
+            setTimeout(() => {
+                nodes.forEach(node => {
+                    node.classList.add('bg-slate-600');
+                    node.classList.remove('bg-green-400', 'shadow-lg', 'shadow-green-400/50');
+                });
+                status.innerText = "Status: Idle";
+            }, 4000);
+        }
+
+        // 2. App Engine Simulation
+        window.trafficLevel = 0;
+        window.adjustTraffic = function(amount) {
+            window.trafficLevel = Math.max(0, Math.min(100, window.trafficLevel + amount));
+            
+            // Update Bar
+            const bar = document.getElementById('traffic-bar');
+            const val = document.getElementById('traffic-val');
+            const pool = document.getElementById('instance-pool');
+            const status = document.getElementById('gae-status');
+            
+            bar.style.width = window.trafficLevel + '%';
+            val.innerText = window.trafficLevel + '%';
+
+            // Calculate Instances needed (1 instance per 20% traffic)
+            const instancesNeeded = Math.max(1, Math.ceil(window.trafficLevel / 20));
+            const currentInstances = pool.children.length;
+
+            if (instancesNeeded > currentInstances) {
+                status.innerText = "Scaling UP: Creating new instances...";
+                for (let i = currentInstances; i < instancesNeeded; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'instance-box w-full h-12 bg-blue-100 border-2 border-blue-500 rounded flex items-center justify-center text-blue-700 font-bold text-xs';
+                    div.innerHTML = '<i class="fas fa-server"></i>';
+                    pool.appendChild(div);
+                }
+            } else if (instancesNeeded < currentInstances) {
+                status.innerText = "Scaling DOWN: Saving costs...";
+                // Remove excess
+                while (pool.children.length > instancesNeeded) {
+                    pool.removeChild(pool.lastChild);
+                }
+            } else {
+                status.innerText = "Steady state.";
+            }
+        }
+
+        // 3. Comparison Radar
+        function renderComparisonChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Capability Comparison (Outer Edge = Stronger)";
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Ease of Use', 'Global Speed (CDN)', 'SSR Capability', 'Config Control', 'Deployment Speed'],
+                    datasets: [{
+                        label: 'Firebase',
+                        data: [10, 10, 5, 3, 10], 
+                        fill: true,
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber
+                        borderColor: 'rgb(245, 158, 11)',
+                        pointBackgroundColor: 'rgb(245, 158, 11)',
+                    }, {
+                        label: 'App Engine',
+                        data: [6, 4, 10, 9, 5], 
+                        fill: true,
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)', // Blue
+                        borderColor: 'rgb(37, 99, 235)',
+                        pointBackgroundColor: 'rgb(37, 99, 235)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 3 } },
+                    scales: { r: { suggestedMin: 0, suggestedMax: 10, angleLines: { display: false } } }
+                }
+            });
+        }
+
+        // 4. Decision Engine
+        function renderDecisionTool() {
+            const container = document.getElementById('decision-container');
+            container.innerHTML = `
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-6">Project Parameters</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Q1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">1. Rendering Strategy</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('renderType', 'client', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Client-Side (SPA)</strong><br>React/Vue bundles. Browser renders.
+                                </button>
+                                <button onclick="selectOption('renderType', 'server', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Server-Side (SSR)</strong><br>Express/Next.js/Django. Server renders.
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">2. Backend Logic</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('backendLogic', 'baas', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Minimal/Serverless</strong><br>Using Auth/DB APIs directly.
+                                </button>
+                                <button onclick="selectOption('backendLogic', 'custom', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Heavy Custom Logic</strong><br>Complex middleware, image processing.
+                                </button>
+                            </div>
+                        </div>
+
+                         <!-- Q3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">3. Team Size</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('teamExp', 'small', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Small/Solo</strong><br>Speed is everything.
+                                </button>
+                                <button onclick="selectOption('teamExp', 'large', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Enterprise</strong><br>Need VPCs, security rules, logs.
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1">
+                    <div id="recommendation-card" class="bg-slate-800 text-white p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500">
+                        <i class="fas fa-server text-4xl text-slate-500 mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">Awaiting Input</h4>
+                        <p class="text-slate-400 text-sm">Select options to see the recommendation.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectOption = function(category, value, btnElement) {
+            state.decisionInputs[category] = value;
+            
+            // Visual Toggle
+            const parent = btnElement.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'border-indigo-500');
+                b.classList.add('border-slate-200');
+            });
+            btnElement.classList.remove('border-slate-200');
+            btnElement.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'border-indigo-500');
+
+            calculateDecision();
+        }
+
+        function calculateDecision() {
+            const { renderType, backendLogic, teamExp } = state.decisionInputs;
+            if (!renderType || !backendLogic || !teamExp) return;
+
+            const card = document.getElementById('recommendation-card');
+            let title, icon, desc, bgClass;
+
+            let scoreFirebase = 0;
+            let scoreGAE = 0;
+
+            // Logic
+            if (renderType === 'client') scoreFirebase += 3; else scoreGAE += 3;
+            if (backendLogic === 'baas') scoreFirebase += 2; else scoreGAE += 2;
+            if (teamExp === 'small') scoreFirebase += 1; else scoreGAE += 1;
+
+            if (scoreFirebase > scoreGAE) {
+                title = "Use Firebase";
+                icon = "fas fa-fire";
+                desc = "Your app is modern, client-heavy, and benefits from global caching. Firebase's Developer Experience will help you ship faster.";
+                bgClass = "bg-amber-600";
+            } else {
+                title = "Use App Engine";
+                icon = "fab fa-google";
+                desc = "Your app requires the power of a server. Whether for SSR SEO, complex backend computation, or legacy compatibility, GAE is the robust choice.";
+                bgClass = "bg-blue-600";
+            }
+
+            card.className = `p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500 ${bgClass} text-white`;
+            card.innerHTML = `
+                <div class="animate-bounce mb-4"><i class="${icon} text-4xl"></i></div>
+                <h4 class="text-2xl font-bold mb-3">${title}</h4>
+                <p class="text-white/90 text-sm leading-relaxed">${desc}</p>
+                <button onclick="navigateTo('compare')" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-xs uppercase tracking-wider font-bold transition-colors">Compare Details</button>
+            `;
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent('intro');
+
+            // Mobile Menu
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            btn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('hidden');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('hidden');
+            });
+        });
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

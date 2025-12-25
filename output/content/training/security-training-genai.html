@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive GenAI Security &amp; Compliance Training for Enterprise. Features role-based simulations for Developers and Marketing, data classification tools, and risk visualization based on 2025 guidelines." name="description"/>
+    <meta content="GenAI Security, AI Compliance, Enterprise AI Training, Data Classification, LLM Risks, AI Ethics, Developer Security, Corporate AI Policy" name="keywords"/>
+    <title>GenAI Security &amp; Ethics Training Module</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Chart Container Styles - Mandatory for Responsiveness */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar for better UX in text heavy areas */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Animation utilities */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: "Trust & Clarity" -->
+    <!-- Primary: Slate-800 (Text/Deep Backgrounds), Accent: Indigo-600 (Action), Semantic: Emerald-500 (Safe), Rose-500 (Risk), Amber-500 (Caution). Background: Slate-50/White. -->
+    
+    <!-- Application Structure Plan: 
+         1. Header: Branding and Progress Tracker.
+         2. "The Landscape" (Dashboard): High-level stats on GenAI risks to set the stage.
+         3. "The Data Filter" (Interactive Tool): A simulator where users classify data types (Green/Red zones).
+         4. "Role-Specific Simulators" (Tabbed Interface): 
+            - Developers: Code safety, secrets, hallucinations.
+            - Sales/Marketing: PII handling, copyright, public vs. private data.
+         5. "Risk Visualizer" (Chart): Visualizing the impact of different threat vectors.
+         6. "Certification Quiz": Final knowledge check.
+         RATIONALE: This structure moves from awareness (Landscape) to understanding (Filter) to application (Simulators) and finally validation (Quiz), facilitating active learning.
+    -->
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-indigo-100 selection:text-indigo-800">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🛡️</span>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">GenAI License <span class="text-indigo-600">2025</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-500">
+                    <button class="hover:text-indigo-600 transition-colors" onclick="scrollToSection('dashboard')">Risk Landscape</button>
+                    <button class="hover:text-indigo-600 transition-colors" onclick="scrollToSection('classifier')">Data Safety</button>
+                    <button class="hover:text-indigo-600 transition-colors" onclick="scrollToSection('simulation')">Role Scenarios</button>
+                    <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm" onclick="scrollToSection('quiz')">Start Quiz</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section 1: Introduction & Dashboard -->
+        <section class="space-y-8 fade-in" id="dashboard">
+            <div class="text-center max-w-3xl mx-auto">
+                <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Secure Innovation with Generative AI</h1>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    Generative AI tools (ChatGPT, GitHub Copilot, Midjourney) accelerate our work, but they introduce new attack vectors. 
+                    This interactive report digests our 2025 Security Guidelines into actionable insights for <strong>Developers</strong>, <strong>Sales</strong>, and <strong>Marketing</strong> teams.
+                </p>
+            </div>
+
+            <!-- Introductory Context Block -->
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-800 mb-2 border-l-4 border-indigo-500 pl-3">Why This Matters: The Threat Landscape</h3>
+                <p class="text-slate-600 mb-4">
+                    Before using GenAI tools, understanding <em>what</em> can go wrong is crucial. The charts below visualize data from the "2025 State of AI Security" section of the report, highlighting that while adoption is high, data leakage remains the primary risk factor.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                    <!-- Chart 1: Incident Types -->
+                    <div class="flex flex-col items-center">
+                        <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Reported GenAI Security Incidents (2024)</h4>
+                        <div class="chart-container">
+                            <canvas id="incidentChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center text-slate-400 mt-2">Source: Internal Security Audit &amp; Industry Benchmarks</p>
+                    </div>
+
+                    <!-- Chart 2: Adoption vs Policy Knowledge -->
+                    <div class="flex flex-col items-center">
+                        <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Adoption vs. Policy Awareness</h4>
+                        <div class="chart-container">
+                            <canvas id="awarenessChart"></canvas>
+                        </div>
+                        <div class="mt-4 p-3 bg-indigo-50 rounded-lg text-sm text-indigo-800 w-full max-w-md text-center">
+                            <strong>Insight:</strong> 85% of staff use GenAI, but only 30% know the data classification rules.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Data Classification Tool -->
+        <section class="space-y-8 fade-in" id="classifier">
+            <div class="flex flex-col md:flex-row gap-8 items-start">
+                <div class="md:w-1/3">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4">Interactive Data Classifier</h2>
+                    <p class="text-slate-600 mb-6">
+                        <strong>The Golden Rule:</strong> Never send <em>Restricted</em> or <em>Private</em> data to public AI models. 
+                        Use this tool to practice identifying what data is safe for public GenAI tools (like ChatGPT Free) vs. Enterprise instances.
+                    </p>
+                    <div class="bg-indigo-900 text-white p-6 rounded-xl shadow-lg">
+                        <div class="mb-4">
+                            <span class="text-4xl block mb-2">🚦</span>
+                            <h3 class="text-xl font-bold">Check Before You Paste</h3>
+                        </div>
+                        <p class="text-indigo-200 text-sm mb-4">Select a data type to see the security protocol.</p>
+                        
+                        <div class="space-y-2">
+                            <select class="w-full p-3 text-slate-900 rounded-lg border-2 border-indigo-400 focus:outline-none focus:border-white transition-colors" id="dataSelector" onchange="classifyData()">
+                                <option disabled="" selected="" value="">Select Data Type...</option>
+                                <option value="pii">Customer Names/Emails (PII)</option>
+                                <option value="code_keys">API Keys / AWS Secrets</option>
+                                <option value="marketing_copy">General Ad Copy Drafts</option>
+                                <option value="strategy">Unreleased Product Strategy</option>
+                                <option value="public_code">Open Source Boilerplate</option>
+                                <option value="financials">Q3 Financial Projections</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:w-2/3 bg-white rounded-xl border border-slate-200 p-8 shadow-sm min-h-[300px] flex items-center justify-center relative overflow-hidden">
+                    <div class="text-center w-full" id="classificationResult">
+                        <div class="text-slate-400 text-lg">
+                            Select an item from the dropdown to analyze its risk level.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Role-Specific Simulation -->
+        <section class="space-y-6 fade-in" id="simulation">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <h2 class="text-2xl font-bold text-slate-900">Role-Based Simulation</h2>
+                <p class="text-slate-600">
+                    Security context changes based on your role. Select your department to run through a realistic scenario found in the "Operational Guidelines" section of the report.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <!-- Tabs -->
+                <div class="flex border-b border-slate-200">
+                    <button class="flex-1 py-4 text-center font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors border-b-2 border-transparent" id="tab-marketing" onclick="setRole('marketing')">
+                        📢 Marketing &amp; Sales
+                    </button>
+                    <button class="flex-1 py-4 text-center font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors border-b-2 border-transparent" id="tab-dev" onclick="setRole('dev')">
+                        💻 Developers &amp; Engineering
+                    </button>
+                </div>
+
+                <!-- Simulation Content -->
+                <div class="p-8">
+                    <div class="max-w-4xl mx-auto" id="scenario-container">
+                        <!-- Dynamic Content Loaded Here -->
+                        <div class="text-center py-12">
+                            <span class="text-5xl block mb-4">👤</span>
+                            <h3 class="text-xl font-bold text-slate-800">Select your department above to start the training simulation.</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Risk Visualizer (Interactive Chart) -->
+        <section class="space-y-6 fade-in">
+             <div class="bg-slate-900 rounded-2xl p-8 text-white">
+                <div class="flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="lg:w-1/2 space-y-4">
+                        <h2 class="text-2xl font-bold text-white">The Impact of Hallucination &amp; Bias</h2>
+                        <p class="text-slate-300">
+                            The report highlights that security isn't just about leaks; it's about <strong>integrity</strong>. 
+                            GenAI can confidently state falsehoods ("Hallucinations").
+                        </p>
+                        <p class="text-slate-300">
+                            <strong>Interactive Analysis:</strong> Click the radar chart segments to understand how different LLM failures impact business operations.
+                        </p>
+                        <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm mt-4 hidden" id="riskDetail">
+                            <h4 class="font-bold text-indigo-300 mb-1" id="riskTitle">Risk Title</h4>
+                            <p class="text-sm text-slate-200" id="riskDesc">Description goes here.</p>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 w-full">
+                        <div class="chart-container">
+                            <canvas id="riskRadar"></canvas>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Section 5: Certification Quiz -->
+        <section class="max-w-3xl mx-auto space-y-8 py-8 fade-in" id="quiz">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Final Certification</h2>
+                <p class="text-slate-600">Verify your knowledge to complete the training.</p>
+            </div>
+
+            <div class="bg-white rounded-xl border border-slate-200 shadow-lg p-8">
+                <div class="space-y-8" id="quiz-container">
+                    <!-- Dynamic Quiz Questions -->
+                </div>
+                
+                <div class="hidden text-center py-6" id="quiz-results">
+                    <div class="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4" id="score-circle">
+                        <span class="text-2xl font-bold text-indigo-700" id="score-text">0/3</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Quiz Complete</h3>
+                    <p class="text-slate-600 mb-6" id="score-feedback">Review your results.</p>
+                    <button class="text-indigo-600 hover:underline" onclick="resetQuiz()">Retake Quiz</button>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-100 flex justify-end">
+                    <button class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-md" id="submit-quiz" onclick="submitQuiz()">
+                        Submit Answers
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Visualization & Content Choices: 
+         1. Incident Chart (Doughnut): Report Info (Security Incidents) -> Goal (Inform) -> Doughnut Chart -> Quick visual of breakdown.
+         2. Awareness Chart (Bar): Report Info (Adoption Gap) -> Goal (Compare) -> Bar Chart -> Contrasts high usage with low security awareness.
+         3. Data Classifier (Interactive DOM): Report Info (Data Classification Policy) -> Goal (Train/Inform) -> Input/Output Simulator -> Active learning of policy.
+         4. Risk Radar (Radar Chart): Report Info (LLM Risks) -> Goal (Explore) -> Radar Chart + Click Event -> Shows multi-dimensional nature of AI risk.
+         5. Role Simulation (Tabs/Cards): Report Info (Departmental Procedures) -> Goal (Apply) -> Interactive Scenario -> Relevance to specific user jobs.
+         -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script>
+        // --- State Management ---
+        const state = {
+            currentRole: null,
+            quizScore: 0,
+            scenarios: {
+                marketing: {
+                    title: "Scenario: The Email Campaign",
+                    desc: "You need to write personalized email copy for 5,000 customers. You have a CSV file with their Names, Purchase History, and Email Addresses.",
+                    question: "How do you use GenAI for this task?",
+                    options: [
+                        {
+                            label: "Upload the full CSV to ChatGPT (Public) to generate personalized emails.",
+                            correct: false,
+                            feedback: "❌ CRITICAL ERROR: You just leaked PII (Personally Identifiable Information) of 5,000 customers to a public model. This is a GDPR/CCPA violation."
+                        },
+                        {
+                            label: "Anonymize the data first, or use the approved Enterprise Internal AI Sandbox.",
+                            correct: true,
+                            feedback: "✅ CORRECT: Using Enterprise instances ensures data stays within our VPC. Anonymization is a great secondary defense."
+                        },
+                        {
+                            label: "Copy only the names and paste them into the prompt one by one.",
+                            correct: false,
+                            feedback: "❌ INCORRECT: Even names alone are PII. Pasting them into a public model trains the model on our customer base."
+                        }
+                    ]
+                },
+                dev: {
+                    title: "Scenario: Refactoring Legacy Code",
+                    desc: "You are refactoring a legacy authentication module that connects to AWS. The code is messy and you want Copilot/ChatGPT to clean it up.",
+                    question: "What is the mandatory first step?",
+                    options: [
+                        {
+                            label: "Copy the file and paste it into the chat window immediately.",
+                            correct: false,
+                            feedback: "❌ RISK ALERT: The code might contain hardcoded API keys or secrets. You must scan for secrets first."
+                        },
+                        {
+                            label: "Scrub all secrets/keys, then paste into Enterprise AI, then audit the output.",
+                            correct: true,
+                            feedback: "✅ CORRECT: Sanitize inputs (remove secrets) and Verify outputs (check for hallucinated packages or vulnerabilities)."
+                        },
+                        {
+                            label: "Use a public AI tool since the code is old and likely not sensitive.",
+                            correct: false,
+                            feedback: "❌ INCORRECT: Legacy code often contains internal logic and vulnerabilities that attackers could exploit if leaked."
+                        }
+                    ]
+                }
+            },
+            quizData: [
+                {
+                    q: "Which of the following data types is PERMITTED in public, non-enterprise GenAI tools?",
+                    options: ["Customer Email Lists", "Unreleased Product Code", "Generic Marketing Copy Templates", "Employee Performance Reviews"],
+                    a: 2 // Index of correct answer
+                },
+                {
+                    q: "What is 'AI Hallucination'?",
+                    options: ["When AI becomes sentient", "When AI confidently generates false or non-existent information", "When AI refuses to answer", "A visual glitch in image generation"],
+                    a: 1
+                },
+                {
+                    q: "You find a great code snippet generated by AI. What must you do?",
+                    options: ["Commit it immediately to save time", "Review it for security flaws and logical errors", "Attribute the AI in the comments", "Run it in production to test it"],
+                    a: 1
+                }
+            ]
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            renderQuiz();
+        });
+
+        // --- Navigation Logic ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Chart.js Implementations ---
+        function initCharts() {
+            // Chart 1: Incidents (Doughnut)
+            const ctx1 = document.getElementById('incidentChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Data Leakage (PII/IP)', 'Inaccurate Output', 'Copyright Issues', 'Prompt Injection'],
+                    datasets: [{
+                        data: [45, 30, 15, 10],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#6366f1', '#10b981'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Awareness (Bar)
+            const ctx2 = document.getElementById('awarenessChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Active Usage', 'Knows Data Policy', 'Verifies Output'],
+                    datasets: [{
+                        label: 'Employee Percentage',
+                        data: [85, 30, 45],
+                        backgroundColor: ['#6366f1', '#f59e0b', '#10b981'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Chart 3: Risk Radar (Radar)
+            const ctx3 = document.getElementById('riskRadar').getContext('2d');
+            const riskChart = new Chart(ctx3, {
+                type: 'radar',
+                data: {
+                    labels: ['Privacy Risk', 'IP Theft', 'Hallucination', 'Bias', 'Security Vulns'],
+                    datasets: [{
+                        label: 'Risk Severity Impact',
+                        data: [90, 75, 60, 50, 85],
+                        fill: true,
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        borderColor: 'rgb(99, 102, 241)',
+                        pointBackgroundColor: 'rgb(99, 102, 241)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(99, 102, 241)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                            pointLabels: { color: 'white', font: { size: 12 } },
+                            ticks: { display: false, backdropColor: 'transparent' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` Impact Score: ${context.raw}/100`;
+                                }
+                            }
+                        }
+                    },
+                    onClick: (e) => {
+                        const points = riskChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+                        if (points.length) {
+                            const index = points[0].index;
+                            const labels = ['Privacy Risk', 'IP Theft', 'Hallucination', 'Bias', 'Security Vulnerabilities'];
+                            const descs = [
+                                "Leaking PII or PHI into public models violates GDPR/CCPA and erodes trust.",
+                                "Generating content that infringes on existing copyrights, or leaking our own trade secrets.",
+                                "The model confidently presenting false facts, leading to bad business decisions.",
+                                "Model outputs reinforcing harmful stereotypes or excluding demographics.",
+                                "Generated code introducing SQL injection flaws or malicious package imports."
+                            ];
+                            document.getElementById('riskDetail').classList.remove('hidden');
+                            document.getElementById('riskTitle').innerText = labels[index];
+                            document.getElementById('riskDesc').innerText = descs[index];
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Data Classifier Logic ---
+        function classifyData() {
+            const val = document.getElementById('dataSelector').value;
+            const resDiv = document.getElementById('classificationResult');
+            
+            let html = '';
+            
+            switch(val) {
+                case 'pii':
+                case 'code_keys':
+                case 'strategy':
+                case 'financials':
+                    html = `
+                        <div class="animate-pulse">
+                            <div class="text-6xl mb-4">⛔</div>
+                            <h3 class="text-2xl font-bold text-rose-600 mb-2">PROHIBITED / RESTRICTED</h3>
+                            <p class="text-slate-600 max-w-md mx-auto">
+                                This is <strong>Class 4 Highly Sensitive Data</strong>. 
+                                <br><br>
+                                <strong>Protocol:</strong> Do NOT use public AI. Use <em>only</em> approved internal enterprise instances with zero-retention policies.
+                            </p>
+                        </div>
+                    `;
+                    break;
+                case 'marketing_copy':
+                case 'public_code':
+                    html = `
+                        <div>
+                            <div class="text-6xl mb-4">✅</div>
+                            <h3 class="text-2xl font-bold text-emerald-600 mb-2">PERMITTED (PUBLIC)</h3>
+                            <p class="text-slate-600 max-w-md mx-auto">
+                                This data is classified as <strong>Public / Low Risk</strong>.
+                                <br><br>
+                                <strong>Protocol:</strong> You may use tools like ChatGPT or Midjourney, but <em>verify</em> the output for accuracy and bias before publishing.
+                            </p>
+                        </div>
+                    `;
+                    break;
+                default:
+                    html = '';
+            }
+            
+            resDiv.innerHTML = html;
+        }
+
+        // --- Role Simulation Logic ---
+        function setRole(role) {
+            state.currentRole = role;
+            
+            // Update Tab Styles
+            document.getElementById('tab-marketing').className = role === 'marketing' 
+                ? "flex-1 py-4 text-center font-bold text-indigo-700 bg-indigo-50 border-b-2 border-indigo-600 transition-colors"
+                : "flex-1 py-4 text-center font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors border-b-2 border-transparent";
+            
+            document.getElementById('tab-dev').className = role === 'dev' 
+                ? "flex-1 py-4 text-center font-bold text-indigo-700 bg-indigo-50 border-b-2 border-indigo-600 transition-colors"
+                : "flex-1 py-4 text-center font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors border-b-2 border-transparent";
+
+            // Render Scenario
+            const data = state.scenarios[role];
+            const container = document.getElementById('scenario-container');
+            
+            let optionsHtml = '';
+            data.options.forEach((opt, idx) => {
+                optionsHtml += `
+                    <button onclick="checkScenario(${idx})" class="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all mb-3 group">
+                        <div class="flex items-start">
+                            <span class="bg-slate-100 text-slate-500 font-bold px-2 py-1 rounded text-xs mr-3 group-hover:bg-indigo-200 group-hover:text-indigo-800">OPT ${String.fromCharCode(65+idx)}</span>
+                            <span class="text-slate-700 text-sm font-medium">${opt.label}</span>
+                        </div>
+                    </button>
+                    <div id="feedback-${idx}" class="hidden mt-2 mb-4 p-3 rounded text-sm"></div>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="fade-in">
+                    <div class="bg-slate-100 rounded-lg p-4 mb-6 inline-block">
+                        <span class="font-bold text-slate-600 uppercase tracking-wide text-xs">Role: ${role === 'marketing' ? 'Marketing & Sales' : 'Engineering'}</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">${data.title}</h3>
+                    <p class="text-lg text-slate-600 mb-8 border-l-4 border-indigo-300 pl-4">${data.desc}</p>
+                    
+                    <h4 class="font-bold text-indigo-900 mb-4">Question: ${data.question}</h4>
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkScenario(optionIdx) {
+            const role = state.currentRole;
+            const data = state.scenarios[role];
+            const option = data.options[optionIdx];
+            const feedbackEl = document.getElementById(`feedback-${optionIdx}`);
+            
+            // Hide all other feedbacks first
+            data.options.forEach((_, idx) => {
+                 document.getElementById(`feedback-${idx}`).classList.add('hidden');
+            });
+
+            feedbackEl.innerText = option.feedback;
+            feedbackEl.className = option.correct 
+                ? "mt-2 mb-4 p-4 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-sm block fade-in" 
+                : "mt-2 mb-4 p-4 bg-rose-100 text-rose-800 border border-rose-300 rounded-lg text-sm block fade-in";
+        }
+
+        // --- Quiz Logic ---
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            let html = '';
+            
+            state.quizData.forEach((item, idx) => {
+                let opts = '';
+                item.options.forEach((opt, oIdx) => {
+                    opts += `
+                        <label class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-50 cursor-pointer">
+                            <input type="radio" name="q${idx}" value="${oIdx}" class="form-radio h-5 w-5 text-indigo-600">
+                            <span class="text-slate-700">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                html += `
+                    <div class="quiz-item border-b border-slate-100 pb-6 last:border-0">
+                        <p class="font-bold text-lg text-slate-800 mb-3">${idx + 1}. ${item.q}</p>
+                        <div class="space-y-1">
+                            ${opts}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            let total = state.quizData.length;
+            
+            state.quizData.forEach((item, idx) => {
+                const selected = document.querySelector(`input[name="q${idx}"]:checked`);
+                if (selected && parseInt(selected.value) === item.a) {
+                    score++;
+                }
+            });
+
+            const resultsDiv = document.getElementById('quiz-results');
+            const container = document.getElementById('quiz-container');
+            const submitBtn = document.getElementById('submit-quiz');
+            const scoreText = document.getElementById('score-text');
+            const feedback = document.getElementById('score-feedback');
+
+            container.classList.add('hidden');
+            submitBtn.classList.add('hidden');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.classList.add('fade-in');
+
+            scoreText.innerText = `${score}/${total}`;
+            
+            if (score === total) {
+                scoreText.parentElement.className = "w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4";
+                scoreText.className = "text-2xl font-bold text-emerald-700";
+                feedback.innerHTML = `<span class="font-bold text-emerald-600">Perfect Score!</span><br>You are now certified to use GenAI tools securely.`;
+            } else if (score > 0) {
+                 feedback.innerHTML = `<span class="font-bold text-indigo-600">Good Effort.</span><br>Review the materials and try again to achieve 100%.`;
+            } else {
+                 feedback.innerHTML = `<span class="font-bold text-rose-600">Needs Improvement.</span><br>Please review the Risk Landscape and Data Filter sections.`;
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-results').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('submit-quiz').classList.remove('hidden');
+            
+            // Clear inputs
+            const radios = document.querySelectorAll('input[type="radio"]');
+            radios.forEach(r => r.checked = false);
+        }
+
+    </script>
+
+</body></html>

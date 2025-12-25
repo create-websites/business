@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive guide for data architects comparing NoSQL Databases vs. Vector Databases. Features a decision engine to choose the right storage engine for AI, RAG, and transactional workloads." name="description"/>
+    <meta content="NoSQL, Vector Database, MongoDB, Pinecone, DynamoDB, Weaviate, Embeddings, Database Architecture, AI Infrastructure, RAG, Semantic Search, Transactional vs Analytical" name="keywords"/>
+    <title>Data Architect: NoSQL vs. Vector DB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #0f172a; /* slate-900 */
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        .nav-item.active {
+            background-color: #e2e8f0;
+            border-left: 4px solid #0f172a; /* slate-900 */
+            font-weight: 600;
+        }
+
+        /* Interactive NoSQL Visualization Styles */
+        .json-card {
+            transition: all 0.2s ease;
+        }
+        .json-card.highlight {
+            border-color: #0d9488; /* teal-600 */
+            background-color: #f0fdfa; /* teal-50 */
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <!-- Chosen Palette: Slate (Background), Teal (NoSQL), Violet (Vector), Amber (Decision) -->
+    <!-- Application Structure Plan: Dashboard Layout.
+         - Sidebar: Intro, NoSQL Deep Dive, Vector Deep Dive, Comparative Analysis, Decision Engine.
+         - Content Area: Dynamic injection.
+         - Logic: Distinguishes between "Exact Match/Transactional" (NoSQL) and "Probabilistic/Semantic" (Vector).
+    -->
+    <!-- Visualization & Content Choices:
+         - NoSQL View: Interactive "Key-Value Store" simulation. User types ID, finds Doc instantly. Visualizes Hash Map/B-Tree speed.
+         - Vector View: 3D-to-2D Scatter Plot simulation showing "Nearest Neighbor" search radius.
+         - Comparison: Radar Chart comparing ACID compliance, Semantic capabilities, Exact Match speed, etc.
+         - Decision Engine: Form-based logic tree.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Mobile Header -->
+    <header class="md:hidden bg-slate-900 text-slate-50 p-4 flex justify-between items-center shadow-md z-20">
+        <h1 class="text-lg font-bold"><i class="fas fa-database mr-2"></i>Data Architect</h1>
+        <button class="text-slate-50 focus:outline-none" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="bg-white w-64 flex-shrink-0 border-r border-slate-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10 h-full flex flex-col" id="sidebar">
+            <div class="p-6 border-b border-slate-200 hidden md:block">
+                <h1 class="text-2xl font-bold text-slate-800"><i class="fas fa-database mr-2 text-teal-600"></i>Data Architect</h1>
+                <p class="text-xs text-slate-500 mt-2">Storage Engine Decision Guide</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1">
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-slate-50 transition-colors flex items-center active" id="nav-intro" onclick="navigateTo('intro')">
+                            <i class="fas fa-info-circle w-6"></i> Introduction
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-slate-50 transition-colors flex items-center" id="nav-nosql" onclick="navigateTo('nosql')">
+                            <i class="fas fa-layer-group w-6 text-teal-600"></i> NoSQL DB
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-slate-50 transition-colors flex items-center" id="nav-vector" onclick="navigateTo('vector')">
+                            <i class="fas fa-brain w-6 text-violet-600"></i> Vector DB
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-slate-50 transition-colors flex items-center" id="nav-compare" onclick="navigateTo('compare')">
+                            <i class="fas fa-balance-scale w-6"></i> Comparative Analysis
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-slate-50 transition-colors flex items-center" id="nav-decision" onclick="navigateTo('decision')">
+                            <i class="fas fa-calculator w-6 text-amber-600"></i> Decision Engine
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="p-4 border-t border-slate-200 bg-slate-50">
+                <div class="text-xs text-slate-500">
+                    <p class="font-semibold">Current Context:</p>
+                    <p id="context-indicator">Introduction</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-slate-100 p-4 md:p-8" id="main-content">
+            <!-- Content injected via JS -->
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden" id="overlay"></div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'intro',
+            decisionInputs: {
+                dataNature: null,
+                queryType: null,
+                consistency: null,
+                volume: null
+            },
+            // Mock data for NoSQL visualization
+            nosqlData: [
+                { id: "user_101", type: "User", content: "{ name: 'Alice', role: 'Admin' }" },
+                { id: "prod_550", type: "Product", content: "{ sku: 'X1', price: 99.99 }" },
+                { id: "log_992", type: "Log", content: "{ err: 'Timeout', ts: 16200 }" },
+                { id: "user_102", type: "User", content: "{ name: 'Bob', role: 'Viewer' }" },
+                { id: "cart_331", type: "Cart", content: "{ items: [550, 221] }" }
+            ]
+        };
+
+        // --- Content Store ---
+        const contentData = {
+            intro: {
+                title: "The Storage Dilemma: Exact vs. Semantic",
+                content: `
+                    <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                        <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-slate-800">
+                            <h2 class="text-2xl font-bold text-slate-800 mb-4">The New Database Landscape</h2>
+                            <p class="text-slate-600 leading-relaxed text-lg">
+                                For a decade, "NoSQL" was the default answer for flexible, scalable data. Then came Generative AI. Now, applications don't just need to look up data by <strong>Key</strong>; they need to understand data by <strong>Meaning</strong>. This guide helps you choose between the proven reliability of NoSQL and the cognitive capabilities of Vector Databases.
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-teal-500" onclick="navigateTo('nosql')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 mr-3">
+                                        <i class="fas fa-layer-group"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">NoSQL Databases</h3>
+                                </div>
+                                <p class="text-slate-600 mb-4">Document, Key-Value, and Column stores. Built for high throughput, flexible schemas, and <strong>exact match</strong> retrieval.</p>
+                                <span class="text-teal-600 font-semibold text-sm">Explore Strategy &rarr;</span>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-violet-500" onclick="navigateTo('vector')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 mr-3">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">Vector Databases</h3>
+                                </div>
+                                <p class="text-slate-600 mb-4">Built to store high-dimensional embeddings. Optimized for <strong>similarity search</strong> and AI/LLM memory.</p>
+                                <span class="text-violet-600 font-semibold text-sm">Explore Strategy &rarr;</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-200 p-6 rounded-xl text-center mt-8">
+                            <h3 class="text-lg font-bold text-slate-700 mb-2">Building an AI App?</h3>
+                            <button onclick="navigateTo('decision')" class="bg-slate-800 text-white px-6 py-3 rounded-lg shadow hover:bg-slate-700 transition-colors">
+                                Launch Decision Engine
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            nosql: {
+                title: "NoSQL: The Flexible Scaler",
+                description: "NoSQL (e.g., MongoDB, DynamoDB, Cassandra) excels at handling large volumes of structured or semi-structured data where you know exactly *what* you are looking for (by ID, Category, or Index).",
+                vizScript: 'renderNoSQLViz'
+            },
+            vector: {
+                title: "Vector DB: The AI Memory",
+                description: "Vector DBs (e.g., Pinecone, Weaviate, Milvus) store data as mathematical vectors (embeddings). They don't look for exact text matches; they look for 'nearest neighbors' in a multi-dimensional concept space.",
+                vizScript: 'renderVectorViz'
+            },
+            compare: {
+                title: "Head-to-Head Comparison",
+                description: "Comparing architectural trade-offs. NoSQL offers consistency and exactness. Vector DBs offer semantic understanding and fuzzy matching.",
+                vizScript: 'renderComparisonChart'
+            },
+            decision: {
+                title: "Infrastructure Decision Engine",
+                description: "Answer four key questions about your workload to receive a tailored infrastructure recommendation.",
+                vizScript: 'renderDecisionTool'
+            }
+        };
+
+        // --- Core Navigation ---
+        function navigateTo(sectionId) {
+            state.currentSection = sectionId;
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            document.getElementById('context-indicator').innerText = contentData[sectionId].title;
+
+            // Mobile menu close
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebar').classList.remove('translate-x-0');
+            document.getElementById('overlay').classList.add('hidden');
+
+            renderContent(sectionId);
+        }
+
+        function renderContent(sectionId) {
+            const main = document.getElementById('main-content');
+            const data = contentData[sectionId];
+
+            if (sectionId === 'intro') {
+                main.innerHTML = data.content;
+                return;
+            }
+
+            let html = `
+                <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">${data.title}</h2>
+                        <p class="text-slate-600">${data.description}</p>
+                    </div>
+            `;
+
+            if (sectionId === 'decision') {
+                html += `<div id="decision-container" class="grid md:grid-cols-3 gap-6"></div>`;
+            } else if (sectionId === 'nosql') {
+                // Custom HTML for NoSQL interactive demo
+                 html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-teal-700 mb-4">Interactive Key-Value Lookup</h3>
+                            <div class="mb-4">
+                                <input type="text" id="nosql-search" placeholder="Enter Key (e.g., 'user_101')" class="w-full p-2 border border-slate-300 rounded focus:border-teal-500 focus:outline-none font-mono text-sm">
+                            </div>
+                            <div id="nosql-grid" class="flex-grow bg-slate-50 rounded-lg border border-slate-200 p-4 space-y-2 overflow-y-auto h-80">
+                                <!-- Cards injected by JS -->
+                            </div>
+                            <p class="text-xs text-slate-400 mt-2 text-center">Simulates O(1) direct access speed of Key-Value/Document stores.</p>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col justify-center">
+                            <h3 class="font-bold text-slate-700 mb-4 text-center">Visualization</h3>
+                            <div class="chart-container">
+                                <canvas id="mainChart"></canvas>
+                            </div>
+                            <p class="text-center text-xs text-slate-400 mt-2" id="chart-caption"></p>
+                        </div>
+                        <div class="space-y-6">
+                             ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            main.innerHTML = html;
+
+            if (data.vizScript === 'renderNoSQLViz') renderNoSQLViz();
+            if (data.vizScript === 'renderVectorViz') renderVectorViz();
+            if (data.vizScript === 'renderComparisonChart') renderComparisonChart();
+            if (data.vizScript === 'renderDecisionTool') renderDecisionTool();
+        }
+
+        function getDetailsHTML(sectionId) {
+            if (sectionId === 'nosql') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-teal-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Structure Flexibility:</strong> Store complex JSON objects without rigid schema.</li>
+                            <li><strong>Operational Speed:</strong> Incredibly fast reads/writes for known keys.</li>
+                            <li><strong>Maturity:</strong> Robust tooling, backups, and consistency models (ACID options).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>"Dumb" Search:</strong> Can't find "happy customers" if the JSON says "delighted clients" (no semantic match).</li>
+                            <li><strong>Exactness:</strong> Requires knowing the query parameters precisely.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'vector') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-violet-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-violet-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Semantic Search:</strong> Finds concepts, not just keywords. (e.g., "cold" matches "freezing").</li>
+                            <li><strong>Multimodal:</strong> Can store embeddings for images, audio, and video alongside text.</li>
+                            <li><strong>GenAI Core:</strong> The backbone of RAG (Retrieval Augmented Generation).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Approximate:</strong> Results are "Nearest Neighbors," not guaranteed exact matches.</li>
+                            <li><strong>Write Cost:</strong> Re-indexing vectors is computationally expensive compared to simple inserts.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'compare') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-4">Architecture Summary</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-teal-600 text-sm uppercase">NoSQL (Teal)</h4>
+                                <p class="text-sm text-slate-600">The operational workhorse. Use for user profiles, shopping carts, activity logs, and any system requiring high-speed transaction processing or retrieval by ID.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-violet-600 text-sm uppercase">Vector DB (Violet)</h4>
+                                <p class="text-sm text-slate-600">The AI brain. Use for semantic search engines, recommendation systems, and long-term memory for LLMs.</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h4 class="font-bold text-slate-600 text-sm uppercase">The "Hybrid" Trend</h4>
+                                <p class="text-sm text-slate-600">Many NoSQL DBs (MongoDB, Cassandra) now support Vector Search. Use hybrid when you need to filter by exact metadata (e.g., "User ID = 123") <em>and</em> search semantically (e.g., "Find emails about billing").</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Visualizations ---
+
+        // 1. NoSQL Interactive Viz
+        function renderNoSQLViz() {
+            const grid = document.getElementById('nosql-grid');
+            const input = document.getElementById('nosql-search');
+
+            // Initial Render
+            renderCards(state.nosqlData);
+
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase();
+                if (!val) {
+                    renderCards(state.nosqlData);
+                    return;
+                }
+                // Filter Logic
+                const filtered = state.nosqlData.map(item => {
+                    const match = item.id.toLowerCase().includes(val);
+                    return { ...item, highlight: match };
+                });
+                renderCards(filtered, true);
+            });
+
+            function renderCards(items, filtering = false) {
+                grid.innerHTML = items.map(item => `
+                    <div class="json-card border rounded p-3 bg-white font-mono text-xs flex justify-between items-center ${item.highlight ? 'highlight' : (filtering ? 'opacity-30' : '')}">
+                        <div class="text-teal-700 font-bold">${item.id}</div>
+                        <div class="text-slate-500 truncate ml-2">${item.content}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 2. Vector Viz (Scatter Plot)
+        function renderVectorViz() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Visualizing the 'Embedding Space'. Concepts (dots) cluster together based on meaning.";
+
+            // Clusters
+            // Cluster 1: Food (Fruits)
+            const c1 = Array.from({length: 10}, () => ({x: Math.random() * 20 + 10, y: Math.random() * 20 + 10}));
+            // Cluster 2: Tech (Computers)
+            const c2 = Array.from({length: 10}, () => ({x: Math.random() * 20 + 60, y: Math.random() * 20 + 60}));
+            // Search Query: "Apple" (Ambiguous, but closer to fruit in this context?)
+            const query = [{x: 25, y: 25}]; 
+
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: 'Concept: Food', data: c1, backgroundColor: 'rgba(16, 185, 129, 0.6)' },
+                        { label: 'Concept: Tech', data: c2, backgroundColor: 'rgba(139, 92, 246, 0.6)' },
+                        { 
+                            label: 'Search Query', 
+                            data: query, 
+                            backgroundColor: 'rgba(255, 159, 28, 1)', 
+                            pointRadius: 8, 
+                            pointBorderColor: 'white', 
+                            pointBorderWidth: 2 
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ctx.dataset.label
+                            }
+                        },
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        // 3. Comparison Radar
+        function renderComparisonChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Comparing Key Capabilities (Outer is Stronger)";
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Transactional Integrity', 'Semantic Search', 'Exact Match Speed', 'Schema Flexibility', 'AI Readiness'],
+                    datasets: [{
+                        label: 'NoSQL DB',
+                        data: [9, 2, 10, 9, 3], // High trans, low semantic, high exact, high flex, low AI
+                        fill: true,
+                        backgroundColor: 'rgba(20, 184, 166, 0.2)', // teal
+                        borderColor: 'rgb(20, 184, 166)',
+                        pointBackgroundColor: 'rgb(20, 184, 166)',
+                    }, {
+                        label: 'Vector DB',
+                        data: [2, 10, 4, 3, 10], // Low trans, high semantic, low exact, low flex (strict vectors), high AI
+                        fill: true,
+                        backgroundColor: 'rgba(139, 92, 246, 0.2)', // violet
+                        borderColor: 'rgb(139, 92, 246)',
+                        pointBackgroundColor: 'rgb(139, 92, 246)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 3 } },
+                    scales: { r: { suggestedMin: 0, suggestedMax: 10, angleLines: { display: false } } }
+                }
+            });
+        }
+
+        // 4. Decision Engine
+        function renderDecisionTool() {
+            const container = document.getElementById('decision-container');
+            container.innerHTML = `
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-6">Workload Characteristics</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Q1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">1. Primary Data Type</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('dataNature', 'structured', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>JSON/Records</strong><br>User profiles, logs, catalogs.
+                                </button>
+                                <button onclick="selectOption('dataNature', 'unstructured', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Embeddings</strong><br>Vectors from Images, Text, Audio.
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">2. Search Requirement</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('queryType', 'exact', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Exact Match</strong><br>Filter by ID, Date, Category.
+                                </button>
+                                <button onclick="selectOption('queryType', 'semantic', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Similarity</strong><br>"Find items similar to this."
+                                </button>
+                            </div>
+                        </div>
+
+                         <!-- Q3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">3. Consistency Needs</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('consistency', 'high', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>High (ACID)</strong><br>Banking, Inventory, Auth.
+                                </button>
+                                <button onclick="selectOption('consistency', 'low', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Eventual/Approx</strong><br>Recommendations, Search results.
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1">
+                    <div id="recommendation-card" class="bg-slate-800 text-white p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500">
+                        <i class="fas fa-server text-4xl text-slate-500 mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">Awaiting Input</h4>
+                        <p class="text-slate-400 text-sm">Select options to see the recommendation.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectOption = function(category, value, btnElement) {
+            state.decisionInputs[category] = value;
+            
+            // Visual Toggle
+            const parent = btnElement.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-teal-500', 'bg-teal-50', 'border-teal-500');
+                b.classList.add('border-slate-200');
+            });
+            btnElement.classList.remove('border-slate-200');
+            btnElement.classList.add('ring-2', 'ring-teal-500', 'bg-teal-50', 'border-teal-500');
+
+            calculateDecision();
+        }
+
+        function calculateDecision() {
+            const { dataNature, queryType, consistency } = state.decisionInputs;
+            if (!dataNature || !queryType || !consistency) return;
+
+            const card = document.getElementById('recommendation-card');
+            let title, icon, desc, bgClass;
+
+            // Logic Tree
+            // 1. Structured + Exact + High Consistency -> Pure NoSQL
+            // 2. Unstructured + Semantic -> Pure Vector
+            // 3. Mixed -> Hybrid
+
+            let scoreNoSQL = 0;
+            let scoreVector = 0;
+
+            if (dataNature === 'structured') scoreNoSQL += 2; else scoreVector += 2;
+            if (queryType === 'exact') scoreNoSQL += 2; else scoreVector += 2;
+            if (consistency === 'high') scoreNoSQL += 2; // Vector DBs rarely prioritize ACID
+
+            // Hybrid Check: Need Semantic BUT also Structured/High Consistency
+            const isHybrid = (queryType === 'semantic' && (dataNature === 'structured' || consistency === 'high'));
+
+            if (isHybrid) {
+                title = "Hybrid Approach";
+                icon = "fa-random";
+                desc = "You need the structure/filtering of NoSQL combined with Semantic Search. Use a <strong>NoSQL DB with Vector Support</strong> (e.g., MongoDB Atlas Vector, Cassandra) OR a Vector DB with robust metadata filtering.";
+                bgClass = "bg-indigo-600";
+            } else if (scoreNoSQL > scoreVector) {
+                title = "Pure NoSQL DB";
+                icon = "fa-layer-group";
+                desc = "Your workload is operational. You need reliable CRUD operations, exact filtering, and high throughput. Stick to MongoDB, DynamoDB, or similar.";
+                bgClass = "bg-teal-600";
+            } else {
+                title = "Pure Vector DB";
+                icon = "fa-brain";
+                desc = "Your primary goal is similarity search for AI/ML. You are storing embeddings. Use a specialized Vector Database like Pinecone, Weaviate, or Milvus.";
+                bgClass = "bg-violet-600";
+            }
+
+            card.className = `p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500 ${bgClass} text-white`;
+            card.innerHTML = `
+                <div class="animate-bounce mb-4"><i class="fas ${icon} text-4xl"></i></div>
+                <h4 class="text-2xl font-bold mb-3">${title}</h4>
+                <p class="text-white/90 text-sm leading-relaxed">${desc}</p>
+                <button onclick="navigateTo('compare')" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-xs uppercase tracking-wider font-bold transition-colors">Compare Details</button>
+            `;
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent('intro');
+
+            // Mobile Menu
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            btn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('hidden');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('hidden');
+            });
+        });
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

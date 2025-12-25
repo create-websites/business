@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Exploring RAG Architectures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: "Soothing Neutrals" -->
+    <!-- Application Structure Plan: The application is designed as a guided, linear journey for educational purposes. It starts with a high-level introduction, breaks down core concepts, then allows for deep exploration of specific architectures, and concludes with a direct comparison. This thematic, scrolling structure was chosen over a dashboard because the goal is to build understanding progressively. Key interactions include: 1) A tab-based system in the 'Architectures' section to switch between Naive, Advanced, and Modular RAG models, which dynamically updates a visual diagram and textual explanation. This allows for focused learning and direct comparison of flows. 2) An interactive radar chart in the 'Comparison' section where users can toggle architectures to visually understand their trade-offs. This structure supports a user flow from "what is it?" to "how does it work?" to "which is better for what scenario?", which is ideal for explaining a complex technical topic. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Core RAG components (Retriever, Generator, Index). Goal: Inform. Viz/Presentation: HTML/CSS diagram. Interaction: Static. Justification: Simple, clear representation of foundational concepts before adding complexity. Library/Method: Tailwind CSS Flexbox.
+        - Report Info: Process flows of Naive, Advanced, and Modular RAG. Goal: Organize/Explain. Viz/Presentation: Interactive HTML/CSS flowcharts. Interaction: Clicking tabs to switch between diagrams and descriptions. Justification: Enables users to actively select and focus on one architecture at a time, making the complex flows easier to digest. The visual flow is critical for understanding the sequence of operations. Library/Method: Vanilla JS for state management and DOM manipulation.
+        - Report Info: Comparative metrics (Complexity, Performance, Cost, Flexibility). Goal: Compare. Viz/Presentation: Radar Chart. Interaction: Checkboxes to dynamically add/remove architectures from the chart. Justification: A radar chart is highly effective for multi-variate comparison, showing the strengths and weaknesses of each architecture in a single, easy-to-understand graphic. Library/Method: Chart.js (Canvas).
+        - Report Info: Detailed pros, cons, and descriptions. Goal: Inform. Viz/Presentation: Structured text blocks (lists, paragraphs). Interaction: Dynamically shown/hidden based on tab selection. Justification: Text is necessary for detailed explanation, and linking it to the interactive diagram selection keeps the UI clean and contextual. Library/Method: Vanilla JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .active-tab {
+            border-color: #FB923C;
+            color: #FB923C;
+            font-weight: 600;
+        }
+        .inactive-tab {
+            border-color: transparent;
+            color: #71717A;
+        }
+        .diagram-box {
+            border: 1px solid #E5E7EB;
+            background-color: #FFFFFF;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+            transition: all 0.3s ease;
+        }
+        .arrow {
+            position: relative;
+            flex-grow: 1;
+            height: 2px;
+            background-color: #D1D5DB;
+            margin: 0 1rem;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 6px solid #D1D5DB;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-orange-900 tracking-tight">An Interactive Guide to RAG Architectures</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">Retrieval-Augmented Generation (RAG) enhances Large Language Models by grounding them in external knowledge. Explore the evolution from simple to sophisticated architectures designed to improve response accuracy and relevance.</p>
+        </header>
+
+        <main>
+            <section class="mb-20" id="core-concepts">
+                <h2 class="text-3xl font-bold text-center text-orange-800 mb-2">Core Building Blocks</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Every RAG system, regardless of its complexity, is built upon three fundamental components that work together to retrieve information and generate answers.</p>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="text-3xl mb-3">🗂️</div>
+                        <h3 class="text-xl font-semibold text-orange-900 mb-2">Indexer</h3>
+                        <p class="text-gray-600">A pipeline that ingests and structures data from various sources. It creates a searchable knowledge library, typically by converting documents into numerical representations (embeddings) and storing them in a vector database.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="text-3xl mb-3">🔍</div>
+                        <h3 class="text-xl font-semibold text-orange-900 mb-2">Retriever</h3>
+                        <p class="text-gray-600">The search engine of the RAG system. When a user asks a question, the retriever searches the indexed knowledge library to find the most relevant documents or text chunks related to the query.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <div class="text-3xl mb-3">✍️</div>
+                        <h3 class="text-xl font-semibold text-orange-900 mb-2">Generator</h3>
+                        <p class="text-gray-600">A Large Language Model (LLM) that receives the user's original query along with the relevant information retrieved from the library. It then synthesizes this information to generate a comprehensive, coherent, and contextually accurate answer.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-20 bg-orange-50/50 rounded-2xl p-6 md:p-10" id="architectures">
+                <h2 class="text-3xl font-bold text-center text-orange-800 mb-4">Exploring the Architectures</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">The way the core components are arranged and enhanced defines the RAG architecture. Each design offers different trade-offs in complexity, cost, and performance. Click through the tabs below to see how each architecture works and discover its unique characteristics.</p>
+                
+                <div class="border-b border-gray-200 mb-8">
+                    <nav aria-label="Tabs" class="-mb-px flex justify-center space-x-2 md:space-x-8">
+                        <button class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 active-tab" id="tab-naive">Naive RAG</button>
+                        <button class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 inactive-tab" id="tab-advanced">Advanced RAG</button>
+                        <button class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm md:text-base transition-colors duration-300 inactive-tab" id="tab-modular">Modular RAG</button>
+                    </nav>
+                </div>
+
+                <div id="content-container">
+                </div>
+            </section>
+
+            <section class="mb-16" id="comparison">
+                <h2 class="text-3xl font-bold text-center text-orange-800 mb-4">Comparative Analysis</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">Choosing the right architecture depends on your specific needs. This section provides a side-by-side look at how the different RAG models perform across key metrics. Use the checkboxes to compare them on the chart.</p>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-semibold text-center text-orange-900 mb-4">Architecture Trade-offs</h3>
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                        <div class="flex justify-center flex-wrap gap-4 mt-6" id="chart-legend">
+                            <label class="inline-flex items-center">
+                                <input checked="" class="form-checkbox h-5 w-5 rounded text-orange-500 border-gray-300 focus:ring-orange-400 chart-toggle" data-dataset-index="0" type="checkbox"/>
+                                <span class="ml-2 text-gray-700">Naive RAG</span>
+                            </label>
+                             <label class="inline-flex items-center">
+                                <input checked="" class="form-checkbox h-5 w-5 rounded text-blue-500 border-gray-300 focus:ring-blue-400 chart-toggle" data-dataset-index="1" type="checkbox"/>
+                                <span class="ml-2 text-gray-700">Advanced RAG</span>
+                            </label>
+                             <label class="inline-flex items-center">
+                                <input checked="" class="form-checkbox h-5 w-5 rounded text-teal-500 border-gray-300 focus:ring-teal-400 chart-toggle" data-dataset-index="2" type="checkbox"/>
+                                <span class="ml-2 text-gray-700">Modular RAG</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="text-gray-700 space-y-4">
+                       <div>
+                           <h4 class="font-semibold text-lg text-orange-900">Complexity</h4>
+                           <p>Reflects the engineering effort required for implementation and maintenance. Naive RAG is simple, while Modular RAG requires significant system design.</p>
+                       </div>
+                       <div>
+                           <h4 class="font-semibold text-lg text-orange-900">Performance</h4>
+                           <p>Measures the quality and relevance of the final output. Advanced techniques like re-ranking and query transformation directly boost performance.</p>
+                       </div>
+                       <div>
+                           <h4 class="font-semibold text-lg text-orange-900">Cost (Compute/API)</h4>
+                           <p>Indicates the operational cost. More complex models with multiple LLM calls (e.g., for query rewriting or re-ranking) are more expensive to run.</p>
+                       </div>
+                       <div>
+                           <h4 class="font-semibold text-lg text-orange-900">Flexibility &amp; Adaptability</h4>
+                           <p>The ability to customize and adapt the system for specific domains or tasks. Modular RAG is the most flexible, allowing for swappable components.</p>
+                       </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+
+
+    </div>
+
+    <script>
+        const architectureData = {
+            naive: {
+                title: "Naive RAG: The Foundational Approach",
+                description: "This is the simplest implementation of RAG. It follows a straightforward 'retrieve-then-read' process. While easy to set up, it can sometimes struggle with irrelevant retrieved documents or poorly formulated user questions, leading to less accurate answers.",
+                diagram: `
+                    <div class="flex items-center justify-center flex-wrap">
+                        <div class="diagram-box">User Query</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box">Retrieve Docs</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box">Generate Answer</div>
+                    </div>
+                `,
+                pros: [
+                    "Simple to implement and understand.",
+                    "Low computational cost.",
+                    "Provides a solid baseline for RAG performance."
+                ],
+                cons: [
+                    "Susceptible to 'lost in the middle' problem where relevant info is buried.",
+                    "Struggles with ambiguous or complex user queries.",
+                    "Retrieval quality is highly dependent on the initial query."
+                ]
+            },
+            advanced: {
+                title: "Advanced RAG: Smarter Retrieval",
+                description: "This architecture introduces pre- and post-retrieval strategies to improve the quality of context provided to the LLM. Techniques like query transformation refine the user's question for better search results, while a re-ranking step filters and prioritizes the retrieved documents to ensure only the most relevant information is used for generation.",
+                diagram: `
+                    <div class="flex items-center justify-center flex-wrap gap-y-4">
+                        <div class="diagram-box">User Query</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box bg-blue-50 border-blue-200">Query Transform</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box">Retrieve Docs</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box bg-blue-50 border-blue-200">Re-rank Docs</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box">Generate Answer</div>
+                    </div>
+                `,
+                pros: [
+                    "Significantly improves response relevance and accuracy.",
+                    "More robust against poorly phrased user queries.",
+                    "Reduces noise passed to the generator LLM."
+                ],
+                cons: [
+                    "Increased complexity and latency.",
+                    "Higher computational cost due to extra steps (e.g., re-ranking model).",
+                    "Requires more sophisticated engineering."
+                ]
+            },
+            modular: {
+                title: "Modular RAG: The Flexible Framework",
+                description: "Modular RAG treats the entire process as a flexible framework of interchangeable components. It allows for more complex workflows, such as iterative retrieval, where the system can search multiple times or use different methods based on the query. It might also use a search agent to decide which data source (or 'tool') to query, making it highly adaptable for complex, multi-step reasoning tasks.",
+                 diagram: `
+                    <div class="flex items-center justify-center flex-wrap gap-y-4">
+                        <div class="diagram-box">User Query</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box bg-teal-50 border-teal-200">Search Agent</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box">Iterative Retrieval</div>
+                        <div class="arrow w-8 md:w-16"></div>
+                        <div class="diagram-box">Synthesize & Generate</div>
+                    </div>
+                `,
+                pros: [
+                    "Highly flexible and customizable.",
+                    "Can handle very complex and multi-hop questions.",
+                    "Adaptable to various data sources and retrieval techniques.",
+                    "Supports advanced strategies like self-correction."
+                ],
+                cons: [
+                    "Highest complexity to design and implement.",
+                    "Can be significantly more expensive and slower.",
+                    "Prone to error cascades if one module fails."
+                ]
+            }
+        };
+
+        function renderContent(architecture) {
+            const data = architectureData[architecture];
+            const contentContainer = document.getElementById('content-container');
+            
+            let prosList = data.pros.map(pro => `<li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✓</span>${pro}</li>`).join('');
+            let consList = data.cons.map(con => `<li class="flex items-start"><span class="text-red-500 mr-2 mt-1">✗</span>${con}</li>`).join('');
+
+            contentContainer.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center animate-fade-in">
+                    <div>
+                        <h3 class="text-2xl font-bold text-orange-900 mb-3">${data.title}</h3>
+                        <p class="text-gray-600 mb-6">${data.description}</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-2 text-gray-800">Pros</h4>
+                                <ul class="space-y-2 text-gray-600">${prosList}</ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2 text-gray-800">Cons</h4>
+                                <ul class="space-y-2 text-gray-600">${consList}</ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 sm:p-6 rounded-lg border border-gray-200 shadow-sm">
+                        <h4 class="text-lg font-semibold text-center mb-4 text-gray-700">Process Flow</h4>
+                        ${data.diagram}
+                    </div>
+                </div>
+            `;
+            
+            contentContainer.style.opacity = 0;
+            requestAnimationFrame(() => {
+                contentContainer.style.transition = 'opacity 0.5s ease-in-out';
+                contentContainer.style.opacity = 1;
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = [
+                document.getElementById('tab-naive'),
+                document.getElementById('tab-advanced'),
+                document.getElementById('tab-modular')
+            ];
+
+            function switchTab(event) {
+                tabs.forEach(tab => {
+                    tab.classList.remove('active-tab');
+                    tab.classList.add('inactive-tab');
+                });
+                event.target.classList.add('active-tab');
+                event.target.classList.remove('inactive-tab');
+                
+                const architecture = event.target.id.split('-')[1];
+                renderContent(architecture);
+            }
+
+            tabs.forEach(tab => tab.addEventListener('click', switchTab));
+            
+            renderContent('naive');
+
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            const chartData = {
+                labels: ['Complexity', 'Performance', 'Cost (Compute)', 'Flexibility'],
+                datasets: [
+                    {
+                        label: 'Naive RAG',
+                        data: [2, 3, 2, 2],
+                        backgroundColor: 'rgba(251, 146, 60, 0.2)',
+                        borderColor: 'rgba(251, 146, 60, 1)',
+                        pointBackgroundColor: 'rgba(251, 146, 60, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(251, 146, 60, 1)',
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Advanced RAG',
+                        data: [4, 4, 3, 3],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                    },
+                    {
+                        label: 'Modular RAG',
+                        data: [5, 5, 5, 5],
+                        backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                        borderColor: 'rgba(20, 184, 166, 1)',
+                        pointBackgroundColor: 'rgba(20, 184, 166, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(20, 184, 166, 1)',
+                        borderWidth: 2,
+                    }
+                ]
+            };
+
+            const comparisonChart = new Chart(ctx, {
+                type: 'radar',
+                data: chartData,
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: '#E5E7EB'
+                            },
+                            grid: {
+                                color: '#E5E7EB'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 13,
+                                    weight: '500'
+                                },
+                                color: '#4A4A4A'
+                            },
+                            ticks: {
+                                backdropColor: '#FDFBF8',
+                                color: '#71717A',
+                                stepSize: 1,
+                                max: 5,
+                                min: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        }
+                    }
+                }
+            });
+
+            const originalDatasets = JSON.parse(JSON.stringify(chartData.datasets));
+            document.querySelectorAll('.chart-toggle').forEach(checkbox => {
+                checkbox.addEventListener('change', (event) => {
+                    const index = parseInt(event.target.dataset.datasetIndex);
+                    const isVisible = comparisonChart.isDatasetVisible(index);
+                    
+                    if (isVisible) {
+                        comparisonChart.hide(index);
+                    } else {
+                        comparisonChart.show(index);
+                    }
+                });
+            });
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

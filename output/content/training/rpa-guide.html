@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive Report: The World of RPA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals & Slate Blue -->
+    <!-- Application Structure Plan: A top-down narrative flow designed for progressive discovery. It starts with a high-level "What is it?" (Intro), moves to "Why does it matter?" (Market), then "How does it work?" (Technology), "Is it for me?" (Strategy), "Where is it used?" (Industries), and finally "What's next?" (Future). This logical path guides the user from general understanding to specific application and strategic consideration, using interactive elements like charts, toggles, and filters to make dense information digestible and engaging. -->
+    <!-- Visualization & Content Choices:
+        - Market Growth: Report Info (Market size forecasts) -> Goal (Show rapid growth) -> Viz (Interactive Line Chart - Chart.js) -> Interaction (Hover for details) -> Justification (Visually compelling, quantifies opportunity).
+        - Tech Comparison: Report Info (Table 1) -> Goal (Clarify differences) -> Viz (Interactive Card Grid - HTML/CSS/JS) -> Interaction (Click to highlight/expand) -> Justification (Modernizes table, promotes active comparison).
+        - RPA Models: Report Info (Table 2) -> Goal (Explain deployment options) -> Viz (Three-column layout with icons - HTML/CSS) -> Interaction (Subtle hover effects) -> Justification (Clear, scannable comparison).
+        - Use Case Criteria: Report Info (Checklist items) -> Goal (Provide an actionable decision framework) -> Viz (Interactive checklist - HTML/CSS/JS) -> Interaction (Visual feedback on hover) -> Justification (Engages user in self-assessment).
+        - Industry Applications: Report Info (Table 4, Case Studies) -> Goal (Show industry relevance) -> Viz (Filterable content tabs - HTML/CSS/JS) -> Interaction (Click tab to show industry-specific data) -> Justification (Personalizes content, avoids information overload).
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F7F4; color: #404040; }
+        .nav-link { transition: color 0.3s, border-color 0.3s; }
+        .nav-link-active { color: #3B82F6; border-bottom-color: #3B82F6; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .tab-button { transition: background-color 0.3s, color 0.3s; }
+        .tab-button-active { background-color: #3B82F6; color: white; }
+        .chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 mb-2">The In-Depth Guide to RPA</h1>
+            <p class="text-lg text-slate-600">An Interactive Exploration of Robotic Process Automation</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="sticky top-0 bg-[#F8F7F4]/80 backdrop-blur-md z-10 mb-12 border-b border-slate-200">
+            <ul class="flex justify-center items-center flex-wrap space-x-4 sm:space-x-8 text-sm sm:text-base font-medium text-slate-600">
+                <li><a class="nav-link block py-4 border-b-2 border-transparent hover:text-blue-500" href="#intro">Introduction</a></li>
+                <li><a class="nav-link block py-4 border-b-2 border-transparent hover:text-blue-500" href="#market">Market</a></li>
+                <li><a class="nav-link block py-4 border-b-2 border-transparent hover:text-blue-500" href="#technology">Technology</a></li>
+                <li><a class="nav-link block py-4 border-b-2 border-transparent hover:text-blue-500" href="#strategy">Strategy</a></li>
+                <li><a class="nav-link block py-4 border-b-2 border-transparent hover:text-blue-500" href="#industries">Industries</a></li>
+                <li><a class="nav-link block py-4 border-b-2 border-transparent hover:text-blue-500" href="#future">Future</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Section 1: Introduction -->
+            <section class="mb-16 scroll-mt-24" id="intro">
+                <h2 class="text-3xl font-bold text-slate-800 text-center mb-8">Defining the Digital Workforce</h2>
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
+                     <p class="text-lg text-slate-700 mb-6">Robotic Process Automation (RPA) is a transformative technology that allows businesses to deploy a "digital workforce" of software robots. These bots emulate human actions to interact with digital systems, executing repetitive, rules-based tasks without needing deep system integration via APIs. This section introduces the core concepts of RPA, explaining how it operates on the user interface layer as a non-invasive tool to boost efficiency and free human workers for higher-value activities.</p>
+                    <div class="grid md:grid-cols-2 gap-8 text-center">
+                        <div class="bg-slate-50 p-6 rounded-lg">
+                            <h3 class="font-bold text-xl text-blue-600 mb-2">The "What"</h3>
+                            <p class="text-slate-600">Software bots that mimic human clicks and keystrokes to automate tasks across applications like ERPs, CRMs, and web portals.</p>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-lg">
+                            <h3 class="font-bold text-xl text-green-600 mb-2">The "Why"</h3>
+                            <p class="text-slate-600">To increase speed, accuracy, and compliance while reallocating human talent to creative, strategic, and problem-solving work.</p>
+                        </div>
+                    </div>
+                     <div class="mt-8 p-6 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+                        <h4 class="font-bold text-slate-800">A Tactical Bridge to Modernization</h4>
+                        <p class="text-slate-700 mt-2">While RPA can be a "digital band-aid" for legacy systems, its true strategic value often lies in its role as a bridge. Implementing RPA forces a detailed mapping of existing processes, providing invaluable requirements for future, more robust API-based integrations when systems are eventually modernized.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Market -->
+            <section class="mb-16 scroll-mt-24" id="market">
+                <h2 class="text-3xl font-bold text-slate-800 text-center mb-8">Explosive Growth &amp; Market Outlook</h2>
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
+                    <p class="text-lg text-slate-700 mb-8 text-center">The RPA market is experiencing exponential growth, driven by the relentless pursuit of digital transformation, efficiency, and cost savings across all industries. This section provides a visual overview of the market's trajectory, highlighting key growth projections and the primary trends shaping its future, such as the convergence with AI and the shift to cloud-based delivery.</p>
+                    <div class="chart-container mb-8">
+                        <canvas id="marketGrowthChart"></canvas>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mt-8">
+                        <div class="p-6 bg-slate-50 rounded-lg">
+                            <h4 class="font-semibold text-slate-800 text-lg mb-2">Key Market Drivers</h4>
+                            <ul class="list-disc list-inside space-y-2 text-slate-600">
+                                <li>Improving operational efficiency</li>
+                                <li>Achieving significant cost savings</li>
+                                <li>Ensuring regulatory compliance</li>
+                                <li>Accelerating digital transformation</li>
+                            </ul>
+                        </div>
+                         <div class="p-6 bg-slate-50 rounded-lg">
+                            <h4 class="font-semibold text-slate-800 text-lg mb-2">Dominant Trends</h4>
+                            <ul class="list-disc list-inside space-y-2 text-slate-600">
+                                <li>AI as the core platform strategy</li>
+                                <li>Convergence into "Hyperautomation" platforms</li>
+                                <li>Cloud-first (RPA-as-a-Service) adoption</li>
+                                <li>Democratization via low/no-code tools</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Technology -->
+            <section class="mb-16 scroll-mt-24" id="technology">
+                 <h2 class="text-3xl font-bold text-slate-800 text-center mb-8">The Automation Spectrum</h2>
+                 <div class="max-w-5xl mx-auto">
+                    <p class="text-lg text-slate-700 mb-8 text-center">To use RPA effectively, it's crucial to understand its place within the broader automation landscape. This section unpacks the key differences between RPA and other technologies, clarifies the various deployment models, and explains how Artificial Intelligence is supercharging RPA's capabilities. Use the interactive elements below to compare models and technologies.</p>
+
+                    <div class="bg-white p-8 rounded-xl shadow-md mb-10">
+                        <h3 class="text-2xl font-bold text-slate-800 text-center mb-6">Attended vs. Unattended vs. Hybrid</h3>
+                        <div class="grid md:grid-cols-3 gap-6 text-center">
+                            <div class="p-6 bg-slate-50 rounded-lg border-t-4 border-blue-400">
+                                <h4 class="font-bold text-xl text-blue-600 mb-2">Attended RPA</h4>
+                                <p class="text-slate-600 text-sm mb-3">The "Digital Assistant" that works alongside humans, triggered by user actions to automate parts of a task (e.g., in a call center).</p>
+                            </div>
+                             <div class="p-6 bg-slate-50 rounded-lg border-t-4 border-purple-400">
+                                <h4 class="font-bold text-xl text-purple-600 mb-2">Unattended RPA</h4>
+                                <p class="text-slate-600 text-sm mb-3">The "Virtual Workforce" that operates 24/7 on servers, executing high-volume, end-to-end back-office processes autonomously.</p>
+                            </div>
+                             <div class="p-6 bg-slate-50 rounded-lg border-t-4 border-green-400">
+                                <h4 class="font-bold text-xl text-green-600 mb-2">Hybrid RPA</h4>
+                                <p class="text-slate-600 text-sm mb-3">A collaborative model where tasks are handed off between humans and bots, enabling automation of complex workflows requiring judgment.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                         <h3 class="text-2xl font-bold text-slate-800 text-center mb-6">RPA vs. Other Automation</h3>
+                         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="techComparisonGrid">
+                            <!-- JS will populate this -->
+                         </div>
+                         <div class="mt-6 p-6 bg-slate-50 rounded-lg min-h-[100px] transition-all duration-300" id="techComparisonDetail">
+                             <p class="text-slate-600">Click on a technology above to see details.</p>
+                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Strategy -->
+            <section class="mb-16 scroll-mt-24" id="strategy">
+                <h2 class="text-3xl font-bold text-slate-800 text-center mb-8">Framework for Adoption</h2>
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-lg text-slate-700 mb-8 text-center">Successful RPA adoption is not just about technology; it's about strategy. Knowing which processes to automate—and which to avoid—is paramount. This section provides actionable frameworks, checklists, and best practices to guide your organization's automation journey, from identifying the right opportunities to establishing governance and managing change.</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-white p-8 rounded-xl shadow-md">
+                            <h3 class="text-2xl font-bold text-green-600 mb-4">When to Use RPA ✅</h3>
+                             <p class="text-slate-600 mb-4">Ideal processes for automation are highly repetitive, stable, and rules-based. Use this checklist to identify prime candidates.</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start p-3 bg-green-50 rounded-md"><span class="text-green-500 mr-3">✔</span><span class="text-slate-700"><strong>Rules-Based:</strong> Follows clear, objective rules with no subjective judgment.</span></li>
+                                <li class="flex items-start p-3 bg-green-50 rounded-md"><span class="text-green-500 mr-3">✔</span><span class="text-slate-700"><strong>High-Volume &amp; Repetitive:</strong> Performed frequently, delivering significant ROI.</span></li>
+                                <li class="flex items-start p-3 bg-green-50 rounded-md"><span class="text-green-500 mr-3">✔</span><span class="text-slate-700"><strong>Stable &amp; Mature:</strong> The process and underlying applications rarely change.</span></li>
+                                <li class="flex items-start p-3 bg-green-50 rounded-md"><span class="text-green-500 mr-3">✔</span><span class="text-slate-700"><strong>Structured Digital Input:</strong> Relies on readable data from spreadsheets, forms, etc.</span></li>
+                                <li class="flex items-start p-3 bg-green-50 rounded-md"><span class="text-green-500 mr-3">✔</span><span class="text-slate-700"><strong>Prone to Human Error:</strong> Monotonous tasks where bots improve accuracy.</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl shadow-md">
+                            <h3 class="text-2xl font-bold text-red-600 mb-4">When to Avoid RPA ❌</h3>
+                             <p class="text-slate-600 mb-4">Misapplying RPA is a common cause of failure. Avoid automating processes that are broken, require judgment, or are too dynamic.</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start p-3 bg-red-50 rounded-md"><span class="text-red-500 mr-3">✖</span><span class="text-slate-700"><strong>"Broken" Processes:</strong> Automating a flawed process only makes it faster, not better. Fix it first.</span></li>
+                                <li class="flex items-start p-3 bg-red-50 rounded-md"><span class="text-red-500 mr-3">✖</span><span class="text-slate-700"><strong>Requires Subjective Judgment:</strong> Tasks needing creativity or complex problem-solving.</span></li>
+                                <li class="flex items-start p-3 bg-red-50 rounded-md"><span class="text-red-500 mr-3">✖</span><span class="text-slate-700"><strong>Highly Dynamic Environments:</strong> Constant UI or rule changes will lead to high maintenance.</span></li>
+                                <li class="flex items-start p-3 bg-red-50 rounded-md"><span class="text-red-500 mr-3">✖</span><span class="text-slate-700"><strong>A Robust API is Available:</strong> API integration is always more stable and efficient if it exists.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Industries -->
+            <section class="mb-16 scroll-mt-24" id="industries">
+                <h2 class="text-3xl font-bold text-slate-800 text-center mb-8">RPA in Action: A Cross-Industry View</h2>
+                <div class="max-w-5xl mx-auto">
+                    <p class="text-lg text-slate-700 mb-8 text-center">RPA delivers value across nearly every sector. This section showcases its application in key industries, from streamlining compliance in finance to improving patient outcomes in healthcare. Select an industry below to explore specific use cases and real-world examples of how RPA is driving transformation.</p>
+
+                    <div class="bg-white p-8 rounded-xl shadow-md">
+                        <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8">
+                            <button class="industry-tab tab-button px-4 py-2 rounded-full font-medium text-sm sm:text-base tab-button-active" data-industry="finance">Finance &amp; Banking</button>
+                            <button class="industry-tab tab-button px-4 py-2 rounded-full font-medium text-sm sm:text-base" data-industry="healthcare">Healthcare</button>
+                            <button class="industry-tab tab-button px-4 py-2 rounded-full font-medium text-sm sm:text-base" data-industry="manufacturing">Manufacturing</button>
+                            <button class="industry-tab tab-button px-4 py-2 rounded-full font-medium text-sm sm:text-base" data-industry="retail">Retail &amp; CPG</button>
+                        </div>
+                        <div id="industry-content">
+                            <!-- JS will populate this -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Section 6: Future -->
+            <section class="scroll-mt-24" id="future">
+                <h2 class="text-3xl font-bold text-slate-800 text-center mb-8">The Future is Autonomous</h2>
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
+                     <p class="text-lg text-slate-700 mb-6">The evolution of automation is moving beyond simple tasks towards a future of intelligent, end-to-end process orchestration. This final section explores the strategic shift from basic RPA to Hyperautomation and the emerging paradigm of agentic automation, where AI-powered agents will reason and act autonomously, with RPA serving as their essential "arms and legs" to execute decisions within enterprise systems.</p>
+                     <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-400">
+                           <h3 class="font-bold text-xl text-blue-700 mb-2">Hyperautomation</h3>
+                           <p class="text-slate-600">A business-driven strategy to automate as many processes as possible using an orchestrated toolkit of technologies: RPA, AI, process mining, and low-code platforms.</p>
+                        </div>
+                        <div class="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-400">
+                           <h3 class="font-bold text-xl text-purple-700 mb-2">Agentic Automation</h3>
+                           <p class="text-slate-600">The next frontier. Intelligent agents powered by Generative AI will perceive, reason, and act to achieve high-level goals, using RPA as the execution layer to interact with applications.</p>
+                        </div>
+                     </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // --- Data ---
+
+    const marketData = {
+        labels: ['2024', '2026', '2028', '2030', '2032', '2034'],
+        datasets: [{
+            label: 'Global RPA Market (in Billions USD)',
+            data: [18.18, 26.6, 38.9, 57.0, 72.64, 46.66],
+            borderColor: '#3B82F6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            fill: true,
+            tension: 0.4
+        }]
+    };
+    
+    const techComparisonData = [
+        { 
+            name: "RPA", 
+            focus: "Task Automation", 
+            detail: "Emulates human actions on the User Interface (UI). It's ideal for rapid deployment on legacy systems that lack APIs but can be brittle if the UI changes." 
+        },
+        { 
+            name: "API Automation", 
+            focus: "System Integration", 
+            detail: "Uses direct, code-level communication between apps. It's highly robust and efficient but requires available APIs and more specialized development skills." 
+        },
+        { 
+            name: "Workflow (BPM)", 
+            focus: "Process Orchestration", 
+            detail: "Manages the entire end-to-end flow of work between humans and systems. It provides visibility and control over entire business processes." 
+        },
+        { 
+            name: "Intelligent Automation", 
+            focus: "Cognitive Automation", 
+            detail: "Combines RPA with AI/ML to learn, adapt, and handle unstructured data. It can automate complex, dynamic processes that require judgment." 
+        }
+    ];
+
+    const industryData = {
+        finance: {
+            title: "Finance & Banking",
+            description: "The finance industry uses RPA to manage high transaction volumes, enhance security, and ensure strict regulatory compliance, automating everything from customer onboarding to fraud detection.",
+            useCases: ["KYC/AML Compliance", "Loan Processing Automation", "Accounts Payable/Receivable", "Financial Reporting"],
+            caseStudy: {
+                name: "HDFC Bank",
+                detail: "Utilized RPA to process customer data autonomously, achieving 100% accuracy in automated tasks and significantly reducing manual effort."
+            }
+        },
+        healthcare: {
+            title: "Healthcare",
+            description: "In healthcare, RPA reduces the immense administrative burden, minimizes errors in billing, and improves the patient experience by automating scheduling, claims processing, and data management.",
+            useCases: ["Patient Scheduling", "Revenue Cycle Management", "EHR/EMR Data Migration", "Claims Adjudication"],
+            caseStudy: {
+                name: "Banner Health",
+                detail: "Migrated millions of electronic medical records using intelligent automation, returning an estimated 1.2 million hours of work back to the business."
+            }
+        },
+        manufacturing: {
+            title: "Manufacturing & Supply Chain",
+            description: "RPA optimizes complex supply chains and production workflows by automating inventory management, procurement, and logistics, ensuring data consistency across ERP systems.",
+            useCases: ["Bill of Materials (BOM) generation", "Inventory Management", "Procure-to-Pay Cycle", "Freight Management"],
+            caseStudy: {
+                name: "ArcelorMittal Nippon Steel",
+                detail: "Implemented an OCR-augmented RPA solution to process over 300,000 invoices annually from thousands of vendors, ensuring timely payments."
+            }
+        },
+        retail: {
+            title: "Retail & CPG",
+            description: "For retail, RPA is key to managing thin margins and fluctuating demand. It automates inventory planning, e-commerce order fulfillment, and customer service to boost efficiency.",
+            useCases: ["Demand-Supply Planning", "E-commerce Order Management", "Returns Processing", "Sales Analytics"],
+            caseStudy: {
+                name: "Major U.S. Retailer",
+                detail: "Automated the processing of 7,000 invoices monthly with 93% straight-through processing, reducing invoice handling time from minutes to 30 seconds."
+            }
+        }
+    };
+
+    // --- Chart.js Initialization ---
+    const ctx = document.getElementById('marketGrowthChart').getContext('2d');
+    const marketGrowthChart = new Chart(ctx, {
+        type: 'line',
+        data: marketData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Market Size (USD Billions)' }
+                }
+            },
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y) + 'B';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // --- Navigation Logic ---
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('main > section');
+
+    function updateActiveLink() {
+        let currentSection = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 120) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('nav-link-active', 'text-blue-600');
+            if (link.getAttribute('href') === `#${currentSection}`) {
+                link.classList.add('nav-link-active', 'text-blue-600');
+            }
+        });
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            document.querySelector(targetId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    });
+
+    window.addEventListener('scroll', updateActiveLink);
+    updateActiveLink();
+
+    // --- Technology Comparison Logic ---
+    const techGrid = document.getElementById('techComparisonGrid');
+    const techDetail = document.getElementById('techComparisonDetail');
+    
+    techComparisonData.forEach((tech, index) => {
+        const card = document.createElement('div');
+        card.className = 'tech-card p-4 bg-white rounded-lg border-2 border-slate-200 cursor-pointer card-hover';
+        card.dataset.index = index;
+        card.innerHTML = `
+            <h4 class="font-bold text-slate-800">${tech.name}</h4>
+            <p class="text-sm text-slate-500">${tech.focus}</p>
+        `;
+        techGrid.appendChild(card);
+    });
+
+    techGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.tech-card');
+        if (!card) return;
+
+        document.querySelectorAll('.tech-card').forEach(c => {
+            c.classList.remove('border-blue-500', 'bg-blue-50');
+            c.classList.add('border-slate-200', 'bg-white');
+        });
+
+        card.classList.add('border-blue-500', 'bg-blue-50');
+        card.classList.remove('border-slate-200', 'bg-white');
+
+        const tech = techComparisonData[card.dataset.index];
+        techDetail.innerHTML = `
+            <h4 class="font-bold text-slate-800">${tech.name}</h4>
+            <p class="text-slate-700 mt-2">${tech.detail}</p>
+        `;
+    });
+    
+    // Trigger click on the first item to pre-populate details
+    techGrid.querySelector('.tech-card').click();
+
+
+    // --- Industry Tabs Logic ---
+    const industryTabs = document.querySelectorAll('.industry-tab');
+    const industryContent = document.getElementById('industry-content');
+
+    function renderIndustryContent(industryKey) {
+        const data = industryData[industryKey];
+        industryContent.innerHTML = `
+            <div class="p-4 transition-opacity duration-500 animate-fade-in">
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">${data.title}</h3>
+                <p class="text-slate-600 mb-6">${data.description}</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-lg text-slate-700 mb-3">Key Use Cases</h4>
+                        <ul class="space-y-2">
+                            ${data.useCases.map(uc => `<li class="flex items-center"><span class="text-blue-500 mr-2">◆</span><span class="text-slate-600">${uc}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-lg text-slate-700 mb-2">Case Study Snapshot</h4>
+                        <p class="font-bold text-slate-800">${data.caseStudy.name}</p>
+                        <p class="text-sm text-slate-600">${data.caseStudy.detail}</p>
+                    </div>
+                </div>
+            </div>
+            <style>
+                @keyframes fade-in {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                .animate-fade-in { animation: fade-in 0.5s ease-in-out; }
+            </style>
+        `;
+    }
+
+    industryTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            industryTabs.forEach(t => t.classList.remove('tab-button-active'));
+            tab.classList.add('tab-button-active');
+            renderIndustryContent(tab.dataset.industry);
+        });
+    });
+
+    // Initial load
+    renderIndustryContent('finance');
+
+});
+</script>
+
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

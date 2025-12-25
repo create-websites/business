@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Exploring Retrieval-Augmented Generation Architectures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The application is designed as a thematic, single-page dashboard. It starts with a high-level introduction (What is RAG?), then moves into a tabbed interface to explore the core architectural patterns: Naive, Advanced, and Modular RAG. This structure allows users to compare architectures easily. Following the architectures, a dedicated interactive section explores common RAG challenges and their corresponding solutions, using clickable cards for engagement. Finally, a section on evaluation metrics provides a quantitative comparison of the architectures through an interactive bar chart. This non-linear, topic-driven structure was chosen over a linear paper format to facilitate user-led exploration and direct comparison of complex concepts, enhancing understanding for a technical audience like data scientists. -->
+    <!-- Visualization & Content Choices: 
+        1. RAG Core Process: Goal: Inform. Method: HTML/CSS diagram. Interaction: Hover effects on stages. Justification: A simple visual flow is more intuitive than text for understanding a process.
+        2. Architecture Comparison: Goal: Organize & Compare. Method: Tabbed content sections. Interaction: Clicking tabs reveals detailed content for each architecture (Naive, Advanced, Modular). Justification: Tabs provide a clean, organized way to manage a large amount of detailed information without overwhelming the user, facilitating direct comparison.
+        3. Challenges & Solutions: Goal: Organize & Inform. Method: Interactive HTML/CSS card grid. Interaction: Clicking a "challenge" card reveals its corresponding "solution" card. Justification: This interactive pairing reinforces the relationship between problem and solution in a more engaging way than a static list.
+        4. Performance Metrics: Goal: Compare. Method: Interactive Bar Chart (Chart.js/Canvas). Interaction: A dropdown allows the user to select a performance metric (e.g., Context Relevance, Answer Faithfulness), which dynamically updates the chart to compare the RAG architectures. Justification: A dynamic chart provides a powerful and immediate visual comparison of quantitative data, making performance differences clear.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #383838;
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            border-color: #A58D76;
+            color: #A58D76;
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAEAEA;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+        .challenge-card.selected {
+            border-color: #A58D76;
+            box-shadow: 0 0 0 3px rgba(165, 141, 118, 0.3);
+        }
+        .solution-card {
+            background-color: #F7F5F2;
+        }
+        .diagram-box {
+            border: 2px dashed #D1CFCB;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .diagram-box:hover {
+            background-color: #F7F5F2;
+            border-color: #A58D76;
+        }
+        .arrow {
+            font-size: 2rem;
+            color: #A58D76;
+            align-self: center;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#383838] tracking-tight">An Interactive Dive into RAG Architectures</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">A visual exploration of the concepts from "A Comprehensive Survey of Retrieval-Augmented Generation Architectures".</p>
+        </header>
+
+        <main>
+            <!-- Section 1: What is RAG? -->
+            <section class="mb-20" id="introduction">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">What is Retrieval-Augmented Generation?</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">This section introduces the fundamental concept of RAG. It breaks down how RAG enhances Large Language Models (LLMs) by connecting them to external knowledge bases, leading to more accurate and up-to-date responses. Explore the core process diagram below to understand the synergy between retrieval and generation.</p>
+                </div>
+                <div class="card p-8">
+                    <p class="text-gray-700 leading-relaxed mb-8">Retrieval-Augmented Generation (RAG) is an architectural pattern that enhances the capabilities of Large Language Models (LLMs). It merges the pre-trained knowledge of an LLM with information retrieved from external, dynamic databases. The core idea is to provide the LLM with relevant, external context before it generates a response. This process is analogous to an expert consulting the latest data before making a decision, ensuring the final output is not just fluent but also factually grounded and current.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-4 text-center">
+                        <div class="diagram-box">
+                            <h3 class="font-semibold">1. User Query</h3>
+                            <p class="text-sm text-gray-500">Input from the user starts the process.</p>
+                        </div>
+                        <div class="arrow hidden md:block">→</div>
+                        <div class="diagram-box">
+                            <h3 class="font-semibold">2. Retrieval</h3>
+                            <p class="text-sm text-gray-500">Relevant documents are fetched from a knowledge base.</p>
+                        </div>
+                        <div class="arrow hidden md:block">→</div>
+                        <div class="diagram-box">
+                            <h3 class="font-semibold">3. Augmentation</h3>
+                             <p class="text-sm text-gray-500">Query and retrieved context are combined into an augmented prompt.</p>
+                        </div>
+                        <div class="arrow hidden md:block">→</div>
+                        <div class="diagram-box">
+                            <h3 class="font-semibold">4. Generation</h3>
+                            <p class="text-sm text-gray-500">The LLM generates a response based on the augmented prompt.</p>
+                        </div>
+                         <div class="arrow hidden md:block">→</div>
+                        <div class="diagram-box">
+                            <h3 class="font-semibold">5. Response</h3>
+                             <p class="text-sm text-gray-500">The final, context-aware answer is delivered.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 2: RAG Architectures -->
+            <section class="mb-20" id="architectures">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">Exploring RAG Architectures</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">This section provides an in-depth look at the evolution of RAG systems. Use the tabs below to navigate between the three main categories: Naive RAG, the foundational approach; Advanced RAG, which introduces specific enhancements; and Modular RAG, a flexible, plug-and-play framework. This allows you to directly compare their components and complexities.</p>
+                </div>
+                <div class="card p-6 md:p-8">
+                    <div class="flex justify-center border-b border-gray-200 mb-6">
+                        <button class="tab-btn px-6 py-3 text-lg active" onclick="showTab('naive')">Naive RAG</button>
+                        <button class="tab-btn px-6 py-3 text-lg" onclick="showTab('advanced')">Advanced RAG</button>
+                        <button class="tab-btn px-6 py-3 text-lg" onclick="showTab('modular')">Modular RAG</button>
+                    </div>
+
+                    <div class="content-section active" id="naive">
+                        <h3 class="text-2xl font-semibold mb-4 text-[#A58D76]">Naive RAG: The Foundation</h3>
+                        <p class="text-gray-700 mb-4">Also known as "basic" RAG, this is the earliest and most straightforward implementation. It follows a simple sequence of indexing, retrieval, and generation. While effective, it often faces challenges like low-precision retrieval and generating responses that are generic or misaligned with the retrieved content.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 text-sm">
+                            <div class="p-4 bg-[#F7F5F2] rounded-lg"><strong>Indexing:</strong> Documents are chunked, converted to vector embeddings, and stored in a vector database.</div>
+                            <div class="p-4 bg-[#F7F5F2] rounded-lg"><strong>Retrieval:</strong> The user's query is embedded and used to find the most similar document chunks (top-k) via vector similarity search.</div>
+                            <div class="p-4 bg-[#F7F5F2] rounded-lg"><strong>Generation:</strong> The retrieved chunks are concatenated with the query and fed to the LLM to produce the final answer.</div>
+                        </div>
+                    </div>
+
+                    <div class="content-section" id="advanced">
+                        <h3 class="text-2xl font-semibold mb-4 text-[#A58D76]">Advanced RAG: Targeted Improvements</h3>
+                        <p class="text-gray-700 mb-4">Advanced RAG builds upon the naive framework by introducing specific techniques to overcome its limitations. Instead of a complete redesign, it focuses on enhancing either the pre-retrieval or post-retrieval stages. This approach aims to improve the quality and relevance of the information passed to the LLM.</p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Pre-retrieval Optimization:</strong> Focuses on improving the indexing process. Techniques include optimizing chunking strategies (e.g., sentence-window chunking), refining indexing with metadata, and using query rewriting to better align the user's question with the stored data.</li>
+                            <li><strong>Post-retrieval Enhancement:</strong> Focuses on refining the retrieved documents before they reach the LLM. This involves re-ranking the retrieved passages to prioritize the most relevant ones and compressing the context to remove noise and highlight key information.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section" id="modular">
+                        <h3 class="text-2xl font-semibold mb-4 text-[#A58D76]">Modular RAG: A Flexible Framework</h3>
+                        <p class="text-gray-700 mb-4">Modular RAG represents a paradigm shift towards a more flexible and adaptable system. It breaks down the RAG pipeline into interchangeable modules, allowing for greater customization and integration with other AI techniques. This architecture can incorporate modules for query rewriting, various retrieval methods, and even fine-tuning modules that adapt the models on-the-fly.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                            <div class="p-4 bg-[#F7F5F2] rounded-lg">
+                                <h4 class="font-semibold">Key Modules:</h4>
+                                <ul class="list-disc list-inside text-sm mt-2">
+                                    <li>Search Module (e.g., Vector Search, BM25)</li>
+                                    <li>Rewrite Module (Query expansion, rewriting)</li>
+                                    <li>Memory Module (Utilizing conversation history)</li>
+                                    <li>Fusion Module (Combining results from multiple retrievers)</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-[#F7F5F2] rounded-lg">
+                                <h4 class="font-semibold">Advantages:</h4>
+                                 <ul class="list-disc list-inside text-sm mt-2">
+                                    <li>High adaptability and extensibility.</li>
+                                    <li>Ability to handle complex, multi-step queries.</li>
+                                    <li>Can integrate agentic behaviors for task decomposition.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Challenges and Solutions -->
+            <section class="mb-20" id="challenges">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">Common RAG Challenges &amp; Solutions</h2>
+                     <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Every powerful technology has its challenges. This interactive section highlights the common hurdles encountered when building RAG systems. Click on a challenge card to reveal its corresponding solution, providing a clear and direct understanding of how to mitigate these issues.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-center">Challenges</h3>
+                        <div class="space-y-4">
+                            <div class="card challenge-card p-6 cursor-pointer" id="challenge-1" onclick="selectChallenge(1)">
+                                <h4 class="font-bold">Context Relevance</h4>
+                                <p class="text-sm text-gray-600 mt-1">The retrieved documents are not relevant to the user's query, leading to off-topic or incorrect answers.</p>
+                            </div>
+                            <div class="card challenge-card p-6 cursor-pointer" id="challenge-2" onclick="selectChallenge(2)">
+                                <h4 class="font-bold">Answer Hallucination</h4>
+                                <p class="text-sm text-gray-600 mt-1">The LLM invents facts or generates information that is not supported by the retrieved context.</p>
+                            </div>
+                            <div class="card challenge-card p-6 cursor-pointer" id="challenge-3" onclick="selectChallenge(3)">
+                                <h4 class="font-bold">Stale Information</h4>
+                                <p class="text-sm text-gray-600 mt-1">The knowledge base is outdated, causing the RAG system to provide obsolete information.</p>
+                            </div>
+                             <div class="card challenge-card p-6 cursor-pointer" id="challenge-4" onclick="selectChallenge(4)">
+                                <h4 class="font-bold">Evaluation Complexity</h4>
+                                <p class="text-sm text-gray-600 mt-1">It's difficult to quantitatively measure the performance of the retrieval and generation components independently.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-center">Solutions</h3>
+                        <div class="space-y-4">
+                            <div class="card solution-card p-6 opacity-25" id="solution-1">
+                                <h4 class="font-bold">Embedding &amp; Re-ranking</h4>
+                                <p class="text-sm text-gray-600 mt-1">Use more powerful embedding models and add a re-ranking step after initial retrieval to prioritize the most relevant documents.</p>
+                            </div>
+                            <div class="card solution-card p-6 opacity-25" id="solution-2">
+                                <h4 class="font-bold">Grounding &amp; Prompting</h4>
+                                <p class="text-sm text-gray-600 mt-1">Use stricter prompting techniques that explicitly instruct the LLM to only use the provided context. Fact-checking modules can also be added.</p>
+                            </div>
+                            <div class="card solution-card p-6 opacity-25" id="solution-3">
+                                <h4 class="font-bold">Automated Indexing</h4>
+                                <p class="text-sm text-gray-600 mt-1">Implement pipelines that automatically monitor data sources and update the vector index in real-time or on a frequent schedule.</p>
+                            </div>
+                            <div class="card solution-card p-6 opacity-25" id="solution-4">
+                                <h4 class="font-bold">Component-wise Metrics</h4>
+                                <p class="text-sm text-gray-600 mt-1">Develop specific metrics for each part of the pipeline, such as hit rate for retrieval and faithfulness/relevance for generation, to isolate and address issues.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 4: Performance Evaluation -->
+            <section id="evaluation">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">Evaluating RAG Performance</h2>
+                    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">How do we measure the effectiveness of different RAG architectures? This section introduces key metrics used to evaluate RAG pipelines. Use the dropdown menu to select a metric and see a comparative visualization of how Naive, Advanced, and Modular RAG architectures typically perform. This provides a clear, data-driven perspective on their trade-offs.</p>
+                </div>
+                <div class="card p-6 md:p-8">
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+                         <label class="font-semibold" for="metric-selector">Select a Metric:</label>
+                         <select class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#A58D76] focus:border-[#A58D76]" id="metric-selector">
+                            <option selected="" value="context_relevance">Context Relevance</option>
+                            <option value="answer_faithfulness">Answer Faithfulness</option>
+                            <option value="answer_relevance">Answer Relevance</option>
+                            <option value="latency">Latency (lower is better)</option>
+                         </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.querySelector(`.tab-btn[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function selectChallenge(id) {
+            const challengeCards = document.querySelectorAll('.challenge-card');
+            const solutionCards = document.querySelectorAll('.solution-card');
+            
+            challengeCards.forEach(card => card.classList.remove('selected'));
+            solutionCards.forEach(card => {
+                card.classList.add('opacity-25');
+                card.classList.remove('opacity-100');
+            });
+
+            document.getElementById(`challenge-${id}`).classList.add('selected');
+            const solutionCard = document.getElementById(`solution-${id}`);
+            solutionCard.classList.remove('opacity-25');
+            solutionCard.classList.add('opacity-100');
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            selectChallenge(1);
+
+            const performanceData = {
+                context_relevance: {
+                    label: 'Context Relevance (Score)',
+                    data: [75, 88, 92],
+                    backgroundColor: 'rgba(165, 141, 118, 0.6)',
+                    borderColor: 'rgba(165, 141, 118, 1)',
+                },
+                answer_faithfulness: {
+                    label: 'Answer Faithfulness (Score)',
+                    data: [70, 85, 94],
+                    backgroundColor: 'rgba(110, 136, 152, 0.6)',
+                    borderColor: 'rgba(110, 136, 152, 1)',
+                },
+                answer_relevance: {
+                    label: 'Answer Relevance (Score)',
+                    data: [80, 90, 95],
+                    backgroundColor: 'rgba(179, 157, 134, 0.6)',
+                    borderColor: 'rgba(179, 157, 134, 1)',
+                },
+                latency: {
+                    label: 'Latency in ms (Lower is Better)',
+                    data: [300, 550, 800],
+                     backgroundColor: 'rgba(211, 140, 140, 0.6)',
+                    borderColor: 'rgba(211, 140, 140, 1)',
+                }
+            };
+
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            let myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Naive RAG', 'Advanced RAG', 'Modular RAG'],
+                    datasets: [{
+                        label: performanceData.context_relevance.label,
+                        data: performanceData.context_relevance.data,
+                        backgroundColor: performanceData.context_relevance.backgroundColor,
+                        borderColor: performanceData.context_relevance.borderColor,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#EAEAEA'
+                            },
+                            ticks: {
+                                color: '#383838'
+                            }
+                        },
+                        x: {
+                             grid: {
+                                display: false
+                            },
+                             ticks: {
+                                color: '#383838'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                             position: 'top',
+                             labels: {
+                                 color: '#383838'
+                             }
+                        },
+                        tooltip: {
+                            backgroundColor: '#383838',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#FFFFFF',
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('metric-selector').addEventListener('change', function() {
+                const selectedMetric = this.value;
+                const newMetricData = performanceData[selectedMetric];
+
+                myChart.data.datasets[0].data = newMetricData.data;
+                myChart.data.datasets[0].label = newMetricData.label;
+                myChart.data.datasets[0].backgroundColor = newMetricData.backgroundColor;
+                myChart.data.datasets[0].borderColor = newMetricData.borderColor;
+                myChart.update();
+            });
+        });
+    </script>
+
+
+</body></html>

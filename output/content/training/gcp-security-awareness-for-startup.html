@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive GCP security training manual for startups. Learn to secure Identity (IAM), Networking (VPC), and Data Storage through hands-on simulations and gamified modules." name="description"/>
+    <meta content="GCP, Google Cloud Platform, Cloud Security, Startup Security, IAM, Firewall, VPC, Data Protection, Training, Interactive Guide, Cyber Security Awareness" name="keywords"/>
+    <title>GCP Security for Startups: Interactive Training</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Warm Professional -->
+    <!-- Primary Background: #f8fafc (Slate 50) -->
+    <!-- Card Background: #ffffff (White) -->
+    <!-- Text Primary: #1e293b (Slate 800) -->
+    <!-- Accents: #3b82f6 (Blue - Google), #ef4444 (Red - Danger), #10b981 (Green - Secure) -->
+
+    <style>
+        /* Custom Font for a clean, tech feel */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Warm/Neutral Light Grey */
+            color: #1e293b;
+        }
+
+        /* Chart Container Styling - MANDATORY REQUIREMENT */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .module-btn.active {
+            background-color: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            color: #1e3a8a;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- Application Structure Plan: 
+         1. Header: Branding and Global Status.
+         2. Layout: Three-pane layout (Navigation, Main Content, Stats/Score).
+            - Navigation: Linear modules (Introduction -> IAM -> Network -> Storage -> Conclusion).
+            - Main Content: Dynamic injection of text, interactive tools, and context.
+            - Stats: Real-time "Security Score" visualization that updates based on user interaction.
+         3. Logic: Central state object tracks progress. Event listeners update the DOM and Charts.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Threat Landscape Chart (Bar): Shows top vectors (Creds, Misconfig) -> Goal: Inform/Motivate -> Chart.js.
+         2. Security Score (Doughnut): Gamification element -> Goal: Engagement -> Chart.js.
+         3. IAM Simulator (HTML/JS Interaction): Drag-and-drop style role assignment -> Goal: Teach Least Privilege.
+         4. Firewall Viz (HTML/JS): Toggle switches for ports -> Goal: Teach Network Security.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shadow-sm z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold">G</div>
+            <h1 class="text-xl font-bold tracking-tight text-slate-800">GCP Security <span class="text-blue-600">Awareness</span> <span class="text-xs font-normal text-gray-500 uppercase tracking-wider ml-2">Startup Edition</span></h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="text-sm text-gray-600 hidden md:block">Session Progress: <span class="font-bold text-blue-600" id="progress-text">0%</span></div>
+            <button class="text-xs text-gray-400 hover:text-red-500 underline" id="reset-btn">Reset Training</button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex-col hidden md:flex overflow-y-auto">
+            <div class="p-6">
+                <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Training Modules</h2>
+                <nav class="space-y-2" id="module-nav">
+                    <!-- Nav items generated by JS -->
+                </nav>
+            </div>
+            
+            <div class="mt-auto p-6 bg-slate-50 border-t border-gray-100">
+                <h3 class="text-sm font-semibold text-gray-700 mb-2">Quick Tips</h3>
+                <p class="text-xs text-gray-500 italic" id="daily-tip">"Always enforce MFA on all users."</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-6 md:p-10 relative">
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Breadcrumbs & Mobile Nav Trigger -->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="text-sm text-gray-500" id="breadcrumbs">Training / <span class="text-gray-900 font-medium">Introduction</span></div>
+                    <button class="md:hidden text-gray-600 text-2xl" id="mobile-menu-btn">☰</button>
+                </div>
+
+                <!-- Dynamic Content Container -->
+                <div class="space-y-8 animate-fade-in" id="content-area">
+                    <!-- Content injected here -->
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Right Panel: Stats & Tools (Collapsible on mobile) -->
+        <aside class="w-80 bg-white border-l border-gray-200 flex-col hidden lg:flex overflow-y-auto">
+            <div class="p-6 border-b border-gray-100">
+                <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span>🛡️</span> Security Score
+                </h2>
+                <div class="chart-container h-48">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+                <p class="text-center text-xs text-gray-500 mt-2">Complete modules and fix vulnerabilities to improve score.</p>
+            </div>
+
+            <div class="p-6">
+                <h2 class="text-sm font-bold text-gray-800 mb-4">Threat Intel</h2>
+                <div class="bg-red-50 border border-red-100 rounded-lg p-4 mb-4">
+                    <div class="text-xs text-red-800 font-bold mb-1">DATA BREACH ALERT</div>
+                    <p class="text-xs text-red-600">48% of startup breaches occur due to compromised credentials.</p>
+                </div>
+                
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Top Risks</h3>
+                <div class="chart-container h-48">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Navigation Modal -->
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden" id="mobile-nav" onclick="toggleMobileNav()">
+        <div class="absolute left-0 top-0 h-full w-64 bg-white p-6 shadow-xl" onclick="event.stopPropagation()">
+            <h2 class="text-lg font-bold mb-6">Menu</h2>
+            <nav class="space-y-4" id="mobile-module-nav">
+                <!-- Mobile Nav Items -->
+            </nav>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA & CONTENT ---
+        
+        const appData = {
+            modules: [
+                {
+                    id: 'intro',
+                    title: '1. The Startup Risk',
+                    icon: '🚀',
+                    content: {
+                        heading: "Why Cloud Security Matters for Startups",
+                        intro: "Startups are prime targets for cyberattacks. We often prioritize speed over governance, leaving doors open. This module explores the real-world impact of security neglect in a GCP environment.",
+                        body: `
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                                    <div class="text-3xl mb-2">📉</div>
+                                    <h3 class="font-bold text-gray-800 mb-2">The Cost of a Breach</h3>
+                                    <p class="text-sm text-gray-600">The average cost of a data breach for a small business is over $3 million. For a startup, this is often an extinction event.</p>
+                                </div>
+                                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                                    <div class="text-3xl mb-2">⚡</div>
+                                    <h3 class="font-bold text-gray-800 mb-2">Speed vs. Security</h3>
+                                    <p class="text-sm text-gray-600">Security doesn't have to slow you down. Implementing "Security by Design" actually accelerates scaling by preventing technical debt.</p>
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">The "Shared Responsibility" Model</h3>
+                            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                                Google secures the <strong>infrastructure</strong> (hardware, physical datacenters). <br>
+                                You secure the <strong>data and configuration</strong> (IAM, Firewall rules, Encryption).
+                            </p>
+
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                                <p class="text-sm text-blue-800"><strong>Key Takeaway:</strong> Most cloud breaches are not Google's fault; they are due to customer misconfiguration.</p>
+                            </div>
+                            
+                            <button onclick="markComplete('intro')" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition shadow-lg text-sm font-medium">Acknowledge & Continue</button>
+                        `
+                    }
+                },
+                {
+                    id: 'iam',
+                    title: '2. Identity (IAM)',
+                    icon: '🔑',
+                    content: {
+                        heading: "Identity: The New Perimeter",
+                        intro: "In the cloud, IP addresses matter less than Identity. If an attacker steals a Service Account key with 'Owner' permissions, they own your startup. This section teaches the Principle of Least Privilege.",
+                        body: `
+                            <div class="mb-8">
+                                <h3 class="font-bold text-gray-800 mb-4">Interactive Challenge: Fix the Permissions</h3>
+                                <p class="text-sm text-gray-600 mb-4">Review the following users and assign the safest role. Avoid "Owner" or "Editor" whenever possible.</p>
+                                
+                                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                    <table class="w-full text-sm text-left">
+                                        <thead class="bg-gray-50 text-gray-500 border-b">
+                                            <tr>
+                                                <th class="p-4">User / Service</th>
+                                                <th class="p-4">Needs</th>
+                                                <th class="p-4">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-100">
+                                            <tr>
+                                                <td class="p-4 font-medium">Developer Dave</td>
+                                                <td class="p-4 text-gray-600">View logs to debug an app.</td>
+                                                <td class="p-4">
+                                                    <select id="iam-dave" onchange="checkIam('dave')" class="border rounded p-1 text-xs bg-gray-50">
+                                                        <option value="">Select Role...</option>
+                                                        <option value="owner">Project Owner</option>
+                                                        <option value="editor">Project Editor</option>
+                                                        <option value="viewer">Logs Viewer</option>
+                                                    </select>
+                                                    <span id="res-dave" class="ml-2 text-xs"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-4 font-medium">Backup Bot (Service Account)</td>
+                                                <td class="p-4 text-gray-600">Write backup files to a Storage Bucket.</td>
+                                                <td class="p-4">
+                                                    <select id="iam-bot" onchange="checkIam('bot')" class="border rounded p-1 text-xs bg-gray-50">
+                                                        <option value="">Select Role...</option>
+                                                        <option value="admin">Storage Admin</option>
+                                                        <option value="creator">Storage Object Creator</option>
+                                                        <option value="basic">Basic Owner</option>
+                                                    </select>
+                                                    <span id="res-bot" class="ml-2 text-xs"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p id="iam-feedback" class="mt-4 text-xs font-bold text-gray-500"></p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-4 border border-red-200 bg-red-50 rounded">
+                                    <h4 class="font-bold text-red-700 text-sm mb-1">⛔ DANGER: Service Account Keys</h4>
+                                    <p class="text-xs text-red-600">Never check JSON key files into GitHub. Use Workload Identity Federation instead.</p>
+                                </div>
+                                <div class="p-4 border border-green-200 bg-green-50 rounded">
+                                    <h4 class="font-bold text-green-700 text-sm mb-1">✅ BEST PRACTICE: MFA</h4>
+                                    <p class="text-xs text-green-600">Enforce 2-Step Verification for all users in Google Workspace.</p>
+                                </div>
+                            </div>
+                        `
+                    }
+                },
+                {
+                    id: 'network',
+                    title: '3. Network Security',
+                    icon: '🌐',
+                    content: {
+                        heading: "VPC & Firewalls",
+                        intro: "Default VPC networks often come with wide-open firewall rules. A common mistake is leaving port 22 (SSH) or 3389 (RDP) open to 0.0.0.0/0.",
+                        body: `
+                            <div class="mb-8">
+                                <h3 class="font-bold text-gray-800 mb-4">Simulation: Secure the Firewall</h3>
+                                <p class="text-sm text-gray-600 mb-4">The current configuration allows traffic from anywhere. Toggle the rules to secure the instance.</p>
+                                
+                                <div class="bg-gray-900 rounded-lg p-6 text-green-400 font-mono text-xs shadow-lg">
+                                    <div class="mb-2 text-gray-400">// Firewall Rules for 'web-server-01'</div>
+                                    
+                                    <div class="flex items-center justify-between py-2 border-b border-gray-800">
+                                        <span>ALLOW tcp:80 (HTTP) from 0.0.0.0/0</span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer" disabled>
+                                            <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                                        </label>
+                                    </div>
+
+                                    <div class="flex items-center justify-between py-2 border-b border-gray-800">
+                                        <span class="text-red-400">ALLOW tcp:22 (SSH) from 0.0.0.0/0</span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="ssh-toggle" checked onchange="updateNetworkScore()" class="sr-only peer">
+                                            <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between py-2 border-b border-gray-800">
+                                        <span class="text-red-400">ALLOW tcp:3306 (MySQL) from 0.0.0.0/0</span>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="db-toggle" checked onchange="updateNetworkScore()" class="sr-only peer">
+                                            <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
+                                        </label>
+                                    </div>
+
+                                    <div class="mt-4 pt-2 text-gray-500">
+                                        Status: <span id="firewall-status" class="text-red-500 font-bold">VULNERABLE</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Tip: Use Identity-Aware Proxy (IAP) instead of exposing SSH.</p>
+                            </div>
+                        `
+                    }
+                },
+                {
+                    id: 'storage',
+                    title: '4. Data & Storage',
+                    icon: '💾',
+                    content: {
+                        heading: "The Leaky Bucket",
+                        intro: "Cloud Storage buckets are private by default. They only become public when someone explicitly changes permissions. However, 'allUsers' grant is a common mistake that leads to data leaks.",
+                        body: `
+                            <div class="flex flex-col md:flex-row gap-6 mb-6">
+                                <div class="flex-1 bg-white p-6 rounded shadow border border-gray-100">
+                                    <h4 class="font-bold text-gray-800 mb-2">Classify Your Data</h4>
+                                    <p class="text-sm text-gray-600 mb-4">Not all data is equal. Tag your buckets.</p>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                                            <span class="text-xs font-medium">PII / Sensitive (Encryption Required)</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                                            <span class="text-xs font-medium">Internal (Restricted Access)</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                                            <span class="text-xs font-medium">Public (Assets/Images only)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-1 bg-white p-6 rounded shadow border border-gray-100 flex flex-col justify-center items-center text-center">
+                                    <div class="text-4xl mb-2">🔒</div>
+                                    <h4 class="font-bold text-gray-800">Uniform Bucket Level Access</h4>
+                                    <p class="text-xs text-gray-500 mt-2">Always enable this setting. It prevents per-object ACLs, which are hard to manage and audit.</p>
+                                </div>
+                            </div>
+                            
+                            <button onclick="markComplete('storage')" class="w-full py-3 bg-gray-800 text-white rounded hover:bg-black transition text-sm font-medium">I Understand Data Classification</button>
+                        `
+                    }
+                }
+            ],
+            state: {
+                currentModule: 'intro',
+                completed: [],
+                score: 10, // Base score
+                riskData: [45, 25, 20, 10] // Creds, Misconfig, Malware, Insider
+            }
+        };
+
+        // --- CHART INITIALIZATION ---
+        
+        let scoreChartInstance = null;
+        let riskChartInstance = null;
+
+        function initCharts() {
+            // 1. Score Chart (Doughnut)
+            const ctxScore = document.getElementById('scoreChart').getContext('2d');
+            scoreChartInstance = new Chart(ctxScore, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Secured', 'Vulnerable'],
+                    datasets: [{
+                        data: [appData.state.score, 100 - appData.state.score],
+                        backgroundColor: ['#3b82f6', '#e2e8f0'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                },
+                plugins: [{
+                    id: 'textCenter',
+                    beforeDraw: function(chart) {
+                        var width = chart.width, height = chart.height, ctx = chart.ctx;
+                        ctx.restore();
+                        var fontSize = (height / 114).toFixed(2);
+                        ctx.font = "bold " + fontSize + "em sans-serif";
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = "#1e293b";
+                        var text = appData.state.score + "%",
+                            textX = Math.round((width - ctx.measureText(text).width) / 2),
+                            textY = height / 2;
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }]
+            });
+
+            // 2. Risk Chart (Bar)
+            const ctxRisk = document.getElementById('riskChart').getContext('2d');
+            riskChartInstance = new Chart(ctxRisk, {
+                type: 'bar',
+                data: {
+                    labels: ['Creds', 'Config', 'Malware', 'Insider'],
+                    datasets: [{
+                        label: 'Incidents %',
+                        data: appData.state.riskData,
+                        backgroundColor: ['#ef4444', '#f59e0b', '#64748b', '#94a3b8'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: false } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // --- LOGIC & INTERACTION ---
+
+        function renderNav() {
+            const nav = document.getElementById('module-nav');
+            const mobileNav = document.getElementById('mobile-module-nav');
+            
+            // Helper to create HTML string
+            const createLinks = (isMobile) => appData.modules.map(mod => {
+                const isActive = appData.state.currentModule === mod.id;
+                const isCompleted = appData.state.completed.includes(mod.id);
+                const statusIcon = isCompleted ? '✓' : (isActive ? '●' : '○');
+                const baseClass = isMobile 
+                    ? "block w-full text-left p-3 rounded hover:bg-gray-100" 
+                    : "module-btn w-full text-left flex items-center gap-3 px-4 py-3 rounded-md transition-all text-sm font-medium hover:bg-slate-100 text-gray-600";
+                
+                return `
+                    <button onclick="loadModule('${mod.id}')" 
+                        class="${baseClass} ${isActive && !isMobile ? 'active' : ''} ${isActive && isMobile ? 'bg-blue-50 text-blue-700' : ''}">
+                        <span class="${isCompleted ? 'text-green-500' : 'text-gray-400'}">${statusIcon}</span>
+                        <span>${mod.title}</span>
+                    </button>
+                `;
+            }).join('');
+
+            nav.innerHTML = createLinks(false);
+            mobileNav.innerHTML = createLinks(true);
+        }
+
+        function loadModule(moduleId) {
+            appData.state.currentModule = moduleId;
+            const module = appData.modules.find(m => m.id === moduleId);
+            
+            // Update UI
+            const contentArea = document.getElementById('content-area');
+            const breadcrumbs = document.getElementById('breadcrumbs');
+            
+            breadcrumbs.innerHTML = `Training / <span class="text-gray-900 font-medium">${module.title}</span>`;
+            
+            contentArea.innerHTML = `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-4xl bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center">${module.icon}</div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">${module.heading}</h2>
+                            <p class="text-sm text-blue-600 font-medium uppercase tracking-wide">Module Focus</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-8 border-l-4 border-gray-200 pl-4 italic">
+                        ${module.content.intro}
+                    </p>
+                    <hr class="border-gray-100 mb-8">
+                    <div class="prose prose-slate max-w-none">
+                        ${module.content.body}
+                    </div>
+                </div>
+            `;
+
+            renderNav();
+            // Close mobile nav if open
+            document.getElementById('mobile-nav').classList.add('hidden');
+        }
+
+        function updateScore(points) {
+            const newScore = Math.min(100, appData.state.score + points);
+            appData.state.score = newScore;
+            
+            // Update chart
+            scoreChartInstance.data.datasets[0].data = [newScore, 100 - newScore];
+            scoreChartInstance.update();
+            
+            // Update text progress
+            const totalModules = appData.modules.length;
+            const completedCount = appData.state.completed.length;
+            const percentage = Math.round((completedCount / totalModules) * 100);
+            document.getElementById('progress-text').innerText = percentage + "%";
+        }
+
+        function markComplete(moduleId) {
+            if (!appData.state.completed.includes(moduleId)) {
+                appData.state.completed.push(moduleId);
+                updateScore(15); // +15 points per module completion
+                renderNav();
+                
+                // Auto advance if not last
+                const currentIndex = appData.modules.findIndex(m => m.id === moduleId);
+                if (currentIndex < appData.modules.length - 1) {
+                    setTimeout(() => {
+                        loadModule(appData.modules[currentIndex + 1].id);
+                    }, 500); // Slight delay for effect
+                } else {
+                    alert("Training Complete! Check your final Security Score.");
+                }
+            }
+        }
+
+        // --- SPECIFIC MODULE INTERACTION HANDLERS ---
+
+        // Module 2: IAM Checker
+        window.checkIam = function(user) {
+            const role = document.getElementById(`iam-${user}`).value;
+            const feedback = document.getElementById(`iam-feedback`);
+            const resSpan = document.getElementById(`res-${user}`);
+
+            if (user === 'dave') {
+                if (role === 'viewer') {
+                    resSpan.innerHTML = "✅";
+                    feedback.innerText = "Correct! Dave only needs to view logs.";
+                    feedback.className = "mt-4 text-xs font-bold text-green-600";
+                    updateScore(5);
+                } else if (role) {
+                    resSpan.innerHTML = "⚠️";
+                    feedback.innerText = "Too risky! 'Owner' or 'Editor' gives full control. Try again.";
+                    feedback.className = "mt-4 text-xs font-bold text-red-600";
+                }
+            }
+            if (user === 'bot') {
+                if (role === 'creator') {
+                    resSpan.innerHTML = "✅";
+                    feedback.innerText = "Perfect. The bot can upload backups but cannot delete buckets or modify ACLs.";
+                    feedback.className = "mt-4 text-xs font-bold text-green-600";
+                    updateScore(5);
+                    // Check if both correct to mark module complete
+                    const daveRole = document.getElementById('iam-dave').value;
+                    if (daveRole === 'viewer') markComplete('iam');
+                } else if (role) {
+                    resSpan.innerHTML = "⚠️";
+                    feedback.innerText = "Too broad. 'Admin' allows deletion of all data.";
+                    feedback.className = "mt-4 text-xs font-bold text-red-600";
+                }
+            }
+        };
+
+        // Module 3: Network Checker
+        window.updateNetworkScore = function() {
+            const ssh = document.getElementById('ssh-toggle');
+            const db = document.getElementById('db-toggle');
+            const status = document.getElementById('firewall-status');
+            
+            // We want both UNCHECKED (Off) meaning traffic is blocked
+            if (!ssh.checked && !db.checked) {
+                status.innerText = "SECURED";
+                status.className = "text-green-500 font-bold";
+                markComplete('network');
+            } else {
+                status.innerText = "VULNERABLE";
+                status.className = "text-red-500 font-bold";
+            }
+        };
+
+        // UI Helpers
+        function toggleMobileNav() {
+            const nav = document.getElementById('mobile-nav');
+            nav.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileNav);
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            if(confirm("Reset progress?")) {
+                location.reload();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            renderNav();
+            loadModule('intro'); // Start with intro
+        });
+
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive guide comparing Node.js vs. Python for backend API development. Features a decision engine to help choose the right stack for real-time apps, AI/ML integrations, and standard CRUD APIs." name="description"/>
+    <meta content="Node.js, Python, Backend Development, API, Express.js, FastAPI, Django, Event Loop, AsyncIO, Web Development, Tech Stack Decision" name="keywords"/>
+    <title>Backend Architect: Node.js vs. Python</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* green-50 base */
+            color: #111827; /* gray-900 */
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #dcfce7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #22c55e;
+            border-radius: 4px;
+        }
+
+        .nav-item.active {
+            background-color: #dcfce7; /* green-100 */
+            border-left: 4px solid #16a34a; /* green-600 */
+            font-weight: 600;
+        }
+
+        /* Animation Classes */
+        .packet {
+            transition: all 0.5s linear;
+        }
+        .pipeline-node {
+            transition: all 0.3s ease;
+        }
+        .pipeline-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <!-- Chosen Palette: Green (Node.js), Blue/Yellow (Python), Slate (Neutral) -->
+    <!-- Application Structure Plan: Dashboard Layout.
+         - Sidebar: Intro, Node.js (Event Loop), Python (CPU/Data), Comparative Analysis, Decision Engine.
+         - Content Area: Dynamic injection.
+         - Logic: Distinguishes between "I/O Bound + Concurrency" (Node) and "CPU Bound + Data Science" (Python).
+    -->
+    <!-- Visualization & Content Choices:
+         - Node View: "Event Loop Simulator". Visualizes how a single thread handles multiple concurrent requests without blocking.
+         - Python View: "Ecosystem Pipeline". Visualizes Python's unique ability to seamlessly pipe web requests into heavy ML/Data libraries (Pandas/PyTorch).
+         - Comparison: Radar Chart comparing I/O Speed, CPU Speed, Dev Velocity, Ecosystem size.
+         - Decision Engine: Form-based logic tree.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Mobile Header -->
+    <header class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center shadow-md z-20">
+        <h1 class="text-lg font-bold"><i class="fas fa-server mr-2"></i>Backend Architect</h1>
+        <button class="text-white focus:outline-none" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="bg-white w-64 flex-shrink-0 border-r border-green-100 transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10 h-full flex flex-col" id="sidebar">
+            <div class="p-6 border-b border-green-100 hidden md:block">
+                <h1 class="text-2xl font-bold text-slate-800"><i class="fas fa-server mr-2 text-green-600"></i>Backend API</h1>
+                <p class="text-xs text-slate-500 mt-2">Node.js vs. Python Guide</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1">
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center active" id="nav-intro" onclick="navigateTo('intro')">
+                            <i class="fas fa-info-circle w-6"></i> Introduction
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center" id="nav-node" onclick="navigateTo('node')">
+                            <i class="fab fa-node-js w-6 text-green-600"></i> Node.js
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center" id="nav-python" onclick="navigateTo('python')">
+                            <i class="fab fa-python w-6 text-sky-600"></i> Python
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center" id="nav-compare" onclick="navigateTo('compare')">
+                            <i class="fas fa-balance-scale w-6"></i> Comparative Analysis
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-green-50 transition-colors flex items-center" id="nav-decision" onclick="navigateTo('decision')">
+                            <i class="fas fa-calculator w-6 text-yellow-600"></i> Decision Engine
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="p-4 border-t border-green-100 bg-green-50">
+                <div class="text-xs text-slate-500">
+                    <p class="font-semibold">Current Context:</p>
+                    <p id="context-indicator">Introduction</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-8" id="main-content">
+            <!-- Content injected via JS -->
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden" id="overlay"></div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'intro',
+            decisionInputs: {
+                appType: null,
+                teamSkills: null,
+                performance: null,
+                ecosystem: null
+            }
+        };
+
+        // --- Content Store ---
+        const contentData = {
+            intro: {
+                title: "The Backend Battle: I/O vs. CPU",
+                content: `
+                    <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                        <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-slate-800">
+                            <h2 class="text-2xl font-bold text-slate-800 mb-4">Two Giants, Two Philosophies</h2>
+                            <p class="text-slate-600 leading-relaxed text-lg">
+                                Choosing a backend technology dictates your hiring strategy, development speed, and scaling architecture. <strong>Node.js</strong> revolutionized the web with its non-blocking event loop, perfect for real-time applications. <strong>Python</strong> conquered the world of data, AI, and scientific computing with its clean syntax and massive library ecosystem.
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-green-500" onclick="navigateTo('node')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
+                                        <i class="fab fa-node-js"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">Node.js</h3>
+                                </div>
+                                <p class="text-slate-600 mb-4">JavaScript everywhere. Built on Chrome's V8 engine. Dominates in real-time chats, streaming, and I/O-heavy microservices.</p>
+                                <span class="text-green-600 font-semibold text-sm">Explore Async &rarr;</span>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-sky-500" onclick="navigateTo('python')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 mr-3">
+                                        <i class="fab fa-python"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">Python</h3>
+                                </div>
+                                <p class="text-slate-600 mb-4">Readability counts. The standard for AI, ML, and Data Science backends (Django, FastAPI). Excellent for CPU-heavy tasks.</p>
+                                <span class="text-sky-600 font-semibold text-sm">Explore Ecosystem &rarr;</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-200 p-6 rounded-xl text-center mt-8">
+                            <h3 class="text-lg font-bold text-slate-700 mb-2">Starting a new project?</h3>
+                            <button onclick="navigateTo('decision')" class="bg-slate-800 text-white px-6 py-3 rounded-lg shadow hover:bg-slate-700 transition-colors">
+                                Launch Decision Engine
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            node: {
+                title: "Node.js: The Event Loop Master",
+                description: "Node.js is single-threaded but non-blocking. This means it can handle thousands of concurrent connections waiting for data (I/O) without needing thousands of threads. It's the king of concurrency.",
+                vizScript: 'renderNodeViz'
+            },
+            python: {
+                title: "Python: The Data Powerhouse",
+                description: "Python prioritizes readability and rich integration. While traditionally synchronous (blocking), modern frameworks like FastAPI offer async capabilities. Its true power lies in seamlessly connecting APIs to heavy-lifting libraries like Pandas and PyTorch.",
+                vizScript: 'renderPythonViz'
+            },
+            compare: {
+                title: "Head-to-Head Comparison",
+                description: "Node wins on raw I/O throughput. Python wins on computational complexity and code simplicity.",
+                vizScript: 'renderComparisonChart'
+            },
+            decision: {
+                title: "Stack Selector",
+                description: "Answer four questions about your project goals to get a recommendation.",
+                vizScript: 'renderDecisionTool'
+            }
+        };
+
+        // --- Core Navigation ---
+        function navigateTo(sectionId) {
+            state.currentSection = sectionId;
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            document.getElementById('context-indicator').innerText = contentData[sectionId].title;
+
+            // Mobile menu close
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebar').classList.remove('translate-x-0');
+            document.getElementById('overlay').classList.add('hidden');
+
+            renderContent(sectionId);
+        }
+
+        function renderContent(sectionId) {
+            const main = document.getElementById('main-content');
+            const data = contentData[sectionId];
+
+            if (sectionId === 'intro') {
+                main.innerHTML = data.content;
+                return;
+            }
+
+            let html = `
+                <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">${data.title}</h2>
+                        <p class="text-slate-600">${data.description}</p>
+                    </div>
+            `;
+
+            if (sectionId === 'decision') {
+                html += `<div id="decision-container" class="grid md:grid-cols-3 gap-6"></div>`;
+            } else if (sectionId === 'node') {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-green-700 mb-4">Event Loop Simulator</h3>
+                            
+                            <div class="flex-grow bg-slate-900 rounded-lg p-4 relative overflow-hidden flex flex-col items-center justify-center" style="height: 300px;">
+                                <!-- Visualization Elements -->
+                                <div class="w-full flex justify-between px-4 mb-8 text-xs text-slate-400 font-mono">
+                                    <span>INCOMING REQUESTS</span>
+                                    <span>EVENT LOOP (Single Thread)</span>
+                                    <span>WORKER POOL (DB/Files)</span>
+                                </div>
+                                
+                                <div class="flex w-full items-center justify-between px-8 relative">
+                                    <!-- Queue -->
+                                    <div id="request-queue" class="w-20 h-40 border-2 border-slate-600 border-dashed rounded flex flex-col-reverse p-1 gap-1"></div>
+                                    
+                                    <!-- Event Loop Spinner -->
+                                    <div class="relative">
+                                        <div id="event-loop-spinner" class="w-16 h-16 rounded-full border-4 border-green-500 border-t-transparent animate-spin"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">V8</div>
+                                    </div>
+
+                                    <!-- Workers -->
+                                    <div id="worker-pool" class="w-32 space-y-2">
+                                        <div class="worker h-8 bg-slate-700 rounded w-full flex items-center justify-center text-xs text-slate-300">DB Query</div>
+                                        <div class="worker h-8 bg-slate-700 rounded w-full flex items-center justify-center text-xs text-slate-300">File Read</div>
+                                        <div class="worker h-8 bg-slate-700 rounded w-full flex items-center justify-center text-xs text-slate-300">Ext API</div>
+                                    </div>
+                                </div>
+
+                                <div id="node-status" class="mt-8 text-green-400 font-mono text-sm text-center">Idle</div>
+                            </div>
+                            
+                            <button onclick="runNodeSimulation()" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors">
+                                <i class="fas fa-bolt mr-2"></i> Simulate Concurrency
+                            </button>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else if (sectionId === 'python') {
+                 html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-sky-700 mb-4">Integrated Data Pipeline</h3>
+                            
+                            <div class="flex-grow bg-slate-50 rounded-lg border border-slate-200 p-4 relative" style="height: 300px;">
+                                <div class="flex flex-col h-full justify-between py-4">
+                                    <!-- Web Layer -->
+                                    <div class="pipeline-node flex items-center p-3 bg-white border border-sky-200 rounded-lg shadow-sm">
+                                        <div class="w-10 h-10 bg-sky-100 rounded flex items-center justify-center text-sky-600 mr-3"><i class="fas fa-globe"></i></div>
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-700">FastAPI / Django</div>
+                                            <div class="text-xs text-slate-500">Receives Request</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Arrow -->
+                                    <div class="flex justify-center"><i class="fas fa-arrow-down text-slate-300"></i></div>
+
+                                    <!-- Logic Layer -->
+                                    <div class="pipeline-node flex items-center p-3 bg-white border border-yellow-200 rounded-lg shadow-sm">
+                                        <div class="w-10 h-10 bg-yellow-100 rounded flex items-center justify-center text-yellow-600 mr-3"><i class="fas fa-table"></i></div>
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-700">Pandas / NumPy</div>
+                                            <div class="text-xs text-slate-500">Data Transformation</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Arrow -->
+                                    <div class="flex justify-center"><i class="fas fa-arrow-down text-slate-300"></i></div>
+
+                                    <!-- AI Layer -->
+                                    <div class="pipeline-node flex items-center p-3 bg-white border border-orange-200 rounded-lg shadow-sm">
+                                        <div class="w-10 h-10 bg-orange-100 rounded flex items-center justify-center text-orange-600 mr-3"><i class="fas fa-brain"></i></div>
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-700">PyTorch / TensorFlow</div>
+                                            <div class="text-xs text-slate-500">Model Inference</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Simulation Overlay -->
+                                <div id="python-data-packet" class="absolute top-8 left-8 w-4 h-4 bg-sky-500 rounded-full shadow opacity-0 pointer-events-none"></div>
+                            </div>
+                            
+                            <button onclick="runPythonSimulation()" class="mt-4 w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition-colors">
+                                <i class="fas fa-cogs mr-2"></i> Process Data Request
+                            </button>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col justify-center">
+                            <h3 class="font-bold text-slate-700 mb-4 text-center">Visualization</h3>
+                            <div class="chart-container">
+                                <canvas id="mainChart"></canvas>
+                            </div>
+                            <p class="text-center text-xs text-slate-400 mt-2" id="chart-caption"></p>
+                        </div>
+                        <div class="space-y-6">
+                             ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            main.innerHTML = html;
+
+            if (data.vizScript === 'renderNodeViz') { /* Handled by HTML click */ }
+            if (data.vizScript === 'renderPythonViz') { /* Handled by HTML click */ }
+            if (data.vizScript === 'renderComparisonChart') renderComparisonChart();
+            if (data.vizScript === 'renderDecisionTool') renderDecisionTool();
+        }
+
+        function getDetailsHTML(sectionId) {
+            if (sectionId === 'node') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-green-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Non-Blocking I/O:</strong> Handles thousands of concurrent connections efficiently.</li>
+                            <li><strong>Unified Language:</strong> Use JavaScript for Frontend and Backend (Fullstack).</li>
+                            <li><strong>JSON Native:</strong> Perfect for REST APIs and dealing with NoSQL databases (MongoDB).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>CPU Bottleneck:</strong> Heavy computation (image processing, math) blocks the single thread.</li>
+                            <li><strong>Callback Hell:</strong> Though Promises/Async-Await fixed this, bad code can still get messy.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'python') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-sky-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-sky-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Library Ecosystem:</strong> Unrivaled for Data Science, AI, ML, and Image Processing.</li>
+                            <li><strong>Readability:</strong> Code is often described as "executable pseudocode". Easier to maintain.</li>
+                            <li><strong>Maturity:</strong> Battle-tested frameworks like Django include everything (Auth, Admin, ORM).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Slower Raw Speed:</strong> Python is generally slower than JS (though compiled extensions help).</li>
+                            <li><strong>GIL (Global Interpreter Lock):</strong> True parallelism is harder to achieve than in other languages.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'compare') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-4">The Verdict</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-green-600 text-sm uppercase">Node.js (Green)</h4>
+                                <p class="text-sm text-slate-600">The clear winner for <strong>I/O Bound</strong> systems. If you are building a chat app, a streaming service, or a high-traffic API gateway, pick Node.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sky-600 text-sm uppercase">Python (Blue)</h4>
+                                <p class="text-sm text-slate-600">The clear winner for <strong>CPU Bound</strong> or <strong>Logic Heavy</strong> systems. If you need to analyze data, run AI models, or build complex enterprise logic, pick Python.</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h4 class="font-bold text-yellow-600 text-sm uppercase">Developer Experience</h4>
+                                <p class="text-sm text-slate-600">Node allows for "Fullstack JS" teams (one language). Python separates frontend and backend but offers a cleaner backend codebase.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Visualizations ---
+
+        // 1. Node.js Event Loop Sim
+        window.runNodeSimulation = function() {
+            const queue = document.getElementById('request-queue');
+            const status = document.getElementById('node-status');
+            const spinner = document.getElementById('event-loop-spinner');
+            const workers = document.querySelectorAll('.worker');
+
+            // Reset
+            queue.innerHTML = '';
+            status.innerText = "Processing 5 concurrent requests...";
+            
+            // Add requests to queue
+            for(let i=0; i<5; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'w-full h-4 bg-green-400 rounded animate-pulse';
+                queue.appendChild(dot);
+            }
+
+            let completed = 0;
+            
+            // Simulation Logic
+            workers.forEach((worker, index) => {
+                setTimeout(() => {
+                    worker.classList.remove('bg-slate-700', 'text-slate-300');
+                    worker.classList.add('bg-green-600', 'text-white');
+                    
+                    // Remove from queue
+                    if(queue.lastChild) queue.removeChild(queue.lastChild);
+
+                    setTimeout(() => {
+                        worker.classList.remove('bg-green-600', 'text-white');
+                        worker.classList.add('bg-slate-700', 'text-slate-300');
+                        completed++;
+                        if(completed === 3) status.innerText = "Non-blocking I/O complete!";
+                    }, 1000 + (index * 200));
+                }, index * 300);
+            });
+        }
+
+        // 2. Python Pipeline Sim
+        window.runPythonSimulation = function() {
+            const packet = document.getElementById('python-data-packet');
+            
+            // Reset
+            packet.style.transition = 'none';
+            packet.style.top = '30px'; // Web Layer
+            packet.style.left = '30px';
+            packet.style.opacity = '1';
+            
+            // Animate
+            setTimeout(() => {
+                packet.style.transition = 'top 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                packet.style.top = '125px'; // Logic Layer
+            }, 100);
+
+            setTimeout(() => {
+                packet.style.top = '220px'; // AI Layer
+            }, 1200);
+
+            setTimeout(() => {
+                packet.style.opacity = '0';
+                // Perhaps show a "Result" bubble?
+            }, 2300);
+        }
+
+        // 3. Comparison Radar
+        function renderComparisonChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Comparing capabilities (Outer = Better)";
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['I/O Speed', 'CPU Speed', 'Data/AI Ecosystem', 'Web Ecosystem', 'Dev Speed'],
+                    datasets: [{
+                        label: 'Node.js',
+                        data: [10, 4, 3, 10, 8], 
+                        fill: true,
+                        backgroundColor: 'rgba(34, 197, 94, 0.2)', // Green
+                        borderColor: 'rgb(34, 197, 94)',
+                        pointBackgroundColor: 'rgb(34, 197, 94)',
+                    }, {
+                        label: 'Python',
+                        data: [6, 7, 10, 8, 9], // Higher CPU (via C extensions), Max Data, Good Web, High Dev Speed
+                        fill: true,
+                        backgroundColor: 'rgba(14, 165, 233, 0.2)', // Sky
+                        borderColor: 'rgb(14, 165, 233)',
+                        pointBackgroundColor: 'rgb(14, 165, 233)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 3 } },
+                    scales: { r: { suggestedMin: 0, suggestedMax: 10, angleLines: { display: false } } }
+                }
+            });
+        }
+
+        // 4. Decision Engine
+        function renderDecisionTool() {
+            const container = document.getElementById('decision-container');
+            container.innerHTML = `
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-6">Project Requirements</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Q1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">1. Application Type</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('appType', 'realtime', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Real-time/Streaming</strong><br>Chat, Live Updates, Sockets.
+                                </button>
+                                <button onclick="selectOption('appType', 'compute', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Data Intensive</strong><br>Analysis, ML Model serving.
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">2. Team Expertise</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('teamSkills', 'js', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>JavaScript (React/Vue)</strong><br>Frontend devs going fullstack.
+                                </button>
+                                <button onclick="selectOption('teamSkills', 'general', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Diverse/Backend</strong><br>Engineers familiar with Logic/Scripting.
+                                </button>
+                            </div>
+                        </div>
+
+                         <!-- Q3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">3. Primary Bottleneck</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('performance', 'io', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Wait Time (I/O)</strong><br>Waiting for DB, APIs, Files.
+                                </button>
+                                <button onclick="selectOption('performance', 'cpu', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Processing (CPU)</strong><br>Calculations, Image manipulation.
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1">
+                    <div id="recommendation-card" class="bg-slate-800 text-white p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500">
+                        <i class="fas fa-server text-4xl text-slate-500 mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">Awaiting Input</h4>
+                        <p class="text-slate-400 text-sm">Select options to see the recommendation.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectOption = function(category, value, btnElement) {
+            state.decisionInputs[category] = value;
+            
+            // Visual Toggle
+            const parent = btnElement.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-slate-500', 'bg-slate-50', 'border-slate-500');
+                b.classList.add('border-slate-200');
+            });
+            btnElement.classList.remove('border-slate-200');
+            btnElement.classList.add('ring-2', 'ring-slate-500', 'bg-slate-50', 'border-slate-500');
+
+            calculateDecision();
+        }
+
+        function calculateDecision() {
+            const { appType, teamSkills, performance } = state.decisionInputs;
+            if (!appType || !teamSkills || !performance) return;
+
+            const card = document.getElementById('recommendation-card');
+            let title, icon, desc, bgClass;
+
+            let scoreNode = 0;
+            let scorePython = 0;
+
+            // Logic
+            if (appType === 'realtime') scoreNode += 3; else scorePython += 3;
+            if (teamSkills === 'js') scoreNode += 2; else scorePython += 1;
+            if (performance === 'io') scoreNode += 2; else scorePython += 3;
+
+            if (scoreNode > scorePython) {
+                title = "Use Node.js";
+                icon = "fab fa-node-js";
+                desc = "Your project benefits from high concurrency and real-time features. Using JavaScript across the stack (React + Node) will speed up development.";
+                bgClass = "bg-green-600";
+            } else {
+                title = "Use Python";
+                icon = "fab fa-python";
+                desc = "Your project likely involves heavy logic, data processing, or AI integration. Python's readability and ecosystem (Django/FastAPI) are superior here.";
+                bgClass = "bg-sky-600";
+            }
+
+            card.className = `p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500 ${bgClass} text-white`;
+            card.innerHTML = `
+                <div class="animate-bounce mb-4"><i class="${icon} text-4xl"></i></div>
+                <h4 class="text-2xl font-bold mb-3">${title}</h4>
+                <p class="text-white/90 text-sm leading-relaxed">${desc}</p>
+                <button onclick="navigateTo('compare')" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-xs uppercase tracking-wider font-bold transition-colors">Compare Details</button>
+            `;
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent('intro');
+
+            // Mobile Menu
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            btn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('hidden');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('hidden');
+            });
+        });
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

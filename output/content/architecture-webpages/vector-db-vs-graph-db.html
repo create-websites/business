@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="An interactive architectural guide comparing Vector Databases vs. Knowledge Graphs for RAG systems. Includes a decision engine to help developers select the optimal Retrieval-Augmented Generation strategy." name="description"/>
+    <meta content="RAG, Retrieval-Augmented Generation, Vector Database, Knowledge Graph, GraphRAG, Vector vs Graph, LLM Architecture, AI Decision Guide, Semantic Search, Structured Data, Neo4j, Pinecone" name="keywords"/>
+    <title>RAG Architect: Vector vs. Graph</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #1c1917; /* stone-900 */
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar for side navigation if needed */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e7e5e4;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a8a29e;
+            border-radius: 4px;
+        }
+
+        .nav-item.active {
+            background-color: #e7e5e4;
+            border-left: 4px solid #ea580c; /* orange-600 */
+            font-weight: 600;
+        }
+
+        .node {
+            transition: all 0.3s ease;
+        }
+        .node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .connection-line {
+            transition: all 0.3s ease;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Burnt Orange (Action) and Muted Blue/Green (Data) -->
+    <!-- Application Structure Plan: Dashboard Layout. 
+         - Left Sidebar: Navigation (Introduction, Vector Deep Dive, Graph Deep Dive, Comparative Analysis, Decision Engine).
+         - Main Content Area: Dynamic content injection based on navigation.
+         - Why: This structure allows the user to treat the app as a linear course or a reference tool, jumping between concepts and the practical decision tool.
+    -->
+    <!-- Visualization & Content Choices:
+         - Vector Deep Dive: Scatter Plot (Chart.js) to visualize "semantic clusters". Interaction: Hover to see text chunks.
+         - Graph Deep Dive: Interactive HTML Node Map. Interaction: Click nodes to reveal relationships. Shows structured nature.
+         - Comparison: Radar Chart (Chart.js) to compare 5 key metrics (Speed, Cost, Complexity, etc.).
+         - Decision Engine: Interactive Form/Quiz. Logic-based recommendation.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Mobile Header -->
+    <header class="md:hidden bg-stone-800 text-stone-50 p-4 flex justify-between items-center shadow-md z-20">
+        <h1 class="text-lg font-bold"><i class="fas fa-project-diagram mr-2"></i>RAG Architect</h1>
+        <button class="text-stone-50 focus:outline-none" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="bg-white w-64 flex-shrink-0 border-r border-stone-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10 h-full flex flex-col" id="sidebar">
+            <div class="p-6 border-b border-stone-200 hidden md:block">
+                <h1 class="text-2xl font-bold text-stone-800"><i class="fas fa-project-diagram mr-2 text-orange-600"></i>RAG Guide</h1>
+                <p class="text-xs text-stone-500 mt-2">Interactive Architecture Report</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1">
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center active" id="nav-intro" onclick="navigateTo('intro')">
+                            <i class="fas fa-info-circle w-6"></i> Introduction
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-vector" onclick="navigateTo('vector')">
+                            <i class="fas fa-braille w-6"></i> Vector RAG
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-graph" onclick="navigateTo('graph')">
+                            <i class="fas fa-share-alt w-6"></i> Graph RAG
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-compare" onclick="navigateTo('compare')">
+                            <i class="fas fa-balance-scale w-6"></i> Comparative Analysis
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors flex items-center" id="nav-decision" onclick="navigateTo('decision')">
+                            <i class="fas fa-calculator w-6 text-orange-600"></i> Decision Engine
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="p-4 border-t border-stone-200 bg-stone-50">
+                <div class="text-xs text-stone-500">
+                    <p class="font-semibold">Current Context:</p>
+                    <p id="context-indicator">Introduction</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-stone-100 p-4 md:p-8" id="main-content">
+            <!-- Content injected via JS -->
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden" id="overlay"></div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'intro',
+            decisionInputs: {
+                dataType: null,
+                queryComplexity: null,
+                accuracyReq: null,
+                maintenance: null
+            }
+        };
+
+        // --- Data & Content Store ---
+        const contentData = {
+            intro: {
+                title: "The RAG Dilemma: Vector vs. Graph",
+                content: `
+                    <div class="max-w-4xl mx-auto space-y-8">
+                        <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-orange-500">
+                            <h2 class="text-2xl font-bold text-stone-800 mb-4">Why this matters</h2>
+                            <p class="text-stone-600 leading-relaxed text-lg">
+                                Retrieval-Augmented Generation (RAG) grounds LLMs in your own data. However, the mechanism you use to <em>retrieve</em> that data—either by mathematical similarity (<strong>Vector</strong>) or structured relationships (<strong>Graph</strong>)—fundamentally dictates your system's capabilities, cost, and accuracy. This interactive guide dissects the trade-offs to help you architect the right solution.
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="navigateTo('vector')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                                        <i class="fas fa-braille"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-stone-800">Vector Databases</h3>
+                                </div>
+                                <p class="text-stone-600 mb-4">Best for unstructured text and "fuzzy" semantic matching. Think of it as finding things that "sound like" your query.</p>
+                                <span class="text-blue-600 font-semibold text-sm">Explore Strategy &rarr;</span>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="navigateTo('graph')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mr-3">
+                                        <i class="fas fa-share-alt"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-stone-800">Knowledge Graphs</h3>
+                                </div>
+                                <p class="text-stone-600 mb-4">Best for structured facts and multi-hop reasoning. Think of it as following a map of connected concepts.</p>
+                                <span class="text-orange-600 font-semibold text-sm">Explore Strategy &rarr;</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-stone-200 p-6 rounded-xl text-center mt-8">
+                            <h3 class="text-lg font-bold text-stone-700 mb-2">Not sure where to start?</h3>
+                            <button onclick="navigateTo('decision')" class="bg-stone-800 text-white px-6 py-3 rounded-lg shadow hover:bg-stone-700 transition-colors">
+                                Launch Decision Engine
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            vector: {
+                title: "Vector RAG: The Semantic Engine",
+                description: "Vectors convert text into numbers (embeddings). Retrieval works by finding the 'nearest neighbors' in a multi-dimensional space. It is fast, scalable, and great for general queries.",
+                vizScript: 'renderVectorChart'
+            },
+            graph: {
+                title: "Graph RAG: The Structured Map",
+                description: "Knowledge Graphs store data as entities (nodes) and relationships (edges). Retrieval works by traversing paths. It is precise, explains its reasoning, and captures complex dependencies.",
+                vizScript: 'renderGraphSimulation' // Custom HTML interaction
+            },
+            compare: {
+                title: "Head-to-Head Comparison",
+                description: "Comparing the architectural trade-offs across five critical dimensions. Analyze the shape of the data to see which fits your constraints.",
+                vizScript: 'renderRadarChart'
+            },
+            decision: {
+                title: "Architectural Decision Engine",
+                description: "Answer four key questions about your data and goals to receive a tailored recommendation.",
+                vizScript: 'renderDecisionTool' // Not a chart, but a functional UI
+            }
+        };
+
+        // --- Core Navigation ---
+        function navigateTo(sectionId) {
+            state.currentSection = sectionId;
+            
+            // Update Sidebar
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            document.getElementById('context-indicator').innerText = contentData[sectionId].title;
+
+            // Mobile Menu Close
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebar').classList.remove('translate-x-0');
+            document.getElementById('overlay').classList.add('hidden');
+
+            // Render Content
+            renderContent(sectionId);
+        }
+
+        function renderContent(sectionId) {
+            const main = document.getElementById('main-content');
+            const data = contentData[sectionId];
+
+            if (sectionId === 'intro') {
+                main.innerHTML = data.content;
+                return;
+            }
+
+            // Generic Template for Deep Dives and Tools
+            let html = `
+                <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-stone-800 mb-2">${data.title}</h2>
+                        <p class="text-stone-600">${data.description}</p>
+                    </div>
+            `;
+
+            // Specific Layouts
+            if (sectionId === 'decision') {
+                html += `<div id="decision-container" class="grid md:grid-cols-3 gap-6"></div>`; // 2 cols for form, 1 for result
+            } else if (sectionId === 'graph') {
+                 html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-stone-700 mb-4">Interactive Concept Map</h3>
+                            <p class="text-sm text-stone-500 mb-4">Click a node to see how Graph RAG "traverses" relationships to find non-obvious answers.</p>
+                            <div id="graph-interactive-area" class="flex-grow bg-stone-50 rounded-lg border border-stone-200 relative h-96 overflow-hidden select-none">
+                                <!-- Nodes injected by JS -->
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                                <h3 class="font-bold text-stone-800 mb-2"><i class="fas fa-check text-green-500 mr-2"></i>Pros</h3>
+                                <ul class="list-disc list-inside text-stone-600 space-y-2">
+                                    <li><strong>Multi-hop Reasoning:</strong> Can answer "Who is the CEO of the company that acquired X?"</li>
+                                    <li><strong>Precision:</strong> Low hallucination risk due to strict facts.</li>
+                                    <li><strong>Explainability:</strong> You can trace the path of the answer.</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                                <h3 class="font-bold text-stone-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Cons</h3>
+                                <ul class="list-disc list-inside text-stone-600 space-y-2">
+                                    <li><strong>High Complexity:</strong> Requires an ontology/schema definition.</li>
+                                    <li><strong>Extraction Difficulty:</strong> Converting unstructured text to triplets (Subject, Predicate, Object) is error-prone.</li>
+                                    <li><strong>Rigidity:</strong> Hard to query vague concepts.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Vector and Compare Layouts
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col justify-center">
+                            <h3 class="font-bold text-stone-700 mb-4 text-center">Visualization</h3>
+                            <div class="chart-container">
+                                <canvas id="mainChart"></canvas>
+                            </div>
+                            <p class="text-center text-xs text-stone-400 mt-2" id="chart-caption"></p>
+                        </div>
+                        <div class="space-y-6">
+                             ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            main.innerHTML = html;
+
+            // Trigger JS Logic for the view
+            if (data.vizScript === 'renderVectorChart') renderVectorChart();
+            if (data.vizScript === 'renderRadarChart') renderRadarChart();
+            if (data.vizScript === 'renderGraphSimulation') renderGraphSimulation();
+            if (data.vizScript === 'renderDecisionTool') renderDecisionTool();
+        }
+
+        function getDetailsHTML(sectionId) {
+            if (sectionId === 'vector') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                        <h3 class="font-bold text-stone-800 mb-2"><i class="fas fa-check text-green-500 mr-2"></i>Pros</h3>
+                        <ul class="list-disc list-inside text-stone-600 space-y-2">
+                            <li><strong>Setup Speed:</strong> Just chunk text and embed. No schema needed.</li>
+                            <li><strong>Scalability:</strong> Handles millions of docs efficiently.</li>
+                            <li><strong>Flexibility:</strong> Matches "concepts" even if keywords differ.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-stone-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Cons</h3>
+                        <ul class="list-disc list-inside text-stone-600 space-y-2">
+                            <li><strong>Loss of Context:</strong> Chunks lose relationship to the whole document.</li>
+                            <li><strong>No Reasoning:</strong> Cannot reliably connect A to B if they aren't in the same chunk.</li>
+                            <li><strong>Hallucination:</strong> May retrieve irrelevant but "sounding similar" chunks.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'compare') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-stone-800 mb-4">Key Takeaways</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-blue-600 text-sm uppercase">Vector (Blue)</h4>
+                                <p class="text-sm text-stone-600">Dominates in <strong>Setup Speed</strong> and <strong>Cost</strong>. It is the "80/20" solution for most RAG apps dealing with general documentation.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-orange-600 text-sm uppercase">Graph (Orange)</h4>
+                                <p class="text-sm text-stone-600">Dominates in <strong>Context</strong> and <strong>Reasoning</strong>. Essential for fraud detection, scientific research, or supply chain where connections matter more than keyword similarity.</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h4 class="font-bold text-purple-600 text-sm uppercase">The Hybrid Future</h4>
+                                <p class="text-sm text-stone-600">Advanced systems use <strong>GraphRAG</strong>: extracting entities to a graph for reasoning, while keeping text chunks in vector stores for similarity. Best of both worlds, but highest complexity.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Visualization Functions ---
+
+        // 1. Vector Chart (Scatter)
+        function renderVectorChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "2D projection of high-dimensional semantic embeddings. Dots closer together have similar meanings.";
+            
+            // Simulated Data: Clusters of "topics"
+            const data1 = Array.from({length: 15}, () => ({x: Math.random() * 20 + 10, y: Math.random() * 20 + 10})); // Tech
+            const data2 = Array.from({length: 15}, () => ({x: Math.random() * 20 + 60, y: Math.random() * 20 + 60})); // Finance
+            const data3 = Array.from({length: 15}, () => ({x: Math.random() * 20 + 60, y: Math.random() * 20 + 10})); // Health
+            
+            // Query Point
+            const queryPoint = [{x: 18, y: 18}]; 
+
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Tech Docs',
+                            data: data1,
+                            backgroundColor: 'rgba(59, 130, 246, 0.6)'
+                        },
+                        {
+                            label: 'Finance Docs',
+                            data: data2,
+                            backgroundColor: 'rgba(16, 185, 129, 0.6)'
+                        },
+                        {
+                            label: 'Health Docs',
+                            data: data3,
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)'
+                        },
+                        {
+                            label: 'User Query',
+                            data: queryPoint,
+                            backgroundColor: 'rgba(255, 165, 0, 1)',
+                            pointRadius: 8,
+                            pointBorderColor: '#000',
+                            pointBorderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataset.label === 'User Query') return "Query: 'How to fix server api?'";
+                                    return context.dataset.label + " Chunk ID: " + Math.floor(Math.random()*1000);
+                                }
+                            }
+                        },
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        // 2. Graph Simulation (HTML/CSS)
+        function renderGraphSimulation() {
+            const container = document.getElementById('graph-interactive-area');
+            
+            // Define nodes and simple positions (percent based)
+            const nodes = [
+                { id: 'apple', label: 'Apple Inc.', x: 50, y: 50, type: 'entity' },
+                { id: 'tim', label: 'Tim Cook', x: 20, y: 30, type: 'person' },
+                { id: 'iphone', label: 'iPhone', x: 80, y: 30, type: 'product' },
+                { id: 'cali', label: 'California', x: 50, y: 80, type: 'loc' },
+                { id: 'us', label: 'USA', x: 20, y: 80, type: 'loc' },
+            ];
+
+            const edges = [
+                { from: 'tim', to: 'apple', label: 'CEO_OF' },
+                { from: 'apple', to: 'iphone', label: 'MAKES' },
+                { from: 'apple', to: 'cali', label: 'LOCATED_IN' },
+                { from: 'cali', to: 'us', label: 'PART_OF' }
+            ];
+
+            let html = '';
+            
+            // Draw Edges (Simple SVG lines behind HTML nodes? No, purely HTML request, but SVG is forbidden... 
+            // Wait, "NO SVG graphics used" usually refers to external files or chart libraries exporting SVG. 
+            // Simple inline SVG for lines is often the only way to connect DOM elements cleanly in vanilla without canvas.
+            // PROMPT CONSTRAINT: "Use structured HTML/CSS... or Canvas... Avoid raster images."
+            // "NO SVG graphics used" -> I will use absolute positioned divs with rotation for lines (CSS triganometry) 
+            // OR simple canvas overlay. Let's use a canvas overlay for lines, HTML for nodes.
+            
+            html += `<canvas id="graph-canvas" class="absolute inset-0 w-full h-full z-0"></canvas>`;
+
+            nodes.forEach(node => {
+                let color = 'bg-stone-200';
+                if(node.type === 'entity') color = 'bg-blue-100 border-blue-300 text-blue-800';
+                if(node.type === 'person') color = 'bg-orange-100 border-orange-300 text-orange-800';
+                if(node.type === 'product') color = 'bg-purple-100 border-purple-300 text-purple-800';
+                if(node.type === 'loc') color = 'bg-green-100 border-green-300 text-green-800';
+
+                html += `
+                    <button 
+                        class="node absolute px-3 py-2 rounded-full border-2 text-xs font-bold shadow-sm z-10 ${color}"
+                        style="left: ${node.x}%; top: ${node.y}%; transform: translate(-50%, -50%);"
+                        onclick="highlightGraph('${node.id}')"
+                        data-id="${node.id}"
+                    >
+                        ${node.label}
+                    </button>
+                `;
+            });
+
+            // Info panel
+            html += `
+                <div id="graph-info" class="absolute bottom-2 left-2 right-2 bg-white/90 p-2 rounded border text-xs text-center z-20">
+                    Click a node to trace relationships
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            // Draw Lines on Canvas
+            setTimeout(() => {
+                const canvas = document.getElementById('graph-canvas');
+                const ctx = canvas.getContext('2d');
+                const rect = container.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+
+                ctx.strokeStyle = '#cbd5e1'; // stone-300
+                ctx.lineWidth = 2;
+
+                edges.forEach(edge => {
+                    const fromNode = nodes.find(n => n.id === edge.from);
+                    const toNode = nodes.find(n => n.id === edge.to);
+                    
+                    const x1 = (fromNode.x / 100) * canvas.width;
+                    const y1 = (fromNode.y / 100) * canvas.height;
+                    const x2 = (toNode.x / 100) * canvas.width;
+                    const y2 = (toNode.y / 100) * canvas.height;
+
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+
+                    // Edge Label (Text on canvas)
+                    const midX = (x1 + x2) / 2;
+                    const midY = (y1 + y2) / 2;
+                    ctx.fillStyle = '#64748b';
+                    ctx.font = '10px Inter';
+                    ctx.fillText(edge.label, midX, midY);
+                });
+            }, 100);
+        }
+
+        window.highlightGraph = function(nodeId) {
+            const info = document.getElementById('graph-info');
+            // Logic to describe specific node relationships
+            if(nodeId === 'tim') info.innerHTML = "<strong>Tim Cook</strong> --(CEO_OF)--> Apple. <br><span class='text-orange-600'>Graph RAG knows Tim leads the company that makes iPhones.</span>";
+            if(nodeId === 'apple') info.innerHTML = "<strong>Apple</strong> connects to Tim Cook, iPhone, and California. <br><span class='text-blue-600'>Central hub for multi-hop queries.</span>";
+            if(nodeId === 'iphone') info.innerHTML = "<strong>iPhone</strong> --(MAKES)--> Apple. <br><span class='text-purple-600'>Product entity linked to parent company.</span>";
+            if(nodeId === 'us') info.innerHTML = "<strong>USA</strong> --(PART_OF)--> California. <br><span class='text-green-600'>Spatial reasoning possible via hierarchy.</span>";
+        }
+
+        // 3. Radar Chart (Comparison)
+        function renderRadarChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Comparing capabilities. Outer edge = Better/High. Inner = Worse/Low (except Cost/Complexity where Low is better).";
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Setup Speed', 'Low Cost', 'Context/Reasoning', 'Accuracy', 'Scalability'],
+                    datasets: [{
+                        label: 'Vector RAG',
+                        data: [9, 9, 4, 6, 9], // Fast setup, cheap, low context, med accuracy, high scale
+                        fill: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        pointBackgroundColor: 'rgb(59, 130, 246)',
+                    }, {
+                        label: 'Graph RAG',
+                        data: [3, 2, 10, 9, 6], // Slow setup, expensive, high context, high accuracy, med scale
+                        fill: true,
+                        backgroundColor: 'rgba(234, 88, 12, 0.2)',
+                        borderColor: 'rgb(234, 88, 12)',
+                        pointBackgroundColor: 'rgb(234, 88, 12)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: { borderWidth: 3 }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    }
+                }
+            });
+        }
+
+        // 4. Decision Engine
+        function renderDecisionTool() {
+            const container = document.getElementById('decision-container');
+            container.innerHTML = `
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-stone-800 mb-6">Project Parameters</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Q1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-stone-700 mb-2">1. Nature of Data</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('dataType', 'unstructured', this)" class="option-btn border rounded p-3 text-sm text-stone-600 hover:bg-stone-50 text-left">
+                                    <strong>Docs/PDFs/Blogs</strong><br>Mostly loose text blocks.
+                                </button>
+                                <button onclick="selectOption('dataType', 'structured', this)" class="option-btn border rounded p-3 text-sm text-stone-600 hover:bg-stone-50 text-left">
+                                    <strong>Entities/Logs/Links</strong><br>Highly interconnected data points.
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-stone-700 mb-2">2. Query Complexity</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('queryComplexity', 'simple', this)" class="option-btn border rounded p-3 text-sm text-stone-600 hover:bg-stone-50 text-left">
+                                    <strong>Similarity/Summary</strong><br>"Find docs about X", "Summarize Y".
+                                </button>
+                                <button onclick="selectOption('queryComplexity', 'complex', this)" class="option-btn border rounded p-3 text-sm text-stone-600 hover:bg-stone-50 text-left">
+                                    <strong>Multi-hop/Reasoning</strong><br>"How is person A related to event B via C?"
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Q3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-stone-700 mb-2">3. Domain Knowledge Required</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('accuracyReq', 'low', this)" class="option-btn border rounded p-3 text-sm text-stone-600 hover:bg-stone-50 text-left">
+                                    <strong>General</strong><br>General language understanding is sufficient.
+                                </button>
+                                <button onclick="selectOption('accuracyReq', 'high', this)" class="option-btn border rounded p-3 text-sm text-stone-600 hover:bg-stone-50 text-left">
+                                    <strong>Specialized/Strict</strong><br>Must strictly adhere to domain facts (Medical/Legal).
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1">
+                    <div id="recommendation-card" class="bg-stone-800 text-white p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500">
+                        <i class="fas fa-cogs text-4xl text-stone-400 mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">Awaiting Input</h4>
+                        <p class="text-stone-400 text-sm">Select options to generate a recommendation.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectOption = function(category, value, btnElement) {
+            // Update State
+            state.decisionInputs[category] = value;
+            
+            // Visual Feedback
+            const parent = btnElement.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-orange-500', 'bg-orange-50', 'border-orange-500');
+                b.classList.add('border-stone-200');
+            });
+            btnElement.classList.remove('border-stone-200');
+            btnElement.classList.add('ring-2', 'ring-orange-500', 'bg-orange-50', 'border-orange-500');
+
+            calculateRecommendation();
+        }
+
+        function calculateRecommendation() {
+            const { dataType, queryComplexity, accuracyReq } = state.decisionInputs;
+            
+            if (!dataType || !queryComplexity || !accuracyReq) return;
+
+            const card = document.getElementById('recommendation-card');
+            let title, icon, desc, colorClass, borderClass;
+
+            // Logic Tree
+            // 1. If Unstructured + Simple + General -> Vector (Classic)
+            // 2. If Structured + Complex -> Graph
+            // 3. If Unstructured + Complex + Strict -> Hybrid (GraphRAG)
+            
+            let scoreVector = 0;
+            let scoreGraph = 0;
+
+            if (dataType === 'unstructured') scoreVector += 2; else scoreGraph += 2;
+            if (queryComplexity === 'simple') scoreVector += 2; else scoreGraph += 2;
+            if (accuracyReq === 'low') scoreVector += 1; else scoreGraph += 2; // Graph is better for strict accuracy
+
+            if (scoreGraph >= 4) {
+                // Recommend Graph or Hybrid
+                if (dataType === 'unstructured') {
+                    // Hybrid Case
+                    title = "Recommendation: Hybrid RAG";
+                    icon = "fa-project-diagram";
+                    desc = "You have unstructured data but need complex reasoning. Use an LLM to extract entities into a Graph, but keep vectors for broad search.";
+                    colorClass = "bg-purple-900";
+                } else {
+                    // Pure Graph
+                    title = "Recommendation: Knowledge Graph";
+                    icon = "fa-share-alt";
+                    desc = "Your data is already structured and your queries require reasoning. A pure Graph database (Neo4j, etc.) is your best bet.";
+                    colorClass = "bg-orange-600";
+                }
+            } else {
+                // Recommend Vector
+                title = "Recommendation: Vector RAG";
+                icon = "fa-braille";
+                desc = "Your use case matches the standard RAG pattern. A Vector Database (Pinecone, Weaviate, etc.) will be fastest to build and sufficient.";
+                colorClass = "bg-blue-600";
+            }
+
+            // Update UI
+            card.className = `p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500 ${colorClass} text-white`;
+            card.innerHTML = `
+                <div class="animate-bounce mb-4"><i class="fas ${icon} text-4xl"></i></div>
+                <h4 class="text-2xl font-bold mb-3">${title}</h4>
+                <p class="text-white/90 text-sm leading-relaxed">${desc}</p>
+                <button onclick="navigateTo('compare')" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-xs uppercase tracking-wider font-bold transition-colors">Compare Details</button>
+            `;
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent('intro');
+
+            // Mobile Menu Toggle
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            btn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('hidden');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('hidden');
+            });
+        });
+
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

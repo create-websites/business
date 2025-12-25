@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive Report: Just-in-Time Access Security Controls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- 
+    Chosen Palette: Warm Neutrals (Slate, Stone) with a Subtle Blue Accent.
+    Application Structure Plan: The SPA is designed as a top-down narrative dashboard, guiding the user from the core problem to the solution and implementation. 
+    1. Hero: Grabs attention and states the report's thesis.
+    2. The Problem (Interactive): Immediately contrasts the old vs. new model with an interactive chart and text, establishing the "why." This is more impactful than a static table.
+    3. The Framework (Tabs): Breaks down the "Four Pillars" into digestible, tabbed sections. This avoids overwhelming the user with a long list of controls.
+    4. Cloud Implementations (Interactive Selector): Allows users to actively explore native tools for AWS, Azure, and GCP. This task-oriented design is more engaging than a large comparison table.
+    5. Solution Landscape (Filterable Gallery): Organizes the complex vendor market into clear categories, letting users filter by their area of interest.
+    6. Strategic Roadmap (Visual Process): Presents the implementation plan as a clear, visual flow, making the strategy easy to follow.
+    This structure was chosen to transform a linear report into an exploratory experience, prioritizing user engagement and comprehension over strict adherence to the source document's order.
+    Visualization & Content Choices: 
+    - Report Info: Standing vs. JIT Risk Comparison (Table 1). Goal: Compare. Viz/Method: Interactive Bar Chart (Chart.js) + Dynamic Text. Interaction: Buttons to toggle between models, updating the chart and text. Justification: A visual, interactive comparison is more memorable and clearer than a static table. Library: Chart.js.
+    - Report Info: The Four Pillars (Section 3). Goal: Organize/Inform. Viz/Method: HTML/CSS Tabbed Interface. Interaction: Clicking tabs reveals content for each pillar. Justification: Tabs organize a large amount of related information cleanly, preventing cognitive overload. Library/Method: Vanilla JS + Tailwind CSS.
+    - Report Info: Cloud Provider Capabilities (Table 2). Goal: Compare/Inform. Viz/Method: Interactive Content Switcher. Interaction: Buttons for AWS/Azure/GCP update a single content pane. Justification: Focuses user attention on one provider at a time, simplifying a complex comparison. Library/Method: Vanilla JS + Tailwind CSS.
+    - Report Info: Vendor Landscape (Table 3). Goal: Organize. Viz/Method: Filterable Cards. Interaction: Buttons filter vendors by category. Justification: Allows users to easily find solutions relevant to their needs. Library/Method: Vanilla JS + Tailwind CSS.
+    - Report Info: Implementation Roadmap (Section 6.1). Goal: Show Process. Viz/Method: HTML/CSS Flow Diagram. Interaction: Static visual. Justification: A visual representation of a process is more intuitive than a bulleted list. Library/Method: Tailwind CSS.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #3b82f6; /* blue-500 */
+            border-bottom-color: #3b82f6; /* blue-500 */
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .pillar-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .pillar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold text-slate-800">JIT Access Controls</div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a class="nav-link px-2 py-1" href="#problem">The Problem</a>
+                <a class="nav-link px-2 py-1" href="#pillars">The Framework</a>
+                <a class="nav-link px-2 py-1" href="#clouds">Cloud Platforms</a>
+                <a class="nav-link px-2 py-1" href="#solutions">Solutions</a>
+                <a class="nav-link px-2 py-1" href="#roadmap">Roadmap</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <section class="text-center mb-16 md:mb-24" id="hero">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 mb-4">The Shift to Ephemeral Privileges</h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">Moving from "always-on" access to a Just-in-Time (JIT) model is no longer optional—it's a strategic imperative for modern cybersecurity. This interactive report explores the controls, strategies, and technologies that define a robust JIT framework.</p>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="problem">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800">The Problem: Standing Privileges vs. JIT Access</h2>
+                <p class="mt-2 text-lg text-slate-600 max-w-3xl mx-auto">The traditional model of granting persistent access creates a massive, constant attack surface. JIT fundamentally changes the game by making privileged access temporary and on-demand. Select a model below to see how they compare.</p>
+            </div>
+
+            <div class="flex justify-center space-x-4 mb-8">
+                <button class="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-600 transition" id="btn-standing">Standing Privileges</button>
+                <button class="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-semibold hover:bg-slate-300 transition" id="btn-jit">Just-in-Time (JIT)</button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="fade-in" id="risk-comparison-text">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4" id="risk-title"></h3>
+                    <p class="text-slate-600 mb-4" id="risk-description"></p>
+                    <ul class="space-y-2" id="risk-points"></ul>
+                </div>
+                <div class="chart-container">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="pillars">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800">The Four Pillars of a Resilient JIT Framework</h2>
+                <p class="mt-2 text-lg text-slate-600 max-w-3xl mx-auto">A secure JIT system is built on four interdependent pillars of control. Each addresses a critical question in the access lifecycle: Who are you? What can you do? Who approves? And what did you do?</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="pillar-card bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                    <div class="flex items-center mb-3">
+                        <span class="text-3xl mr-4">🔑</span>
+                        <h3 class="text-xl font-bold text-slate-800">Authentication</h3>
+                    </div>
+                    <p class="text-slate-600">Verifying user identity with certainty before granting access, using controls like MFA, contextual analysis, and passwordless methods.</p>
+                </div>
+                <div class="pillar-card bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                    <div class="flex items-center mb-3">
+                        <span class="text-3xl mr-4">🛡️</span>
+                        <h3 class="text-xl font-bold text-slate-800">Authorization</h3>
+                    </div>
+                    <p class="text-slate-600">Defining precisely what a user can do, under what conditions, and for how long, using granular, time-bound policies.</p>
+                </div>
+                <div class="pillar-card bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-500">
+                     <div class="flex items-center mb-3">
+                        <span class="text-3xl mr-4">✅</span>
+                        <h3 class="text-xl font-bold text-slate-800">Approval</h3>
+                    </div>
+                    <p class="text-slate-600">Automating access decisions with intelligent, frictionless workflows integrated into tools like Slack and Teams.</p>
+                </div>
+                <div class="pillar-card bg-white p-6 rounded-lg shadow-md border-t-4 border-red-500">
+                    <div class="flex items-center mb-3">
+                        <span class="text-3xl mr-4">🧾</span>
+                        <h3 class="text-xl font-bold text-slate-800">Auditing</h3>
+                    </div>
+                    <p class="text-slate-600">Creating a complete, immutable record of all privileged activity for compliance, forensics, and threat detection.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="clouds">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800">JIT in Multi-Cloud Environments</h2>
+                <p class="mt-2 text-lg text-slate-600 max-w-3xl mx-auto">Major cloud providers offer native JIT tools, but their approaches and capabilities differ significantly. This creates complexity for multi-cloud organizations. Explore the native solutions for each platform below.</p>
+            </div>
+            <div class="flex justify-center flex-wrap gap-4 mb-8">
+                <button class="cloud-btn bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-600 transition" data-target="aws">AWS</button>
+                <button class="cloud-btn bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-semibold hover:bg-slate-300 transition" data-target="azure">Azure</button>
+                <button class="cloud-btn bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-semibold hover:bg-slate-300 transition" data-target="gcp">GCP</button>
+            </div>
+            <div class="bg-white p-8 rounded-lg shadow-lg fade-in" id="cloud-content-area">
+                <!-- Content will be injected here by JS -->
+            </div>
+        </section>
+
+        <section class="mb-16 md:mb-24 scroll-mt-20" id="solutions">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800">The JIT Solution Landscape</h2>
+                <p class="mt-2 text-lg text-slate-600 max-w-3xl mx-auto">Beyond native tools, a vibrant ecosystem of commercial and open-source solutions provides advanced, multi-cloud JIT capabilities. Filter the landscape by category to explore different approaches.</p>
+            </div>
+             <div class="flex justify-center flex-wrap gap-4 mb-8">
+                <button class="solution-filter-btn bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-600 transition" data-filter="all">All</button>
+                <button class="solution-filter-btn bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-semibold hover:bg-slate-300 transition" data-filter="pam">Commercial PAM</button>
+                <button class="solution-filter-btn bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-semibold hover:bg-slate-300 transition" data-filter="oss">Open Source</button>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="solution-gallery">
+                 <!-- Solution cards will be injected here by JS -->
+            </div>
+        </section>
+
+        <section class="scroll-mt-20" id="roadmap">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800">Strategic Roadmap for JIT Implementation</h2>
+                <p class="mt-2 text-lg text-slate-600 max-w-3xl mx-auto">A successful JIT program is a journey, not a destination. Follow this phased approach to maximize security gains while minimizing disruption.</p>
+            </div>
+            <div class="relative">
+                <div class="hidden md:block border-l-2 border-blue-300 border-dashed absolute h-full top-0 left-1/2 -ml-px"></div>
+                <div class="space-y-12 md:space-y-0">
+                    <div class="md:grid md:grid-cols-2 md:gap-8 items-center">
+                        <div class="flex justify-center md:justify-end md:pr-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md border-l-4 border-blue-500">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">Phase 1: Plan &amp; Discover</h3>
+                                <p class="text-slate-600">Start with your "crown jewels." Identify the highest-risk accounts and systems. Use discovery tools to map existing permissions, find over-privileged accounts, and establish a baseline for your JIT policies.</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center">
+                            <div class="bg-blue-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold">1</div>
+                        </div>
+                    </div>
+                     <div class="md:grid md:grid-cols-2 md:gap-8 items-center">
+                        <div class="hidden md:flex justify-center items-center">
+                            <div class="bg-blue-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold">2</div>
+                        </div>
+                        <div class="flex justify-center md:justify-start md:pl-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md border-r-4 md:border-l-4 md:border-r-0 border-blue-500">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">Phase 2: Execute &amp; Automate</h3>
+                                <p class="text-slate-600">Deploy your chosen solution with a relentless focus on user experience. Automate approval workflows for low-risk requests and integrate deeply with ChatOps (Slack, Teams) and ITSM tools to make access seamless.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="md:grid md:grid-cols-2 md:gap-8 items-center">
+                        <div class="flex justify-center md:justify-end md:pr-8">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md border-l-4 border-blue-500">
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">Phase 3: Maintain &amp; Refine</h3>
+                                <p class="text-slate-600">JIT is not "set and forget." Continuously audit logs, solicit user feedback to reduce friction, and provide ongoing training. Use the data to refine policies and detect anomalies, evolving your security posture.</p>
+                            </div>
+                        </div>
+                         <div class="hidden md:flex justify-center items-center">
+                            <div class="bg-blue-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold">3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const riskData = {
+        standing: {
+            title: "Standing Privileges: The 'Always-On' Vulnerability",
+            description: "This traditional model grants users permissions that remain active indefinitely, creating a state of constant vulnerability and a prime target for attackers.",
+            points: [
+                "<strong>Large Attack Surface:</strong> 'Always-on' accounts are a persistent, 24/7 cyber threat.",
+                "<strong>High Lateral Movement Potential:</strong> Compromised accounts are ideal for moving through a network.",
+                "<strong>Inevitable Privilege Creep:</strong> Users accumulate permissions over time that are rarely revoked.",
+                "<strong>Difficult Auditing:</strong> Proving who needed access and when is complex and noisy."
+            ],
+            chartData: [90, 85]
+        },
+        jit: {
+            title: "Just-in-Time (JIT): The Ephemeral Advantage",
+            description: "JIT access is a dynamic extension of Zero Trust, granting permissions only for the minimum necessary duration, dramatically reducing risk.",
+            points: [
+                "<strong>Minimal Attack Surface:</strong> Access pathways are closed by default, shrinking threat windows by over 90%.",
+                "<strong>Low Lateral Movement Potential:</strong> Time-bound access prevents prolonged unauthorized presence.",
+                "<strong>Eliminates Privilege Creep:</strong> Privileges are granted on-demand and automatically revoked.",
+                "<strong>Simplified Compliance:</strong> Provides a clear, granular audit trail for every single access request."
+            ],
+            chartData: [10, 15]
+        }
+    };
+
+    const cloudData = {
+        aws: {
+            title: "Amazon Web Services (AWS)",
+            services: "Systems Manager JIT Node Access; IAM Identity Center (with TEAM tool)",
+            description: "AWS provides distinct solutions for compute infrastructure vs. management plane roles. Its flagship service, Systems Manager JIT, eliminates the need for open inbound ports for EC2 instances. However, native JIT for IAM roles is not a turnkey solution and requires a more complex, self-managed setup.",
+            limitation: "JIT for IAM roles requires deploying and managing a separate, custom solution like the open-source TEAM tool."
+        },
+        azure: {
+            title: "Microsoft Azure",
+            services: "Defender for Cloud JIT VM Access; Entra Privileged Identity Management (PIM)",
+            description: "Azure's capabilities are split between network-level control and identity-level control. Defender for Cloud locks down VM network ports, while Entra PIM makes users *eligible* for roles, requiring activation. A comprehensive strategy requires using both services in tandem.",
+            limitation: "The two primary JIT services solve different problems (network vs. identity) and must be managed and configured separately."
+        },
+        gcp: {
+            title: "Google Cloud Platform (GCP)",
+            services: "Privileged Access Manager (PAM); IAM Conditions; JIT Groups (Open Source)",
+            description: "GCP offers a flexible but fragmented toolkit rather than a single, unified product. Options range from the managed PAM service to simple IAM Conditions with expiration timestamps. This flexibility comes at the cost of increased complexity and a higher operational burden on platform teams.",
+            limitation: "The fragmented approach requires more complex integration and self-management to achieve a comprehensive JIT strategy."
+        }
+    };
+    
+    const solutionData = [
+        { name: 'Teleport', category: 'pam', description: 'Identity-native PAM using short-lived certificates instead of passwords to grant access to SSH, K8s, and databases.' },
+        { name: 'StrongDM', category: 'pam', description: 'An agentless control plane for infrastructure access, managing a wide array of modern and legacy resources.' },
+        { name: 'CyberQP', category: 'pam', description: 'Tailored for MSPs, offering passwordless JIT access for technicians without handling credentials.' },
+        { name: 'CyberArk', category: 'pam', description: 'An established PAM leader with mature JIT capabilities and deep support for on-premises enterprise systems.' },
+        { name: 'Jumpserver', category: 'oss', description: 'A comprehensive, feature-rich open-source PAM platform that is a direct alternative to commercial suites.' },
+        { name: 'Google JIT Groups', category: 'oss', description: 'An open-source app for managing JIT access to GCP resources via Google Groups, requiring self-hosting.' },
+    ];
+
+    const riskChartCtx = document.getElementById('riskChart').getContext('2d');
+    let riskChart;
+
+    function createOrUpdateChart(data) {
+        if (riskChart) {
+            riskChart.data.datasets[0].data = data;
+            riskChart.update();
+        } else {
+            riskChart = new Chart(riskChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Attack Surface Exposure', 'Insider Threat Risk'],
+                    datasets: [{
+                        label: 'Relative Risk Score',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.5)',
+                            'rgba(239, 68, 68, 0.5)',
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(239, 68, 68, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                             grid: {
+                                color: '#e5e7eb'
+                            }
+                        },
+                        y: {
+                             grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Relative Risk: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function updateRiskComparison(model) {
+        const data = riskData[model];
+        const riskTitle = document.getElementById('risk-title');
+        const riskDescription = document.getElementById('risk-description');
+        const riskPoints = document.getElementById('risk-points');
+        const riskComparisonText = document.getElementById('risk-comparison-text');
+        
+        riskComparisonText.classList.remove('fade-in');
+        void riskComparisonText.offsetWidth; 
+        riskComparisonText.classList.add('fade-in');
+
+        riskTitle.textContent = data.title;
+        riskDescription.textContent = data.description;
+        riskPoints.innerHTML = data.points.map(point => `<li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">✓</span><span>${point}</span></li>`).join('');
+        createOrUpdateChart(data.chartData);
+
+        const btnStanding = document.getElementById('btn-standing');
+        const btnJit = document.getElementById('btn-jit');
+
+        if (model === 'standing') {
+            btnStanding.classList.remove('bg-slate-200', 'text-slate-700');
+            btnStanding.classList.add('bg-blue-500', 'text-white');
+            btnJit.classList.remove('bg-blue-500', 'text-white');
+            btnJit.classList.add('bg-slate-200', 'text-slate-700');
+        } else {
+            btnJit.classList.remove('bg-slate-200', 'text-slate-700');
+            btnJit.classList.add('bg-blue-500', 'text-white');
+            btnStanding.classList.remove('bg-blue-500', 'text-white');
+            btnStanding.classList.add('bg-slate-200', 'text-slate-700');
+        }
+    }
+
+    document.getElementById('btn-standing').addEventListener('click', () => updateRiskComparison('standing'));
+    document.getElementById('btn-jit').addEventListener('click', () => updateRiskComparison('jit'));
+
+    const cloudContentArea = document.getElementById('cloud-content-area');
+    const cloudButtons = document.querySelectorAll('.cloud-btn');
+
+    function updateCloudContent(platform) {
+        const data = cloudData[platform];
+        cloudContentArea.innerHTML = `
+            <h3 class="text-2xl font-bold text-slate-800 mb-2">${data.title}</h3>
+            <p class="text-sm text-slate-500 mb-4"><strong>Core Services:</strong> ${data.services}</p>
+            <p class="text-slate-600 mb-4">${data.description}</p>
+            <div class="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded-r-lg">
+                <p><strong>Key Limitation:</strong> ${data.limitation}</p>
+            </div>
+        `;
+        cloudContentArea.classList.remove('fade-in');
+        void cloudContentArea.offsetWidth;
+        cloudContentArea.classList.add('fade-in');
+
+        cloudButtons.forEach(btn => {
+            if (btn.dataset.target === platform) {
+                btn.classList.remove('bg-slate-200', 'text-slate-700');
+                btn.classList.add('bg-blue-500', 'text-white');
+            } else {
+                btn.classList.remove('bg-blue-500', 'text-white');
+                btn.classList.add('bg-slate-200', 'text-slate-700');
+            }
+        });
+    }
+
+    cloudButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            updateCloudContent(e.target.dataset.target);
+        });
+    });
+    
+    const solutionGallery = document.getElementById('solution-gallery');
+    const solutionFilterButtons = document.querySelectorAll('.solution-filter-btn');
+
+    function renderSolutions(filter = 'all') {
+        solutionGallery.innerHTML = '';
+        const filteredSolutions = filter === 'all' ? solutionData : solutionData.filter(s => s.category === filter);
+        
+        filteredSolutions.forEach(solution => {
+            const card = document.createElement('div');
+            card.className = 'bg-white p-6 rounded-lg shadow-md pillar-card fade-in';
+            card.innerHTML = `
+                <h4 class="text-xl font-bold text-slate-800 mb-2">${solution.name}</h4>
+                <p class="text-slate-600">${solution.description}</p>
+            `;
+            solutionGallery.appendChild(card);
+        });
+    }
+    
+    solutionFilterButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const filter = e.target.dataset.filter;
+            renderSolutions(filter);
+            
+            solutionFilterButtons.forEach(btn => {
+                if (btn.dataset.filter === filter) {
+                    btn.classList.remove('bg-slate-200', 'text-slate-700');
+                    btn.classList.add('bg-blue-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-slate-200', 'text-slate-700');
+                }
+            });
+        });
+    });
+
+    updateRiskComparison('standing');
+    updateCloudContent('aws');
+    renderSolutions('all');
+
+});
+</script>
+
+
+</body></html>

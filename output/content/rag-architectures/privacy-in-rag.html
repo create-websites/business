@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive PII Masking Framework for RAG Systems</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Corporate Blue & Neutral Gray -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive, multi-section guide to deconstruct the complex PII masking report. The structure is thematic, guiding the user logically from foundational concepts to practical implementation. It starts with an interactive comparison of PII definitions, moves to a clickable diagram of RAG pipeline vulnerabilities, then provides a "Defender's Toolkit" to explore detection and masking techniques with visual aids. Finally, it culminates in a strategic implementation section with an interactive selector to help users choose a risk-based framework. This structure was chosen to transform a dense, linear document into an engaging, non-linear exploratory tool that prioritizes user understanding and actionable insights over simply replicating the report's layout. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: PII Definitions (NIST, CCPA, GDPR) -> Goal: Compare -> Viz: Interactive Cards (HTML/Tailwind) -> Interaction: Click tabs to switch between definitions -> Justification: Simplifies comparison of legal texts.
+        - Report Info: RAG Pipeline Vulnerabilities (Table 2) -> Goal: Organize/Explore -> Viz: Clickable Diagram (HTML/Tailwind) -> Interaction: Clicking a pipeline stage reveals details on threats and controls -> Justification: Visually maps vulnerabilities to the RAG process, making risks more tangible.
+        - Report Info: PII Masking Techniques (Table 3) -> Goal: Compare/Analyze -> Viz: Bar Chart (Chart.js) + Info Cards -> Interaction: Selecting a technique updates the chart to show its impact on data utility and displays detailed text -> Justification: Visually represents the critical privacy-utility trade-off.
+        - Report Info: Architectural Choices & Tiered Framework -> Goal: Guide/Recommend -> Viz: Interactive Selectors (HTML/JS) -> Interaction: User chooses a risk profile (Low/Medium/High) to receive tailored strategic recommendations -> Justification: Makes the report's final framework actionable and directly relevant to the user's context.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #1e293b; /* slate-800 */
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 250px;
+            max-height: 250px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #2563eb; /* blue-600 */
+        }
+        .tab-button {
+            transition: all 0.2s ease-in-out;
+            border-bottom: 4px solid transparent;
+        }
+        .tab-button.active {
+            border-bottom-color: #2563eb; /* blue-600 */
+            color: #1e293b; /* slate-800 */
+        }
+        .pipeline-stage {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .pipeline-stage:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .pipeline-stage.active {
+             border-color: #2563eb; /* blue-600 */
+             background-color: #eff6ff; /* blue-50 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-slate-900">PII Shield for RAG</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium" href="#definitions">Definitions</a>
+                        <a class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium" href="#vulnerabilities">Vulnerabilities</a>
+                        <a class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium" href="#toolkit">Toolkit</a>
+                        <a class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium" href="#strategy">Strategy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white">
+        <div class="container mx-auto max-w-5xl py-16 px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">Architecting Trust in AI</h2>
+            <p class="mt-6 text-xl text-slate-600">An interactive guide to the framework for PII masking in Retrieval-Augmented Generation (RAG) systems. Explore the risks, tools, and strategies required to build secure and compliant AI.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-24">
+        
+        <section id="definitions">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-2">The Evolving Definition of Personal Information</h3>
+                <p class="text-lg text-slate-600 text-center mb-8">Modern privacy laws have expanded beyond simple identifiers. Understanding the scope of "Personal Information" under different regulations is the first step in building a compliant RAG system. Click each tab to compare the key definitions.</p>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                    <div class="border-b border-slate-200">
+                        <nav aria-label="Tabs" class="-mb-px flex space-x-6" id="definitions-tabs">
+                        </nav>
+                    </div>
+                    <div class="mt-6 prose prose-slate max-w-none" id="definitions-content">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vulnerabilities">
+            <div class="max-w-6xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-2">Deconstructing PII Risk in the RAG Pipeline</h3>
+                <p class="text-lg text-slate-600 text-center mb-8">PII can leak at every stage of a RAG system. Click on each component in the pipeline below to understand its specific vulnerabilities, the potential threats, and the primary mitigation strategies.</p>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 mb-8" id="pipeline-diagram">
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 min-h-[250px]" id="vulnerability-details">
+                </div>
+            </div>
+        </section>
+
+        <section id="toolkit">
+             <div class="max-w-5xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-2">The Defender's Toolkit: Detection &amp; Masking</h3>
+                <p class="text-lg text-slate-600 text-center mb-8">Effectively protecting PII requires a two-step process: accurate detection followed by appropriate masking. This section explores the core techniques, highlighting the critical trade-off between privacy and data utility.</p>
+
+                 <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                     <h4 class="text-2xl font-bold mb-4">PII Masking Techniques</h4>
+                     <p class="text-slate-600 mb-6">Select a masking technique to learn more about it and see its typical impact on the semantic value of your data—a key factor for RAG performance.</p>
+                     
+                     <div class="mb-6">
+                        <label class="sr-only" for="masking-technique-selector">Select Masking Technique</label>
+                        <select class="block w-full p-3 border border-slate-300 rounded-lg bg-slate-50 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="masking-technique-selector"></select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h5 class="font-bold text-center text-slate-700 mb-2">Impact on Data Utility</h5>
+                            <div class="chart-container">
+                                <canvas id="utilityChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="prose prose-slate max-w-none" id="technique-details-content">
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <section id="strategy">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="text-3xl font-bold text-center mb-2">Strategic Implementation Framework</h3>
+                <p class="text-lg text-slate-600 text-center mb-8">A one-size-fits-all approach to PII masking is ineffective. Your strategy should be aligned with your application's specific risk profile. Use the selector below to get a tailored set of recommendations.</p>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                    <label class="block text-lg font-medium text-slate-800 mb-2" for="risk-profile-selector">1. Select Your Application's Risk Profile:</label>
+                    <select class="block w-full p-3 border border-slate-300 rounded-lg bg-slate-50 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="risk-profile-selector">
+                        <option value="low">Tier 1: Low Risk (e.g., internal tools, non-sensitive data)</option>
+                        <option value="medium">Tier 2: Medium Risk (e.g., general customer support)</option>
+                        <option value="high">Tier 3: High Risk (e.g., healthcare, finance, legal)</option>
+                    </select>
+
+                    <div class="mt-8">
+                         <h4 class="text-2xl font-bold mb-4">2. Recommended Strategic Framework</h4>
+                         <div class="prose prose-slate max-w-none" id="strategy-recommendations"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Data from Report ---
+
+    const definitionsData = {
+        "NIST": {
+            title: "NIST SP 800-122",
+            content: `
+                <p>The National Institute of Standards and Technology (NIST) provides a foundational US federal baseline. It defines PII as "any information about an individual maintained by an agency... that can be used to distinguish or trace an individual’s identity."</p>
+                <ul>
+                    <li><strong>Focus:</strong> Identifier-centric (name, SSN, biometric records).</li>
+                    <li><strong>Concept:</strong> Differentiates between 'linked' (direct ID) and 'linkable' (indirect ID) information.</li>
+                    <li><strong>Scope:</strong> Represents a traditional, narrower view of PII. It's a subset of what modern laws consider personal data.</li>
+                </ul>`
+        },
+        "CCPA/CPRA": {
+            title: "CCPA / CPRA",
+            content: `
+                <p>California's Consumer Privacy Act (CCPA), amended by the CPRA, dramatically expands the definition to "any data that identifies, relates to, or could reasonably be linked to you or your household."</p>
+                <ul>
+                    <li><strong>Focus:</strong> Broad and encompassing.</li>
+                    <li><strong>Includes:</strong> IP addresses, Browse history, geolocation data, and critically, <strong>inferences</strong> drawn to create a profile about a consumer.</li>
+                    <li><strong>Introduces:</strong> A special category for "Sensitive Personal Information" (e.g., SSN, financials, private communications) with stricter protection requirements.</li>
+                </ul>`
+        },
+        "GDPR": {
+            title: "GDPR",
+            content: `
+                <p>The EU's General Data Protection Regulation (GDPR) defines personal data as "any information relating to an identified or identifiable natural person."</p>
+                 <ul>
+                    <li><strong>Focus:</strong> Broad and rights-based.</li>
+                    <li><strong>Includes:</strong> Online identifiers like IP addresses and cookie IDs, acknowledging they can be combined to identify individuals.</li>
+                    <li><strong>Introduces:</strong> "Special Categories of Personal Data" (e.g., health, racial origin, political opinions) which require explicit consent and heightened protection, similar to CPRA's sensitive data.</li>
+                </ul>`
+        }
+    };
+
+    const vulnerabilitiesData = {
+        "Input": {
+            title: "Stage 1: The User Query",
+            vulnerability: "Users naturally include PII in queries (e.g., 'What is the status of claim #98765 for John Doe?').",
+            threat: "PII is captured in logs, transmitted to third-party LLM providers, and potentially used for model training or exposed in a breach of the provider's system.",
+            control: "<strong>Real-time Query Masking:</strong> Detect and mask PII in the query *before* it is logged or processed by any downstream component."
+        },
+        "Knowledge": {
+            title: "Stage 2: The Knowledge Base",
+            vulnerability: "Enterprise data stores (documents, emails, chats) are often vast, unstructured reservoirs of untracked PII, PHI, and financial data.",
+            threat: "A RAG system can become a 'firehose of sensitive information,' inadvertently leaking data to unauthorized users due to overly permissive search indexing.",
+            control: "<strong>Pre-processing and Sanitization:</strong> Discover and mask PII in the knowledge base during the data ingestion phase, before it is ever placed in the vector store."
+        },
+        "Retrieval": {
+            title: "Stage 3: The Retrieval Process",
+            vulnerability: "Text embeddings are not one-way hashes; they can be reversed to reconstruct the original text. A compromised vector database is a direct risk.",
+            threat: "An 'embedding inversion' attack on the vector database could lead to the recovery of sensitive PII, even if the source documents were deleted.",
+            control: "<strong>Pre-embedding Masking:</strong> The most effective control is to mask PII *before* creating vector embeddings. This ensures the vector DB never stores representations of sensitive data."
+        },
+        "Generation": {
+            title: "Stage 4: The Generation Process",
+            vulnerability: "LLMs can memorize and regurgitate PII from their training data, hallucinate fake but plausible-looking PII, or be tricked via 'prompt injection' to leak data from the context.",
+            threat: "The LLM itself becomes the point of leakage, bypassing all upstream controls. It can also synthesize new, sensitive inferences that did not explicitly exist in the source data.",
+            control: "<strong>Post-processing Guardrails:</strong> Scan the LLM's final generated response for any PII (real, memorized, or hallucinated) and redact it *before* the response is delivered to the end-user."
+        }
+    };
+    
+    const maskingTechniquesData = {
+        "Redaction": { description: "Completely removes PII, replacing it with a generic placeholder like `[REDACTED]`.", impact: 10, reversibility: "No", use_case: "Permanently removing data where context is not critical." },
+        "Anonymization": { description: "Replaces PII with realistic but fake synthetic data (e.g., 'John Doe' becomes 'Jane Smith').", impact: 30, reversibility: "No", use_case: "Pre-processing data for analytics where individual identities are not needed but structure is." },
+        "Pseudonymization": { description: "Swaps PII with a non-sensitive token (e.g., `[PERSON_1]`). The original data is stored in a secure, separate 'vault'.", impact: 85, reversibility: "Yes (with key)", use_case: "The best balance for most RAG systems, securing prompts sent to 3rd-party LLMs while allowing de-tokenization for authorized actions." },
+        "FPE": { description: "Format-Preserving Encryption. Encrypts PII into ciphertext that retains the original data's format (e.g., a 16-digit credit card number encrypts to another 16-digit string).", impact: 80, reversibility: "Yes (with key)", use_case: "Protecting structured data that must be stored in specific formats for legacy systems." },
+        "Synthetic Data": { description: "Creates an entirely new, privacy-safe dataset that mimics the original's statistical properties.", impact: 60, reversibility: "N/A", use_case: "Pre-processing entire knowledge bases in high-risk domains (e.g., healthcare) to avoid any contact with real PII." },
+    };
+
+    const strategyData = {
+        low: `
+            <p class="mb-4">For low-risk applications, the focus is on basic compliance and preventing obvious leaks. The user experience and low latency are prioritized.</p>
+            <ul>
+                <li><strong>Knowledge Base:</strong> Assumed to be mostly non-sensitive. Pre-processing is optional or can use fast, regex-based redaction for obvious identifiers.</li>
+                <li><strong>Query/Response Masking:</strong> Implement real-time masking on user queries and LLM responses using efficient, low-latency tools (e.g., basic NER or regex).</li>
+                <li><strong>Technique:</strong> Simple redaction or basic anonymization is often sufficient.</li>
+                <li><strong>Tooling:</strong> Lightweight open-source libraries or built-in cloud functions are suitable.</li>
+            </ul>
+        `,
+        medium: `
+            <p class="mb-4">For applications handling general customer data, a more robust, balanced approach is required. This is a common tier for many enterprise RAG systems.</p>
+            <ul>
+                <li><strong>Knowledge Base:</strong> Apply pre-processing to irreversibly redact highly sensitive data (e.g., SSNs, financial accounts).</li>
+                <li><strong>Query/Response Masking:</strong> Use real-time, <strong>reversible pseudonymization (tokenization)</strong> for PII that may be required for context (e.g., names, case numbers). This protects data from the LLM while allowing for authorized access.</li>
+                <li><strong>Technique:</strong> A hybrid approach. Use redaction for the most sensitive data and tokenization for everything else.</li>
+                <li><strong>Tooling:</strong> High-quality hybrid engines like Microsoft Presidio are recommended.</li>
+            </ul>
+        `,
+        high: `
+            <p class="mb-4">For applications in highly regulated industries like healthcare or finance, a comprehensive, defense-in-depth strategy is mandatory. Security and compliance override performance concerns.</p>
+            <ul>
+                <li><strong>Knowledge Base:</strong> Extensive pre-processing is required. Consider advanced techniques like creating a fully <strong>synthetic knowledge base</strong> to eliminate contact with real PII.</li>
+                <li><strong>Query/Response Masking:</strong> All data flowing in real-time must be protected with strong, reversible methods like Format-Preserving Encryption or tokenization with a secure, audited vault.</li>
+                <li><strong>Controls:</strong> Implement strict, granular Role-Based Access Control (RBAC), multi-layered output guardrails, and continuous automated monitoring for anomalies.</li>
+                <li><strong>Tooling:</strong> Commercial, enterprise-grade platforms or specialist vendors that can be deployed within a secure VPC are often necessary.</li>
+            </ul>
+        `
+    };
+
+    // --- Definitions Section ---
+    const definitionsTabsContainer = document.getElementById('definitions-tabs');
+    const definitionsContentContainer = document.getElementById('definitions-content');
+    Object.keys(definitionsData).forEach((key, index) => {
+        const button = document.createElement('button');
+        button.className = `tab-button whitespace-nowrap py-4 px-1 text-base font-medium text-slate-500`;
+        button.textContent = definitionsData[key].title;
+        button.dataset.tab = key;
+        if (index === 0) {
+            button.classList.add('active');
+            definitionsContentContainer.innerHTML = definitionsData[key].content;
+        }
+        button.addEventListener('click', () => {
+            definitionsTabsContainer.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            definitionsContentContainer.innerHTML = definitionsData[button.dataset.tab].content;
+        });
+        definitionsTabsContainer.appendChild(button);
+    });
+
+    // --- Vulnerabilities Section ---
+    const pipelineContainer = document.getElementById('pipeline-diagram');
+    const vulnerabilityDetailsContainer = document.getElementById('vulnerability-details');
+    const pipelineStages = ["Input", "Knowledge", "Retrieval", "Generation"];
+
+    pipelineStages.forEach((stage, index) => {
+        const stageEl = document.createElement('div');
+        stageEl.className = 'pipeline-stage w-full md:w-1/4 bg-white rounded-lg shadow-md p-4 text-center border-2 border-transparent';
+        stageEl.dataset.stage = stage;
+        stageEl.innerHTML = `<h4 class="font-bold text-lg">${stage}</h4><p class="text-sm text-slate-500">${vulnerabilitiesData[stage].title}</p>`;
+        pipelineContainer.appendChild(stageEl);
+        
+        if (index < pipelineStages.length - 1) {
+            const arrow = document.createElement('div');
+            arrow.className = 'text-3xl text-slate-400 font-light transform md:rotate-0 rotate-90';
+            arrow.innerHTML = `&rarr;`;
+            pipelineContainer.appendChild(arrow);
+        }
+
+        stageEl.addEventListener('click', () => {
+            pipelineContainer.querySelectorAll('.pipeline-stage').forEach(el => el.classList.remove('active'));
+            stageEl.classList.add('active');
+            const data = vulnerabilitiesData[stageEl.dataset.stage];
+            vulnerabilityDetailsContainer.innerHTML = `
+                <h4 class="text-xl font-bold mb-3 text-blue-600">${data.title}</h4>
+                <div class="space-y-4">
+                    <div><strong class="text-slate-700">Vulnerability:</strong><p class="text-slate-600 inline ml-2">${data.vulnerability}</p></div>
+                    <div><strong class="text-slate-700">Threat:</strong><p class="text-slate-600 inline ml-2">${data.threat}</p></div>
+                    <div><strong class="text-slate-700">Primary Control:</strong><p class="text-slate-600 inline ml-2">${data.control}</p></div>
+                </div>
+            `;
+        });
+    });
+    pipelineContainer.querySelector('.pipeline-stage').click();
+
+    // --- Toolkit Section ---
+    const techniqueSelector = document.getElementById('masking-technique-selector');
+    const techniqueDetailsContainer = document.getElementById('technique-details-content');
+    const utilityChartCtx = document.getElementById('utilityChart').getContext('2d');
+    let utilityChart;
+
+    Object.keys(maskingTechniquesData).forEach(key => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = key.replace('FPE', 'Format-Preserving Encryption');
+        techniqueSelector.appendChild(option);
+    });
+    
+    function updateTechniqueDetails(techniqueKey) {
+        const data = maskingTechniquesData[techniqueKey];
+        techniqueDetailsContainer.innerHTML = `
+            <h5 class="font-bold text-lg text-slate-800">${techniqueKey.replace('FPE', 'Format-Preserving Encryption')}</h5>
+            <p class="mt-2 text-slate-600">${data.description}</p>
+            <ul class="mt-4 space-y-2">
+                <li><strong>Reversibility:</strong> <span class="font-medium ${data.reversibility.startsWith('Yes') ? 'text-green-600' : 'text-red-600'}">${data.reversibility}</span></li>
+                <li><strong>Ideal Use Case:</strong> ${data.use_case}</li>
+            </ul>
+        `;
+        
+        const chartData = {
+            labels: ['Utility Preserved'],
+            datasets: [{
+                label: 'Impact on Data Utility',
+                data: [data.impact],
+                backgroundColor: ['#3b82f6'],
+                borderColor: ['#1d4ed8'],
+                borderWidth: 1,
+                maxBarThickness: 50,
+            }]
+        };
+
+        if (utilityChart) {
+             utilityChart.data = chartData;
+             utilityChart.update();
+        } else {
+             utilityChart = new Chart(utilityChartCtx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { min: 0, max: 100, grid: { drawOnChartArea: false } , ticks: { callback: value => value + '%' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+    }
+    
+    techniqueSelector.addEventListener('change', (e) => updateTechniqueDetails(e.target.value));
+    updateTechniqueDetails(techniqueSelector.value);
+
+    // --- Strategy Section ---
+    const riskSelector = document.getElementById('risk-profile-selector');
+    const recommendationsContainer = document.getElementById('strategy-recommendations');
+
+    function updateStrategy(riskProfile) {
+        recommendationsContainer.innerHTML = strategyData[riskProfile];
+    }
+
+    riskSelector.addEventListener('change', (e) => updateStrategy(e.target.value));
+    updateStrategy(riskSelector.value);
+
+});
+</script>
+
+
+</body></html>

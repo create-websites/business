@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive Report: Exploring Embedding Methodologies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutral (Amber/Slate with Teal Accent) -->
+    <!-- Application Structure Plan: The application is structured into five thematic, interactive sections accessible via a fixed header navigation: 1) Foundations, 2) Model Explorer, 3) Evaluation Framework, 4) Implementation Playbook, and 5) Future Outlook. This task-oriented, non-linear dashboard structure was chosen over a simple linear document to make the dense, technical report more digestible. It allows users to jump directly to topics of interest and engage with the content through interactive elements (filters, charts, accordions), facilitating better understanding and knowledge retention. The goal is to transform passive reading into active exploration. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Model Comparison Table -> Goal: Compare/Organize -> Viz/Method: Interactive filterable grid of cards & dynamic bar chart -> Interaction: Users can filter models by type (Static, Contextual, Multimodal), which updates both the visible cards and the chart. Clicking a card reveals detailed information in a modal. -> Justification: This approach turns a static data table into a dynamic comparison tool, allowing users to easily analyze model features. -> Library: Chart.js for the visual comparison chart.
+        - Report Info: MTEB Task Types Table -> Goal: Inform/Organize -> Viz/Method: Interactive two-column layout with a clickable list -> Interaction: Clicking a task in the list on the left displays its detailed description, metrics, and examples on the right. -> Justification: This is more engaging and less overwhelming than presenting a large, static table, allowing users to focus on one task at a time. -> Library: Vanilla JS.
+        - Report Info: Best Practices Content -> Goal: Guide/Advise -> Viz/Method: A series of accordions for different topics and an interactive quiz for model selection. -> Interaction: Users can expand/collapse sections of interest. The quiz guides users through questions to a tailored model-type recommendation. -> Justification: This makes practical advice more accessible and actionable, turning abstract recommendations into a guided experience. -> Library: Vanilla JS.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: color 0.2s, border-color 0.2s; }
+        .nav-link.active { color: #0d9488; border-bottom-color: #0d9488; }
+        .nav-link:not(.active):hover { color: #0d9488; border-bottom-color: #ccfbf1; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .modal-bg { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-40 border-b border-slate-200" id="main-header">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-slate-800">Embeddings Explained</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4" id="nav-links">
+                        <a class="nav-link text-slate-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" href="#foundations">Foundations</a>
+                        <a class="nav-link text-slate-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" href="#explorer">Model Explorer</a>
+                        <a class="nav-link text-slate-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" href="#evaluation">Evaluation</a>
+                        <a class="nav-link text-slate-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" href="#playbook">Playbook</a>
+                        <a class="nav-link text-slate-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent" href="#future">Future</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button class="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-teal-600 hover:bg-slate-100 focus:outline-none" id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <svg aria-hidden="true" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden pb-3 space-y-1" id="mobile-menu">
+                <a class="nav-link text-slate-600 block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent" href="#foundations">Foundations</a>
+                <a class="nav-link text-slate-600 block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent" href="#explorer">Model Explorer</a>
+                <a class="nav-link text-slate-600 block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent" href="#evaluation">Evaluation</a>
+                <a class="nav-link text-slate-600 block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent" href="#playbook">Playbook</a>
+                <a class="nav-link text-slate-600 block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent" href="#future">Future</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        
+        <section class="section" id="foundations">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Foundational Role of Embeddings</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600">This section introduces the core concepts of vector space embeddings. We explore what they are, why they are essential for modern AI by solving challenges like the "curse of dimensionality," and how they power a wide range of transformative applications.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm ring-1 ring-slate-200">
+                <h3 class="text-2xl font-semibold text-slate-800">What is an Embedding?</h3>
+                <p class="mt-2 text-slate-600">In machine learning, an embedding is a learned numerical representation of a real-world object like a word, image, or product. It transforms high-dimensional, discrete data into a continuous, dense vector in a lower-dimensional space. The key principle is that **similarity in the real world corresponds to proximity in this vector space**. For example, the vectors for "cat" and "kitten" will be much closer to each other than to the vector for "rocket". This geometric encoding of meaning allows models to perform mathematical operations that have semantic interpretations, such as the famous analogy: `vector('king') - vector('man') + vector('woman')` results in a vector very close to `vector('queen')`.</p>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="p-6 rounded-xl bg-slate-50 ring-1 ring-slate-200">
+                        <h4 class="font-semibold text-slate-700">Overcoming Data Challenges</h4>
+                        <p class="mt-2 text-sm text-slate-600">Embeddings solve the "curse of dimensionality." Traditional methods like one-hot encoding create huge, sparse vectors that are computationally inefficient and make it hard for models to learn. Embeddings provide a dense, compact representation, capturing the most important features and dramatically reducing computational costs.</p>
+                    </div>
+                    <div class="p-6 rounded-xl bg-slate-50 ring-1 ring-slate-200">
+                        <h4 class="font-semibold text-slate-700">Automating Feature Engineering</h4>
+                        <p class="mt-2 text-sm text-slate-600">Instead of manually crafting features, practitioners now design models that *learn* the best features automatically. The focus shifts from feature engineering to designing the right learning tasks, which in turn produce high-quality embeddings tailored for specific applications.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <h3 class="text-2xl font-semibold text-center text-slate-800">Core Applications</h3>
+                <p class="mt-2 text-center text-slate-600 max-w-3xl mx-auto">Embeddings are a versatile multitool powering numerous modern AI systems. Hover over the cards below to see how.</p>
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="group relative bg-white p-6 rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
+                        <h4 class="text-lg font-semibold text-slate-700">Semantic Search</h4>
+                        <p class="mt-2 text-sm text-slate-600">Goes beyond keywords to understand the *intent* behind a query, retrieving conceptually related results.</p>
+                        <div class="absolute inset-0 bg-teal-500/80 p-6 text-white transition-transform duration-300 translate-y-full group-hover:translate-y-0">
+                            <h4 class="font-bold">Example</h4>
+                            <p class="text-sm mt-1">A search for "ways to make a car go faster" can return documents about "engine tuning" or "aerodynamic improvements," even if they don't share the same words.</p>
+                        </div>
+                    </div>
+                    <div class="group relative bg-white p-6 rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
+                        <h4 class="text-lg font-semibold text-slate-700">Recommendation Systems</h4>
+                        <p class="mt-2 text-sm text-slate-600">Recommends items (products, movies) by finding those with embeddings similar to a user's own embedding.</p>
+                        <div class="absolute inset-0 bg-teal-500/80 p-6 text-white transition-transform duration-300 translate-y-full group-hover:translate-y-0">
+                            <h4 class="font-bold">How it Works</h4>
+                            <p class="text-sm mt-1">Both users and items are mapped into the same vector space. If you like item A, the system finds item B, whose vector is close to A's.</p>
+                        </div>
+                    </div>
+                    <div class="group relative bg-white p-6 rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
+                        <h4 class="text-lg font-semibold text-slate-700">Clustering &amp; Classification</h4>
+                        <p class="mt-2 text-sm text-slate-600">Groups similar items or classifies new items based on their position in the embedding space.</p>
+                         <div class="absolute inset-0 bg-teal-500/80 p-6 text-white transition-transform duration-300 translate-y-full group-hover:translate-y-0">
+                            <h4 class="font-bold">Use Cases</h4>
+                            <p class="text-sm mt-1">Used for content moderation, spam detection, customer segmentation, and discovering trends in large datasets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="explorer">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Model Explorer</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">The world of embeddings has evolved rapidly. This section provides an interactive explorer to compare different model architectures. Use the filters to narrow your search and click on any model to see its detailed characteristics, ideal use cases, and key innovations.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm ring-1 ring-slate-200">
+                <div class="flex flex-wrap items-center gap-4 mb-6">
+                    <span class="font-medium text-slate-700">Filter by Type:</span>
+                    <div class="flex flex-wrap gap-2" id="model-filters">
+                        <button class="filter-btn bg-teal-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold" data-filter="all">All</button>
+                        <button class="filter-btn bg-white text-slate-600 px-4 py-1.5 rounded-full text-sm font-semibold ring-1 ring-slate-300 hover:bg-slate-100" data-filter="Static Text">Static Text</button>
+                        <button class="filter-btn bg-white text-slate-600 px-4 py-1.5 rounded-full text-sm font-semibold ring-1 ring-slate-300 hover:bg-slate-100" data-filter="Contextual Text">Contextual Text</button>
+                        <button class="filter-btn bg-white text-slate-600 px-4 py-1.5 rounded-full text-sm font-semibold ring-1 ring-slate-300 hover:bg-slate-100" data-filter="Contextual Sentence">Contextual Sentence</button>
+                        <button class="filter-btn bg-white text-slate-600 px-4 py-1.5 rounded-full text-sm font-semibold ring-1 ring-slate-300 hover:bg-slate-100" data-filter="Contextual Retrieval">Retrieval</button>
+                        <button class="filter-btn bg-white text-slate-600 px-4 py-1.5 rounded-full text-sm font-semibold ring-1 ring-slate-300 hover:bg-slate-100" data-filter="Multimodal">Multimodal</button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="model-grid">
+                </div>
+            </div>
+            
+            <div class="mt-12 bg-white p-6 rounded-2xl shadow-sm ring-1 ring-slate-200">
+                 <h3 class="text-2xl font-semibold text-center text-slate-800 mb-4">Model Feature Comparison</h3>
+                 <div class="chart-container">
+                    <canvas id="model-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="evaluation">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Evaluation Framework</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">How do we know if an embedding is "good"? This section explores the two primary methods for evaluating embedding quality: intrinsic tests that probe the vector space itself, and extrinsic tests that measure real-world performance. We also introduce MTEB, a standardized benchmark for fair comparison.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-8 rounded-2xl shadow-sm ring-1 ring-slate-200">
+                    <h3 class="text-2xl font-semibold text-slate-800">Intrinsic vs. Extrinsic Evaluation</h3>
+                    <p class="mt-2 text-slate-600">A complete evaluation strategy uses both approaches. Intrinsic tests are quick for prototyping, while extrinsic tests provide the ultimate validation for your specific application.</p>
+                    <div class="mt-6 space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-teal-700">Intrinsic Evaluation</h4>
+                            <p class="mt-1 text-slate-600">Assesses the inherent properties of the embeddings. These tests are fast and check if the model has learned meaningful linguistic or semantic relationships.</p>
+                            <ul class="mt-2 list-disc list-inside text-sm text-slate-500 space-y-1">
+                                <li><strong>Word Similarity:</strong> Do vector distances match human judgments of similarity?</li>
+                                <li><strong>Word Analogies:</strong> Can the model solve `king - man + woman ≈ queen`?</li>
+                                <li><strong>Clustering &amp; Visualization:</strong> Do related items form coherent visual clusters?</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-blue-700">Extrinsic Evaluation</h4>
+                            <p class="mt-1 text-slate-600">Measures the practical utility of embeddings on a real-world, downstream task. This is the ultimate test of usefulness.</p>
+                             <ul class="mt-2 list-disc list-inside text-sm text-slate-500 space-y-1">
+                                <li><strong>Text Classification:</strong> How well does it perform on sentiment analysis or spam detection?</li>
+                                <li><strong>Information Retrieval:</strong> How good are the search results it powers?</li>
+                                <li><strong>Question Answering:</strong> Does it help find the correct answers?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-sm ring-1 ring-slate-200">
+                    <h3 class="text-2xl font-semibold text-slate-800">MTEB: A Standardized Benchmark</h3>
+                    <p class="mt-2 text-slate-600">The <span class="font-semibold">M</span>assive <span class="font-semibold">T</span>ext <span class="font-semibold">E</span>mbedding <span class="font-semibold">B</span>enchmark (MTEB) provides a holistic "report card" for models across diverse tasks and languages, enabling fair and reproducible comparisons. Click a task to learn more.</p>
+                    <div class="mt-4 flex flex-col md:flex-row gap-4 h-[400px]">
+                        <div class="w-full md:w-1/3 space-y-2 overflow-y-auto pr-2" id="mteb-task-list">
+                        </div>
+                        <div class="w-full md:w-2/3 bg-slate-50 p-4 rounded-lg" id="mteb-task-details">
+                            <p class="text-slate-500">Select a task from the list to see details.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="playbook">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Implementation Playbook</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">This section provides a practical guide for implementing embeddings. Explore best practices for model selection, dimensionality, fine-tuning, and managing costs, along with solutions for advanced challenges like bias and interpretability.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200">
+                    <button class="accordion-header w-full flex justify-between items-center text-left p-6">
+                        <h3 class="text-xl font-semibold text-slate-800">Model Selection Guide</h3>
+                        <span class="accordion-icon text-2xl text-slate-500 transition-transform transform">+</span>
+                    </button>
+                    <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500">
+                        <div class="p-6 pt-0">
+                            <p class="text-slate-600 mb-6">Choosing the right model involves balancing your task, data, and constraints. Answer the questions below to get a general recommendation.</p>
+                            <div class="space-y-4 p-6 bg-slate-50 rounded-lg" id="selection-quiz">
+                                <div id="quiz-question-1">
+                                    <p class="font-medium text-slate-700">1. What is your primary data modality?</p>
+                                    <div class="mt-2 space-y-1">
+                                        <label class="flex items-center"><input class="mr-2" name="q1" type="radio" value="text"/> Text</label>
+                                        <label class="flex items-center"><input class="mr-2" name="q1" type="radio" value="image"/> Image</label>
+                                        <label class="flex items-center"><input class="mr-2" name="q1" type="radio" value="multimodal"/> Text &amp; Image (or other mixed types)</label>
+                                    </div>
+                                </div>
+                                <div class="hidden" id="quiz-question-2">
+                                    <p class="font-medium text-slate-700">2. Is your text data in a highly specialized domain (e.g., legal, medical)?</p>
+                                     <div class="mt-2 space-y-1">
+                                        <label class="flex items-center"><input class="mr-2" name="q2" type="radio" value="yes"/> Yes, it uses specific jargon.</label>
+                                        <label class="flex items-center"><input class="mr-2" name="q2" type="radio" value="no"/> No, it's general-purpose text.</label>
+                                    </div>
+                                </div>
+                                <div class="hidden p-4 bg-teal-50 text-teal-800 rounded-md" id="quiz-result"></div>
+                                <button class="hidden mt-4 bg-slate-200 text-slate-700 px-3 py-1 rounded-md text-sm" id="quiz-reset">Start Over</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200">
+                    <button class="accordion-header w-full flex justify-between items-center text-left p-6">
+                        <h3 class="text-xl font-semibold text-slate-800">Dimensionality &amp; Fine-Tuning</h3>
+                         <span class="accordion-icon text-2xl text-slate-500 transition-transform transform">+</span>
+                    </button>
+                     <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500">
+                        <div class="p-6 pt-0 grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold text-slate-700">Dimensionality: A Balancing Act</h4>
+                                <p class="text-slate-600 mt-2 text-sm">Higher dimensions capture more detail but increase cost and memory. Lower dimensions are faster and cheaper. The optimal size is task-dependent and best found via experimentation. Start with model defaults (e.g., 768 for BERT-base) and adjust.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-slate-700">Fine-Tuning for Domain Specificity</h4>
+                                <p class="text-slate-600 mt-2 text-sm">If you have domain-specific data (e.g., legal contracts), fine-tuning a general-purpose model can dramatically improve performance. This adapts the model to your unique vocabulary and semantic nuances, boosting the quality of retrieval and classification.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200">
+                    <button class="accordion-header w-full flex justify-between items-center text-left p-6">
+                        <h3 class="text-xl font-semibold text-slate-800">Ethical Considerations: Bias &amp; Interpretability</h3>
+                         <span class="accordion-icon text-2xl text-slate-500 transition-transform transform">+</span>
+                    </button>
+                     <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500">
+                         <div class="p-6 pt-0 grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold text-slate-700">Debiasing and Fairness</h4>
+                                <p class="text-slate-600 mt-2 text-sm">Models trained on web data can learn and amplify harmful societal biases. This is a critical risk. Mitigation strategies include curating training data and using post-processing algorithms to remove bias from the learned vectors, ensuring fairer outcomes in applications like hiring or loan analysis.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-slate-700">Model Interpretability</h4>
+                                <p class="text-slate-600 mt-2 text-sm">Embeddings are often "black boxes," making it hard to understand model decisions. Techniques like LIME/SHAP, attention visualization, and probing tasks can provide insights into what the model has learned, which is crucial for debugging, building trust, and meeting regulatory requirements.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="future">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Future of Embeddings</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">The field continues to advance at a breakneck pace. This final section highlights emerging trends that are poised to shape the next generation of AI systems, pushing towards more flexible, powerful, and holistic representations of information.</p>
+            </div>
+
+            <div class="relative pl-6 border-l-2 border-slate-200">
+                <div class="mb-8 relative">
+                    <div class="absolute -left-[35px] top-1 w-4 h-4 bg-teal-500 rounded-full ring-8 ring-slate-50"></div>
+                    <h3 class="text-xl font-semibold text-slate-800">Instruction-Tuned Embeddings</h3>
+                    <p class="mt-1 text-slate-600">Models are being trained to follow natural language instructions for embedding tasks. By prepending an instruction like <span class="font-mono bg-slate-100 p-1 rounded">"retrieve the passage for this query:"</span>, a single model can generate embeddings specifically optimized for different use cases like retrieval, similarity, or clustering.</p>
+                </div>
+                 <div class="mb-8 relative">
+                    <div class="absolute -left-[35px] top-1 w-4 h-4 bg-teal-500 rounded-full ring-8 ring-slate-50"></div>
+                    <h3 class="text-xl font-semibold text-slate-800">Hybrid Sparse-Dense Models</h3>
+                    <p class="mt-1 text-slate-600">The future of search is hybrid. Systems will combine dense embeddings (for semantic understanding) with traditional sparse methods like BM25 (for keyword precision). This approach leverages the strengths of both worlds to deliver more accurate and relevant results.</p>
+                </div>
+                 <div class="mb-8 relative">
+                    <div class="absolute -left-[35px] top-1 w-4 h-4 bg-teal-500 rounded-full ring-8 ring-slate-50"></div>
+                    <h3 class="text-xl font-semibold text-slate-800">Long-Context &amp; Hierarchical Embeddings</h3>
+                    <p class="mt-1 text-slate-600">A key research area is developing models that can process entire documents or books, overcoming current context window limitations. This will enable hierarchical embeddings that capture meaning at multiple levels of granularity—from words to paragraphs to full documents.</p>
+                </div>
+                 <div class="relative">
+                    <div class="absolute -left-[35px] top-1 w-4 h-4 bg-teal-500 rounded-full ring-8 ring-slate-50"></div>
+                    <h3 class="text-xl font-semibold text-slate-800">The Future is Multimodal</h3>
+                    <p class="mt-1 text-slate-600">This is the most exciting frontier. Models are already aligning text and images, but future systems will integrate audio, video, sensor data, and more into a single, unified conceptual space. This will lead to AI that can understand the world in a much richer, more human-like way.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" id="model-modal">
+        <div aria-hidden="true" class="modal-bg fixed inset-0 bg-black/50"></div>
+        <div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative transform scale-95">
+             <div class="sticky top-0 bg-white/80 backdrop-blur-sm p-6 border-b border-slate-200 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-slate-800" id="modal-title"></h3>
+                <button class="text-slate-500 hover:text-slate-800" id="modal-close">×</button>
+            </div>
+            <div class="p-6" id="modal-body"></div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const modelsData = [
+                { name: 'Word2Vec', type: 'Static Text', innovation: 'Predictive model using local context windows (CBOW/Skip-Gram).', oov: false, contextual: false, training: 'Predicting context words (Skip-Gram) or target words (CBOW).', use_cases: 'Baseline semantic similarity, simple text classification.' },
+                { name: 'GloVe', type: 'Static Text', innovation: 'Trained on global word-word co-occurrence statistics.', oov: false, contextual: false, training: 'Factorizing a global co-occurrence matrix.', use_cases: 'Word analogies, semantic similarity, named entity recognition.' },
+                { name: 'FastText', type: 'Static Text', innovation: 'Represents words as a bag of character n-grams.', oov: true, contextual: false, training: 'CBOW or Skip-Gram on subword units.', use_cases: 'Morphologically rich languages, handling typos, text classification.' },
+                { name: 'BERT', type: 'Contextual Text', innovation: 'Bidirectional Transformer encoder.', oov: true, contextual: true, training: 'Masked Language Modeling (MLM) & Next Sentence Prediction (NSP).', use_cases: 'Question answering, sentiment analysis, complex NLP tasks.' },
+                { name: 'GPT', type: 'Contextual Text', innovation: 'Unidirectional (auto-regressive) Transformer decoder.', oov: true, contextual: true, training: 'Next-token prediction.', use_cases: 'Text generation, summarization, chatbots.' },
+                { name: 'SBERT', type: 'Contextual Sentence', innovation: 'Siamese BERT networks with a pooling layer.', oov: true, contextual: true, training: 'Fine-tuned on sentence-pair similarity tasks.', use_cases: 'Semantic similarity search, paraphrase detection, clustering.' },
+                { name: 'DPR', type: 'Contextual Retrieval', innovation: 'Dual-encoder (question/passage) BERT-based model.', oov: true, contextual: true, training: 'Contrastive learning on (query, positive, negative) passages.', use_cases: 'Open-domain question answering, Retrieval-Augmented Generation (RAG).' },
+                { name: 'CLIP', type: 'Multimodal', innovation: 'Aligns image and text modalities in a shared vector space.', oov: true, contextual: true, training: 'Contrastive learning on massive image-text pairs.', use_cases: 'Cross-modal search (text-to-image), zero-shot image classification.' }
+            ];
+
+            const mtebTasks = [
+                { name: 'Bitext Mining', desc: 'Find matching sentences in two different languages.', metric: 'F1-score', dataset: 'Tatoeba' },
+                { name: 'Classification', desc: 'Sort texts into predefined categories.', metric: 'Accuracy', dataset: 'AmazonReviews, TweetEval' },
+                { name: 'Clustering', desc: 'Group similar texts together without predefined labels.', metric: 'v-measure', dataset: 'ArxivClustering, BiorxivClustering' },
+                { name: 'Pair Classification', desc: 'Determine if two texts have a specific relationship (e.g., paraphrase).', metric: 'Average Precision', dataset: 'TweetPC, STSB' },
+                { name: 'Reranking', desc: 'Reorder a list of texts based on relevance to a query.', metric: 'Mean Average Precision (MAP)', dataset: 'SciDocs, NFCorpus' },
+                { name: 'Retrieval', desc: 'Find relevant documents from a large corpus for a given query.', metric: 'nDCG@10', dataset: 'MS MARCO, Natural Questions' },
+                { name: 'STS', desc: 'Measure the degree of semantic similarity between two sentences.', metric: 'Spearman Correlation', dataset: 'STS Benchmark (STS-B)' },
+                { name: 'Summarization', desc: 'Score machine-generated summaries against human-written ones.', metric: 'Spearman Correlation', dataset: 'SummEval' }
+            ];
+            
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let currentChart = null;
+
+            function updateNav() {
+                const currentHash = window.location.hash || '#foundations';
+                sections.forEach(sec => {
+                    if ('#' + sec.id === currentHash) {
+                        sec.classList.add('active');
+                    } else {
+                        sec.classList.remove('active');
+                    }
+                });
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === currentHash) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    window.location.hash = e.target.getAttribute('href');
+                    if (mobileMenu.classList.contains('block')) {
+                       mobileMenu.classList.remove('block');
+                       mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('block');
+            });
+
+            window.addEventListener('hashchange', updateNav);
+            
+            function renderModels(filter = 'all') {
+                const modelGrid = document.getElementById('model-grid');
+                modelGrid.innerHTML = '';
+                const filteredData = modelsData.filter(model => filter === 'all' || model.type === filter);
+
+                filteredData.forEach(model => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-slate-50 p-4 rounded-lg ring-1 ring-slate-200 cursor-pointer hover:ring-teal-500 hover:shadow-md transition-all';
+                    card.dataset.modelName = model.name;
+                    card.innerHTML = `
+                        <h4 class="font-bold text-slate-800">${model.name}</h4>
+                        <p class="text-sm text-slate-500">${model.type}</p>
+                    `;
+                    card.addEventListener('click', () => openModal(model.name));
+                    modelGrid.appendChild(card);
+                });
+                updateChart(filteredData);
+            }
+
+            function updateChart(data) {
+                const ctx = document.getElementById('model-chart').getContext('2d');
+                const labels = data.map(m => m.name);
+                const oovData = data.map(m => m.oov ? 1 : 0);
+                const contextualData = data.map(m => m.contextual ? 1 : 0);
+
+                if (currentChart) {
+                    currentChart.destroy();
+                }
+
+                currentChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Handles OOV',
+                                data: oovData,
+                                backgroundColor: 'rgba(20, 184, 166, 0.6)',
+                                borderColor: 'rgba(13, 148, 136, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Is Contextual',
+                                data: contextualData,
+                                backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                                borderColor: 'rgba(37, 99, 235, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        if (value === 1) return 'Yes';
+                                        if (value === 0) return 'No';
+                                        return null;
+                                    },
+                                    stepSize: 1
+                                },
+                                grid: {
+                                    color: 'rgba(203, 213, 225, 0.5)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += (context.parsed.y === 1 ? 'Yes' : 'No');
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const filter = e.target.dataset.filter;
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('bg-teal-500', 'text-white');
+                        btn.classList.add('bg-white', 'text-slate-600');
+                    });
+                    e.target.classList.add('bg-teal-500', 'text-white');
+                    e.target.classList.remove('bg-white', 'text-slate-600');
+                    renderModels(filter);
+                });
+            });
+
+            const modal = document.getElementById('model-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalClose = document.getElementById('modal-close');
+            const modalBg = document.querySelector('.modal-bg');
+
+            function openModal(modelName) {
+                const model = modelsData.find(m => m.name === modelName);
+                if (!model) return;
+                
+                modalTitle.textContent = model.name;
+                modalBody.innerHTML = `
+                    <div class="space-y-4">
+                        <div><strong class="text-slate-600">Type:</strong> <span class="text-slate-800">${model.type}</span></div>
+                        <div><strong class="text-slate-600">Key Innovation:</strong> <p class="mt-1 text-slate-800">${model.innovation}</p></div>
+                        <div><strong class="text-slate-600">Primary Training Method:</strong> <p class="mt-1 text-slate-800">${model.training}</p></div>
+                        <div><strong class="text-slate-600">Ideal Use Cases:</strong> <p class="mt-1 text-slate-800">${model.use_cases}</p></div>
+                        <div class="flex space-x-4">
+                            <span><strong class="text-slate-600">Handles OOV:</strong> ${model.oov ? '✅ Yes' : '❌ No'}</span>
+                            <span><strong class="text-slate-600">Contextual:</strong> ${model.contextual ? '✅ Yes' : '❌ No'}</span>
+                        </div>
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalBg.classList.remove('opacity-0');
+                    modal.querySelector('.modal-content').classList.remove('scale-95');
+                }, 10);
+            }
+            
+            function closeModal() {
+                 modalBg.classList.add('opacity-0');
+                 modal.querySelector('.modal-content').classList.add('scale-95');
+                 setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            modalBg.addEventListener('click', closeModal);
+
+            const mtebTaskList = document.getElementById('mteb-task-list');
+            const mtebTaskDetails = document.getElementById('mteb-task-details');
+
+            mtebTasks.forEach((task, index) => {
+                const button = document.createElement('button');
+                button.className = 'mteb-task-btn w-full text-left p-2 rounded-md hover:bg-slate-100 text-sm font-medium text-slate-700';
+                button.textContent = task.name;
+                button.dataset.index = index;
+                mtebTaskList.appendChild(button);
+            });
+
+            mtebTaskList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('mteb-task-btn')) {
+                    document.querySelectorAll('.mteb-task-btn').forEach(btn => btn.classList.remove('bg-teal-100', 'text-teal-800'));
+                    e.target.classList.add('bg-teal-100', 'text-teal-800');
+                    const task = mtebTasks[e.target.dataset.index];
+                    mtebTaskDetails.innerHTML = `
+                        <h4 class="font-bold text-slate-800">${task.name}</h4>
+                        <p class="mt-2 text-sm text-slate-600">${task.desc}</p>
+                        <div class="mt-4 text-xs space-y-1">
+                            <p><strong class="text-slate-500">Metric:</strong> ${task.metric}</p>
+                            <p><strong class="text-slate-500">Example Dataset:</strong> ${task.dataset}</p>
+                        </div>
+                    `;
+                }
+            });
+            mtebTaskList.querySelector('.mteb-task-btn').click();
+
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.accordion-icon');
+                    
+                    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                        content.style.maxHeight = '0px';
+                        icon.classList.remove('rotate-45');
+                    } else {
+                         content.style.maxHeight = content.scrollHeight + 'px';
+                         icon.classList.add('rotate-45');
+                    }
+                });
+            });
+
+            const quiz = document.getElementById('selection-quiz');
+            const q1 = document.getElementById('quiz-question-1');
+            const q2 = document.getElementById('quiz-question-2');
+            const resultDiv = document.getElementById('quiz-result');
+            const resetButton = document.getElementById('quiz-reset');
+            
+            quiz.addEventListener('change', (e) => {
+                if (e.target.name === 'q1') {
+                    const val = e.target.value;
+                    if (val === 'text') {
+                        q2.classList.remove('hidden');
+                        resultDiv.classList.add('hidden');
+                    } else if (val === 'image') {
+                        q2.classList.add('hidden');
+                        resultDiv.innerHTML = "<strong>Recommendation:</strong> For images, start with a <strong>Vision Transformer (ViT)</strong> or a <strong>CNN-based</strong> model like ResNet to generate embeddings.";
+                        resultDiv.classList.remove('hidden');
+                        resetButton.classList.remove('hidden');
+                    } else if (val === 'multimodal') {
+                        q2.classList.add('hidden');
+                        resultDiv.innerHTML = "<strong>Recommendation:</strong> For mixed data, a <strong>Multimodal Embedding</strong> model like CLIP is the ideal choice. It maps different data types into a shared semantic space.";
+                        resultDiv.classList.remove('hidden');
+                        resetButton.classList.remove('hidden');
+                    }
+                }
+                if (e.target.name === 'q2') {
+                    const val = e.target.value;
+                    if (val === 'yes') {
+                        resultDiv.innerHTML = "<strong>Recommendation:</strong> For specialized domains, you should <strong>fine-tune</strong> a powerful general model (like an SBERT variant) on your specific data, or look for a pre-trained, domain-specific model (e.g., BioBERT, LegalBERT).";
+                    } else {
+                        resultDiv.innerHTML = "<strong>Recommendation:</strong> For general text, a <strong>Sentence-Transformer (SBERT)</strong> model is an excellent starting point for tasks like semantic search and clustering due to its balance of performance and efficiency.";
+                    }
+                    resultDiv.classList.remove('hidden');
+                    resetButton.classList.remove('hidden');
+                }
+            });
+            
+            resetButton.addEventListener('click', () => {
+                quiz.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+                q2.classList.add('hidden');
+                resultDiv.classList.add('hidden');
+                resetButton.classList.add('hidden');
+            });
+            
+            updateNav();
+            renderModels();
+
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

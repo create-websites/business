@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive Report: The Evolution of RAG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: Warm Neutrals (Background: #F8F7F4, Text: #3D405B, Primary: #81B29A, Accent: #E07A5F) -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard. The core structure features a persistent navigation menu on the left (or top on mobile) allowing users to select a RAG type. This selection dynamically updates the main content panel on the right, which displays detailed information, key characteristics, and a visual process flow for the chosen architecture. This hub-and-spoke model avoids page loads and encourages exploration. Below this, a dedicated comparative analysis section uses a radar chart and a table to facilitate synthesis and high-level understanding. This structure was chosen to transform the linear, passive text report into an active, exploratory tool, making complex architectural concepts more digestible and comparable through visualization and interaction. -->
+    <!-- Visualization & Content Choices: 1. Report Info: RAG Architectures -> Goal: Organize/Explain -> Viz: HTML/CSS Flow Diagrams -> Interaction: Dynamically displayed based on user selection -> Justification: Visually simplifies complex pipelines without using prohibited SVG/Mermaid. 2. Report Info: Comparative Metrics (Complexity, Speed, etc.) -> Goal: Compare/Analyze -> Viz: Radar Chart (Chart.js) & HTML Table -> Interaction: Chart displays all types for direct comparison -> Justification: Radar chart provides an immediate, high-level visual summary of trade-offs, which is more impactful than a simple table. The table provides the granular details. 3. Report Info: Detailed descriptions of each RAG type -> Goal: Inform -> Viz: Dynamically updated text blocks -> Interaction: Content changes on nav click -> Justification: Keeps the user in a single, focused view, enhancing usability. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #3D405B;
+        }
+        .active-nav-button {
+            background-color: #81B29A !important;
+            color: #FFFFFF !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .nav-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-button:hover {
+            background-color: #A1C4B3;
+            color: #FFFFFF;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            height: 40vh;
+            max-height: 500px;
+            margin: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 50vh;
+            }
+        }
+        .flow-diagram-arrow {
+            font-size: 1.5rem;
+            line-height: 2rem;
+            color: #81B29A;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#3D405B] mb-2">The Evolution of RAG</h1>
+            <p class="text-lg text-[#3D405B]/80 max-w-3xl mx-auto">An interactive guide to understanding the architectures of Retrieval-Augmented Generation, from foundational concepts to autonomous agents.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <nav class="lg:col-span-3">
+                <div class="p-6 bg-white/70 rounded-xl shadow-lg sticky top-8">
+                    <h3 class="text-xl font-bold mb-4 text-[#3D405B]">Explore Architectures</h3>
+                    <div class="space-y-3" id="navigation">
+                    </div>
+                </div>
+            </nav>
+
+            <div class="lg:col-span-9">
+                <section class="bg-white p-6 sm:p-8 rounded-xl shadow-lg min-h-[500px]" id="content-display">
+                    <h2 class="text-3xl font-bold text-[#3D405B] mb-4 transition-opacity duration-300" id="content-title">Welcome!</h2>
+                    <p class="text-base text-[#3D405B]/80 mb-6 transition-opacity duration-300" id="content-intro">Select a RAG architecture from the menu to learn about its core concepts, strengths, and limitations. This interactive guide is designed to help you explore how RAG systems have evolved to become more powerful and sophisticated.</p>
+                    
+                    <div id="content-details">
+                       <h4 class="text-xl font-semibold text-[#81B29A] mb-3">Process Flow</h4>
+                       <div class="flex flex-wrap items-center gap-2 p-4 bg-[#F8F7F4] rounded-lg mb-6" id="content-flow">
+                           <div class="text-center p-3 bg-white rounded-md shadow-sm">Select a type</div>
+                       </div>
+                       <h4 class="text-xl font-semibold text-[#81B29A] mb-3">Key Characteristics</h4>
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="content-points">
+                            <div class="p-4 bg-[#F8F7F4] rounded-lg">
+                                <h5 class="font-bold text-lg mb-1 text-[#3D405B]">Primary Strength</h5>
+                                <p class="text-sm text-[#3D405B]/80">Details will appear here.</p>
+                            </div>
+                            <div class="p-4 bg-[#F8F7F4] rounded-lg">
+                                <h5 class="font-bold text-lg mb-1 text-[#3D405B]">Key Limitation</h5>
+                                <p class="text-sm text-[#3D405B]/80">Details will appear here.</p>
+                            </div>
+                       </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+        
+        <section class="mt-16 bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+            <div class="text-center mb-8">
+                 <h2 class="text-4xl font-bold text-[#3D405B] mb-2">Comparative Analysis</h2>
+                 <p class="text-lg text-[#3D405B]/80 max-w-3xl mx-auto">Visualize the trade-offs between different RAG paradigms. The chart below plots each architecture against key metrics, offering a quick way to compare their relative strengths and weaknesses.</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="ragComparisonChart"></canvas>
+            </div>
+        </section>
+
+        <section class="mt-12 bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+            <h3 class="text-2xl font-bold text-[#3D405B] mb-4 text-center">Detailed Comparison Matrix</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-[#3D405B] min-w-[800px]" id="comparison-table">
+                    <thead class="text-xs text-[#3D405B] uppercase bg-[#F8F7F4]">
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const ragData = {
+            'vanilla': {
+                title: 'Vanilla RAG',
+                intro: 'The simplest form of RAG that combines retrieval with generation in a straightforward "retrieve-then-read" pipeline. It forms the foundational blueprint for all other advanced RAG systems.',
+                flow: ['Index', 'Retrieve', 'Generate'],
+                points: {
+                    strength: 'Simplicity and ease of implementation. Provides a basic but effective framework for grounding LLMs in external knowledge.',
+                    limitation: 'Often suffers from low precision retrieval. The simple semantic search can be brittle and retrieve irrelevant context, leading to poor generation quality.'
+                }
+            },
+            'standard': {
+                title: 'Standard RAG',
+                intro: 'An enhanced version of RAG that introduces pre-retrieval and post-retrieval steps to improve the quality of information passed to the generator LLM.',
+                flow: ['Query Rewrite', 'Retrieve', 'Rerank', 'Generate'],
+                points: {
+                    strength: 'Improved Relevance. Query rewriting clarifies user intent, and reranking filters out noise, significantly improving the precision of the context.',
+                    limitation: 'Increased Latency and Complexity. The additional processing steps (rewriting and reranking) add computational overhead and slow down the response time.'
+                }
+            },
+            'cag': {
+                title: 'Cache-Augmented Generation (CAG)',
+                intro: 'Instead of retrieving data during each interaction, CAG preloads a static set of documents into the model\'s context. This works well when the data is stable and fits in the context window.',
+                flow: ['Preload Knowledge', 'Cache KV States', 'Query', 'Generate'],
+                points: {
+                    strength: 'Extremely Low Latency. By eliminating the real-time retrieval step, it offers very fast response times, ideal for real-time applications.',
+                    limitation: 'Only suitable for small, static knowledge bases. It cannot handle large or dynamic datasets and is limited by the LLM\'s context window size.'
+                }
+            },
+            'hybrid': {
+                title: 'Hybrid RAG',
+                intro: 'Combines multiple retrieval methods, most commonly keyword-based (sparse) and semantic (dense) search, to collect more comprehensive and accurate information.',
+                flow: ['Dense Retrieve', 'Sparse Retrieve', 'Fuse Results (RRF)', 'Generate'],
+                points: {
+                    strength: 'Robustness and Comprehensiveness. It captures both semantic meaning and specific keywords, making it highly effective for domains requiring both (e.g., legal or medical).',
+                    limitation: 'High Implementation Complexity. Fusing results from different retrieval systems effectively can be challenging and requires careful tuning.'
+                }
+            },
+            'hyde': {
+                title: 'Hypothetical Document Embeddings (HyDE)',
+                intro: 'An inventive technique that generates a hypothetical document in response to a query and then uses that document\'s embedding to find real documents.',
+                flow: ['Query', 'Generate Hypothetical Doc', 'Encode Doc', 'Retrieve', 'Generate'],
+                points: {
+                    strength: 'Effectively bridges the semantic gap between short queries and long documents, often improving retrieval performance for vague or complex questions.',
+                    limitation: 'Risky if the hypothetical document is poor quality. An inaccurate or hallucinatory generated document can lead the entire retrieval process astray.'
+                }
+            },
+            'agentic': {
+                title: 'Agentic RAG',
+                intro: 'Employs autonomous AI agents that can reason, plan, and dynamically decide when, what, and how to retrieve information using a variety of tools.',
+                flow: ['Plan', 'Select Tool', 'Retrieve/Act', 'Reflect', 'Generate'],
+                points: {
+                    strength: 'Maximum Flexibility and Power. Can automate complex, multi-step research and analysis tasks that go far beyond simple question-answering.',
+                    limitation: 'Very high latency and complexity. Agentic systems are difficult to build, debug, and can be slow due to their iterative, multi-step nature.'
+                }
+            }
+        };
+
+        const comparisonData = {
+            labels: ['Vanilla RAG', 'Standard RAG', 'CAG', 'Hybrid RAG', 'HyDE', 'Agentic RAG'],
+            metrics: {
+                'Complexity':   [1, 3, 3, 4, 3, 5],
+                'Flexibility':  [1, 2, 1, 4, 2, 5],
+                'Speed (Latency)': [4, 3, 5, 2, 3, 1],
+                'Accuracy':     [2, 4, 3, 5, 4, 5],
+                'Scalability':  [4, 3, 1, 4, 3, 5],
+            }
+        };
+
+        const comparisonTableData = {
+            headers: ["Feature", "Vanilla RAG", "Standard RAG", "Hybrid RAG", "HyDE", "Cache-Augmented Generation (CAG)", "Agentic RAG"],
+            rows: [
+                { feature: "Core Concept", values: ["Simple retrieve-then-read pipeline.", "Enhanced retrieval via query/result processing.", "Fuses multiple retrieval methods.", "Uses a generated answer for retrieval.", "Preloads all knowledge into context.", "Autonomous agents perform dynamic retrieval."] },
+                { feature: "Primary Use Case", values: ["Simple Q&A on static documents.", "Complex or ambiguous queries.", "Domains needing both keyword and semantic search.", "Niche domains or vague queries.", "Low-latency apps with static knowledge.", "Complex, multi-step research and analysis tasks."] },
+                { feature: "Primary Strength", values: ["Simplicity", "Improved Relevance", "Robustness", "Bridges Semantic Gap", "Speed (Low Latency)", "Flexibility & Power"] },
+                { feature: "Key Limitation(s)", values: ["Low precision; brittle.", "Increased latency.", "High implementation complexity.", "Can propagate errors.", "Only for static, small data.", "Very high latency; complex to debug."] },
+                { feature: "Relative Complexity", values: ["Low", "Medium", "High", "Medium", "Medium", "Very High"] }
+            ]
+        };
+
+        const navigationContainer = document.getElementById('navigation');
+        const contentTitle = document.getElementById('content-title');
+        const contentIntro = document.getElementById('content-intro');
+        const contentFlow = document.getElementById('content-flow');
+        const contentPoints = document.getElementById('content-points');
+        const contentDetails = document.getElementById('content-details');
+
+        let activeNavButton = null;
+        
+        function updateContent(ragKey) {
+            const data = ragData[ragKey];
+            if (!data) return;
+
+            contentDetails.style.opacity = '0';
+            
+            setTimeout(() => {
+                contentTitle.textContent = data.title;
+                contentIntro.textContent = data.intro;
+
+                contentFlow.innerHTML = data.flow.map((step, index) => `
+                    <div class="text-center p-3 bg-white rounded-md shadow-sm flex-grow">${step}</div>
+                    ${index < data.flow.length - 1 ? '<div class="flow-diagram-arrow font-bold mx-2">&rarr;</div>' : ''}
+                `).join('');
+
+                contentPoints.innerHTML = `
+                    <div class="p-4 bg-[#F8F7F4] rounded-lg">
+                        <h5 class="font-bold text-lg mb-1 text-[#3D405B]">Primary Strength</h5>
+                        <p class="text-sm text-[#3D405B]/80">${data.points.strength}</p>
+                    </div>
+                    <div class="p-4 bg-[#F8F7F4] rounded-lg">
+                        <h5 class="font-bold text-lg mb-1 text-[#3D405B]">Key Limitation</h5>
+                        <p class="text-sm text-[#3D405B]/80">${data.points.limitation}</p>
+                    </div>
+                `;
+                contentDetails.style.opacity = '1';
+
+                const newActiveButton = document.querySelector(`[data-rag-key="${ragKey}"]`);
+                if (activeNavButton) {
+                    activeNavButton.classList.remove('active-nav-button');
+                }
+                if (newActiveButton) {
+                    newActiveButton.classList.add('active-nav-button');
+                    activeNavButton = newActiveButton;
+                }
+            }, 150);
+        }
+
+        Object.keys(ragData).forEach(key => {
+            const button = document.createElement('button');
+            button.className = 'w-full text-left p-3 rounded-lg bg-white shadow-md nav-button text-[#3D405B]';
+            button.textContent = ragData[key].title;
+            button.dataset.ragKey = key;
+            button.addEventListener('click', () => updateContent(key));
+            navigationContainer.appendChild(button);
+        });
+
+        const ctx = document.getElementById('ragComparisonChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: Object.keys(comparisonData.metrics),
+                datasets: comparisonData.labels.map((label, index) => ({
+                    label: label,
+                    data: Object.values(comparisonData.metrics).map(metric => metric[index]),
+                    fill: true,
+                    backgroundColor: `rgba(${index * 40}, ${180 - index * 20}, ${150 + index * 10}, 0.2)`,
+                    borderColor: `rgb(${index * 40}, ${180 - index * 20}, ${150 + index * 10})`,
+                    pointBackgroundColor: `rgb(${index * 40}, ${180 - index * 20}, ${150 + index * 10})`,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: `rgb(${index * 40}, ${180 - index * 20}, ${150 + index * 10})`
+                }))
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.r !== null) {
+                                    label += context.parsed.r + ' / 5';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        pointLabels: {
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        const tableHead = document.querySelector('#comparison-table thead');
+        const tableBody = document.querySelector('#comparison-table tbody');
+        let headHtml = '<tr>';
+        comparisonTableData.headers.forEach(header => {
+            headHtml += `<th scope="col" class="px-6 py-3">${header}</th>`;
+        });
+        headHtml += '</tr>';
+        tableHead.innerHTML = headHtml;
+        
+        let bodyHtml = '';
+        comparisonTableData.rows.forEach((row, rowIndex) => {
+            bodyHtml += `<tr class="${rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#F8F7F4]'} border-b">`;
+            bodyHtml += `<th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">${row.feature}</th>`;
+            row.values.forEach(value => {
+                bodyHtml += `<td class="px-6 py-4">${value}</td>`;
+            });
+            bodyHtml += '</tr>';
+        });
+        tableBody.innerHTML = bodyHtml;
+        
+        updateContent('vanilla');
+    });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

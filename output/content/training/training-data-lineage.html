@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive Data Lineage training. Learn to trace data provenance, perform impact analysis, and debug pipelines using visual lineage maps." name="description"/>
+    <meta content="Data Lineage, Data Governance, ETL, Impact Analysis, Data Engineering, Provenance, Root Cause Analysis" name="keywords"/>
+    <title>Data Lineage: The Map of Truth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Styles */
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+        }
+
+        /* Lineage Graph Container */
+        #graph-container {
+            position: relative;
+            height: 500px;
+            width: 100%;
+            overflow: hidden;
+            background-color: #f8fafc; /* Slate-50 */
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        #line-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .node {
+            position: absolute;
+            width: 160px;
+            padding: 1rem;
+            background: white;
+            border: 2px solid #94a3b8;
+            border-radius: 8px;
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            font-size: 0.875rem;
+        }
+
+        .node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .node.active {
+            border-color: #3b82f6; /* Blue-500 */
+            background-color: #eff6ff; /* Blue-50 */
+            ring: 2px solid #3b82f6;
+        }
+
+        .node.upstream {
+            border-color: #10b981; /* Emerald-500 */
+            background-color: #ecfdf5;
+        }
+
+        .node.downstream {
+            border-color: #f59e0b; /* Amber-500 */
+            background-color: #fffbeb;
+        }
+        
+        .node.broken {
+            border-color: #ef4444; /* Rose-500 */
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: "Engineering Blueprint" -->
+    <!-- Primary: Blue-600, Neutral: Slate-900, Success: Emerald-500, Alert: Orange-500. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero: "The Trust Crisis" - Why lineage matters (Dashboard says X, Database says Y).
+         2. Interactive Lineage Map: A bespoke DOM+Canvas visualization. Users click nodes (Raw Data -> Transformation -> BI Report) to see flow and dependencies.
+         3. Impact Analysis Mode: User simulates a "Schema Change" in a source node. The visualization highlights all downstream breakages.
+         4. Root Cause Detective: User starts at a broken report and traces backwards to find the data quality issue.
+         5. Certification Quiz.
+    -->
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Nav -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">🧬</span>
+                    <span class="font-bold text-slate-900">DATA<span class="text-blue-600">LINEAGE</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-500">
+                    <button class="hover:text-blue-600" onclick="scrollToId('map-section')">The Map</button>
+                    <button class="hover:text-blue-600" onclick="scrollToId('impact-section')">Impact Analysis</button>
+                    <button class="hover:text-blue-600" onclick="scrollToId('detective-section')">Debug Scenario</button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" onclick="scrollToId('quiz')">Take Quiz</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24">
+
+        <!-- Hero -->
+        <section class="text-center space-y-6 fade-in">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+                Where did this number <br/><span class="text-blue-600">come from?</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg text-slate-600">
+                <strong>Data Lineage</strong> creates a map of truth. It traces data from origin to consumption, enabling you to debug errors, prove compliance, and predict the impact of changes.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-4xl mx-auto">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+                    <div class="text-blue-500 text-xl mb-2">🔍 Provenance</div>
+                    <p class="text-sm text-slate-500">Know exactly where data originated.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+                    <div class="text-orange-500 text-xl mb-2">⚠️ Impact Analysis</div>
+                    <p class="text-sm text-slate-500">See what breaks before you deploy.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+                    <div class="text-emerald-500 text-xl mb-2">🛡️ Governance</div>
+                    <p class="text-sm text-slate-500">Track PII flow and usage.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Lineage Map -->
+        <section class="scroll-mt-20 fade-in" id="map-section">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900">Interactive Lineage Map</h2>
+                    <p class="text-slate-600 mt-2">Explore the pipeline. Click a node to see its metadata and dependencies.</p>
+                </div>
+                <div class="flex space-x-2 text-xs">
+                    <span class="flex items-center"><span class="w-3 h-3 bg-white border-2 border-slate-400 rounded mr-1"></span> Node</span>
+                    <span class="flex items-center"><span class="w-3 h-3 bg-emerald-50 border border-emerald-500 rounded mr-1"></span> Upstream</span>
+                    <span class="flex items-center"><span class="w-3 h-3 bg-amber-50 border border-amber-500 rounded mr-1"></span> Downstream</span>
+                </div>
+            </div>
+
+            <!-- The Graph Visualization -->
+            <div id="graph-container">
+                <canvas id="line-canvas"></canvas>
+                <!-- Nodes generated by JS -->
+            </div>
+
+            <!-- Details Panel -->
+            <div class="mt-4 p-6 bg-white border border-slate-200 rounded-lg shadow-sm hidden" id="node-details">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900" id="detail-title">Node Name</h3>
+                        <span class="inline-block mt-1 px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded uppercase tracking-wide font-bold" id="detail-type">Type</span>
+                    </div>
+                    <button class="text-slate-400 hover:text-slate-600" onclick="closeDetails()">✕</button>
+                </div>
+                <p class="text-slate-600 mt-4 text-sm" id="detail-desc">Description...</p>
+                <div class="grid grid-cols-2 gap-4 mt-4 text-sm">
+                    <div>
+                        <span class="block text-xs text-slate-400 uppercase">Owner</span>
+                        <span class="font-medium" id="detail-owner">Data Team</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-slate-400 uppercase">Last Updated</span>
+                        <span class="font-medium" id="detail-update">2 mins ago</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Analysis Simulator -->
+        <section class="scroll-mt-20 fade-in bg-slate-900 rounded-2xl p-8 text-white shadow-xl" id="impact-section">
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="lg:w-1/2 space-y-6">
+                    <h2 class="text-3xl font-bold text-white">Simulation: Impact Analysis</h2>
+                    <p class="text-slate-300 leading-relaxed">
+                        Engineers often change a column name (e.g., `cust_id` to `customer_uuid`) without realizing it breaks a CEO dashboard 5 steps downstream.
+                    </p>
+                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                        <h4 class="font-bold text-blue-400 mb-4">Scenario: Rename Column</h4>
+                        <p class="text-sm text-slate-300 mb-4">
+                            You are planning to rename the <code class="bg-black px-1 rounded text-emerald-400">revenue</code> column in the <strong>CRM_RAW</strong> table.
+                        </p>
+                        <button class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-colors flex items-center justify-center" id="btn-simulate" onclick="simulateImpact()">
+                            <span>🚀 Simulate Schema Change</span>
+                        </button>
+                        <div class="hidden mt-4 pt-4 border-t border-slate-700" id="impact-result">
+                            <p class="text-orange-400 font-bold mb-2">⚠️ Potential Breakage Detected:</p>
+                            <ul class="text-sm text-slate-300 space-y-1 list-disc pl-4">
+                                <li><strong>ETL_Sales_Agg</strong> (Job will fail)</li>
+                                <li><strong>Warehouse_Sales</strong> (Data stale)</li>
+                                <li><strong>Executive_Dashboard</strong> (Will show $0)</li>
+                            </ul>
+                            <p class="text-xs text-slate-500 mt-2 italic">Lineage allows you to notify these owners BEFORE you deploy.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 w-full">
+                    <div class="bg-white rounded-lg p-1">
+                         <div class="chart-container">
+                            <canvas id="impactChart"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-center text-xs text-slate-400 mt-2">Visualizing the "Blast Radius" of a change</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Debugging Detective -->
+        <section class="scroll-mt-20 fade-in" id="detective-section">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-900">Detective: Root Cause Analysis</h2>
+                    <p class="text-slate-600 mt-2">
+                        The CEO calls: "My dashboard is blank!" Use the lineage trace to find the culprit.
+                    </p>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+                    <!-- Steps -->
+                    <div class="md:w-1/3 bg-slate-50 border-r border-slate-200 p-6">
+                        <h3 class="font-bold text-slate-700 mb-4">Investigation Log</h3>
+                        <div class="space-y-4">
+                            <button class="w-full text-left p-3 rounded bg-white border border-slate-200 shadow-sm hover:border-blue-400 transition-colors" id="step-0" onclick="checkNode(0)">
+                                <div class="text-xs font-bold text-slate-400 uppercase">Step 1</div>
+                                <div class="font-medium text-slate-800">Check Dashboard</div>
+                            </button>
+                            <button class="w-full text-left p-3 rounded bg-white border border-slate-200 shadow-sm hover:border-blue-400 transition-colors opacity-50 cursor-not-allowed" disabled="" id="step-1" onclick="checkNode(1)">
+                                <div class="text-xs font-bold text-slate-400 uppercase">Step 2</div>
+                                <div class="font-medium text-slate-800">Check Warehouse</div>
+                            </button>
+                            <button class="w-full text-left p-3 rounded bg-white border border-slate-200 shadow-sm hover:border-blue-400 transition-colors opacity-50 cursor-not-allowed" disabled="" id="step-2" onclick="checkNode(2)">
+                                <div class="text-xs font-bold text-slate-400 uppercase">Step 3</div>
+                                <div class="font-medium text-slate-800">Check ETL Job</div>
+                            </button>
+                            <button class="w-full text-left p-3 rounded bg-white border border-slate-200 shadow-sm hover:border-blue-400 transition-colors opacity-50 cursor-not-allowed" disabled="" id="step-3" onclick="checkNode(3)">
+                                <div class="text-xs font-bold text-slate-400 uppercase">Step 4</div>
+                                <div class="font-medium text-slate-800">Check Source API</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Output Console -->
+                    <div class="md:w-2/3 p-6 flex flex-col">
+                        <div class="flex-grow font-mono text-sm bg-slate-900 text-green-400 p-4 rounded mb-4 overflow-y-auto h-64" id="console-output">
+                            &gt; System ready. <br/>
+                            &gt; Waiting for investigation to start...
+                        </div>
+                        <div class="hidden" id="solution-panel">
+                            <p class="font-bold text-slate-800 mb-2">Conclusion:</p>
+                            <div class="flex gap-2">
+                                <button class="flex-1 py-2 border border-slate-300 rounded hover:bg-slate-50" onclick="solveCase('source')">Source Failed</button>
+                                <button class="flex-1 py-2 border border-slate-300 rounded hover:bg-slate-50" onclick="solveCase('etl')">ETL Bug</button>
+                                <button class="flex-1 py-2 border border-slate-300 rounded hover:bg-slate-50" onclick="solveCase('dashboard')">Dashboard Bug</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz -->
+        <section class="max-w-2xl mx-auto py-10 fade-in" id="quiz">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Lineage Certification</h2>
+            <div class="bg-white border border-slate-200 rounded-xl p-8 shadow-lg">
+                <div class="space-y-6" id="quiz-container">
+                    <!-- Generated via JS -->
+                </div>
+                <div class="hidden text-center mt-6" id="quiz-result">
+                    <p class="text-xl font-bold text-slate-800" id="quiz-score"></p>
+                    <p class="text-slate-600 text-sm mt-2" id="quiz-feedback"></p>
+                    <button class="mt-4 text-blue-600 hover:underline text-sm" onclick="location.reload()">Reset</button>
+                </div>
+                <button class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium" id="btn-submit" onclick="submitQuiz()">Submit Answers</button>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Visualization & Content Choices:
+         1. Interactive Map (HTML+Canvas): Report Info (Topography) -> Goal (Explore) -> Custom JS Graph -> Allows intuitive understanding of upstream/downstream flow.
+         2. Impact Chart (Doughnut): Report Info (Dependency Counts) -> Goal (Visualize Risk) -> Chart.js -> Shows the quantitative impact of a single change.
+         3. Debugging Detective (Interactive DOM): Report Info (Root Cause Analysis) -> Goal (Train) -> Step-by-Step Game -> Simulates real-world engineering troubleshooting.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script>
+        // --- Data: Lineage Graph Topology ---
+        // Coordinates are percentage based (0-100) for responsiveness
+        const nodes = [
+            { id: 0, label: "Marketing API", type: "Source", x: 10, y: 20, description: "Raw JSON feed from AdPlatform.", owner: "External" },
+            { id: 1, label: "CRM SQL DB", type: "Source", x: 10, y: 70, description: "Main customer database (PostgreSQL).", owner: "IT Ops" },
+            { id: 2, label: "Raw_Landing", type: "Storage", x: 35, y: 45, description: "S3 Bucket for raw ingestion.", owner: "Data Eng" },
+            { id: 3, label: "ETL_Cleaning", type: "Job", x: 55, y: 45, description: "Python Spark job for deduplication.", owner: "Data Eng" },
+            { id: 4, label: "Warehouse_Core", type: "Table", x: 75, y: 45, description: "Snowflake curated tables.", owner: "Analytics Eng" },
+            { id: 5, label: "Exec_Dashboard", type: "BI", x: 95, y: 20, description: "Tableau Executive View.", owner: "BI Team" },
+            { id: 6, label: "Finance_Report", type: "Report", x: 95, y: 70, description: "Monthly PDF generated for CFO.", owner: "Finance" }
+        ];
+
+        const edges = [
+            { from: 0, to: 2 },
+            { from: 1, to: 2 },
+            { from: 2, to: 3 },
+            { from: 3, to: 4 },
+            { from: 4, to: 5 },
+            { from: 4, to: 6 }
+        ];
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initGraph();
+            window.addEventListener('resize', drawLines); // Redraw lines on resize
+            initCharts();
+            initQuiz();
+        });
+
+        function scrollToId(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Graph Visualization Logic ---
+        function initGraph() {
+            const container = document.getElementById('graph-container');
+            
+            // Create Nodes
+            nodes.forEach(node => {
+                const el = document.createElement('div');
+                el.className = 'node';
+                el.id = `node-${node.id}`;
+                el.innerHTML = `
+                    <div class="font-bold text-slate-800">${node.label}</div>
+                    <div class="text-xs text-slate-500 uppercase mt-1">${node.type}</div>
+                `;
+                // Position logic (convert % to px)
+                el.style.left = `calc(${node.x}% - 80px)`; // Center based on width
+                el.style.top = `calc(${node.y}% - 40px)`;  // Center based on height
+                
+                el.onclick = () => selectNode(node);
+                el.onmouseenter = () => highlightPath(node.id);
+                el.onmouseleave = () => resetHighlights();
+                
+                container.appendChild(el);
+            });
+
+            // Initial Draw
+            setTimeout(drawLines, 100);
+        }
+
+        function drawLines() {
+            const container = document.getElementById('graph-container');
+            const canvas = document.getElementById('line-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Resize canvas to match container
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#cbd5e1'; // Slate-300
+
+            edges.forEach(edge => {
+                const startEl = document.getElementById(`node-${edge.from}`);
+                const endEl = document.getElementById(`node-${edge.to}`);
+                
+                if (!startEl || !endEl) return;
+
+                const startRect = startEl.getBoundingClientRect();
+                const endRect = endEl.getBoundingClientRect();
+                const contRect = container.getBoundingClientRect();
+
+                // Calculate connection points relative to container
+                const x1 = (startRect.left + startRect.width / 2) - contRect.left;
+                const y1 = (startRect.top + startRect.height / 2) - contRect.top;
+                const x2 = (endRect.left + endRect.width / 2) - contRect.left;
+                const y2 = (endRect.top + endRect.height / 2) - contRect.top;
+
+                // Draw Bezier Curve
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                // Control points for smooth curve
+                ctx.bezierCurveTo(x1 + 50, y1, x2 - 50, y2, x2, y2);
+                ctx.stroke();
+            });
+        }
+
+        // --- Interaction Logic ---
+        function selectNode(node) {
+            const panel = document.getElementById('node-details');
+            panel.classList.remove('hidden');
+            document.getElementById('detail-title').innerText = node.label;
+            document.getElementById('detail-type').innerText = node.type;
+            document.getElementById('detail-desc').innerText = node.description;
+            document.getElementById('detail-owner').innerText = node.owner;
+            // Scroll slightly if needed
+        }
+
+        function closeDetails() {
+            document.getElementById('node-details').classList.add('hidden');
+        }
+
+        function highlightPath(nodeId) {
+            // Find upstream and downstream
+            const upstream = new Set();
+            const downstream = new Set();
+            
+            // Simple traverse for demo
+            // Downstream
+            let queue = [nodeId];
+            while(queue.length > 0) {
+                const curr = queue.shift();
+                edges.forEach(e => {
+                    if (e.from === curr) {
+                        downstream.add(e.to);
+                        queue.push(e.to);
+                    }
+                });
+            }
+            // Upstream
+            queue = [nodeId];
+            while(queue.length > 0) {
+                const curr = queue.shift();
+                edges.forEach(e => {
+                    if (e.to === curr) {
+                        upstream.add(e.from);
+                        queue.push(e.from);
+                    }
+                });
+            }
+
+            // Apply classes
+            document.getElementById(`node-${nodeId}`).classList.add('active');
+            upstream.forEach(id => document.getElementById(`node-${id}`).classList.add('upstream'));
+            downstream.forEach(id => document.getElementById(`node-${id}`).classList.add('downstream'));
+        }
+
+        function resetHighlights() {
+            const els = document.querySelectorAll('.node');
+            els.forEach(el => el.classList.remove('active', 'upstream', 'downstream'));
+        }
+
+        // --- Impact Simulation ---
+        function simulateImpact() {
+            const result = document.getElementById('impact-result');
+            result.classList.remove('hidden');
+            result.classList.add('fade-in');
+            
+            // Highlight specific nodes in the graph as "broken"
+            [3, 4, 5, 6].forEach(id => {
+                const el = document.getElementById(`node-${id}`);
+                el.classList.add('broken');
+            });
+            
+            // Update chart data to show failure
+            impactChartInstance.data.datasets[0].data = [3, 4]; // 3 Safe, 4 at Risk
+            impactChartInstance.data.datasets[0].backgroundColor = ['#e2e8f0', '#ef4444'];
+            impactChartInstance.update();
+        }
+
+        // --- Chart.js ---
+        let impactChartInstance;
+        function initCharts() {
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            impactChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Safe Nodes', 'Impacted Nodes'],
+                    datasets: [{
+                        data: [7, 0],
+                        backgroundColor: ['#3b82f6', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { enabled: true }
+                    }
+                }
+            });
+        }
+
+        // --- Detective Logic ---
+        let currentStep = 0;
+        function checkNode(stepIndex) {
+            const output = document.getElementById('console-output');
+            const msgs = [
+                "> Checking Exec_Dashboard... Value is NULL. Error: 'Input data missing'. \n> Trace upstream to 'Warehouse_Core'.",
+                "> Checking Warehouse_Core... Last update timestamp is OLD. \n> The table hasn't updated in 24 hours. \n> Trace upstream to 'ETL_Cleaning'.",
+                "> Checking ETL_Cleaning... Job status: FAILED. \n> Error Log: 'KeyError: revenue_amt'. \n> Trace upstream to 'Raw_Landing'.",
+                "> Checking Raw_Landing... Data arrived on time. Schema changed by provider.\n> ROOT CAUSE FOUND: Code/Schema Mismatch."
+            ];
+
+            output.innerHTML += `<br>${msgs[stepIndex]}`;
+            output.scrollTop = output.scrollHeight;
+
+            // Unlock next button
+            if (stepIndex < 3) {
+                const nextBtn = document.getElementById(`step-${stepIndex + 1}`);
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                document.getElementById('solution-panel').classList.remove('hidden');
+                document.getElementById('solution-panel').classList.add('fade-in');
+            }
+            
+            currentStep = stepIndex;
+        }
+
+        function solveCase(answer) {
+            const output = document.getElementById('console-output');
+            if (answer === 'etl') {
+                output.innerHTML += `<br><br>> <span class="text-emerald-400">CORRECT: The ETL Job failed because it expected a column that changed. Lineage helped pinpoint the exact break in the chain.</span>`;
+            } else {
+                output.innerHTML += `<br><br>> <span class="text-rose-400">INCORRECT: Look at the logs again. The Raw data is there, but the Job failed.</span>`;
+            }
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // --- Quiz ---
+        const questions = [
+            { q: "What is 'Upstream' data?", opts: ["Data consumption reports", "The source or provider of data", "Data stored in the cloud", "Deleted data"], a: 1 },
+            { q: "Why is Impact Analysis useful?", opts: ["It speeds up the database", "It prevents accidental breakages downstream", "It encrypts the data", "It deletes old logs"], a: 1 },
+            { q: "If a dashboard is wrong, where should you start?", opts: ["Reboot the server", "Delete the dashboard", "Trace the lineage backwards from the report", "Call the CEO"], a: 2 }
+        ];
+
+        function initQuiz() {
+            const cont = document.getElementById('quiz-container');
+            let html = '';
+            questions.forEach((q, i) => {
+                html += `
+                    <div class="mb-6">
+                        <p class="font-bold text-slate-800 mb-2">${i+1}. ${q.q}</p>
+                        <div class="space-y-2">
+                            ${q.opts.map((o, oi) => `
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="q${i}" value="${oi}" class="text-blue-600 focus:ring-blue-500">
+                                    <span class="text-slate-600 text-sm">${o}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            cont.innerHTML = html;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, i) => {
+                const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                if (sel && parseInt(sel.value) === q.a) score++;
+            });
+            
+            const res = document.getElementById('quiz-result');
+            res.classList.remove('hidden');
+            document.getElementById('quiz-score').innerText = `You scored ${score}/${questions.length}`;
+            document.getElementById('quiz-feedback').innerText = score === questions.length ? "Lineage Expert Certified!" : "Review the map and try again.";
+            document.getElementById('btn-submit').classList.add('hidden');
+        }
+    </script>
+
+</body></html>

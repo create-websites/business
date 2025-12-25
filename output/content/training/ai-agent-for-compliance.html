@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="A strategic report on AI Agents in Compliance. Explore how AI copilots break down knowledge silos, guide investigators, and scale expert judgment without replacing humans." name="description"/>
+    <meta content="AI compliance, compliance copilot, regulatory technology, AI agent, automated investigations, risk management, knowledge silos, expert judgment scaling" name="keywords"/>
+    <title>AI Agent for Compliance: Copilot for Humans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            height: 350px; 
+            max-height: 400px; 
+        }
+        .node { transition: all 0.5s ease; }
+        .connection-line { transition: all 0.5s ease; height: 2px; background-color: #cbd5e1; position: absolute; z-index: 0; transform-origin: left center; width: 0; }
+        .active-connection { background-color: #3b82f6; width: 100px; } /* Approximate width for demo */
+        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .chat-bubble { opacity: 0; transform: translateY(10px); transition: all 0.3s ease; }
+        .chat-bubble.visible { opacity: 1; transform: translateY(0); }
+    </style>
+    <!-- Chosen Palette: Corporate Trust (Slate 50-900, Blue 600 accents) for a clean, professional, and trustworthy compliance aesthetic. -->
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the stage with the core "Problem vs Solution" dichotomy.
+         2. The Challenge (Interactive Diagram): Visually demonstrates "Knowledge is siloed". Users click to "Activate AI" and see connections form.
+         3. Core Capabilities (Simulation Tabs): Break down the 3 key roles (Q&A, Guidance, Recommendations) into interactive demos.
+         4. The Outcome (Dynamic Chart): A quantitative visualization of "Scaling expert judgment", comparing Human-Only vs. Human+AI scaling.
+         5. Strategic Summary: Final takeaway text.
+         Rationale: This flow moves from the abstract problem to concrete features, and finally to measurable business impact.
+    -->
+    <!-- Visualization & Content Choices:
+         - Silo Problem: HTML/CSS Grid with JS toggles. Goal: Visualize isolation. Justification: Shows "silos" literally breaking down.
+         - AI Roles: Interactive Tabs/Mock Interface. Goal: Demonstrate functionality. Justification: Better than listing bullets; shows the "Copilot" in action.
+         - Impact Chart: Chart.js Line Chart. Goal: Quantify "Scaling judgment". Justification: Line charts are standard for showing efficiency trends over time/volume.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="text-slate-800">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white font-bold">C</div>
+                <span class="text-xl font-bold text-slate-800 tracking-tight">Compliance<span class="text-blue-600">Copilot</span></span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                <a class="hover:text-blue-600 transition" href="#challenge">The Challenge</a>
+                <a class="hover:text-blue-600 transition" href="#solution">The Solution</a>
+                <a class="hover:text-blue-600 transition" href="#impact">Impact Analysis</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-slate-900 text-white py-20">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="inline-block px-3 py-1 bg-blue-900 text-blue-200 rounded-full text-xs font-semibold tracking-wide uppercase mb-4">Research Report</div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">AI Agent for Compliance: <br/><span class="text-blue-400">Copilot for Humans</span></h1>
+            <p class="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
+                Moving beyond simple automation to scale expert judgment. How AI Agents address siloed knowledge and empower investigators without replacing them.
+            </p>
+            <div class="flex justify-center gap-4">
+                <button class="px-8 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition shadow-lg shadow-blue-900/50" onclick="document.getElementById('challenge').scrollIntoView({behavior: 'smooth'})">Explore the Report</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-24">
+
+        <!-- Section 1: The Problem (Interactive Diagram) -->
+        <section class="scroll-mt-24" id="challenge">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">The Challenge: Knowledge is Siloed</h2>
+                    <p class="text-lg text-slate-600 mb-6">
+                        In traditional compliance environments, critical information is locked within specific departments, legacy systems, or individual experts' heads. This fragmentation slows down investigations and increases risk.
+                    </p>
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
+                        <p class="text-sm text-blue-800 font-semibold">Key Insight</p>
+                        <p class="text-slate-700">Investigators spend more time hunting for information than analyzing it.</p>
+                    </div>
+                    <button class="px-6 py-2 border-2 border-blue-600 text-blue-600 rounded hover:bg-blue-50 font-medium transition" id="connect-silos-btn">
+                        Tap to Bridge Silos
+                    </button>
+                    <p class="text-sm text-slate-500 mt-2 italic" id="silo-status">Status: Fragmented Knowledge</p>
+                </div>
+
+                <!-- Interactive Silo Visual -->
+                <div class="relative bg-slate-100 rounded-xl p-8 h-80 flex flex-col justify-center items-center overflow-hidden border border-slate-200">
+                    <div class="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-8 p-8 pointer-events-none">
+                        <!-- Connection Lines (Hidden by default) -->
+                        <div class="silo-link absolute top-1/2 left-1/4 w-1/2 h-1 bg-blue-400 opacity-0 transition-all duration-1000"></div>
+                        <div class="silo-link absolute top-1/4 left-1/2 h-1/2 w-1 bg-blue-400 opacity-0 transition-all duration-1000"></div>
+                        <div class="silo-link absolute top-1/2 left-1/2 w-32 h-1 bg-blue-400 opacity-0 transition-all duration-1000 transform -rotate-45 origin-center"></div>
+                    </div>
+
+                    <!-- Nodes -->
+                    <div class="grid grid-cols-2 gap-8 w-full max-w-md relative z-10">
+                        <div class="silo-node bg-white p-4 rounded-lg shadow-md text-center border-b-4 border-slate-300 transition-all duration-500">
+                            <div class="text-2xl mb-1">⚖️</div>
+                            <div class="font-bold text-slate-700">Legal</div>
+                        </div>
+                        <div class="silo-node bg-white p-4 rounded-lg shadow-md text-center border-b-4 border-slate-300 transition-all duration-500">
+                            <div class="text-2xl mb-1">📊</div>
+                            <div class="font-bold text-slate-700">Risk Data</div>
+                        </div>
+                        <div class="silo-node bg-white p-4 rounded-lg shadow-md text-center border-b-4 border-slate-300 transition-all duration-500">
+                            <div class="text-2xl mb-1">📜</div>
+                            <div class="font-bold text-slate-700">Policy</div>
+                        </div>
+                        <div class="silo-node bg-white p-4 rounded-lg shadow-md text-center border-b-4 border-slate-300 transition-all duration-500">
+                            <div class="text-2xl mb-1">🔍</div>
+                            <div class="font-bold text-slate-700">Audit</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Central AI Agent (Hidden initially) -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center font-bold shadow-xl opacity-0 scale-50 transition-all duration-700 z-20" id="ai-hub">
+                        AI
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Solution (Interactive Features) -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden scroll-mt-24" id="solution">
+            <div class="p-8 md:p-12 border-b border-slate-100">
+                <div class="max-w-3xl">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">The Solution: AI Agent Role</h2>
+                    <p class="text-slate-600 text-lg">
+                        The AI Agent acts as an intelligent layer on top of your existing data. It doesn't just search; it synthesizes. Select a capability below to see how it assists the human investigator.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex border-b border-slate-200 overflow-x-auto">
+                <button class="feature-tab px-8 py-4 font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50 focus:outline-none transition-colors whitespace-nowrap" id="tab-qa" onclick="switchTab('qa')">
+                    1. Answer Questions
+                </button>
+                <button class="feature-tab px-8 py-4 font-semibold text-slate-500 hover:bg-slate-50 focus:outline-none transition-colors whitespace-nowrap" id="tab-guide" onclick="switchTab('guide')">
+                    2. Guide Reviews
+                </button>
+                <button class="feature-tab px-8 py-4 font-semibold text-slate-500 hover:bg-slate-50 focus:outline-none transition-colors whitespace-nowrap" id="tab-rec" onclick="switchTab('rec')">
+                    3. Recommend Actions
+                </button>
+            </div>
+
+            <!-- Tab Content Area -->
+            <div class="p-8 md:p-12 bg-slate-50 min-h-[400px]">
+                
+                <!-- Content: Q&A -->
+                <div class="feature-content grid md:grid-cols-2 gap-8 items-start" id="content-qa">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Instant Answers with Citations</h3>
+                        <p class="text-slate-600 mb-4">The agent parses thousands of documents to answer complex compliance queries, always linking back to the source of truth.</p>
+                        <ul class="space-y-2 text-sm text-slate-600 mb-6">
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Reduces research time by 80%</li>
+                            <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Eliminates hallucination via grounding</li>
+                        </ul>
+                        <button class="bg-slate-800 text-white px-4 py-2 rounded text-sm hover:bg-slate-700" onclick="runChatDemo()">Simulate Query</button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow border border-slate-200 p-4 font-mono text-sm h-64 overflow-y-auto flex flex-col space-y-3">
+                        <div class="bg-slate-100 p-3 rounded-br-xl rounded-tr-xl rounded-bl-xl self-start max-w-[90%]">
+                            <span class="font-bold text-xs text-slate-500 block mb-1">Human</span>
+                            Does the new vendor policy require a background check for Level 2 suppliers?
+                        </div>
+                        <div id="chat-response-area">
+                            <!-- JS will populate this -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content: Guidance -->
+                <div class="feature-content hidden grid md:grid-cols-2 gap-8 items-start" id="content-guide">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Investigator Guidance</h3>
+                        <p class="text-slate-600 mb-4">The agent acts as a real-time coach, suggesting the necessary investigative steps based on the case type and current regulations.</p>
+                        <p class="text-sm text-slate-500 italic">"It's like having a senior partner looking over your shoulder."</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow border border-slate-200 p-6">
+                        <h4 class="font-bold text-slate-800 mb-4 border-b pb-2">Case #4029: Guidance Protocol</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center p-3 bg-green-50 border border-green-100 rounded">
+                                <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs mr-3">✓</span>
+                                <span class="text-slate-700 text-sm">Verify Beneficial Ownership</span>
+                            </div>
+                            <div class="flex items-center p-3 bg-blue-50 border border-blue-100 rounded ring-2 ring-blue-400 ring-offset-1">
+                                <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs mr-3 animate-pulse">2</span>
+                                <div>
+                                    <span class="text-slate-900 font-semibold text-sm block">Check Political Exposure (PEP)</span>
+                                    <span class="text-xs text-blue-700">AI Note: Match found in database. Confirm identity.</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center p-3 bg-slate-50 border border-slate-100 rounded opacity-60">
+                                <span class="w-6 h-6 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-xs mr-3">3</span>
+                                <span class="text-slate-500 text-sm">Review Source of Funds</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content: Recommendations -->
+                <div class="feature-content hidden grid md:grid-cols-2 gap-8 items-start" id="content-rec">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Precedent-Based Recommendations</h3>
+                        <p class="text-slate-600 mb-4">By analyzing historical case data, the agent recommends the next best action, ensuring consistency across the organization.</p>
+                        <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-500 text-sm text-yellow-800">
+                            <strong>Note:</strong> The human always makes the final decision. The AI provides the recommendation and the <i>why</i>.
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow border border-slate-200 p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-slate-800">AI Recommendation Engine</h4>
+                            <span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">Confidence: 92%</span>
+                        </div>
+                        <div class="mb-4">
+                            <div class="text-sm text-slate-500 mb-1">Recommended Action:</div>
+                            <div class="text-lg font-bold text-blue-700">Approve with Conditions</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Based on Precedent</div>
+                            <div class="p-2 bg-slate-50 rounded text-xs text-slate-600 border border-slate-100 cursor-pointer hover:bg-blue-50 transition">
+                                📄 <span class="underline">Case #2911 (2023)</span> - Similar risk profile approved.
+                            </div>
+                            <div class="p-2 bg-slate-50 rounded text-xs text-slate-600 border border-slate-100 cursor-pointer hover:bg-blue-50 transition">
+                                📄 <span class="underline">Policy 4.2 Section B</span> - Allows exceptions for low-volume vendors.
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t flex gap-2">
+                            <button class="flex-1 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">Accept</button>
+                            <button class="flex-1 py-2 bg-white border border-slate-300 text-slate-600 text-sm rounded hover:bg-slate-50">Reject</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 3: The Outcome (Interactive Chart) -->
+        <section class="scroll-mt-24" id="impact">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Outcome: Scaling Expert Judgment</h2>
+                <p class="text-lg text-slate-600">
+                    The ultimate goal is not to replace humans, but to decouple case volume from headcount growth. AI handles the information retrieval and synthesis, allowing experts to focus on judgment.
+                </p>
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-6">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Resource Scaling Projection</h3>
+                        <p class="text-sm text-slate-500">Move the slider to increase Case Volume complexity.</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 w-full md:w-1/3">
+                        <label class="block text-sm font-medium text-slate-700 mb-1" for="volumeSlider">Projected Case Volume Growth: <span class="text-blue-600 font-bold" id="volumeValue">5x</span></label>
+                        <input class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" id="volumeSlider" max="10" min="1" type="range" value="5"/>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="impactChart"></canvas>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 text-center">
+                    <div class="p-4 bg-slate-50 rounded-lg">
+                        <div class="text-sm text-slate-500 mb-1">Review Time</div>
+                        <div class="text-2xl font-bold text-green-600">-65%</div>
+                        <div class="text-xs text-slate-400">per case</div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-lg">
+                        <div class="text-sm text-slate-500 mb-1">Compliance Coverage</div>
+                        <div class="text-2xl font-bold text-blue-600">100%</div>
+                        <div class="text-xs text-slate-400">vs 15% random sampling</div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-lg">
+                        <div class="text-sm text-slate-500 mb-1">Headcount Need</div>
+                        <div class="text-2xl font-bold text-purple-600">Flat</div>
+                        <div class="text-xs text-slate-400">as volume grows</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    </main>
+
+    <script>
+        // --- 1. Silo Interactive Logic ---
+        const connectBtn = document.getElementById('connect-silos-btn');
+        const siloNodes = document.querySelectorAll('.silo-node');
+        const aiHub = document.getElementById('ai-hub');
+        const links = document.querySelectorAll('.silo-link');
+        const siloStatus = document.getElementById('silo-status');
+        let isConnected = false;
+
+        connectBtn.addEventListener('click', () => {
+            isConnected = !isConnected;
+            
+            if (isConnected) {
+                // Activate AI Hub
+                aiHub.style.opacity = '1';
+                aiHub.style.transform = 'translate(-50%, -50%) scale(1)';
+                
+                // Color Nodes
+                siloNodes.forEach(node => {
+                    node.classList.remove('border-slate-300');
+                    node.classList.add('border-blue-500', 'bg-blue-50');
+                });
+
+                // Show Links
+                links.forEach(link => {
+                    link.style.opacity = '1';
+                });
+
+                connectBtn.textContent = 'Reset Silos';
+                connectBtn.classList.remove('text-blue-600', 'border-blue-600');
+                connectBtn.classList.add('text-slate-600', 'border-slate-400');
+                siloStatus.textContent = 'Status: Unified Intelligence Network';
+                siloStatus.classList.add('text-green-600', 'font-bold');
+                siloStatus.classList.remove('text-slate-500', 'italic');
+            } else {
+                // Deactivate AI Hub
+                aiHub.style.opacity = '0';
+                aiHub.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                
+                // Reset Nodes
+                siloNodes.forEach(node => {
+                    node.classList.add('border-slate-300');
+                    node.classList.remove('border-blue-500', 'bg-blue-50');
+                });
+
+                // Hide Links
+                links.forEach(link => {
+                    link.style.opacity = '0';
+                });
+
+                connectBtn.textContent = 'Tap to Bridge Silos';
+                connectBtn.classList.add('text-blue-600', 'border-blue-600');
+                connectBtn.classList.remove('text-slate-600', 'border-slate-400');
+                siloStatus.textContent = 'Status: Fragmented Knowledge';
+                siloStatus.classList.remove('text-green-600', 'font-bold');
+                siloStatus.classList.add('text-slate-500', 'italic');
+            }
+        });
+
+        // --- 2. Tab Navigation Logic ---
+        function switchTab(tabId) {
+            // Reset Tabs
+            document.querySelectorAll('.feature-tab').forEach(t => {
+                t.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                t.classList.add('text-slate-500');
+            });
+            // Set Active Tab
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            activeTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+            activeTab.classList.remove('text-slate-500');
+
+            // Hide all Content
+            document.querySelectorAll('.feature-content').forEach(c => c.classList.add('hidden'));
+            // Show Active Content
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+        }
+
+        // --- 3. Chat Simulation Logic ---
+        function runChatDemo() {
+            const area = document.getElementById('chat-response-area');
+            area.innerHTML = ''; // Clear previous
+
+            // Create Loading Bubble
+            const loading = document.createElement('div');
+            loading.className = 'bg-blue-600 text-white p-3 rounded-bl-xl rounded-tr-xl rounded-tl-xl self-end max-w-[90%] chat-bubble visible ml-auto mb-2 flex space-x-1 items-center';
+            loading.innerHTML = '<span class="w-2 h-2 bg-white rounded-full animate-bounce"></span><span class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.1s"></span><span class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></span>';
+            area.appendChild(loading);
+
+            setTimeout(() => {
+                loading.remove();
+                
+                const response = document.createElement('div');
+                response.className = 'bg-blue-600 text-white p-3 rounded-bl-xl rounded-tr-xl rounded-tl-xl self-end max-w-[90%] chat-bubble ml-auto text-sm';
+                response.innerHTML = `
+                    <p class="mb-2"><strong>Yes.</strong> According to the Updated Vendor Management Standard (v2.4), Level 2 suppliers with access to PII require a background check.</p>
+                    <div class="bg-blue-700 bg-opacity-50 p-2 rounded text-xs border border-blue-400">
+                        <span class="font-bold opacity-75">CITATION:</span> 
+                        <a href="#" class="underline hover:text-blue-200">Policy Doc 882, Section 4.1.a</a>
+                    </div>
+                `;
+                area.appendChild(response);
+                // Trigger reflow for transition
+                setTimeout(() => response.classList.add('visible'), 10);
+            }, 1500);
+        }
+
+        // --- 4. Chart.js Logic (Impact Analysis) ---
+        const ctx = document.getElementById('impactChart').getContext('2d');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+
+        // Initial Data for 1x volume
+        const baseLabels = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+        
+        const impactChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: baseLabels,
+                datasets: [
+                    {
+                        label: 'Required Headcount (Traditional)',
+                        data: [10, 20, 30, 40, 50], // Linear growth
+                        borderColor: '#94a3b8', // Slate 400
+                        borderDash: [5, 5],
+                        backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Required Headcount (With AI Copilot)',
+                        data: [10, 12, 13, 13.5, 14], // Logarithmic/Plateau
+                        borderColor: '#2563eb', // Blue 600
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, boxWidth: 8 }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' FTEs';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Full-Time Employees (FTEs)' },
+                        grid: { borderDash: [2, 2] }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Update Chart on Slider Change
+        volumeSlider.addEventListener('input', (e) => {
+            const multiplier = parseInt(e.target.value);
+            volumeValue.textContent = multiplier + 'x';
+
+            // Calculate new traditional line (Linear growth based on volume)
+            const newTraditionalData = [10, 10 + (10 * multiplier * 0.25), 10 + (20 * multiplier * 0.25), 10 + (30 * multiplier * 0.25), 10 + (40 * multiplier * 0.25)];
+            
+            // Calculate new AI line (Efficiency gains dampen the curve drastically)
+            // Even with 10x volume, AI headcount grows slowly
+            const newAiData = [10, 12 + (multiplier * 0.5), 13 + (multiplier * 0.6), 13.5 + (multiplier * 0.7), 14 + (multiplier * 0.8)];
+
+            impactChart.data.datasets[0].data = newTraditionalData;
+            impactChart.data.datasets[1].data = newAiData;
+            impactChart.update();
+        });
+
+    </script>
+
+</body></html>

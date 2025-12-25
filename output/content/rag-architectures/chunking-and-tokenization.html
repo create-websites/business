@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Interactive Report: The RAG Pipeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <!-- Chosen Palette: "Calm Harmony" - Neutrals (slate, stone) with muted blue and teal accents. -->
+    <!-- Application Structure Plan: A process-oriented interactive guide. The user navigates through the logical steps of building a RAG system, from foundational concepts to practical application. This non-linear structure uses interactive simulators and visual diagrams to make abstract concepts concrete and explorable, prioritizing user engagement and understanding over the linear format of the source report. Key interactions include a tokenizer comparison tool, a chunking strategy simulator, a clickable RAG pipeline diagram, and a decision hub to guide users to the right strategy. This structure was chosen to transform a dense, technical report into an active learning tool for AI practitioners. -->
+    <!-- Visualization & Content Choices: 
+        - Tokenizer Comparison: (Goal: Compare) An interactive text input with tabbed outputs for different algorithms, rendered as styled HTML spans. Justification: More engaging than a static table, allows user-driven exploration.
+        - Chunking Simulator: (Goal: Compare/Understand) A visual tool with sliders for chunk size/overlap that dynamically re-renders a text block as colored divs. Justification: Makes abstract parameters and their consequences tangible and intuitive.
+        - Chunking Strategy Chart: (Goal: Compare) A Radar chart (Chart.js) comparing strategies on multiple axes (cost, coherence). Justification: Provides a quick, multi-dimensional visual summary of complex trade-offs.
+        - RAG Pipeline Diagram: (Goal: Explain Process) A clickable, horizontal flowchart using styled HTML divs and JS for interaction. Justification: Breaks down a complex system into digestible, sequential steps.
+        - Decision Hub: (Goal: Guide/Inform) An interactive quiz that provides recommendations. Justification: Turns passive recommendations into an actionable, personalized tool.
+        - All content is presented with clear introductory paragraphs and contextual explanations to guide the user. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: all 0.2s ease-in-out; }
+        .nav-link.active { color: #0f766e; border-bottom-color: #0f766e; }
+        .nav-link:not(.active):hover { color: #0d9488; border-bottom-color: #ccfbf1; }
+        .chunk { transition: all 0.3s ease-in-out; }
+        .pipeline-step { transition: all 0.3s ease-in-out; cursor: pointer; }
+        .pipeline-step.active { border-color: #0f766e; background-color: #f0fdfa; transform: translateY(-4px); }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-teal-700">RAG Insights</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 border-b-2 border-transparent" href="#introduction">Intro</a>
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 border-b-2 border-transparent" href="#tokenization">1. Tokenization</a>
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 border-b-2 border-transparent" href="#chunking">2. Chunking</a>
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 border-b-2 border-transparent" href="#pipeline">3. RAG Pipeline</a>
+                        <a class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 border-b-2 border-transparent" href="#decision-hub">4. Decision Hub</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <section class="scroll-mt-20 text-center mb-20" id="introduction">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">From Subwords to Solutions</h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600">
+                An interactive exploration of Tokenization, Chunking, and Retrieval-Augmented Generation (RAG). This guide transforms complex theory into tangible concepts through simulators and interactive diagrams. Navigate through the core components that power modern AI assistants.
+            </p>
+        </section>
+
+        <section class="scroll-mt-20 mb-20" id="tokenization">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">1. The Foundation: Tokenization</h2>
+            <p class="text-slate-600 mb-8 max-w-4xl">
+                Tokenization is the first step in turning human language into something a machine can understand. It breaks raw text into smaller units called tokens. The strategy used here has massive downstream effects on cost, performance, and semantic accuracy. This section lets you explore how different algorithms approach this fundamental task.
+            </p>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <h3 class="text-xl font-semibold mb-4">Tokenizer Simulator</h3>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-1" for="tokenizer-input">Enter text to tokenize:</label>
+                    <input class="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500" id="tokenizer-input" type="text" value="Tokenization is foundational for LLMs."/>
+                </div>
+                <div class="mb-4">
+                    <div class="border-b border-slate-200">
+                        <nav aria-label="Tabs" class="-mb-px flex space-x-6">
+                            <button class="tokenizer-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-teal-600 border-teal-500" id="bpe-tab">Byte-Pair Encoding (BPE)</button>
+                            <button class="tokenizer-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300 border-transparent" id="wordpiece-tab">WordPiece</button>
+                            <button class="tokenizer-tab whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300 border-transparent" id="char-tab">Character</button>
+                        </nav>
+                    </div>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg min-h-[80px] flex flex-wrap gap-1 items-center" id="tokenizer-output">
+                </div>
+                <div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-800 rounded-r-lg" id="tokenizer-explanation">
+                    <h4 class="font-bold">How it works:</h4>
+                    <p class="text-sm"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="scroll-mt-20 mb-20" id="chunking">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">2. Structuring Knowledge: Chunking</h2>
+            <p class="text-slate-600 mb-8 max-w-4xl">
+                After tokenizing, we group tokens into "chunks." This is necessary because models have limited context windows. Chunking involves a critical trade-off: small chunks offer precision but lack context, while large chunks have rich context but can be noisy. This section helps you visualize this trade-off and compare different strategies.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="text-xl font-semibold mb-4">Chunking Strategy Simulator</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" for="chunk-strategy">Strategy</label>
+                            <select class="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500" id="chunk-strategy">
+                                <option value="fixed">Fixed-Size</option>
+                                <option selected="" value="recursive">Recursive Character</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" for="chunk-size">Chunk Size: <span id="chunk-size-label">100</span></label>
+                            <input class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" id="chunk-size" max="300" min="50" type="range" value="100"/>
+                        </div>
+                        <div class="col-span-1 sm:col-span-2">
+                             <label class="block text-sm font-medium text-slate-700 mb-1" for="chunk-overlap">Chunk Overlap: <span id="chunk-overlap-label">20</span></label>
+                            <input class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" id="chunk-overlap" max="100" min="0" type="range" value="20"/>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-lg text-slate-700 leading-relaxed border border-slate-200" id="chunking-output">
+                    </div>
+                     <div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-800 rounded-r-lg" id="chunking-explanation">
+                        <h4 class="font-bold">What this shows:</h4>
+                        <p class="text-sm">Recursive Character Splitting tries to break text along natural boundaries (paragraphs, then sentences, then words). Notice how it avoids splitting words. Switch to Fixed-Size to see how it can abruptly cut sentences. The overlap (lighter color) helps maintain context between chunks.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200 flex flex-col">
+                    <h3 class="text-xl font-semibold mb-4">Strategy Comparison</h3>
+                     <p class="text-sm text-slate-600 mb-4">This chart visualizes the trade-offs between different chunking strategies across key attributes. No single strategy is best; the ideal choice depends on your specific data and application needs.</p>
+                    <div class="chart-container flex-grow">
+                        <canvas id="chunking-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="scroll-mt-20 mb-20" id="pipeline">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">3. The RAG Pipeline in Action</h2>
+             <p class="text-slate-600 mb-8 max-w-4xl">
+                Retrieval-Augmented Generation (RAG) grounds a Large Language Model (LLM) in external facts, reducing hallucinations and enabling it to use up-to-date information. The process involves several key steps, from indexing knowledge to generating a final answer. Click through the pipeline below to see how choices in tokenization and chunking cascade through the entire system.
+            </p>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <h3 class="text-xl font-semibold mb-4">Interactive RAG Flow</h3>
+                <div class="w-full overflow-x-auto pb-4">
+                    <div class="flex items-start space-x-4 min-w-max">
+                        <div class="pipeline-step flex-1 p-4 border-2 border-slate-300 rounded-lg bg-white text-center active" id="step-query">
+                            <div class="text-2xl mb-2">1. ➡️</div>
+                            <h4 class="font-semibold">Query</h4>
+                            <p class="text-xs text-slate-500">User asks a question.</p>
+                        </div>
+                        <div class="pipeline-step flex-1 p-4 border-2 border-slate-300 rounded-lg bg-white text-center" id="step-embed">
+                            <div class="text-2xl mb-2">🔢</div>
+                            <h4 class="font-semibold">Embed</h4>
+                            <p class="text-xs text-slate-500">Query is converted to a vector.</p>
+                        </div>
+                        <div class="pipeline-step flex-1 p-4 border-2 border-slate-300 rounded-lg bg-white text-center" id="step-search">
+                            <div class="text-2xl mb-2">🔍</div>
+                            <h4 class="font-semibold">Search</h4>
+                            <p class="text-xs text-slate-500">Finds similar chunk vectors.</p>
+                        </div>
+                        <div class="pipeline-step flex-1 p-4 border-2 border-slate-300 rounded-lg bg-white text-center" id="step-retrieve">
+                            <div class="text-2xl mb-2">📚</div>
+                            <h4 class="font-semibold">Retrieve</h4>
+                            <p class="text-xs text-slate-500">Fetches the relevant text chunks.</p>
+                        </div>
+                        <div class="pipeline-step flex-1 p-4 border-2 border-slate-300 rounded-lg bg-white text-center" id="step-augment">
+                           <div class="text-2xl mb-2">➕</div>
+                           <h4 class="font-semibold">Augment</h4>
+                           <p class="text-xs text-slate-500">Combines query and context.</p>
+                        </div>
+                         <div class="pipeline-step flex-1 p-4 border-2 border-slate-300 rounded-lg bg-white text-center" id="step-generate">
+                           <div class="text-2xl mb-2">💡</div>
+                           <h4 class="font-semibold">Generate</h4>
+                           <p class="text-xs text-slate-500">LLM creates a grounded answer.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-slate-50 rounded-lg min-h-[120px] fade-in" id="pipeline-explanation">
+                    <h4 class="text-lg font-semibold mb-2 text-teal-800" id="pipeline-title"></h4>
+                    <p class="text-slate-700" id="pipeline-text"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="scroll-mt-20 mb-20" id="decision-hub">
+            <h2 class="text-3xl font-bold text-slate-900 mb-2">4. Strategic Decision Hub</h2>
+             <p class="text-slate-600 mb-8 max-w-4xl">
+                There is no single "best" chunking or tokenization strategy. The optimal choice depends on your data, expected queries, and system constraints. Answer the questions below to receive a tailored recommendation for your RAG pipeline's starting configuration.
+            </p>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200 grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Pipeline Configuration Guide</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">1. What is the primary nature of your data?</label>
+                            <select class="w-full p-2 border border-slate-300 rounded-md shadow-sm" id="q1-data-type">
+                                <option value="unstructured">Unstructured Prose (articles, books)</option>
+                                <option value="structured">Highly Structured (Markdown, HTML)</option>
+                                <option value="specialized">Specialized (Tables, Code)</option>
+                                <option value="messy">Messy / Inconsistent (OCR, logs)</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">2. What kind of user queries do you anticipate?</label>
+                            <select class="w-full p-2 border border-slate-300 rounded-md shadow-sm" id="q2-query-type">
+                                <option value="factual">Simple &amp; Factual</option>
+                                <option value="exploratory">Complex &amp; Exploratory</option>
+                            </select>
+                        </div>
+                         <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">3. What are your resource constraints?</label>
+                            <select class="w-full p-2 border border-slate-300 rounded-md shadow-sm" id="q3-resource-type">
+                                <option value="limited">Cost/Time are major factors</option>
+                                <option value="flexible">Performance is the priority</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-teal-50 rounded-lg border border-teal-200 flex flex-col justify-center fade-in" id="recommendation-box">
+                     <h3 class="text-xl font-semibold text-teal-900 mb-3">Your Recommended Strategy</h3>
+                     <div class="mb-4">
+                        <h4 class="font-semibold text-teal-800">Chunking Strategy:</h4>
+                        <p class="text-teal-700" id="rec-chunking"></p>
+                     </div>
+                     <div>
+                        <h4 class="font-semibold text-teal-800">Rationale:</h4>
+                        <p class="text-sm text-teal-700" id="rec-rationale"></p>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const simpleBPE = (text) => {
+        let tokens = text.split(/(\s+)/);
+        const merges = { 't i': 'ti', 'o n': 'on', 'i s': 'is', 'a t': 'at', 'i on': 'ion' };
+        let newTokens = [];
+        for (let i = 0; i < tokens.length -1; i+=2) {
+            const pair = tokens[i] + ' ' + tokens[i+1];
+            if(merges[pair]) {
+                newTokens.push(merges[pair]);
+            } else {
+                newTokens.push(tokens[i]);
+            }
+        }
+        return text.toLowerCase().replace(/er\b/g, '##er ').replace(/ing\b/g, '##ing ').replace(/ly\b/g, '##ly ').split(' ');
+    };
+
+    const simpleWordPiece = (text) => {
+        return text.toLowerCase().replace(/tokenization/g, 'token ##ization').replace(/foundational/g, 'foundation ##al').split(/(\s+)/).filter(t => t.trim() !== '');
+    };
+    
+    const charTokenizer = (text) => {
+        return text.split('');
+    };
+
+    const tokenizerExplanations = {
+        bpe: "BPE starts with characters and iteratively merges the most frequent adjacent pairs. This is great for compression but can sometimes create non-intuitive subwords. It's used by GPT models.",
+        wordpiece: "WordPiece is similar to BPE, but it merges pairs that maximize the likelihood of the training data, often creating more linguistically meaningful subwords. A `##` prefix indicates a subword that is not the start of a word. It's used by BERT models.",
+        char: "Character tokenization is the simplest form, splitting text into individual characters. It handles any word but results in very long sequences, making it computationally expensive and harder for models to learn word-level semantics."
+    };
+
+    const tokenizerInput = document.getElementById('tokenizer-input');
+    const tokenizerOutput = document.getElementById('tokenizer-output');
+    const tokenizerExplanationEl = document.getElementById('tokenizer-explanation').querySelector('p');
+    const tabs = document.querySelectorAll('.tokenizer-tab');
+    let activeTokenizer = 'bpe';
+
+    function updateTokenizer() {
+        const text = tokenizerInput.value;
+        let tokens;
+        switch (activeTokenizer) {
+            case 'bpe':
+                tokens = simpleBPE(text);
+                break;
+            case 'wordpiece':
+                tokens = simpleWordPiece(text);
+                break;
+            case 'char':
+                tokens = charTokenizer(text);
+                break;
+        }
+        tokenizerOutput.innerHTML = tokens.map(token => `<span class="bg-white text-slate-700 px-2 py-1 rounded-md border border-slate-300 shadow-sm">${token.replace(/ /g, '&nbsp;')}</span>`).join('');
+        tokenizerExplanationEl.textContent = tokenizerExplanations[activeTokenizer];
+    }
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => {
+                t.classList.remove('text-teal-600', 'border-teal-500');
+                t.classList.add('text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300', 'border-transparent');
+            });
+            tab.classList.add('text-teal-600', 'border-teal-500');
+            tab.classList.remove('text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300', 'border-transparent');
+            activeTokenizer = tab.id.split('-')[0];
+            updateTokenizer();
+        });
+    });
+
+    tokenizerInput.addEventListener('input', updateTokenizer);
+    updateTokenizer();
+
+    const chunkSizeSlider = document.getElementById('chunk-size');
+    const chunkOverlapSlider = document.getElementById('chunk-overlap');
+    const chunkSizeLabel = document.getElementById('chunk-size-label');
+    const chunkOverlapLabel = document.getElementById('chunk-overlap-label');
+    const chunkingOutput = document.getElementById('chunking-output');
+    const chunkStrategySelect = document.getElementById('chunk-strategy');
+
+    const sampleText = "The journey from human language to machine intelligence begins with tokenization. This foundational process is the bedrock upon which all modern NLP applications are built. After tokenization, chunking groups tokens into larger, coherent blocks. This is a mandatory and pivotal process for managing the inherent limitations of LLMs. It addresses the finite context window and balances the trade-off between retrieval precision and contextual richness. The goal is to find the sweet spot where each chunk is a semantically self-contained unit of meaning.";
+
+    const chunkColors = ['bg-teal-100', 'bg-blue-100', 'bg-orange-100', 'bg-green-100', 'bg-purple-100', 'bg-pink-100'];
+    const overlapColor = 'bg-yellow-200';
+
+    function updateChunking() {
+        const size = parseInt(chunkSizeSlider.value);
+        const overlap = parseInt(chunkOverlapSlider.value);
+        const strategy = chunkStrategySelect.value;
+        chunkSizeLabel.textContent = size;
+        chunkOverlapLabel.textContent = overlap;
+
+        let chunks = [];
+        if (strategy === 'fixed') {
+            for (let i = 0; i < sampleText.length; i += (size - overlap)) {
+                chunks.push(sampleText.substring(i, i + size));
+            }
+        } else { // Recursive
+            const separators = ["\n\n", ". ", ", ", " "];
+            let textToSplit = sampleText;
+            
+            function splitText(text, separators) {
+                if (text.length <= size) return [text];
+                if (separators.length === 0) {
+                     let finalChunks = [];
+                     for (let i = 0; i < text.length; i += (size - overlap)) {
+                         finalChunks.push(text.substring(i, i + size));
+                     }
+                     return finalChunks;
+                }
+                const separator = separators[0];
+                const parts = text.split(separator);
+                let currentChunk = "";
+                let finalChunks = [];
+
+                for (const part of parts) {
+                    const potentialChunk = currentChunk ? currentChunk + separator + part : part;
+                    if (potentialChunk.length > size) {
+                        if (currentChunk) {
+                            finalChunks.push(currentChunk);
+                        }
+                        finalChunks.push(...splitText(part, separators.slice(1)));
+                        currentChunk = "";
+                    } else {
+                        currentChunk = potentialChunk;
+                    }
+                }
+                if (currentChunk) finalChunks.push(currentChunk);
+                return finalChunks;
+            }
+            chunks = splitText(sampleText, separators);
+        }
+
+        let html = '';
+        let colorIndex = 0;
+        let lastEnd = 0;
+
+        chunks.forEach((chunkText, i) => {
+            const start = sampleText.indexOf(chunkText, lastEnd > 0 ? lastEnd - overlap : 0);
+            const end = start + chunkText.length;
+            
+            if (start === -1) return;
+
+            if (start > lastEnd) {
+                 html += `<span>${sampleText.substring(lastEnd, start)}</span>`;
+            }
+
+            const overlapStart = Math.max(start, lastEnd - overlap);
+            const nonOverlapText = sampleText.substring(start, overlapStart);
+            const overlapText = sampleText.substring(overlapStart, end);
+            
+            html += `<span class="chunk ${chunkColors[colorIndex % chunkColors.length]} rounded-md px-1 py-0.5">${chunkText}</span>`;
+
+            lastEnd = end;
+            colorIndex++;
+        });
+
+        if (lastEnd < sampleText.length) {
+            html += `<span>${sampleText.substring(lastEnd)}</span>`;
+        }
+
+        chunkingOutput.innerHTML = html;
+    }
+
+    chunkSizeSlider.addEventListener('input', updateChunking);
+    chunkOverlapSlider.addEventListener('input', updateChunking);
+    chunkStrategySelect.addEventListener('change', updateChunking);
+    updateChunking();
+    
+    const chunkingChartCtx = document.getElementById('chunking-chart').getContext('2d');
+    const chunkingChart = new Chart(chunkingChartCtx, {
+        type: 'radar',
+        data: {
+            labels: ['Semantic Coherence', 'Implementation Simplicity', 'Computational Cost', 'Structural Awareness', 'Predictability'],
+            datasets: [{
+                label: 'Recursive Character',
+                data: [4, 4, 2, 3, 3],
+                backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                borderColor: 'rgb(13, 148, 136)',
+                pointBackgroundColor: 'rgb(13, 148, 136)',
+            }, {
+                label: 'Fixed-Size',
+                data: [1, 5, 1, 1, 5],
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                borderColor: 'rgb(59, 130, 246)',
+                pointBackgroundColor: 'rgb(59, 130, 246)',
+            }, {
+                label: 'Semantic',
+                data: [5, 2, 5, 2, 2],
+                backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                borderColor: 'rgb(249, 115, 22)',
+                pointBackgroundColor: 'rgb(249, 115, 22)',
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: { display: true },
+                    suggestedMin: 0,
+                    suggestedMax: 5,
+                    pointLabels: { font: { size: 10 } },
+                    ticks: { display: false, stepSize: 1 }
+                }
+            },
+            plugins: {
+                legend: { position: 'bottom', labels: { font: {size: 12} } }
+            }
+        }
+    });
+
+    const pipelineSteps = document.querySelectorAll('.pipeline-step');
+    const pipelineTitle = document.getElementById('pipeline-title');
+    const pipelineText = document.getElementById('pipeline-text');
+    const pipelineExplanations = {
+        query: {
+            title: "1. User Query",
+            text: "The process begins when a user submits a query. This is the raw input that the entire system aims to answer accurately and factually."
+        },
+        embed: {
+            title: "2. Embed Query",
+            text: "The user's query is converted into a numerical vector using an embedding model. This vector represents the semantic meaning of the question, allowing for mathematical comparison with the knowledge base."
+        },
+        search: {
+            title: "3. Semantic Search",
+            text: "The query vector is used to search a vector database. The database finds the vectors of the text chunks that are most 'similar' (closest in vector space) to the query vector."
+        },
+        retrieve: {
+            title: "4. Retrieve Chunks",
+            text: "The system fetches the actual text chunks corresponding to the top-k most similar vectors found in the search. The quality of these chunks is paramount for the final answer."
+        },
+        augment: {
+            title: "5. Augment Prompt",
+            text: "The retrieved text chunks are combined with the original user query into a single, comprehensive prompt. This 'augments' the LLM's knowledge with specific, relevant context."
+        },
+        generate: {
+            title: "6. Generate Answer",
+            text: "The augmented prompt is sent to the LLM. The model is instructed to formulate its answer based *only* on the provided context, ensuring the response is grounded in the source documents."
+        }
+    };
+    
+    function updatePipelineExplanation(stepId) {
+        pipelineSteps.forEach(s => s.classList.remove('active'));
+        document.getElementById(stepId).classList.add('active');
+
+        const content = pipelineExplanations[stepId.split('-')[1]];
+        const container = document.getElementById('pipeline-explanation');
+        container.classList.remove('fade-in');
+        void container.offsetWidth;
+        container.classList.add('fade-in');
+        pipelineTitle.textContent = content.title;
+        pipelineText.textContent = content.text;
+    }
+
+    pipelineSteps.forEach(step => {
+        step.addEventListener('click', () => {
+            updatePipelineExplanation(step.id);
+        });
+    });
+    updatePipelineExplanation('step-query');
+
+    const q1 = document.getElementById('q1-data-type');
+    const q2 = document.getElementById('q2-query-type');
+    const q3 = document.getElementById('q3-resource-type');
+    const recChunking = document.getElementById('rec-chunking');
+    const recRationale = document.getElementById('rec-rationale');
+
+    const recommendations = {
+        unstructured: {
+            chunking: "Recursive Character Splitting",
+            rationale: "This is a robust baseline for prose. It respects natural semantic breaks like paragraphs and sentences, providing a good balance between coherence and simplicity."
+        },
+        structured: {
+            chunking: "Document-Structure Chunking",
+            rationale: "Leverage the inherent hierarchy (e.g., Markdown headers) to create the most logically coherent chunks that align with the document's flow."
+        },
+        specialized: {
+            chunking: "Specialized, Multi-Stage Pipeline",
+            rationale: "Extract tables and code blocks first. Use table-specific chunkers (preserving headers) and code-aware splitters (chunking by function/class) to maintain data integrity."
+        },
+        messy: {
+            chunking: "Fixed-Size or Tuned Recursive Splitting",
+            rationale: "With no reliable structural signals, a simple fixed-size approach is predictable. A heavily-tuned recursive splitter might also work if some separators are consistent."
+        },
+        factual: {
+            chunking_mod: " with smaller chunks",
+            rationale_mod: " Smaller, precise chunks increase the chance of retrieving only the exact answer, reducing noise for the LLM."
+        },
+        exploratory: {
+            chunking_mod: " with larger chunks (consider Semantic Chunking if performance allows)",
+            rationale_mod: " Complex queries require broader context for synthesis. Larger chunks provide this, and semantic chunking ensures these chunks remain thematically coherent."
+        },
+        limited: {
+            chunking_mod: "",
+            rationale_mod: " This strategy is computationally efficient during indexing."
+        },
+        flexible: {
+             chunking_mod: " (consider Semantic Chunking)",
+             rationale_mod: " If performance is key, the higher upfront cost of Semantic Chunking can yield superior, thematically coherent chunks for better retrieval."
+        }
+    };
+
+    function updateRecommendation() {
+        const v1 = q1.value;
+        const v2 = q2.value;
+        const v3 = q3.value;
+        
+        const baseRec = recommendations[v1];
+        const queryMod = recommendations[v2];
+        const resourceMod = recommendations[v3];
+
+        recChunking.textContent = baseRec.chunking + queryMod.chunking_mod;
+        recRationale.textContent = baseRec.rationale + queryMod.rationale_mod + resourceMod.rationale_mod;
+        
+        const box = document.getElementById('recommendation-box');
+        box.classList.remove('fade-in');
+        void box.offsetWidth;
+        box.classList.add('fade-in');
+    }
+
+    q1.addEventListener('change', updateRecommendation);
+    q2.addEventListener('change', updateRecommendation);
+    q3.addEventListener('change', updateRecommendation);
+    updateRecommendation();
+
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === entry.target.id) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, { rootMargin: "-30% 0px -70% 0px" });
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            document.querySelector(targetId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+});
+</script>
+
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

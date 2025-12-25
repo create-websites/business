@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>12 Types of RAG - Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: "Warm Sandstone" -->
+    <!-- Application Structure Plan: The application uses a "filterable dashboard" structure. The core interaction is a set of filter buttons ('All', 'Naive', 'Advanced', 'Modular') that directly mirror the top-level categories from the source diagram. Clicking a button filters a responsive grid of 12 "cards," where each card represents one RAG type. This structure was chosen because the source is a dense hierarchical diagram; a filterable card layout translates this hierarchy into a clean, interactive, and less overwhelming user experience. It allows users to "zoom in" on specific categories, which is a significant usability improvement over the static image. -->
+    <!-- Visualization & Content Choices: Report Info: 12 RAG types categorized into Naive, Advanced (Pre/Post-processing), and Modular (Search, Memory, Response, Augmentation). Goal: Inform, Organize, and Compare. Presentation Method: A responsive CSS grid of HTML/Tailwind "cards". Each card uses text, and Tailwind-styled 'badges' to convey its name, number, category, and description ('when to use'). Interaction: Vanilla JS adds click event listeners to the filter buttons. This JS toggles the 'hidden' class on the cards based on a 'data-category' attribute, showing only the relevant cards. Justification: This is the most direct and effective way to make a categorized list interactive, enabling easy exploration and comparison without needing complex charts. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        .filter-btn {
+            @apply px-4 py-2 text-sm font-medium text-stone-700 bg-white border border-stone-300 rounded-lg shadow-sm hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all;
+        }
+        .filter-btn.active {
+            @apply bg-amber-600 text-white border-amber-600 hover:bg-amber-700;
+        }
+        .rag-card {
+            @apply bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 p-6 flex flex-col h-full;
+        }
+        .rag-card:not(.hidden) {
+            display: flex;
+        }
+        .rag-card h2 {
+            @apply text-lg font-bold text-stone-900 mb-2;
+        }
+        .rag-card p {
+            @apply text-sm text-stone-700 flex-grow;
+        }
+        .badge-container {
+            @apply flex flex-wrap gap-2 mb-4;
+        }
+        .badge {
+            @apply text-xs font-semibold px-2.5 py-0.5 rounded-full;
+        }
+        .badge-main {
+            @apply bg-amber-100 text-amber-800;
+        }
+        .badge-sub {
+            @apply bg-stone-100 text-stone-800;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-amber-700 mb-2">12 Types of RAG</h1>
+            <p class="text-lg text-stone-600">An Interactive Guide to "When to Use Which One"</p>
+        </header>
+
+        <main>
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
+                <p class="text-stone-700 text-center">
+                    The original diagram outlines 12 distinct types of Retrieval-Augmented Generation (RAG). This interactive guide translates that diagram, allowing you to explore these techniques. Click the buttons below to filter by category, or browse all 12 types in the grid. Each card explains the technique and its typical use case.
+                </p>
+                <nav class="flex flex-wrap justify-center gap-2 mt-6" id="filter-nav">
+                    <button class="filter-btn active" data-filter="all">All Types (12)</button>
+                    <button class="filter-btn" data-filter="naive">Naive RAG (1)</button>
+                    <button class="filter-btn" data-filter="advanced">Advanced RAG (4)</button>
+                    <button class="filter-btn" data-filter="modular">Modular RAG (7)</button>
+                </nav>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="rag-grid">
+
+                <div class="rag-card" data-category="naive">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Naive RAG</span>
+                    </div>
+                    <h2>1. Standard RAG</h2>
+                    <p>The foundational approach. Retrieves documents, adds them to the prompt context, and generates an answer. Use for simple Q&amp;A tasks with a small, clean knowledge base.</p>
+                </div>
+
+                <div class="rag-card" data-category="advanced">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Advanced RAG</span>
+                        <span class="badge badge-sub">Pre-processing</span>
+                    </div>
+                    <h2>2. Sliding Window</h2>
+                    <p>Breaks down documents into smaller, overlapping chunks (e.g., 256 tokens with 128 token overlap). Use for long documents to maintain local context and ensure no information is missed at chunk boundaries.</p>
+                </div>
+
+                <div class="rag-card" data-category="advanced">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Advanced RAG</span>
+                        <span class="badge badge-sub">Pre-processing</span>
+                    </div>
+                    <h2>3. Sentence Window</h2>
+                    <p>Retrieves a single sentence and adds the surrounding sentences as context. Use for highly specific, fact-based queries where the exact sentence is key, but context is needed for meaning.</p>
+                </div>
+
+                <div class="rag-card" data-category="advanced">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Advanced RAG</span>
+                        <span class="badge badge-sub">Pre-processing</span>
+                    </div>
+                    <h2>4. Hierarchical RAG</h2>
+                    <p>Creates a hierarchy of summaries. Retrieves from summaries first, then "drills down" to retrieve from the underlying raw text chunks. Use for large, complex document sets.</p>
+                </div>
+
+                <div class="rag-card" data-category="advanced">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Advanced RAG</span>
+                        <span class="badge badge-sub">Post-processing</span>
+                    </div>
+                    <h2>5. Contextual Re-ranking</h2>
+                    <p>Retrieves a large number of documents (e.g., top 50) and then uses a smaller, more precise model to re-rank them for relevance. Use to improve precision when initial retrieval is "noisy."</p>
+                </div>
+
+                <div class="rag-card" data-category="modular">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Modular RAG</span>
+                        <span class="badge badge-sub">Search</span>
+                    </div>
+                    <h2>6. Multi-query</h2>
+                    <p>Generates multiple different queries from a single user query to broaden the search. Use when a user's query is ambiguous or could be interpreted in multiple ways.</p>
+                </div>
+
+                <div class="rag-card" data-category="modular">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Modular RAG</span>
+                        <span class="badge badge-sub">Search</span>
+                    </div>
+                    <h2>7. RAG-Fusion</h2>
+                    <p>Generates multiple queries, retrieves documents for each, and then intelligently merges and re-ranks all results. Use to get a comprehensive answer from diverse sources.</p>
+                </div>
+
+                <div class="rag-card" data-category="modular">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Modular RAG</span>
+                        <span class="badge badge-sub">Memory</span>
+                    </div>
+                    <h2>8. CoRAG</h2>
+                    <p>Corrective RAG. Uses retrieved documents to verify and correct its own generated answer, iterating until the answer is factually grounded. Use for high-stakes, accuracy-critical tasks.</p>
+                </div>
+
+                <div class="rag-card" data-category="modular">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Modular RAG</span>
+                        <span class="badge badge-sub">Response</span>
+                    </div>
+                    <h2>9. Self-RAG</h2>
+                    <p>Uses retrieved documents to reflect on and improve its own generation process in real-time, deciding when to retrieve more or when to answer. Use for complex, multi-step queries.</p>
+                </div>
+
+                <div class="rag-card" data-category="modular">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Modular RAG</span>
+                        <span class="badge badge-sub">Augmentation</span>
+                    </div>
+                    <h2>10. Chain-of-Thought (CoT)</h2>
+                    <p>Integrates step-by-step reasoning into the generation process. Uses retrieved context to inform each step. Use for complex problems that require logical deduction.</p>
+                </div>
+
+                <div class="rag-card" data-category="modular">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Modular RAG</span>
+                        <span class="badge badge-sub">Augmentation</span>
+                    </div>
+                    <h2>11. Tree of Thought (ToT)</h2>
+                    <p>Explores multiple reasoning paths (branches) simultaneously and evaluates them, pruning weak paths. Use for highly complex problems with no single, clear answer path.</p>
+                </div>
+
+                <div class="rag-card" data-category="modular">
+                    <div class="badge-container">
+                        <span class="badge badge-main">Modular RAG</span>
+                        <span class="badge badge-sub">Augmentation</span>
+                    </div>
+                    <h2>12. RAG-Fusion (Augmentation)</h2>
+                    <p>This appears again, linking augmentation with search. It involves fusing augmented context from multiple query sources before the final generation step. Use to synthesize diverse information.</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterButtons = document.querySelectorAll('#filter-nav .filter-btn');
+            const ragCards = document.querySelectorAll('#rag-grid .rag-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    ragCards.forEach(card => {
+                        if (filter === 'all') {
+                            card.classList.remove('hidden');
+                        } else {
+                            if (card.dataset.category.includes(filter)) {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

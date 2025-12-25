@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive AI Model Governance training. Learn MLOps best practices, model registry management, bias auditing, and the Go/No-Go approval process." name="description"/>
+    <meta content="AI Governance, MLOps, Model Registry, AI Fairness, Bias Audit, NIST AI RMF, EU AI Act, Model Cards" name="keywords"/>
+    <title>AI Model Governance: The Control Tower</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Styles */
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Timeline Connector Lines */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background-color: #e2e8f0;
+            z-index: 0;
+        }
+
+        /* Glassmorphism for Registry Cards */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+    <!-- Chosen Palette: "Regulatory Blue" -->
+    <!-- Primary: Slate-800, Secondary: Sky-600, Success: Emerald-500, Risk: Rose-500. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero: "The Control Tower" - Governance ensures AI is reliable, fair, and accountable.
+         2. The Lifecycle Pipeline (Interactive Timeline): Steps from Data -> Dev -> Registry -> Prod. Clicking steps reveals required artifacts (Model Cards, Tests).
+         3. The Bias Auditor (Interactive Chart): User adjusts a decision threshold to see the trade-off between Accuracy and Fairness (Disparate Impact).
+         4. The Model Registry (Simulation): User compares three candidate models (v1.1, v1.2, v2.0) based on metrics (Accuracy, Latency, Drift) and selects the best one for Staging.
+         5. The Go/No-Go Gate (Checklist): Final approval simulation before deployment.
+         6. Certification Quiz.
+    -->
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Nav -->
+    <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">🏛️</span>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-white tracking-wide">AI GOVERNANCE</span>
+                        <span class="text-[10px] text-sky-400 uppercase tracking-widest">Control Tower</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-300">
+                    <button class="hover:text-sky-400 transition-colors" onclick="scrollToId('lifecycle')">Lifecycle</button>
+                    <button class="hover:text-sky-400 transition-colors" onclick="scrollToId('bias-audit')">Bias Audit</button>
+                    <button class="hover:text-sky-400 transition-colors" onclick="scrollToId('registry')">Model Registry</button>
+                    <button class="px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-500 transition-colors" onclick="scrollToId('quiz')">Certification</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-20">
+
+        <!-- Hero -->
+        <section class="text-center space-y-6 fade-in">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+                From Black Box to <span class="text-sky-600">Glass Box</span>
+            </h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 leading-relaxed">
+                Building a model is easy. Controlling it is hard. 
+                <strong>AI Governance</strong> is the framework of policies, gates, and audits that ensures our AI systems are safe, fair, and compliant before they touch real data.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-sky-500">
+                    <h3 class="font-bold text-slate-800 mb-2">Reproducibility</h3>
+                    <p class="text-sm text-slate-500">Can we recreate the model exactly? (Versioning code, data, and config).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-emerald-500">
+                    <h3 class="font-bold text-slate-800 mb-2">Accountability</h3>
+                    <p class="text-sm text-slate-500">Who approved this model? Who owns the risk if it fails?</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-rose-500">
+                    <h3 class="font-bold text-slate-800 mb-2">Fairness</h3>
+                    <p class="text-sm text-slate-500">Does the model perform equally well for all demographic groups?</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Governance Lifecycle -->
+        <section class="scroll-mt-24 fade-in" id="lifecycle">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-900">The MLOps Lifecycle</h2>
+                <p class="text-slate-600 mt-2">Click each stage to see the mandatory governance artifacts.</p>
+            </div>
+
+            <div class="relative">
+                <!-- Desktop Horizontal Line / Mobile Vertical Line logic handled via grid/flex -->
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10">
+                    
+                    <!-- Stage 1 -->
+                    <button class="group relative flex flex-col items-center p-4 bg-white rounded-lg border-2 border-slate-200 hover:border-sky-500 transition-all focus:ring-2 focus:ring-sky-500 focus:outline-none" onclick="showStage(0)">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xl mb-3 group-hover:bg-sky-100 transition-colors">📊</div>
+                        <h4 class="font-bold text-slate-700">Data Prep</h4>
+                        <div class="absolute top-full mt-4 hidden md:block w-0.5 h-8 bg-slate-300"></div>
+                    </button>
+
+                    <!-- Stage 2 -->
+                    <button class="group relative flex flex-col items-center p-4 bg-white rounded-lg border-2 border-slate-200 hover:border-sky-500 transition-all focus:ring-2 focus:ring-sky-500 focus:outline-none" onclick="showStage(1)">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xl mb-3 group-hover:bg-sky-100 transition-colors">🧪</div>
+                        <h4 class="font-bold text-slate-700">Training</h4>
+                        <div class="absolute top-full mt-4 hidden md:block w-0.5 h-8 bg-slate-300"></div>
+                    </button>
+
+                    <!-- Stage 3 -->
+                    <button class="group relative flex flex-col items-center p-4 bg-white rounded-lg border-2 border-slate-200 hover:border-sky-500 transition-all focus:ring-2 focus:ring-sky-500 focus:outline-none" onclick="showStage(2)">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xl mb-3 group-hover:bg-sky-100 transition-colors">⚖️</div>
+                        <h4 class="font-bold text-slate-700">Evaluation</h4>
+                        <div class="absolute top-full mt-4 hidden md:block w-0.5 h-8 bg-slate-300"></div>
+                    </button>
+
+                    <!-- Stage 4 -->
+                    <button class="group relative flex flex-col items-center p-4 bg-white rounded-lg border-2 border-slate-200 hover:border-sky-500 transition-all focus:ring-2 focus:ring-sky-500 focus:outline-none" onclick="showStage(3)">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xl mb-3 group-hover:bg-sky-100 transition-colors">📝</div>
+                        <h4 class="font-bold text-slate-700">Registry</h4>
+                        <div class="absolute top-full mt-4 hidden md:block w-0.5 h-8 bg-slate-300"></div>
+                    </button>
+
+                     <!-- Stage 5 -->
+                     <button class="group relative flex flex-col items-center p-4 bg-white rounded-lg border-2 border-slate-200 hover:border-sky-500 transition-all focus:ring-2 focus:ring-sky-500 focus:outline-none" onclick="showStage(4)">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-xl mb-3 group-hover:bg-sky-100 transition-colors">🚀</div>
+                        <h4 class="font-bold text-slate-700">Production</h4>
+                        <div class="absolute top-full mt-4 hidden md:block w-0.5 h-8 bg-slate-300"></div>
+                    </button>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="mt-8 bg-slate-900 text-white rounded-xl p-8 shadow-xl transition-all duration-300 min-h-[200px] flex items-center justify-center relative overflow-hidden" id="lifecycle-detail">
+                    <div class="absolute right-0 top-0 opacity-10 text-9xl transform translate-x-10 -translate-y-10">⚙️</div>
+                    <div class="relative z-10 w-full text-center" id="lifecycle-content">
+                        <p class="text-slate-400 italic">Select a stage above to view governance requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Bias Auditor -->
+        <section class="scroll-mt-24 fade-in" id="bias-audit">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-8">
+                <div class="flex flex-col lg:flex-row gap-12">
+                    <div class="lg:w-1/3 space-y-6">
+                        <h2 class="text-2xl font-bold text-slate-900">The Bias Auditor</h2>
+                        <p class="text-slate-600 text-sm">
+                            Governance requires models to be fair. A common metric is the <strong>Four-Fifths Rule</strong>: The selection rate for a protected group should be at least 80% of the highest rate.
+                        </p>
+                        <div class="bg-sky-50 p-4 rounded-lg border border-sky-200">
+                            <h4 class="font-bold text-sky-800 text-sm mb-2">Simulator Instructions</h4>
+                            <p class="text-xs text-sky-700 mb-4">
+                                This model predicts loan approvals. 
+                                <br/>1. Adjust the <strong>Approval Threshold</strong>. 
+                                <br/>2. Watch the "Fairness Check". 
+                                <br/>3. Find a setting that is both accurate and fair.
+                            </p>
+                            <label class="block text-xs font-bold text-sky-800 mb-1">Approval Threshold: <span id="thresh-val">50</span>%</label>
+                            <input class="w-full accent-sky-600" id="thresholdRange" max="90" min="10" oninput="updateBiasChart()" type="range" value="50"/>
+                        </div>
+                        <div class="p-3 rounded text-center font-bold text-sm bg-slate-100 text-slate-400" id="fairness-result">
+                            Adjust threshold to test.
+                        </div>
+                    </div>
+
+                    <div class="lg:w-2/3 w-full">
+                        <div class="chart-container">
+                            <canvas id="biasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Model Registry Simulator -->
+        <section class="scroll-mt-24 fade-in" id="registry">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">Model Registry: The System of Record</h2>
+                <p class="text-slate-600 mt-2">
+                    The Registry is like a library for models. You are the Governor. Compare these versions and <strong>Promote</strong> the best candidate to Staging.
+                </p>
+            </div>
+
+            <!-- Comparison Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Model A -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative group hover:shadow-md transition-shadow">
+                    <div class="absolute top-2 right-2 text-xs font-mono text-slate-400">v1.1.0</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Credit_Risk_Tree</h3>
+                    <div class="space-y-3 text-sm flex-grow">
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Accuracy</span>
+                            <span class="font-bold text-emerald-600">92%</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Latency</span>
+                            <span class="font-bold text-emerald-600">45ms</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Bias Check</span>
+                            <span class="font-bold text-emerald-600">PASS</span>
+                        </div>
+                        <div class="flex justify-between pb-1">
+                            <span class="text-slate-500">Documentation</span>
+                            <span class="font-bold text-rose-500">MISSING</span>
+                        </div>
+                    </div>
+                    <button class="mt-6 w-full py-2 border-2 border-slate-200 rounded text-slate-600 font-bold hover:border-sky-500 hover:text-sky-600 transition-colors" onclick="selectModel('A')">Inspect v1.1</button>
+                </div>
+
+                <!-- Model B -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative group hover:shadow-md transition-shadow">
+                    <div class="absolute top-2 right-2 text-xs font-mono text-slate-400">v1.2.0-beta</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Credit_Risk_XGB</h3>
+                    <div class="space-y-3 text-sm flex-grow">
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Accuracy</span>
+                            <span class="font-bold text-emerald-600">96%</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Latency</span>
+                            <span class="font-bold text-emerald-600">60ms</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Bias Check</span>
+                            <span class="font-bold text-emerald-600">PASS</span>
+                        </div>
+                        <div class="flex justify-between pb-1">
+                            <span class="text-slate-500">Documentation</span>
+                            <span class="font-bold text-emerald-600">COMPLETE</span>
+                        </div>
+                    </div>
+                    <button class="mt-6 w-full py-2 border-2 border-slate-200 rounded text-slate-600 font-bold hover:border-sky-500 hover:text-sky-600 transition-colors" onclick="selectModel('B')">Inspect v1.2</button>
+                </div>
+
+                <!-- Model C -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative group hover:shadow-md transition-shadow">
+                    <div class="absolute top-2 right-2 text-xs font-mono text-slate-400">v2.0.0</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Credit_Risk_Neural</h3>
+                    <div class="space-y-3 text-sm flex-grow">
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Accuracy</span>
+                            <span class="font-bold text-emerald-600">98%</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Latency</span>
+                            <span class="font-bold text-rose-500">850ms</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="text-slate-500">Bias Check</span>
+                            <span class="font-bold text-rose-500">FAIL (Age)</span>
+                        </div>
+                        <div class="flex justify-between pb-1">
+                            <span class="text-slate-500">Documentation</span>
+                            <span class="font-bold text-emerald-600">COMPLETE</span>
+                        </div>
+                    </div>
+                    <button class="mt-6 w-full py-2 border-2 border-slate-200 rounded text-slate-600 font-bold hover:border-sky-500 hover:text-sky-600 transition-colors" onclick="selectModel('C')">Inspect v2.0</button>
+                </div>
+            </div>
+
+            <!-- Decision Panel -->
+            <div class="hidden mt-8 p-6 bg-slate-900 text-white rounded-xl text-center fade-in" id="registry-decision">
+                <h4 class="text-xl font-bold mb-2">Reviewing: <span class="text-sky-400" id="selected-model-name"></span></h4>
+                <p class="text-slate-300 mb-6" id="decision-feedback"></p>
+                <div class="flex justify-center gap-4">
+                    <button class="px-6 py-2 border border-rose-500 text-rose-400 rounded hover:bg-rose-900/30 transition-colors" onclick="registryAction('reject')">Reject</button>
+                    <button class="px-6 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-900/20" onclick="registryAction('promote')">Promote to Staging</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Quiz -->
+        <section class="max-w-2xl mx-auto py-10 fade-in" id="quiz">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Governance Certification</h2>
+            <div class="bg-white border border-slate-200 rounded-xl p-8 shadow-lg">
+                <div class="space-y-6" id="quiz-container">
+                    <!-- Generated via JS -->
+                </div>
+                <div class="hidden text-center mt-6" id="quiz-result">
+                    <p class="text-xl font-bold text-slate-800" id="quiz-score"></p>
+                    <p class="text-slate-600 text-sm mt-2" id="quiz-feedback"></p>
+                    <button class="mt-4 text-sky-600 hover:underline text-sm" onclick="location.reload()">Reset</button>
+                </div>
+                <button class="w-full mt-6 bg-slate-900 text-white py-3 rounded-lg hover:bg-slate-800 transition font-medium" id="btn-submit" onclick="submitQuiz()">Submit Answers</button>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Visualization & Content Choices:
+         1. Lifecycle Timeline (DOM Tabs): Report Info (MLOps Process) -> Goal (Train) -> Reveals artifacts at each stage.
+         2. Bias Auditor (Chart.js Bar): Report Info (Fairness Metrics) -> Goal (Simulate) -> Interactive Slider -> Users learn the trade-off between strict thresholds and fairness.
+         3. Model Registry (Cards): Report Info (Versioning/Documentation) -> Goal (Decision Making) -> Comparison exercise showing that highest accuracy isn't always "best" (latency/bias/docs matter).
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script>
+        // --- Navigation ---
+        function scrollToId(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Lifecycle Logic ---
+        const stages = [
+            {
+                title: "Data Preparation",
+                icon: "📊",
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-2">Governance Gate: Data Lineage</h3>
+                    <ul class="text-left list-disc pl-5 space-y-2 text-slate-300">
+                        <li><strong>Data Versioning:</strong> Is the dataset hashed and immutable?</li>
+                        <li><strong>PII Scan:</strong> Has sensitive data been redacted?</li>
+                        <li><strong>Bias Check (Pre-training):</strong> Is the dataset representative?</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Model Training",
+                icon: "🧪",
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-2">Governance Gate: Experiment Tracking</h3>
+                    <ul class="text-left list-disc pl-5 space-y-2 text-slate-300">
+                        <li><strong>Hyperparameters:</strong> Are all config settings logged?</li>
+                        <li><strong>Environment:</strong> Is the Docker container/Conda env saved?</li>
+                        <li><strong>Compute Cost:</strong> Is resource usage within budget?</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Evaluation",
+                icon: "⚖️",
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-2">Governance Gate: Fairness & Robustness</h3>
+                    <ul class="text-left list-disc pl-5 space-y-2 text-slate-300">
+                        <li><strong>Disparate Impact:</strong> Does it pass the 80% rule for all groups?</li>
+                        <li><strong>Stress Testing:</strong> How does it handle adversarial inputs?</li>
+                        <li><strong>Explainability:</strong> Can we explain the predictions (SHAP/LIME)?</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Model Registry",
+                icon: "📝",
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-2">Governance Gate: Documentation</h3>
+                    <ul class="text-left list-disc pl-5 space-y-2 text-slate-300">
+                        <li><strong>Model Card:</strong> Is the "Nutrition Label" for the model complete?</li>
+                        <li><strong>Approval Chain:</strong> Did the Lead Data Scientist sign off?</li>
+                        <li><strong>Version Tagging:</strong> Is it tagged 'Staging' or 'Archived'?</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Production",
+                icon: "🚀",
+                content: `
+                    <h3 class="text-xl font-bold text-white mb-2">Governance Gate: Monitoring</h3>
+                    <ul class="text-left list-disc pl-5 space-y-2 text-slate-300">
+                        <li><strong>Drift Detection:</strong> Is the live data distribution shifting?</li>
+                        <li><strong>Performance Monitoring:</strong> Is latency/accuracy stable?</li>
+                        <li><strong>Rollback Plan:</strong> Can we revert to v1.0 instantly?</li>
+                    </ul>
+                `
+            }
+        ];
+
+        function showStage(index) {
+            const panel = document.getElementById('lifecycle-content');
+            panel.parentElement.classList.remove('fade-in');
+            void panel.parentElement.offsetWidth; // Trigger reflow
+            panel.parentElement.classList.add('fade-in');
+            
+            panel.innerHTML = stages[index].content;
+        }
+
+        // --- Bias Auditor Logic ---
+        let biasChartInstance;
+
+        function initBiasChart() {
+            const ctx = document.getElementById('biasChart').getContext('2d');
+            biasChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Group A (Majority)', 'Group B (Minority)'],
+                    datasets: [{
+                        label: 'Approval Rate (%)',
+                        data: [60, 45],
+                        backgroundColor: ['#0ea5e9', '#6366f1']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Approval Rate %' } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    yMin: 80,
+                                    yMax: 80,
+                                    borderColor: 'rgb(255, 99, 132)',
+                                    borderWidth: 2,
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            updateBiasChart();
+        }
+
+        function updateBiasChart() {
+            const threshold = parseInt(document.getElementById('thresholdRange').value);
+            document.getElementById('thresh-val').innerText = threshold;
+
+            // Simulate approval rates based on threshold
+            // Group A has higher base scores on average (simulating bias in data)
+            // Group B has lower base scores
+            const rateA = Math.max(0, 100 - (threshold * 0.8));
+            const rateB = Math.max(0, 100 - (threshold * 1.1)); 
+
+            biasChartInstance.data.datasets[0].data = [rateA, rateB];
+            biasChartInstance.update();
+
+            // Calculate Fairness (Four-Fifths Rule)
+            const ratio = rateA > 0 ? rateB / rateA : 0;
+            const resBox = document.getElementById('fairness-result');
+            
+            if (ratio >= 0.8) {
+                resBox.innerHTML = `Fairness Ratio: ${(ratio*100).toFixed(1)}% <br> <span class="text-emerald-600 font-bold">PASS (Compliant)</span>`;
+                resBox.className = "p-3 rounded text-center text-sm bg-emerald-50 border border-emerald-200";
+            } else {
+                resBox.innerHTML = `Fairness Ratio: ${(ratio*100).toFixed(1)}% <br> <span class="text-rose-600 font-bold">FAIL (Disparate Impact)</span>`;
+                resBox.className = "p-3 rounded text-center text-sm bg-rose-50 border border-rose-200";
+            }
+        }
+
+        // --- Registry Logic ---
+        let currentModel = '';
+
+        function selectModel(modelId) {
+            currentModel = modelId;
+            const decisionPanel = document.getElementById('registry-decision');
+            const nameSpan = document.getElementById('selected-model-name');
+            const feedback = document.getElementById('decision-feedback');
+            
+            decisionPanel.classList.remove('hidden');
+            
+            if (modelId === 'A') {
+                nameSpan.innerText = "v1.1.0 (Credit_Risk_Tree)";
+                feedback.innerText = "This model is accurate and fast, but it lacks mandatory documentation. A governance audit would fail it.";
+            } else if (modelId === 'B') {
+                nameSpan.innerText = "v1.2.0-beta (Credit_Risk_XGB)";
+                feedback.innerText = "This model has high accuracy, acceptable latency, passed bias checks, and is fully documented. It is the strongest candidate.";
+            } else if (modelId === 'C') {
+                nameSpan.innerText = "v2.0.0 (Credit_Risk_Neural)";
+                feedback.innerText = "This model is highly accurate but failed the Bias Check and is too slow (Latency). It cannot be deployed.";
+            }
+        }
+
+        function registryAction(action) {
+            const feedback = document.getElementById('decision-feedback');
+            if (action === 'promote') {
+                if (currentModel === 'B') {
+                    feedback.innerHTML = `<span class="text-emerald-400 font-bold text-lg">✅ SUCCESS:</span> Excellent choice. You balanced performance with governance compliance.`;
+                } else {
+                    feedback.innerHTML = `<span class="text-rose-400 font-bold text-lg">❌ ERROR:</span> Promoting a model with missing docs (A) or bias failures (C) is a governance violation.`;
+                }
+            } else {
+                if (currentModel === 'B') {
+                    feedback.innerHTML = `<span class="text-amber-400 font-bold text-lg">⚠️ CAUTION:</span> You rejected a valid model. While safe, this delays business value.`;
+                } else {
+                    feedback.innerHTML = `<span class="text-emerald-400 font-bold text-lg">✅ CORRECT:</span> Good catch. This model was not ready for production.`;
+                }
+            }
+        }
+
+        // --- Quiz Logic ---
+        const questions = [
+            { q: "What is a 'Model Card'?", opts: ["A credit card for AWS costs", "A document explaining model usage, limitations, and performance", "The Python code file", "A visualization of the neural network"], a: 1 },
+            { q: "Why is Data Lineage important for Governance?", opts: ["It makes training faster", "It looks cool in reports", "It ensures we can trace model errors back to the source data", "It compresses the data"], a: 2 },
+            { q: "If a model has 99% accuracy but fails the Fairness test, what should you do?", opts: ["Deploy it anyway, accuracy is king", "Retrain with balanced data or adjustment techniques", "Hide the report", "Use it only for internal testing"], a: 1 }
+        ];
+
+        function initQuiz() {
+            const cont = document.getElementById('quiz-container');
+            let html = '';
+            questions.forEach((q, i) => {
+                html += `
+                    <div class="mb-6">
+                        <p class="font-bold text-slate-800 mb-2">${i+1}. ${q.q}</p>
+                        <div class="space-y-2">
+                            ${q.opts.map((o, oi) => `
+                                <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-50">
+                                    <input type="radio" name="q${i}" value="${oi}" class="text-sky-600 focus:ring-sky-500">
+                                    <span class="text-slate-600 text-sm">${o}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            cont.innerHTML = html;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, i) => {
+                const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                if (sel && parseInt(sel.value) === q.a) score++;
+            });
+            
+            const res = document.getElementById('quiz-result');
+            res.classList.remove('hidden');
+            document.getElementById('quiz-score').innerText = `You scored ${score}/${questions.length}`;
+            document.getElementById('quiz-feedback').innerText = score === questions.length ? "Governance Certified!" : "Review the Lifecycle section.";
+            document.getElementById('btn-submit').classList.add('hidden');
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            initBiasChart();
+            initQuiz();
+            showStage(0); // Show first stage by default
+        });
+
+    </script>
+
+</body></html>

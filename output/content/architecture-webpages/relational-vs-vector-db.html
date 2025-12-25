@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive guide comparing Relational Databases (SQL) vs. Vector Databases. Features a decision engine to choose the right architecture for transactional apps, analytics, and AI/RAG systems." name="description"/>
+    <meta content="SQL, Relational Database, Vector Database, PostgreSQL, pgvector, MySQL, Pinecone, RAG, Database Architecture, ACID, Joins vs Embeddings" name="keywords"/>
+    <title>Data Architect: SQL vs. Vector DB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* gray-100 */
+            color: #1f2937; /* gray-800 */
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9ca3af;
+            border-radius: 4px;
+        }
+
+        .nav-item.active {
+            background-color: #e5e7eb;
+            border-left: 4px solid #2563eb; /* blue-600 */
+            font-weight: 600;
+        }
+
+        /* Table Animation Styles */
+        .sql-row {
+            transition: all 0.3s ease;
+        }
+        .highlight-row {
+            background-color: #dbeafe; /* blue-100 */
+            border-left: 4px solid #2563eb;
+        }
+        .sql-connector {
+            height: 2px;
+            background-color: #93c5fd;
+            transition: width 0.5s ease;
+        }
+    </style>
+    <!-- Chosen Palette: Blue (SQL/Structure), Fuchsia (Vector/AI), Emerald (Decision) -->
+    <!-- Application Structure Plan: Dashboard Layout.
+         - Sidebar: Intro, Relational (SQL) Deep Dive, Vector Deep Dive, Comparative Analysis, Decision Engine.
+         - Content Area: Dynamic injection.
+         - Logic: Distinguishes between "Deterministic/Structured" (SQL) and "Probabilistic/Semantic" (Vector).
+    -->
+    <!-- Visualization & Content Choices:
+         - Relational View: Interactive "Join" Simulator. Users click "Run Query" to visually connect two tables (Users + Orders) via ID. Shows rigid schema enforcement.
+         - Vector View: Scatter Plot representing "Concept Space". Shows how searching for "Cheap Phone" finds points near "Budget Smartphone" (Semantic similarity).
+         - Comparison: Radar Chart comparing ACID compliance, Complex Querying (Joins), Semantic Search, etc.
+         - Decision Engine: Form-based logic tree including the "Hybrid" (pgvector) outcome.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Mobile Header -->
+    <header class="md:hidden bg-gray-900 text-white p-4 flex justify-between items-center shadow-md z-20">
+        <h1 class="text-lg font-bold"><i class="fas fa-table mr-2"></i>Data Architect</h1>
+        <button class="text-white focus:outline-none" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="bg-white w-64 flex-shrink-0 border-r border-gray-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10 h-full flex flex-col" id="sidebar">
+            <div class="p-6 border-b border-gray-200 hidden md:block">
+                <h1 class="text-2xl font-bold text-gray-800"><i class="fas fa-table mr-2 text-blue-600"></i>Data Architect</h1>
+                <p class="text-xs text-gray-500 mt-2">SQL vs. Vector Guide</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1">
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors flex items-center active" id="nav-intro" onclick="navigateTo('intro')">
+                            <i class="fas fa-info-circle w-6"></i> Introduction
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors flex items-center" id="nav-sql" onclick="navigateTo('sql')">
+                            <i class="fas fa-database w-6 text-blue-600"></i> Relational (SQL)
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors flex items-center" id="nav-vector" onclick="navigateTo('vector')">
+                            <i class="fas fa-project-diagram w-6 text-fuchsia-600"></i> Vector DB
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors flex items-center" id="nav-compare" onclick="navigateTo('compare')">
+                            <i class="fas fa-balance-scale w-6"></i> Comparative Analysis
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors flex items-center" id="nav-decision" onclick="navigateTo('decision')">
+                            <i class="fas fa-calculator w-6 text-emerald-600"></i> Decision Engine
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="p-4 border-t border-gray-200 bg-gray-50">
+                <div class="text-xs text-gray-500">
+                    <p class="font-semibold">Current Context:</p>
+                    <p id="context-indicator">Introduction</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-gray-100 p-4 md:p-8" id="main-content">
+            <!-- Content injected via JS -->
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden" id="overlay"></div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'intro',
+            decisionInputs: {
+                dataStructure: null,
+                queryNeeds: null,
+                consistency: null,
+                legacy: null
+            }
+        };
+
+        // --- Content Store ---
+        const contentData = {
+            intro: {
+                title: "Structured Logic vs. Semantic Meaning",
+                content: `
+                    <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                        <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-blue-800">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">The Evolution of Data Storage</h2>
+                            <p class="text-gray-600 leading-relaxed text-lg">
+                                For 40 years, <strong>Relational Databases (SQL)</strong> have powered the world with strict schemas, reliable transactions (ACID), and complex joins. But the rise of AI has introduced <strong>Vector Databases</strong>, which trade deterministic precision for probabilistic "understanding." This guide helps you navigate the choice between these two distinct paradigms—and when to combine them.
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-blue-500" onclick="navigateTo('sql')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                                        <i class="fas fa-database"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-gray-800">Relational (SQL)</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Excel at structured data, complex relationships (Joins), and financial accuracy. The bedrock of business applications.</p>
+                                <span class="text-blue-600 font-semibold text-sm">Explore Logic &rarr;</span>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-fuchsia-500" onclick="navigateTo('vector')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-fuchsia-100 flex items-center justify-center text-fuchsia-600 mr-3">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-gray-800">Vector Database</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Excel at unstructured data, similarity search, and high-dimensional embeddings. The memory of AI.</p>
+                                <span class="text-fuchsia-600 font-semibold text-sm">Explore Meaning &rarr;</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-200 p-6 rounded-xl text-center mt-8">
+                            <h3 class="text-lg font-bold text-gray-700 mb-2">Can't decide?</h3>
+                            <button onclick="navigateTo('decision')" class="bg-gray-800 text-white px-6 py-3 rounded-lg shadow hover:bg-gray-700 transition-colors">
+                                Launch Decision Engine
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            sql: {
+                title: "Relational DB: The System of Record",
+                description: "Relational databases (PostgreSQL, MySQL, Oracle) organize data into tables with rows and columns. They enforce strict rules (Schemas) and connections (Foreign Keys) to ensure data integrity.",
+                vizScript: 'renderSQLViz'
+            },
+            vector: {
+                title: "Vector DB: The Engine of Similarity",
+                description: "Vector databases store data as numbers in a multi-dimensional space. Unlike SQL which looks for exact matches (WHERE id = 5), Vector DBs look for concepts that are 'close' to each other.",
+                vizScript: 'renderVectorViz'
+            },
+            compare: {
+                title: "Head-to-Head Comparison",
+                description: "Comparing the trade-offs. SQL wins on accuracy and reporting. Vector wins on search quality for unstructured content.",
+                vizScript: 'renderComparisonChart'
+            },
+            decision: {
+                title: "Architecture Decision Engine",
+                description: "Answer four questions to determine if you need a pure Vector store, a standard SQL database, or a Hybrid approach.",
+                vizScript: 'renderDecisionTool'
+            }
+        };
+
+        // --- Core Navigation ---
+        function navigateTo(sectionId) {
+            state.currentSection = sectionId;
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            document.getElementById('context-indicator').innerText = contentData[sectionId].title;
+
+            // Mobile menu close
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebar').classList.remove('translate-x-0');
+            document.getElementById('overlay').classList.add('hidden');
+
+            renderContent(sectionId);
+        }
+
+        function renderContent(sectionId) {
+            const main = document.getElementById('main-content');
+            const data = contentData[sectionId];
+
+            if (sectionId === 'intro') {
+                main.innerHTML = data.content;
+                return;
+            }
+
+            let html = `
+                <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">${data.title}</h2>
+                        <p class="text-gray-600">${data.description}</p>
+                    </div>
+            `;
+
+            if (sectionId === 'decision') {
+                html += `<div id="decision-container" class="grid md:grid-cols-3 gap-6"></div>`;
+            } else if (sectionId === 'sql') {
+                 html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-blue-700 mb-4">Interactive SQL Join Simulator</h3>
+                            
+                            <!-- Visualization Area -->
+                            <div class="flex-grow bg-gray-50 rounded-lg border border-gray-200 p-4 overflow-hidden relative" style="min-height: 300px;">
+                                <div class="flex justify-between items-start space-x-2">
+                                    <!-- Table A -->
+                                    <div class="w-1/2">
+                                        <div class="text-xs font-bold text-gray-500 mb-1">TABLE: USERS</div>
+                                        <div class="bg-white border rounded shadow-sm text-xs">
+                                            <div class="bg-gray-100 p-2 border-b font-mono">id | name</div>
+                                            <div id="row-u1" class="sql-row p-2 border-b">1 | Alice</div>
+                                            <div id="row-u2" class="sql-row p-2 border-b">2 | Bob</div>
+                                            <div id="row-u3" class="sql-row p-2">3 | Charlie</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Table B -->
+                                    <div class="w-1/2">
+                                        <div class="text-xs font-bold text-gray-500 mb-1">TABLE: ORDERS</div>
+                                        <div class="bg-white border rounded shadow-sm text-xs">
+                                            <div class="bg-gray-100 p-2 border-b font-mono">id | user_id | amount</div>
+                                            <div id="row-o1" class="sql-row p-2 border-b">101 | 1 | $50</div>
+                                            <div id="row-o2" class="sql-row p-2 border-b">102 | 1 | $25</div>
+                                            <div id="row-o3" class="sql-row p-2">103 | 3 | $100</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="result-area" class="mt-8 opacity-0 transition-opacity duration-500">
+                                    <div class="text-xs font-bold text-blue-600 mb-1">RESULT (JOIN on user_id)</div>
+                                    <div class="bg-blue-50 border border-blue-200 rounded shadow-sm text-xs">
+                                        <div class="p-2 border-b font-mono font-bold text-blue-800">Alice (1) ordered $50</div>
+                                        <div class="p-2 border-b font-mono font-bold text-blue-800">Alice (1) ordered $25</div>
+                                        <div class="p-2 font-mono font-bold text-blue-800">Charlie (3) ordered $100</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button onclick="runSQLSimulation()" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">
+                                <i class="fas fa-play mr-2"></i> Run SQL JOIN
+                            </button>
+                            <p class="text-xs text-gray-400 mt-2 text-center">SQL guarantees exact matches based on shared Keys.</p>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col justify-center">
+                            <h3 class="font-bold text-gray-700 mb-4 text-center">Visualization</h3>
+                            <div class="chart-container">
+                                <canvas id="mainChart"></canvas>
+                            </div>
+                            <p class="text-center text-xs text-gray-400 mt-2" id="chart-caption"></p>
+                        </div>
+                        <div class="space-y-6">
+                             ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            main.innerHTML = html;
+
+            if (data.vizScript === 'renderSQLViz') { /* Handled by HTML click */ }
+            if (data.vizScript === 'renderVectorViz') renderVectorViz();
+            if (data.vizScript === 'renderComparisonChart') renderComparisonChart();
+            if (data.vizScript === 'renderDecisionTool') renderDecisionTool();
+        }
+
+        function getDetailsHTML(sectionId) {
+            if (sectionId === 'sql') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <h3 class="font-bold text-gray-800 mb-2"><i class="fas fa-check text-blue-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2 text-sm">
+                            <li><strong>ACID Compliance:</strong> Guarantees that financial transactions are never lost or partially applied.</li>
+                            <li><strong>Structured Queries:</strong> Powerful aggregation (SUM, AVG) and reporting capabilities.</li>
+                            <li><strong>Data Integrity:</strong> Prevents "orphaned" data via foreign key constraints.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-gray-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2 text-sm">
+                            <li><strong>Rigid Schema:</strong> Changing the data structure requires migrations and downtime.</li>
+                            <li><strong>Poor Semantic Search:</strong> "SELECT * WHERE text LIKE '%car%'" won't find "automobile".</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'vector') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-fuchsia-500">
+                        <h3 class="font-bold text-gray-800 mb-2"><i class="fas fa-check text-fuchsia-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2 text-sm">
+                            <li><strong>Semantic Understanding:</strong> Finds items by intent and meaning, not just keywords.</li>
+                            <li><strong>Unstructured Data:</strong> Handles text, images, and audio seamlessly via embeddings.</li>
+                            <li><strong>RAG Enabler:</strong> The core infrastructure for giving LLMs context.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-gray-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2 text-sm">
+                            <li><strong>No Joins:</strong> Cannot easily join "Users" with "Orders" in the vector space.</li>
+                            <li><strong>Approximate:</strong> Results are based on probability, not 100% deterministic logic.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'compare') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-4">The Convergence: pgvector</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-blue-600 text-sm uppercase">Relational (Blue)</h4>
+                                <p class="text-sm text-gray-600">Unbeatable for core business logic, user accounts, inventory management, and financial ledgers.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-fuchsia-600 text-sm uppercase">Vector (Pink)</h4>
+                                <p class="text-sm text-gray-600">Essential for recommendation engines, semantic search, and AI features.</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h4 class="font-bold text-emerald-600 text-sm uppercase">The Hybrid Winner</h4>
+                                <p class="text-sm text-gray-600">Modern SQL databases (especially <strong>PostgreSQL with pgvector</strong>) can now store vectors <em>inside</em> table columns. This allows you to perform SQL Joins AND Vector similarity search in the same query.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Visualizations ---
+
+        // 1. SQL Simulation Logic
+        window.runSQLSimulation = function() {
+            // Reset
+            document.querySelectorAll('.sql-row').forEach(el => el.classList.remove('highlight-row'));
+            document.getElementById('result-area').classList.remove('opacity-100');
+            document.getElementById('result-area').classList.add('opacity-0');
+
+            // Animate Sequence
+            setTimeout(() => {
+                // Highlight Matching IDs (User 1)
+                document.getElementById('row-u1').classList.add('highlight-row');
+                document.getElementById('row-o1').classList.add('highlight-row');
+                document.getElementById('row-o2').classList.add('highlight-row');
+            }, 300);
+
+            setTimeout(() => {
+                // Highlight Matching IDs (User 3)
+                document.getElementById('row-u3').classList.add('highlight-row');
+                document.getElementById('row-o3').classList.add('highlight-row');
+            }, 1000);
+
+            setTimeout(() => {
+                // Show Result
+                document.getElementById('result-area').classList.remove('opacity-0');
+                document.getElementById('result-area').classList.add('opacity-100');
+            }, 1800);
+        }
+
+        // 2. Vector Viz (Scatter Plot)
+        function renderVectorViz() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Visualizing Similarity. The Query (Yellow) is semantically closer to 'Tablet' than 'Phone' in this embedding space.";
+
+            // Product Data
+            const phones = [
+                {x: 10, y: 10, name: 'iPhone 13'}, {x: 12, y: 14, name: 'Galaxy S21'}, {x: 11, y: 9, name: 'Pixel 6'}
+            ];
+            const tablets = [
+                {x: 60, y: 50, name: 'iPad Pro'}, {x: 65, y: 55, name: 'Galaxy Tab'}, {x: 62, y: 48, name: 'Surface Go'}
+            ];
+            // Query: "Large screen device" (Closer to tablets)
+            const query = [{x: 58, y: 52}]; 
+
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: 'Phones', data: phones, backgroundColor: 'rgba(37, 99, 235, 0.6)' }, // Blue
+                        { label: 'Tablets', data: tablets, backgroundColor: 'rgba(192, 38, 211, 0.6)' }, // Fuchsia
+                        { 
+                            label: 'Query: "Large screen"', 
+                            data: query, 
+                            backgroundColor: 'rgba(250, 204, 21, 1)', // Yellow
+                            pointRadius: 8, 
+                            pointBorderColor: 'black', 
+                            pointBorderWidth: 2 
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const point = ctx.raw;
+                                    return point.name ? point.name : ctx.dataset.label;
+                                }
+                            }
+                        },
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        // 3. Comparison Radar
+        function renderComparisonChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Capability Comparison (Outer Edge = Stronger)";
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Structured Queries', 'Data Integrity (ACID)', 'Semantic Search', 'Unstructured Data', 'Aggregation/Reporting'],
+                    datasets: [{
+                        label: 'Relational (SQL)',
+                        data: [10, 10, 2, 2, 10], 
+                        fill: true,
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)', // Blue
+                        borderColor: 'rgb(37, 99, 235)',
+                        pointBackgroundColor: 'rgb(37, 99, 235)',
+                    }, {
+                        label: 'Vector DB',
+                        data: [3, 2, 10, 10, 2], 
+                        fill: true,
+                        backgroundColor: 'rgba(192, 38, 211, 0.2)', // Fuchsia
+                        borderColor: 'rgb(192, 38, 211)',
+                        pointBackgroundColor: 'rgb(192, 38, 211)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 3 } },
+                    scales: { r: { suggestedMin: 0, suggestedMax: 10, angleLines: { display: false } } }
+                }
+            });
+        }
+
+        // 4. Decision Engine
+        function renderDecisionTool() {
+            const container = document.getElementById('decision-container');
+            container.innerHTML = `
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-6">Workload Requirements</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Q1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">1. Primary Data Type</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('dataStructure', 'structured', this)" class="option-btn border rounded p-3 text-sm text-gray-600 hover:bg-gray-50 text-left">
+                                    <strong>Structured Rows</strong><br>Users, Orders, Inventory.
+                                </button>
+                                <button onclick="selectOption('dataStructure', 'unstructured', this)" class="option-btn border rounded p-3 text-sm text-gray-600 hover:bg-gray-50 text-left">
+                                    <strong>Embeddings/Media</strong><br>Vectors, Text Blobs, Images.
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">2. Search Need</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('queryNeeds', 'exact', this)" class="option-btn border rounded p-3 text-sm text-gray-600 hover:bg-gray-50 text-left">
+                                    <strong>Reporting/Filtering</strong><br>"Find orders > $50 in 2023."
+                                </button>
+                                <button onclick="selectOption('queryNeeds', 'semantic', this)" class="option-btn border rounded p-3 text-sm text-gray-600 hover:bg-gray-50 text-left">
+                                    <strong>Similarity</strong><br>"Find products that look like this."
+                                </button>
+                            </div>
+                        </div>
+
+                         <!-- Q3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">3. Relationship Complexity</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('consistency', 'high', this)" class="option-btn border rounded p-3 text-sm text-gray-600 hover:bg-gray-50 text-left">
+                                    <strong>Complex Joins</strong><br>Data is highly interconnected.
+                                </button>
+                                <button onclick="selectOption('consistency', 'low', this)" class="option-btn border rounded p-3 text-sm text-gray-600 hover:bg-gray-50 text-left">
+                                    <strong>Flat/Isolated</strong><br>Data points are mostly independent.
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1">
+                    <div id="recommendation-card" class="bg-gray-800 text-white p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500">
+                        <i class="fas fa-server text-4xl text-gray-500 mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">Awaiting Input</h4>
+                        <p class="text-gray-400 text-sm">Select options to see the recommendation.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectOption = function(category, value, btnElement) {
+            state.decisionInputs[category] = value;
+            
+            // Visual Toggle
+            const parent = btnElement.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50', 'border-blue-500');
+                b.classList.add('border-gray-200');
+            });
+            btnElement.classList.remove('border-gray-200');
+            btnElement.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'border-blue-500');
+
+            calculateDecision();
+        }
+
+        function calculateDecision() {
+            const { dataStructure, queryNeeds, consistency } = state.decisionInputs;
+            if (!dataStructure || !queryNeeds || !consistency) return;
+
+            const card = document.getElementById('recommendation-card');
+            let title, icon, desc, bgClass;
+
+            // Decision Logic
+            // 1. Unstructured + Semantic + Flat -> Pure Vector
+            // 2. Structured + Exact + Complex -> Pure SQL
+            // 3. Structured + Semantic -> Hybrid (pgvector)
+            // 4. Unstructured + Reporting -> Hybrid
+
+            const isVectorPrimary = (dataStructure === 'unstructured' && queryNeeds === 'semantic' && consistency === 'low');
+            const isSQLPrimary = (dataStructure === 'structured' && queryNeeds === 'exact');
+            const isHybrid = !isVectorPrimary && !isSQLPrimary;
+
+            if (isVectorPrimary) {
+                title = "Pure Vector DB";
+                icon = "fa-project-diagram";
+                desc = "Your use case is pure AI memory or similarity search. Use Pinecone, Weaviate, or Milvus for maximum performance on embeddings.";
+                bgClass = "bg-fuchsia-700";
+            } else if (isSQLPrimary) {
+                title = "Standard Relational SQL";
+                icon = "fa-database";
+                desc = "You are building a standard business application (CRM, ERP, Finance). Do not complicate it. Use PostgreSQL or MySQL.";
+                bgClass = "bg-blue-700";
+            } else {
+                title = "Hybrid: SQL + Vector";
+                icon = "fa-layer-group";
+                desc = "The best of both worlds. Use <strong>PostgreSQL with pgvector</strong>. You get ACID compliance and Joins for business data, plus vector search for AI features in the same database.";
+                bgClass = "bg-emerald-700";
+            }
+
+            card.className = `p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500 ${bgClass} text-white`;
+            card.innerHTML = `
+                <div class="animate-bounce mb-4"><i class="fas ${icon} text-4xl"></i></div>
+                <h4 class="text-2xl font-bold mb-3">${title}</h4>
+                <p class="text-white/90 text-sm leading-relaxed">${desc}</p>
+                <button onclick="navigateTo('compare')" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-xs uppercase tracking-wider font-bold transition-colors">Compare Details</button>
+            `;
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent('intro');
+
+            // Mobile Menu
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            btn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('hidden');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('hidden');
+            });
+        });
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

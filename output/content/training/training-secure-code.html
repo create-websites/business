@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive Secure Code Development training. Learn to identify SQL Injection, XSS, and hardcoded secrets. Master parameterized queries and secure dependency management." name="description"/>
+    <meta content="Secure Coding, OWASP Top 10, SQL Injection, XSS, SAST, SCA, DevSecOps, Application Security Training" name="keywords"/>
+    <title>Secure Code: Defense in Depth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@400;600;800&display=swap');
+
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        
+        /* Custom Scrollbar for Code Blocks */
+        .code-scroll::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .code-scroll::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        .slide-up { animation: slideUp 0.4s ease-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Syntax Highlighting Simulators */
+        .token-keyword { color: #c678dd; } /* Purple */
+        .token-string { color: #98c379; } /* Green */
+        .token-func { color: #61afef; } /* Blue */
+        .token-danger { color: #e06c75; font-weight: bold; text-decoration: underline wavy #e06c75; } /* Red */
+        .token-var { color: #e5c07b; } /* Yellow */
+
+        /* Glitch Effect on Hover for Hero */
+        .glitch-hover:hover {
+            text-shadow: 2px 0 #ef4444, -2px 0 #3b82f6;
+        }
+    </style>
+    <!-- Chosen Palette: "DevSecOps Dark" -->
+    <!-- Background: Slate-900, Text: Slate-100, Accent: Emerald-500 (Secure), Rose-500 (Vulnerable), Purple-500 (Code). -->
+    
+    <!-- Application Structure Plan:
+         1. Hero: "Shift Left" - Security is code, not a gateway.
+         2. The SAST Scanner (Interactive Game): User acts as the Static Analysis tool. Review 4 code snippets (Python/JS) and identify the specific vulnerability.
+         3. The Injection Lab (Simulator): A live SQL query builder. User types inputs and sees visually how string concatenation breaks query logic vs. Prepared Statements.
+         4. Supply Chain Visualizer (Dependency Tree): User explores a node tree to find which "leaf" dependency is malicious (Log4j style scenario).
+         5. Secure Headers Config: Toggle interface to harden a web response.
+         6. Certification Quiz.
+    -->
+</head>
+<body class="bg-slate-900 text-slate-100 selection:bg-emerald-500 selection:text-white">
+
+    <!-- Nav -->
+    <nav class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">🛡️</span>
+                    <div class="flex flex-col">
+                        <span class="font-bold tracking-wider text-emerald-400 font-mono">SECURE.CODE()</span>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-widest">DevSecOps Training</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-400 font-mono">
+                    <button class="hover:text-emerald-400 transition-colors" onclick="scrollToId('sast')">&lt;CodeScanner /&gt;</button>
+                    <button class="hover:text-emerald-400 transition-colors" onclick="scrollToId('injection')">&lt;InjectionLab /&gt;</button>
+                    <button class="hover:text-emerald-400 transition-colors" onclick="scrollToId('dependencies')">&lt;SupplyChain /&gt;</button>
+                    <button class="px-4 py-2 border border-emerald-500 text-emerald-400 rounded hover:bg-emerald-500/10 transition-colors" onclick="scrollToId('quiz')">git commit -m "Certificate"</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24">
+
+        <!-- Hero -->
+        <section class="text-center space-y-6 fade-in pt-10">
+            <div class="inline-block px-3 py-1 bg-slate-800 rounded-full border border-slate-700 text-xs font-mono text-emerald-400 mb-4">
+                v2025.1.0 Stable Build
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight glitch-hover cursor-default">
+                Shift <span class="text-emerald-500">Left</span>. <br/>Secure the Source.
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg text-slate-400 leading-relaxed font-mono">
+                Security isn't a QA phase. It happens in the IDE. <br/>
+                Your mission: Identify vulnerabilities, sanitize inputs, and harden the supply chain before deployment.
+            </p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-12">
+                <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                    <div class="text-rose-500 font-bold font-mono">OWASP #1</div>
+                    <div class="text-sm text-slate-400">Broken Access Control</div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                    <div class="text-rose-500 font-bold font-mono">OWASP #3</div>
+                    <div class="text-sm text-slate-400">Injection (SQL/XSS)</div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                    <div class="text-rose-500 font-bold font-mono">OWASP #6</div>
+                    <div class="text-sm text-slate-400">Vulnerable Dependencies</div>
+                </div>
+                <div class="bg-slate-800 p-4 rounded border border-slate-700">
+                    <div class="text-rose-500 font-bold font-mono">OWASP #7</div>
+                    <div class="text-sm text-slate-400">Auth Failures</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: SAST Scanner -->
+        <section class="scroll-mt-24 fade-in" id="sast">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2"><span class="text-emerald-500">Human</span> SAST Scanner</h2>
+                    <p class="text-slate-400">Review the code snippets. Act as the Static Analysis tool. Spot the bug.</p>
+                </div>
+                <div class="font-mono text-sm text-slate-500">
+                    Scanner Status: <span class="text-emerald-400" id="sast-status">IDLE</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-950 rounded-xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col md:flex-row">
+                <!-- Sidebar -->
+                <div class="md:w-64 bg-slate-900 border-r border-slate-800 p-4 flex flex-col space-y-2">
+                    <button class="text-left px-4 py-3 rounded bg-slate-800 text-emerald-400 border-l-4 border-emerald-500 font-mono text-sm transition-all" id="file-0" onclick="loadSnippet(0)">auth_login.py</button>
+                    <button class="text-left px-4 py-3 rounded hover:bg-slate-800 text-slate-400 hover:text-white border-l-4 border-transparent font-mono text-sm transition-all" id="file-1" onclick="loadSnippet(1)">profile_view.jsx</button>
+                    <button class="text-left px-4 py-3 rounded hover:bg-slate-800 text-slate-400 hover:text-white border-l-4 border-transparent font-mono text-sm transition-all" id="file-2" onclick="loadSnippet(2)">aws_config.js</button>
+                    <button class="text-left px-4 py-3 rounded hover:bg-slate-800 text-slate-400 hover:text-white border-l-4 border-transparent font-mono text-sm transition-all" id="file-3" onclick="loadSnippet(3)">user_model.py</button>
+                </div>
+
+                <!-- Editor -->
+                <div class="flex-1 flex flex-col">
+                    <!-- Code Display -->
+                    <div class="flex-1 bg-slate-950 p-6 font-mono text-sm overflow-x-auto code-scroll relative">
+                        <div class="absolute top-2 right-4 text-xs text-slate-600">ReadOnly Mode</div>
+                        <pre class="leading-relaxed" id="code-display"></pre>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="p-6 bg-slate-900 border-t border-slate-800">
+                        <p class="text-slate-400 text-sm mb-3">Identify the vulnerability:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <button class="py-2 bg-slate-800 hover:bg-rose-900/30 border border-slate-700 hover:border-rose-500 text-slate-300 rounded transition-colors text-sm" onclick="checkVuln('sqli')">SQL Injection</button>
+                            <button class="py-2 bg-slate-800 hover:bg-rose-900/30 border border-slate-700 hover:border-rose-500 text-slate-300 rounded transition-colors text-sm" onclick="checkVuln('xss')">XSS (Cross-Site Scripting)</button>
+                            <button class="py-2 bg-slate-800 hover:bg-rose-900/30 border border-slate-700 hover:border-rose-500 text-slate-300 rounded transition-colors text-sm" onclick="checkVuln('secret')">Hardcoded Secret</button>
+                            <button class="py-2 bg-slate-800 hover:bg-rose-900/30 border border-slate-700 hover:border-rose-500 text-slate-300 rounded transition-colors text-sm" onclick="checkVuln('hash')">Weak Hashing</button>
+                        </div>
+                        <div class="mt-4 p-3 rounded bg-slate-950 border border-slate-800 text-sm hidden" id="vuln-feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Injection Lab -->
+        <section class="scroll-mt-24 fade-in" id="injection">
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-8 shadow-xl">
+                <div class="flex flex-col lg:flex-row gap-12">
+                    <!-- Controls -->
+                    <div class="lg:w-1/3 space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white mb-2">The Injection Lab</h2>
+                            <p class="text-slate-400 text-sm">
+                                See how raw input modifies code structure. 
+                                <br/>Try typing: <code class="text-rose-400 bg-slate-900 px-1 rounded">' OR '1'='1</code>
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">User Input (Login Field)</label>
+                            <input class="w-full bg-slate-900 border border-slate-600 text-emerald-400 p-3 rounded font-mono focus:outline-none focus:border-emerald-500" id="sql-input" oninput="updateSqlLab()" placeholder="Enter username..." type="text"/>
+                        </div>
+
+                        <div class="flex items-center space-x-3 bg-slate-900 p-3 rounded border border-slate-700">
+                            <div class="relative inline-block w-10 align-middle select-none">
+                                <input class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-slate-400 border-4 border-slate-900 appearance-none cursor-pointer transition-all duration-300" id="toggle-param" onclick="updateSqlLab()" type="checkbox"/>
+                                <label class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-700 cursor-pointer" for="toggle-param"></label>
+                            </div>
+                            <span class="text-sm font-bold text-slate-300">Enable Parameterized Query</span>
+                        </div>
+                        
+                        <div class="text-sm font-mono p-2 rounded bg-slate-900 text-center" id="injection-status">
+                            Status: <span class="text-emerald-400">SAFE</span>
+                        </div>
+                    </div>
+
+                    <!-- Visualizer -->
+                    <div class="lg:w-2/3 bg-slate-950 rounded-xl p-6 font-mono text-sm md:text-base border border-slate-800 flex flex-col justify-center relative">
+                        <div class="absolute top-0 left-0 bg-slate-800 text-slate-400 text-xs px-2 py-1 rounded-br">Backend SQL Executed</div>
+                        
+                        <div class="leading-loose break-all" id="sql-display">
+                            <!-- Populated by JS -->
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-slate-800">
+                            <h4 class="text-xs uppercase text-slate-500 mb-2">Database Result Simulation</h4>
+                            <div class="bg-slate-900 p-4 rounded text-slate-400 border border-slate-800 h-24 overflow-y-auto" id="db-result">
+                                No query executed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Supply Chain Visualizer -->
+        <section class="scroll-mt-24 fade-in" id="dependencies">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-white">Supply Chain Risk (SCA)</h2>
+                <p class="text-slate-400 mt-2">
+                    Modern apps are 80% open source code. A vulnerability deep in the tree affects the root.
+                    <br/><strong>Mission:</strong> Click the nodes to audit them. Find the infected package.
+                </p>
+            </div>
+
+            <div class="relative w-full max-w-4xl mx-auto h-[400px] bg-slate-950 rounded-xl border border-slate-800 overflow-hidden" id="tree-container">
+                <!-- Lines (SVG) -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none z-0">
+                    <!-- Root to L1 -->
+                    <line stroke="#475569" stroke-width="2" x1="50%" x2="25%" y1="50" y2="180"></line>
+                    <line stroke="#475569" stroke-width="2" x1="50%" x2="75%" y1="50" y2="180"></line>
+                    <!-- L1 to L2 -->
+                    <line stroke="#475569" stroke-width="2" x1="25%" x2="15%" y1="180" y2="320"></line>
+                    <line stroke="#475569" stroke-width="2" x1="25%" x2="35%" y1="180" y2="320"></line>
+                    <line stroke="#475569" stroke-width="2" x1="75%" x2="65%" y1="180" y2="320"></line>
+                    <line stroke="#475569" stroke-width="2" x1="75%" x2="85%" y1="180" y2="320"></line>
+                </svg>
+
+                <!-- Nodes -->
+                <!-- Root -->
+                <button class="absolute top-[20px] left-1/2 -translate-x-1/2 w-32 py-2 bg-emerald-600 text-white rounded font-mono text-sm z-10 border-2 border-slate-900 shadow-lg hover:scale-105 transition-transform" onclick="checkNode('root')">MyApp v1.0</button>
+                
+                <!-- Level 1 -->
+                <button class="absolute top-[160px] left-[25%] -translate-x-1/2 w-28 py-2 bg-slate-700 text-slate-200 rounded font-mono text-xs z-10 border-2 border-slate-900 hover:bg-slate-600 transition-colors" id="node-auth" onclick="checkNode('auth')">auth-lib</button>
+                <button class="absolute top-[160px] left-[75%] -translate-x-1/2 w-28 py-2 bg-slate-700 text-slate-200 rounded font-mono text-xs z-10 border-2 border-slate-900 hover:bg-slate-600 transition-colors" id="node-logger" onclick="checkNode('logger')">logger-pro</button>
+
+                <!-- Level 2 -->
+                <button class="absolute top-[300px] left-[15%] -translate-x-1/2 w-24 py-1 bg-slate-800 text-slate-400 rounded font-mono text-[10px] z-10 border border-slate-700 hover:bg-slate-700 transition-colors" id="node-utils" onclick="checkNode('utils')">py-utils</button>
+                <button class="absolute top-[300px] left-[35%] -translate-x-1/2 w-24 py-1 bg-slate-800 text-slate-400 rounded font-mono text-[10px] z-10 border border-slate-700 hover:bg-slate-700 transition-colors" id="node-crypto" onclick="checkNode('crypto')">crypto-js</button>
+                <button class="absolute top-[300px] left-[65%] -translate-x-1/2 w-24 py-1 bg-slate-800 text-slate-400 rounded font-mono text-[10px] z-10 border border-slate-700 hover:bg-slate-700 transition-colors" id="node-xml" onclick="checkNode('xml')">xml-parser</button>
+                <button class="absolute top-[300px] left-[85%] -translate-x-1/2 w-24 py-1 bg-slate-800 text-slate-400 rounded font-mono text-[10px] z-10 border border-slate-700 hover:bg-slate-700 transition-colors" id="node-colors" onclick="checkNode('colors')">colors.js</button>
+
+                <!-- Feedback Overlay -->
+                <div class="absolute bottom-4 left-0 w-full text-center text-sm font-bold opacity-0 transition-opacity duration-300 pointer-events-none" id="tree-feedback">
+                    Feedback text
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Quiz -->
+        <section class="max-w-2xl mx-auto py-10 fade-in" id="quiz">
+            <h2 class="text-2xl font-bold text-white mb-6 text-center font-mono">Certification Exam</h2>
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-8 shadow-lg">
+                <div class="space-y-6" id="quiz-container">
+                    <!-- Generated via JS -->
+                </div>
+                <div class="hidden text-center mt-6" id="quiz-result">
+                    <p class="text-xl font-bold text-white" id="quiz-score"></p>
+                    <p class="text-slate-400 text-sm mt-2" id="quiz-feedback"></p>
+                    <button class="mt-4 text-emerald-400 hover:underline text-sm font-mono" onclick="location.reload()">./reload_training.sh</button>
+                </div>
+                <button class="w-full mt-6 bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-500 transition font-bold shadow-lg shadow-emerald-900/50" id="btn-submit" onclick="submitQuiz()">Submit</button>
+            </div>
+        </section>
+
+    </main>
+
+    <html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html>
+
+    <!-- Custom CSS for Toggle -->
+    <style>
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #10b981; /* emerald-500 */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #10b981;
+        }
+    </style>
+
+    <!-- Visualization & Content Choices:
+         1. SAST Scanner (Interactive Editor): Report Info (Top Vulnerabilities) -> Goal (Identify) -> Mimics a Code Review process -> Teaches developers what bad patterns look like.
+         2. Injection Lab (Live DOM Update): Report Info (SQLi Mechanisms) -> Goal (Understand) -> Real-time visual -> Makes the abstract concept of "Sanitization" concrete by showing query breakage.
+         3. Supply Chain (Node Tree): Report Info (SCA) -> Goal (Audit) -> Visual search game -> Reinforces that vulnerabilities hide in deep dependencies (Transitive Risk).
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used (except inline for lines). NO Mermaid JS used. -->
+
+    <script>
+        // --- Navigation ---
+        function scrollToId(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- SAST Scanner Logic ---
+        const snippets = [
+            {
+                id: 0,
+                name: 'auth_login.py',
+                code: `<span class="token-keyword">def</span> <span class="token-func">login</span>(user, password):
+    <span class="token-keyword">import</span> sqlite3
+    conn = sqlite3.connect(<span class="token-string">"users.db"</span>)
+    cursor = conn.cursor()
+    
+    <span class="text-slate-500"># Check credentials</span>
+    query = <span class="token-string">f"SELECT * FROM users WHERE u='{user}' AND p='{password}'"</span>
+    cursor.execute(query)
+    <span class="token-keyword">return</span> cursor.fetchone()`,
+                vuln: 'sqli',
+                hint: 'Look at how the query string is constructed.'
+            },
+            {
+                id: 1,
+                name: 'profile_view.jsx',
+                code: `<span class="token-keyword">function</span> <span class="token-func">UserProfile</span>({ bio }) {
+    <span class="token-keyword">return</span> (
+        &lt;div className="profile"&gt;
+            &lt;h1&gt;User Bio&lt;/h1&gt;
+            &lt;div dangerouslySetInnerHTML={{ __html: bio }} /&gt;
+        &lt;/div&gt;
+    );
+}`,
+                vuln: 'xss',
+                hint: 'Is the HTML rendering safe?'
+            },
+            {
+                id: 2,
+                name: 'aws_config.js',
+                code: `<span class="token-keyword">const</span> s3 = <span class="token-keyword">new</span> AWS.S3({
+    accessKeyId: <span class="token-string">"AKIAIOSFODNN7EXAMPLE"</span>,
+    secretAccessKey: <span class="token-string">"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"</span>,
+    region: <span class="token-string">"us-east-1"</span>
+});
+
+<span class="token-func">export</span> s3;`,
+                vuln: 'secret',
+                hint: 'Are there credentials visible in the source?'
+            },
+            {
+                id: 3,
+                name: 'user_model.py',
+                code: `<span class="token-keyword">import</span> hashlib
+
+<span class="token-keyword">def</span> <span class="token-func">store_password</span>(plain_text):
+    <span class="text-slate-500"># MD5 is fast and simple</span>
+    hashed = hashlib.md5(plain_text.encode()).hexdigest()
+    db.save(hashed)
+    <span class="token-keyword">return</span> True`,
+                vuln: 'hash',
+                hint: 'Is MD5 considered secure for passwords today?'
+            }
+        ];
+
+        let currentSnippet = 0;
+
+        function loadSnippet(index) {
+            currentSnippet = index;
+            document.getElementById('code-display').innerHTML = snippets[index].code;
+            document.getElementById('vuln-feedback').classList.add('hidden');
+            
+            // Highlight active file
+            for(let i=0; i<4; i++) {
+                const el = document.getElementById(`file-${i}`);
+                if(i === index) {
+                    el.classList.remove('text-slate-400', 'border-transparent');
+                    el.classList.add('bg-slate-800', 'text-emerald-400', 'border-emerald-500');
+                } else {
+                    el.classList.add('text-slate-400', 'border-transparent');
+                    el.classList.remove('bg-slate-800', 'text-emerald-400', 'border-emerald-500');
+                }
+            }
+        }
+
+        function checkVuln(type) {
+            const snippet = snippets[currentSnippet];
+            const feedback = document.getElementById('vuln-feedback');
+            feedback.classList.remove('hidden');
+
+            if (type === snippet.vuln) {
+                feedback.innerHTML = `<span class="text-emerald-400 font-bold">CORRECT:</span> Detected ${type.toUpperCase()}. <br><span class="text-slate-400 text-xs">Remediation: Use parameterized queries, sanitize HTML, env vars, or bcrypt.</span>`;
+                feedback.className = "mt-4 p-3 rounded bg-emerald-900/20 border border-emerald-500/50 text-sm fade-in";
+                document.getElementById('sast-status').innerText = "THREAT DETECTED";
+                document.getElementById('sast-status').className = "text-rose-500 font-bold animate-pulse";
+            } else {
+                feedback.innerHTML = `<span class="text-rose-400 font-bold">INCORRECT:</span> That is not the primary risk here. Hint: ${snippet.hint}`;
+                feedback.className = "mt-4 p-3 rounded bg-rose-900/20 border border-rose-500/50 text-sm fade-in";
+            }
+        }
+
+        // --- Injection Lab Logic ---
+        function updateSqlLab() {
+            const input = document.getElementById('sql-input').value;
+            const isParam = document.getElementById('toggle-param').checked;
+            const display = document.getElementById('sql-display');
+            const status = document.getElementById('injection-status');
+            const result = document.getElementById('db-result');
+
+            if (isParam) {
+                // Secure Mode
+                display.innerHTML = `
+                    <span class="token-keyword">SELECT</span> * <span class="token-keyword">FROM</span> users 
+                    <span class="token-keyword">WHERE</span> username = <span class="token-func">?</span>;
+                    <br><br>
+                    <span class="text-slate-500 text-xs">-- Parameters sent separately --</span><br>
+                    <span class="text-emerald-400">Params: ["${input}"]</span>
+                `;
+                status.innerHTML = 'Status: <span class="text-emerald-400 font-bold">SECURE (Prepared Statement)</span>';
+                result.innerHTML = `<span class="text-emerald-400">Log:</span> Query executed safely. Input treated as literal string.`;
+            } else {
+                // Insecure Mode
+                // Highlight danger if quotes detected
+                const danger = input.includes("'");
+                
+                let styledInput = input;
+                if (danger) {
+                    // Poor man's highlighting of the injection
+                    styledInput = input.replace(/'/g, `<span class="bg-rose-900 text-white font-bold px-1">'</span>`);
+                }
+
+                display.innerHTML = `
+                    <span class="token-keyword">SELECT</span> * <span class="token-keyword">FROM</span> users 
+                    <span class="token-keyword">WHERE</span> username = <span class="token-string">'</span><span class="text-white font-bold border-b-2 border-slate-600">${styledInput}</span><span class="token-string">'</span>;
+                `;
+
+                if (input.includes("' OR '1'='1")) {
+                    status.innerHTML = 'Status: <span class="text-rose-500 font-bold bg-rose-950 px-2 rounded">CRITICAL: SQL INJECTION</span>';
+                    result.innerHTML = `<span class="text-rose-500">WARNING:</span> Dumping all rows...<br>{id:1, user:'admin', role:'superuser'}<br>{id:2, user:'bob', role:'user'}...`;
+                } else if (danger) {
+                    status.innerHTML = 'Status: <span class="text-amber-400 font-bold">SYNTAX ERROR / RISKY</span>';
+                    result.innerHTML = `<span class="text-amber-500">Error:</span> Unclosed quotation mark near...`;
+                } else {
+                    status.innerHTML = 'Status: <span class="text-slate-500">VULNERABLE (Concatenation)</span>';
+                    result.innerHTML = `Searching for user '${input}'...`;
+                }
+            }
+        }
+
+        // --- Supply Chain Visualizer Logic ---
+        function checkNode(node) {
+            const feedback = document.getElementById('tree-feedback');
+            feedback.style.opacity = 1;
+
+            if (node === 'xml') {
+                document.getElementById('node-xml').classList.remove('bg-slate-800', 'text-slate-400');
+                document.getElementById('node-xml').classList.add('bg-rose-600', 'text-white', 'animate-pulse');
+                feedback.innerHTML = `<span class="text-rose-500 font-bold">MALICIOUS PACKAGE FOUND!</span><br>xml-parser v1.2 contains a Remote Code Execution exploit.`;
+            } else {
+                const el = document.getElementById(`node-${node}`);
+                if(el) {
+                    el.classList.remove('bg-slate-700', 'bg-slate-800');
+                    el.classList.add('bg-emerald-600', 'text-white');
+                }
+                feedback.innerHTML = `<span class="text-emerald-500">CLEAN.</span> No known vulnerabilities in ${node}. Keep searching.`;
+            }
+        }
+
+        // --- Quiz Logic ---
+        const questions = [
+            { q: "What is 'Shift Left'?", opts: ["Writing code with your left hand", "Moving security testing to earlier in the SDLC", "Moving databases to the cloud", "Leaving the company"], a: 1 },
+            { q: "Which prevents SQL Injection best?", opts: ["Input Validation (Regex)", "Parameterized Queries (Prepared Statements)", "Encryption", "Firewalls"], a: 1 },
+            { q: "What is SCA (Software Composition Analysis)?", opts: ["Checking your code style", "Analyzing open source dependencies for vulnerabilities", "Compiling the code", "Scanning for secrets"], a: 1 },
+            { q: "Where should API Keys be stored?", opts: ["In the code comments", "In a public git repo", "Environment Variables / Secret Manager", "In the HTML"], a: 2 }
+        ];
+
+        function initQuiz() {
+            const cont = document.getElementById('quiz-container');
+            let html = '';
+            questions.forEach((q, i) => {
+                html += `
+                    <div class="mb-6 border-b border-slate-700 pb-4 last:border-0">
+                        <p class="font-bold text-slate-200 mb-2 font-mono">${i+1}. ${q.q}</p>
+                        <div class="space-y-2">
+                            ${q.opts.map((o, oi) => `
+                                <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-700 transition-colors">
+                                    <input type="radio" name="q${i}" value="${oi}" class="text-emerald-500 focus:ring-emerald-500 bg-slate-900 border-slate-600">
+                                    <span class="text-slate-400 text-sm">${o}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            cont.innerHTML = html;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, i) => {
+                const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                if (sel && parseInt(sel.value) === q.a) score++;
+            });
+            
+            const res = document.getElementById('quiz-result');
+            res.classList.remove('hidden');
+            res.classList.add('fade-in');
+            document.getElementById('quiz-score').innerText = `Score: ${score}/${questions.length}`;
+            
+            const btn = document.getElementById('btn-submit');
+            btn.classList.add('hidden');
+            
+            if(score === questions.length) {
+                document.getElementById('quiz-feedback').innerText = "Status: CERTIFIED SECURE DEVELOPER";
+                document.getElementById('quiz-feedback').classList.add('text-emerald-400');
+            } else {
+                document.getElementById('quiz-feedback').innerText = "Status: VULNERABLE. Please review the training.";
+                document.getElementById('quiz-feedback').classList.add('text-rose-400');
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSnippet(0);
+            initQuiz();
+            updateSqlLab();
+        });
+
+    </script>
+
+</body></html>

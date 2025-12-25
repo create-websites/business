@@ -1,0 +1,381 @@
+<!-- ou'll provide a second URL parameter called theme that points to your .htm or .html file.
+
+Your theme file must contain an empty element with the specific ID sitemap-injection-point. For example: <div id="sitemap-injection-point"></div>.
+
+The tool will fetch your theme, apply its CSS styles, replace the page content with your theme's body, and then inject the sitemap explorer directly into that div.--><!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sitemap XML to HTML Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tree-item.folder > .tree-item-content > svg.folder-icon {
+            transition: transform 0.2s ease-in-out;
+        }
+        .tree-item.collapsed > .tree-item-content > svg.folder-icon {
+            transform: rotate(-90deg);
+        }
+        .tree-item-content:hover {
+            background-color: #f3f4f6; /* gray-100 */
+        }
+        .tree-item-content.selected {
+            background-color: #ede9fe; /* violet-100 */
+            color: #5b21b6; /* violet-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Sitemap Explorer</h1>
+            <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">
+                Load a sitemap using the <code class="bg-gray-200 text-sm rounded-md px-1 py-0.5">file</code> parameter. 
+                Optionally, add a <code class="bg-gray-200 text-sm rounded-md px-1 py-0.5">theme</code> parameter to display the sitemap inside your own HTML layout.
+            </p>
+             <p class="mt-2 text-sm text-gray-500">Your theme must contain a <code class="bg-gray-200 text-xs rounded-md p-1">&lt;div id="sitemap-injection-point"&gt;&lt;/div&gt;</code></p>
+        </header>
+
+        <main>
+            <!-- Error/Status Message Area -->
+            <div class="mt-6 text-center" id="message-area"></div>
+
+            <!-- Sitemap Display Area (Default, no theme) -->
+            <div class="mt-8 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hidden" id="sitemap-container">
+                <div class="px-6 py-4 border-b border-gray-200">
+                     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-2xl font-semibold text-gray-800" id="sitemap-title">Sitemap Contents</h2>
+                            <p class="text-sm text-gray-500 mt-1" id="sitemap-stats">Found 0 URLs.</p>
+                        </div>
+                        <div class="relative">
+                             <input class="pl-10 pr-4 py-2 border rounded-full w-full sm:w-64 focus:ring-2 focus:ring-violet-500 focus:outline-none" id="search-box" placeholder="Filter URLs..." type="text"/>
+                             <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row">
+                    <div class="w-full md:w-1/2 max-h-[60vh] overflow-y-auto p-4 border-r border-gray-200" id="sitemap-tree-container">
+                        <!-- Tree view will be inserted here -->
+                    </div>
+                    <div class="w-full md:w-1/2 p-6 bg-gray-50" id="details-panel">
+                        <div class="text-center text-gray-500" id="details-content">
+                            <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path></svg>
+                            <h3 class="mt-2 text-lg font-medium">URL Details &amp; Preview</h3>
+                            <p class="mt-1 text-sm">Select a file from the tree to see its details and a live preview.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Use 'let' for elements that might be reassigned in theme mode
+        let sitemapContainer = document.getElementById('sitemap-container');
+        let sitemapStats = document.getElementById('sitemap-stats');
+        let sitemapTitle = document.getElementById('sitemap-title');
+        let messageArea = document.getElementById('message-area');
+        let searchBox = document.getElementById('search-box');
+        let sitemapTreeContainer = document.getElementById('sitemap-tree-container');
+        let detailsPanel = document.getElementById('details-panel');
+        let detailsContent = document.getElementById('details-content');
+
+        let allUrls = [];
+        let sitemapTree = {};
+        let currentSelectedElement = null;
+
+        const icons = {
+            folder: `<svg class="w-5 h-5 mr-2 inline-block text-yellow-500 folder-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>`,
+            file: `<svg class="w-5 h-5 mr-2 inline-block text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>`
+        };
+
+        function showMessage(message, type = 'info') {
+            messageArea = document.getElementById('message-area'); // Re-acquire in case theme changed it
+            if(messageArea) {
+                const colors = {
+                    error: 'bg-red-100 border-red-400 text-red-700',
+                    success: 'bg-green-100 border-green-400 text-green-700',
+                    info: 'bg-blue-100 border-blue-400 text-blue-700',
+                };
+                messageArea.innerHTML = `<div class="p-4 border rounded ${colors[type]}" role="alert">${message}</div>`;
+            }
+        }
+        
+        function buildUrlTree(urls) {
+            const root = { name: 'root', type: 'folder', children: new Map() };
+            urls.forEach(urlData => {
+                try {
+                    const url = new URL(urlData.loc);
+                    const pathSegments = url.pathname.split('/').filter(p => p.trim() !== '');
+                    let currentNode = root;
+                    if (!root.children.has(url.hostname)) {
+                        root.children.set(url.hostname, { name: url.hostname, type: 'folder', children: new Map() });
+                    }
+                    currentNode = root.children.get(url.hostname);
+                    if (pathSegments.length === 0) {
+                        if (!currentNode.children.has('/')) {
+                             currentNode.children.set('/', { name: '(homepage)', type: 'file', data: urlData, children: new Map() });
+                        }
+                        return;
+                    }
+                    pathSegments.forEach((segment, index) => {
+                        const isLastSegment = index === pathSegments.length - 1;
+                        if (isLastSegment) {
+                             if (!currentNode.children.has(segment)) {
+                                currentNode.children.set(segment, { name: segment, type: 'file', data: urlData, children: new Map() });
+                            }
+                        } else {
+                            if (!currentNode.children.has(segment)) {
+                                currentNode.children.set(segment, { name: segment, type: 'folder', children: new Map() });
+                            }
+                            currentNode = currentNode.children.get(segment);
+                        }
+                    });
+                } catch (e) { console.warn(`Skipping invalid URL: ${urlData.loc}`); }
+            });
+            const mapToArray = (node) => {
+                node.children = Array.from(node.children.values()).sort((a, b) => {
+                    if (a.type === b.type) return a.name.localeCompare(b.name);
+                    return a.type === 'folder' ? -1 : 1;
+                });
+                node.children.forEach(mapToArray);
+            };
+            mapToArray(root);
+            return root;
+        }
+
+        function renderTreeView(node, container, depth = 0) {
+            node.children.forEach(childNode => {
+                const item = document.createElement('div');
+                item.classList.add('tree-item', childNode.type);
+                const isTopLevel = depth <= 1;
+                if (childNode.type === 'folder' && !isTopLevel) item.classList.add('collapsed');
+                
+                const content = document.createElement('div');
+                content.classList.add('tree-item-content', 'p-1', 'rounded-md', 'cursor-pointer', 'flex', 'items-center');
+                content.innerHTML = `${icons[childNode.type]}<span>${childNode.name}</span>`;
+                item.appendChild(content);
+                container.appendChild(item);
+
+                if (childNode.type === 'folder') {
+                    const childrenContainer = document.createElement('div');
+                    childrenContainer.classList.add('children-container', 'pl-5');
+                    if(!isTopLevel) childrenContainer.classList.add('hidden');
+                    item.appendChild(childrenContainer);
+                    content.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        item.classList.toggle('collapsed');
+                        childrenContainer.classList.toggle('hidden');
+                    });
+                    renderTreeView(childNode, childrenContainer, depth + 1);
+                } else {
+                    content.addEventListener('click', () => {
+                        showDetails(childNode.data);
+                        if (currentSelectedElement) currentSelectedElement.classList.remove('selected');
+                        content.classList.add('selected');
+                        currentSelectedElement = content;
+                    });
+                }
+            });
+        }
+        
+        async function fetchAndDisplayPage(url) {
+            const previewContainer = document.getElementById('html-preview-container');
+            if (!previewContainer) return;
+            previewContainer.innerHTML = `<h3 class="text-lg font-semibold text-gray-900 mb-2">Live Preview</h3><div id="loader" class="flex items-center justify-center p-8"><svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-violet-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span class="text-gray-500">Loading page content...</span></div>`;
+            try {
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const htmlContent = await response.text();
+                previewContainer.innerHTML = `<h3 class="text-lg font-semibold text-gray-900 mb-2">Live Preview</h3><iframe id="html-preview-frame" class="w-full h-[40vh] border border-gray-300 rounded-md" sandbox="allow-scripts allow-same-origin"></iframe>`;
+                document.getElementById('html-preview-frame').srcdoc = htmlContent;
+            } catch (error) {
+                previewContainer.innerHTML = `<h3 class="text-lg font-semibold text-gray-900 mb-2">Live Preview</h3><div class="p-4 bg-red-50 text-red-700 border border-red-200 rounded-md"><p class="font-bold">Could not load preview</p><p class="text-sm mt-1">${error.message}.</p></div>`;
+            }
+        }
+
+        function showDetails(data) {
+             const sanitize = (str) => { if (!str) return ''; const t = document.createElement('div'); t.textContent = str; return t.innerHTML; };
+            detailsContent = document.getElementById('details-content') || document.getElementById('details-content-theme');
+            if (!detailsContent) return;
+            detailsContent.innerHTML = `<div class="text-left"><h3 class="text-lg font-semibold text-gray-900 break-all">URL Details</h3><div class="mt-4 space-y-3 text-sm border-b border-gray-200 pb-4 mb-4"><div class="flex flex-wrap justify-between"><span class="font-medium text-gray-500 mr-2">Location:</span><a href="${sanitize(data.loc)}" target="_blank" rel="noopener noreferrer" class="text-violet-600 hover:underline break-all">${sanitize(data.loc)}</a></div><div class="flex justify-between"><span class="font-medium text-gray-500">Last Modified:</span><span class="text-gray-800">${sanitize(data.lastmod)}</span></div><div class="flex justify-between"><span class="font-medium text-gray-500">Change Frequency:</span><span class="text-gray-800">${sanitize(data.changefreq)}</span></div><div class="flex justify-between"><span class="font-medium text-gray-500">Priority:</span><span class="text-gray-800">${sanitize(data.priority)}</span></div></div><div id="html-preview-container"></div></div>`;
+            fetchAndDisplayPage(data.loc);
+        }
+
+        function processSitemap(xmlString) {
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+                if (xmlDoc.querySelector("parsererror")) throw new Error("Failed to parse XML.");
+                const urlElements = xmlDoc.getElementsByTagName("url");
+                const sitemapIndexElements = xmlDoc.getElementsByTagName("sitemap");
+                let title = "Sitemap URLs";
+                if (urlElements.length > 0) {
+                    allUrls = Array.from(urlElements).map(url => ({ loc: url.getElementsByTagName("loc")[0]?.textContent || '', lastmod: url.getElementsByTagName("lastmod")[0]?.textContent || 'N/A', changefreq: url.getElementsByTagName("changefreq")[0]?.textContent || 'N/A', priority: url.getElementsByTagName("priority")[0]?.textContent || 'N/A' })).filter(u => u.loc);
+                } else if (sitemapIndexElements.length > 0) {
+                    title = "Sitemap Index File";
+                    allUrls = Array.from(sitemapIndexElements).map(sitemap => ({ loc: sitemap.getElementsByTagName("loc")[0]?.textContent || '', lastmod: sitemap.getElementsByTagName("lastmod")[0]?.textContent || 'N/A', changefreq: 'N/A', priority: 'N/A' })).filter(u => u.loc);
+                } else { throw new Error("No <url> or <sitemap> tags found."); }
+
+                const injectionPoint = document.getElementById('sitemap-injection-point');
+                if (injectionPoint) {
+                    injectionPoint.innerHTML = `<div id="sitemap-container-theme" class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden"><div class="px-6 py-4 border-b border-gray-200"><div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4"><div><h2 id="sitemap-title-theme" class="text-2xl font-semibold text-gray-800">Sitemap</h2><p id="sitemap-stats-theme" class="text-sm text-gray-500 mt-1"></p></div><div class="relative"><input type="text" id="search-box-theme" placeholder="Filter URLs..." class="pl-10 pr-4 py-2 border rounded-full w-full sm:w-64 focus:ring-2 focus:ring-violet-500 focus:outline-none"><svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div></div></div><div class="flex flex-col md:flex-row"><div id="sitemap-tree-container-theme" class="w-full md:w-1/2 max-h-[60vh] overflow-y-auto p-4 border-r border-gray-200"></div><div id="details-panel-theme" class="w-full md:w-1/2 p-6 bg-gray-50"><div id="details-content-theme" class="text-center text-gray-500"><p>Select a file to see details.</p></div></div></div></div>`;
+                    sitemapTitle = document.getElementById('sitemap-title-theme');
+                    sitemapStats = document.getElementById('sitemap-stats-theme');
+                    searchBox = document.getElementById('search-box-theme');
+                    sitemapTreeContainer = document.getElementById('sitemap-tree-container-theme');
+                } else {
+                    sitemapContainer.classList.remove('hidden');
+                }
+                
+                sitemapTitle.textContent = title;
+                sitemapStats.textContent = `Found ${allUrls.length} URLs.`;
+                messageArea.innerHTML = '';
+                sitemapTree = buildUrlTree(allUrls);
+                sitemapTreeContainer.innerHTML = '';
+                renderTreeView(sitemapTree, sitemapTreeContainer);
+                searchBox.addEventListener('input', searchHandler);
+
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+                if (sitemapContainer) sitemapContainer.classList.add('hidden');
+            }
+        }
+
+        const searchHandler = (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredUrls = allUrls.filter(url => url.loc.toLowerCase().includes(searchTerm));
+            sitemapTree = buildUrlTree(filteredUrls);
+            sitemapTreeContainer.innerHTML = '';
+            renderTreeView(sitemapTree, sitemapTreeContainer);
+            if(searchTerm) {
+                sitemapTreeContainer.querySelectorAll('.tree-item.folder').forEach(folder => {
+                    folder.classList.remove('collapsed');
+                    folder.querySelector('.children-container').classList.remove('hidden');
+                });
+            }
+        };
+
+        async function fetchSitemap(url) {
+            showMessage('Fetching sitemap...', 'info');
+            try {
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status} - Failed to fetch sitemap.`);
+                const xmlText = await response.text();
+                processSitemap(xmlText);
+            } catch (error) { showMessage(`Error: ${error.message}`, 'error'); }
+        }
+
+        async function loadTheme(url) {
+            showMessage('Loading theme...', 'info');
+            try {
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status} - Failed to fetch theme.`);
+                const htmlText = await response.text();
+                const parser = new DOMParser();
+                const themeDoc = parser.parseFromString(htmlText, "text/html");
+                themeDoc.head.querySelectorAll('link[rel="stylesheet"], style').forEach(element => {
+                    document.head.appendChild(element.cloneNode(true));
+                });
+                const mainElement = document.querySelector('main');
+                if (mainElement) mainElement.innerHTML = themeDoc.body.innerHTML;
+                else throw new Error('<main> tag not found in the host page.');
+                if (!document.getElementById('sitemap-injection-point')) {
+                    throw new Error('Theme loaded, but required `<div id="sitemap-injection-point"></div>` was not found.');
+                }
+                messageArea.innerHTML = '';
+                return true;
+            } catch (error) {
+                showMessage(`Theme Error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function main() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sitemapUrl = urlParams.get('file');
+            const themeUrl = urlParams.get('theme');
+
+            if (themeUrl) {
+                const themeLoaded = await loadTheme(themeUrl);
+                if (themeLoaded && sitemapUrl) {
+                    await fetchSitemap(sitemapUrl);
+                } else if (themeLoaded && !sitemapUrl) {
+                    showMessage('Theme loaded. Provide a `file` parameter in the URL to load a sitemap.', 'info');
+                }
+            } else if (sitemapUrl) {
+                await fetchSitemap(sitemapUrl);
+                searchBox.addEventListener('input', searchHandler);
+            }
+        }
+
+        window.addEventListener('load', main);
+    </script>
+
+
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>

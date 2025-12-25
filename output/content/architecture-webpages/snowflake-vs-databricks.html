@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive guide comparing Snowflake vs. Databricks. Features a decision engine to help data architects choose between the Data Cloud and the Lakehouse for BI, AI, and Engineering workloads." name="description"/>
+    <meta content="Snowflake, Databricks, Data Lakehouse, Data Warehouse, Spark, SQL, Delta Lake, Snowpark, ETL, Data Architecture, Cloud Data Platform" name="keywords"/>
+    <title>Data Platform Architect: Snowflake vs. Databricks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+            color: #0f172a; /* slate-900 */
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        .nav-item.active {
+            background-color: #f0f9ff; /* sky-50 */
+            border-left: 4px solid #0ea5e9; /* sky-500 */
+            font-weight: 600;
+        }
+
+        /* Databricks/Snowflake specific gradients */
+        .bg-snowflake { background: linear-gradient(135deg, #29b5e8 0%, #009ce0 100%); }
+        .bg-databricks { background: linear-gradient(135deg, #ff5722 0%, #e64a19 100%); }
+
+        /* Animation Classes */
+        .pipeline-flow {
+            animation: flow 2s infinite linear;
+        }
+        @keyframes flow {
+            0% { stroke-dashoffset: 20; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .cluster-node {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gold-layer {
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; box-shadow: 0 0 15px rgba(255, 165, 0, 0.5); }
+            100% { opacity: 0.8; }
+        }
+    </style>
+    <!-- Chosen Palette: Sky Blue (Snowflake), Burnt Orange (Databricks), Slate (Neutral) -->
+    <!-- Application Structure Plan: Dashboard Layout.
+         - Sidebar: Intro, Snowflake (Warehousing/SaaS), Databricks (Lakehouse/Engineering), Comparative Analysis, Decision Engine.
+         - Content Area: Dynamic injection.
+         - Logic: Distinguishes between "SQL/BI/SaaS" (Snowflake) and "Code/AI/Open Format" (Databricks).
+    -->
+    <!-- Visualization & Content Choices:
+         - Snowflake View: "Elastic Warehouse Sim". Users spin up "T-Shirt Sized" clusters (XS, L, 2XL) to crunch a query queue. Shows separation of storage/compute.
+         - Databricks View: "Medallion Architecture". Visualizes data flowing Bronze -> Silver -> Gold with Spark/Delta Logic.
+         - Comparison: Radar Chart comparing Ease of Use, ML Maturity, SQL Performance, Openness.
+         - Decision Engine: Form-based logic tree.
+         - CONFIRMATION: NO SVG graphics used (code generated). NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Mobile Header -->
+    <header class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center shadow-md z-20">
+        <h1 class="text-lg font-bold"><i class="fas fa-cubes mr-2"></i>Platform Architect</h1>
+        <button class="text-white focus:outline-none" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="bg-white w-64 flex-shrink-0 border-r border-slate-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10 h-full flex flex-col" id="sidebar">
+            <div class="p-6 border-b border-slate-200 hidden md:block">
+                <h1 class="text-xl font-bold text-slate-800 flex items-center">
+                    <i class="fas fa-network-wired mr-2 text-sky-500"></i>
+                    <span>Data Platform</span>
+                </h1>
+                <p class="text-xs text-slate-500 mt-2">Snowflake vs. Databricks</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <ul class="space-y-1">
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-sky-50 transition-colors flex items-center active" id="nav-intro" onclick="navigateTo('intro')">
+                            <i class="fas fa-info-circle w-6"></i> Introduction
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-sky-50 transition-colors flex items-center" id="nav-snowflake" onclick="navigateTo('snowflake')">
+                            <i class="fas fa-snowflake w-6 text-sky-500"></i> Snowflake
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-sky-50 transition-colors flex items-center" id="nav-databricks" onclick="navigateTo('databricks')">
+                            <i class="fas fa-layer-group w-6 text-orange-600"></i> Databricks
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-sky-50 transition-colors flex items-center" id="nav-compare" onclick="navigateTo('compare')">
+                            <i class="fas fa-balance-scale w-6"></i> Comparative Analysis
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-item w-full text-left px-6 py-3 text-slate-600 hover:bg-sky-50 transition-colors flex items-center" id="nav-decision" onclick="navigateTo('decision')">
+                            <i class="fas fa-calculator w-6 text-indigo-600"></i> Decision Engine
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="p-4 border-t border-slate-200 bg-slate-50">
+                <div class="text-xs text-slate-500">
+                    <p class="font-semibold">Current Context:</p>
+                    <p id="context-indicator">Introduction</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-slate-100 p-4 md:p-8" id="main-content">
+            <!-- Content injected via JS -->
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden" id="overlay"></div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'intro',
+            decisionInputs: {
+                primaryUser: null,
+                workload: null,
+                dataFormat: null,
+                budgetStyle: null
+            },
+            snowflakeCredits: 0,
+            dbxJobsRun: 0
+        };
+
+        // --- Content Store ---
+        const contentData = {
+            intro: {
+                title: "The Lakehouse Wars",
+                content: `
+                    <div class="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                        <div class="bg-white p-8 rounded-xl shadow-sm border-l-4 border-slate-800">
+                            <h2 class="text-2xl font-bold text-slate-800 mb-4">Convergence on the Cloud</h2>
+                            <p class="text-slate-600 leading-relaxed text-lg">
+                                We are witnessing a convergence. <strong>Snowflake</strong> started as the ultimate Data Warehouse (SQL-first) and is moving toward AI/Python. <strong>Databricks</strong> started as the ultimate Data Lake engine (Spark/Code-first) and is moving toward Warehousing. Both now claim the title of "The Data Platform," but their DNA remains fundamentally different.
+                            </p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-sky-500" onclick="navigateTo('snowflake')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 mr-3">
+                                        <i class="fas fa-snowflake"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">Snowflake</h3>
+                                </div>
+                                <p class="text-slate-600 mb-4">"The Data Cloud." A fully managed SaaS that prioritizes ease of use, SQL reporting, and secure data sharing. It "just works."</p>
+                                <span class="text-sky-600 font-semibold text-sm">Explore Warehousing &rarr;</span>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer border-t-4 border-orange-500" onclick="navigateTo('databricks')">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mr-3">
+                                        <i class="fas fa-layer-group"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-slate-800">Databricks</h3>
+                                1</div>
+                                <p class="text-slate-600 mb-4">"The Lakehouse." An engineering-heavy platform built on open source (Spark, Delta Lake). Prioritizes AI, ML, and control.</p>
+                                <span class="text-orange-600 font-semibold text-sm">Explore Lakehouse &rarr;</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-200 p-6 rounded-xl text-center mt-8">
+                            <h3 class="text-lg font-bold text-slate-700 mb-2">Architecting a solution?</h3>
+                            <button onclick="navigateTo('decision')" class="bg-slate-800 text-white px-6 py-3 rounded-lg shadow hover:bg-slate-700 transition-colors">
+                                Launch Decision Engine
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            snowflake: {
+                title: "Snowflake: Separation of Storage & Compute",
+                description: "Snowflake's architecture decouples low-cost storage (S3/Blob) from elastic compute clusters (Virtual Warehouses). This allows you to instantly scale up for heavy queries and suspend execution to save money.",
+                vizScript: 'renderSnowflakeViz'
+            },
+            databricks: {
+                title: "Databricks: The Medallion Architecture",
+                description: "Databricks champions the Lakehouse pattern using open formats (Delta Lake). Data flows through refined layers: Bronze (Raw), Silver (Cleaned), and Gold (Business Aggregates), powered by Spark jobs.",
+                vizScript: 'renderDatabricksViz'
+            },
+            compare: {
+                title: "Head-to-Head Comparison",
+                description: "Comparing the trade-offs. Snowflake wins on 'Zero Maintenance' and SQL Analyst experience. Databricks wins on 'Total Control' and Data Scientist/ML experience.",
+                vizScript: 'renderComparisonChart'
+            },
+            decision: {
+                title: "Platform Selector",
+                description: "Answer four questions about your team's skillset and workload to receive a recommendation.",
+                vizScript: 'renderDecisionTool'
+            }
+        };
+
+        // --- Core Navigation ---
+        function navigateTo(sectionId) {
+            state.currentSection = sectionId;
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${sectionId}`).classList.add('active');
+            document.getElementById('context-indicator').innerText = contentData[sectionId].title;
+
+            // Mobile menu close
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebar').classList.remove('translate-x-0');
+            document.getElementById('overlay').classList.add('hidden');
+
+            renderContent(sectionId);
+        }
+
+        function renderContent(sectionId) {
+            const main = document.getElementById('main-content');
+            const data = contentData[sectionId];
+
+            if (sectionId === 'intro') {
+                main.innerHTML = data.content;
+                return;
+            }
+
+            let html = `
+                <div class="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">${data.title}</h2>
+                        <p class="text-slate-600">${data.description}</p>
+                    </div>
+            `;
+
+            if (sectionId === 'decision') {
+                html += `<div id="decision-container" class="grid md:grid-cols-3 gap-6"></div>`;
+            } else if (sectionId === 'snowflake') {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-sky-600 mb-4">Elastic Compute Simulator</h3>
+                            
+                            <div class="flex-grow bg-slate-50 rounded-lg p-4 relative border border-slate-200 flex flex-col justify-between" style="height: 350px;">
+                                <!-- Storage Layer -->
+                                <div class="w-full h-16 bg-slate-300 rounded-lg flex items-center justify-center text-slate-600 text-xs font-bold border-2 border-slate-400 border-dashed">
+                                    <i class="fas fa-database mr-2"></i> Central Storage (S3/Azure/GCP)
+                                </div>
+
+                                <!-- Connection Lines (Canvas Overlay concept in CSS) -->
+                                <div class="flex justify-center h-8 relative">
+                                    <div class="absolute w-0.5 h-full bg-slate-300"></div>
+                                </div>
+
+                                <!-- Compute Layer -->
+                                <div id="compute-layer" class="flex justify-around items-end h-32 mb-4">
+                                    <!-- Clusters inject here -->
+                                    <div class="text-slate-400 text-xs text-center w-full self-center">No Active Warehouses</div>
+                                </div>
+
+                                <!-- Query Queue -->
+                                <div class="w-full bg-slate-800 rounded p-2 mb-2">
+                                    <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                        <span>Query Queue Load</span>
+                                        <span id="sf-load-val">0%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-700 rounded-full h-2">
+                                        <div id="sf-load-bar" class="bg-sky-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-2 mt-4">
+                                <button onclick="spinCluster('XS')" class="bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold py-2 px-2 rounded text-xs transition-colors border border-sky-300">
+                                    + X-Small
+                                </button>
+                                <button onclick="spinCluster('L')" class="bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold py-2 px-2 rounded text-xs transition-colors border border-sky-300">
+                                    + Large
+                                </button>
+                                <button onclick="resetClusters()" class="bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-2 px-2 rounded text-xs transition-colors">
+                                    Suspend All
+                                </button>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else if (sectionId === 'databricks') {
+                 html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
+                            <h3 class="font-bold text-orange-600 mb-4">Medallion Architecture Flow</h3>
+                            
+                            <div class="flex-grow bg-slate-900 rounded-lg p-4 relative overflow-hidden flex flex-col justify-center space-y-4" style="height: 350px;">
+                                
+                                <!-- Layers -->
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-16 h-16 rounded-full bg-yellow-900 border-4 border-yellow-800 flex items-center justify-center text-white text-xs font-bold z-10 relative">
+                                        Bronze
+                                        <div class="absolute -bottom-6 text-[10px] text-slate-400">Raw</div>
+                                    </div>
+                                    <div class="flex-1 h-2 bg-slate-700 rounded relative overflow-hidden">
+                                        <div id="pipe-1" class="absolute inset-0 bg-orange-500 opacity-0 transition-opacity duration-300"></div>
+                                    </div>
+                                    <div class="w-16 h-16 rounded-full bg-slate-400 border-4 border-slate-300 flex items-center justify-center text-white text-xs font-bold z-10 relative">
+                                        Silver
+                                        <div class="absolute -bottom-6 text-[10px] text-slate-400">Clean</div>
+                                    </div>
+                                    <div class="flex-1 h-2 bg-slate-700 rounded relative overflow-hidden">
+                                        <div id="pipe-2" class="absolute inset-0 bg-orange-500 opacity-0 transition-opacity duration-300"></div>
+                                    </div>
+                                    <div id="gold-node" class="w-16 h-16 rounded-full bg-yellow-500 border-4 border-yellow-300 flex items-center justify-center text-white text-xs font-bold z-10 relative shadow-lg">
+                                        Gold
+                                        <div class="absolute -bottom-6 text-[10px] text-slate-400">Aggregated</div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-8 bg-slate-800 p-3 rounded text-xs font-mono text-green-400">
+                                    <span class="text-slate-500">$</span> <span id="dbx-console">Waiting for Spark job...</span>
+                                </div>
+
+                            </div>
+                            
+                            <button onclick="runSparkJob()" class="mt-4 w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition-colors">
+                                <i class="fas fa-play mr-2"></i> Run ETL Pipeline
+                            </button>
+                        </div>
+                        <div class="space-y-6">
+                            ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="grid lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col justify-center">
+                            <h3 class="font-bold text-slate-700 mb-4 text-center">Visualization</h3>
+                            <div class="chart-container">
+                                <canvas id="mainChart"></canvas>
+                            </div>
+                            <p class="text-center text-xs text-slate-400 mt-2" id="chart-caption"></p>
+                        </div>
+                        <div class="space-y-6">
+                             ${getDetailsHTML(sectionId)}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            main.innerHTML = html;
+
+            if (data.vizScript === 'renderSnowflakeViz') { window.sfClusters = []; }
+            if (data.vizScript === 'renderDatabricksViz') { /* handled by click */ }
+            if (data.vizScript === 'renderComparisonChart') renderComparisonChart();
+            if (data.vizScript === 'renderDecisionTool') renderDecisionTool();
+        }
+
+        function getDetailsHTML(sectionId) {
+            if (sectionId === 'snowflake') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-sky-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-sky-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Zero Maintenance:</strong> No indexes to manage, no partitions to tune. It's a true SaaS.</li>
+                            <li><strong>Data Sharing:</strong> Securely share live data with other Snowflake accounts without copying.</li>
+                            <li><strong>SQL Native:</strong> Every BI tool on the planet connects to Snowflake instantly.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Cost Transparency:</strong> Easy to scale up, but bills can surprise you if not monitored.</li>
+                            <li><strong>Vendor Lock-in:</strong> Data is stored in proprietary format (though Iceberg support is growing).</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'databricks') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-check text-orange-500 mr-2"></i>Strengths</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Open Formats:</strong> Data is stored as open Delta Lake (Parquet) files in your own cloud bucket.</li>
+                            <li><strong>AI/ML Native:</strong> MLflow integration and Notebook environment are best-in-class for data scientists.</li>
+                            <li><strong>Unified Engine:</strong> One engine (Spark) for Streaming, ETL, and ML.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                        <h3 class="font-bold text-slate-800 mb-2"><i class="fas fa-times text-red-500 mr-2"></i>Weaknesses</h3>
+                        <ul class="list-disc list-inside text-slate-600 space-y-2 text-sm">
+                            <li><strong>Complexity:</strong> High learning curve. Requires engineering knowledge (clusters, instances).</li>
+                            <li><strong>SQL Experience:</strong> Databricks SQL is improving but still feels less "snappy" than Snowflake for pure BI.</li>
+                        </ul>
+                    </div>
+                `;
+            } else if (sectionId === 'compare') {
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-slate-800 mb-4">The Verdict</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-sky-600 text-sm uppercase">Snowflake (Blue)</h4>
+                                <p class="text-sm text-slate-600">The clear winner for <strong>Corporate BI, Reporting, and SQL Analysts</strong>. If you want a "Data Warehouse that just works" without managing infrastructure.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-orange-600 text-sm uppercase">Databricks (Orange)</h4>
+                                <p class="text-sm text-slate-600">The clear winner for <strong>Data Engineering, AI, and Streaming</strong>. If you have a team of Data Scientists and Engineers who want control and open formats.</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h4 class="font-bold text-indigo-600 text-sm uppercase">The Reality</h4>
+                                <p class="text-sm text-slate-600">Large enterprises often use <strong>both</strong>. Databricks for the heavy ETL/AI "kitchen work," and Snowflake for the polished BI "dining room" presentation.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Visualizations ---
+
+        // 1. Snowflake Cluster Sim
+        window.spinCluster = function(size) {
+            const container = document.getElementById('compute-layer');
+            const loadBar = document.getElementById('sf-load-bar');
+            const loadVal = document.getElementById('sf-load-val');
+
+            // Clear empty text
+            if(container.innerText === 'No Active Warehouses') container.innerHTML = '';
+
+            // Create Visual Cluster
+            const node = document.createElement('div');
+            let hClass = size === 'XS' ? 'h-8' : 'h-16';
+            let wClass = size === 'XS' ? 'w-8' : 'w-16';
+            
+            node.className = `cluster-node ${hClass} ${wClass} bg-sky-500 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-xs m-1 border-2 border-sky-300`;
+            node.innerText = size;
+            container.appendChild(node);
+
+            // Simulate Load Reduction
+            let currentLoad = parseInt(loadBar.style.width || '100');
+            // If starting from 0, jump to 100 first to show work
+            if (currentLoad === 0 && container.children.length === 1) currentLoad = 100;
+            
+            const reduction = size === 'XS' ? 20 : 50;
+            const newLoad = Math.max(0, currentLoad - reduction);
+
+            loadBar.style.width = newLoad + '%';
+            loadVal.innerText = newLoad + '%';
+        }
+
+        window.resetClusters = function() {
+            const container = document.getElementById('compute-layer');
+            const loadBar = document.getElementById('sf-load-bar');
+            const loadVal = document.getElementById('sf-load-val');
+            
+            container.innerHTML = '<div class="text-slate-400 text-xs text-center w-full self-center">No Active Warehouses</div>';
+            loadBar.style.width = '100%';
+            loadVal.innerText = '100%';
+        }
+
+        // 2. Databricks Spark Job Sim
+        window.runSparkJob = function() {
+            const pipe1 = document.getElementById('pipe-1');
+            const pipe2 = document.getElementById('pipe-2');
+            const gold = document.getElementById('gold-node');
+            const console = document.getElementById('dbx-console');
+
+            // Reset
+            pipe1.style.opacity = 0;
+            pipe2.style.opacity = 0;
+            gold.classList.remove('gold-layer');
+            console.innerText = "Initializing Spark Context...";
+
+            // Bronze -> Silver
+            setTimeout(() => {
+                pipe1.style.opacity = 1;
+                console.innerText = "Reading Raw (JSON/CSV) -> Writing Delta Bronze...";
+            }, 500);
+
+            // Silver -> Gold
+            setTimeout(() => {
+                pipe2.style.opacity = 1;
+                console.innerText = "Filtering/Cleaning -> Writing Delta Silver...";
+            }, 1500);
+
+            // Gold
+            setTimeout(() => {
+                gold.classList.add('gold-layer');
+                console.innerText = "Aggregating KPIs -> Writing Delta Gold. Job Complete.";
+            }, 2500);
+        }
+
+        // 3. Comparison Radar
+        function renderComparisonChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-caption').innerText = "Comparing Platform Strengths (Outer = Stronger)";
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Ease of Use (Zero Ops)', 'SQL Performance', 'AI/ML Maturity', 'Data Engineering Control', 'Open Formats'],
+                    datasets: [{
+                        label: 'Snowflake',
+                        data: [10, 9, 5, 4, 3], // High ease, High SQL, Low Openness
+                        fill: true,
+                        backgroundColor: 'rgba(14, 165, 233, 0.2)', // Sky
+                        borderColor: 'rgb(14, 165, 233)',
+                        pointBackgroundColor: 'rgb(14, 165, 233)',
+                    }, {
+                        label: 'Databricks',
+                        data: [4, 7, 10, 10, 10], // Low ease, Good SQL, High ML/Eng/Open
+                        fill: true,
+                        backgroundColor: 'rgba(234, 88, 12, 0.2)', // Orange
+                        borderColor: 'rgb(234, 88, 12)',
+                        pointBackgroundColor: 'rgb(234, 88, 12)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 3 } },
+                    scales: { r: { suggestedMin: 0, suggestedMax: 10, angleLines: { display: false } } }
+                }
+            });
+        }
+
+        // 4. Decision Engine
+        function renderDecisionTool() {
+            const container = document.getElementById('decision-container');
+            container.innerHTML = `
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-6">Workload Characteristics</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Q1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">1. Primary User Persona</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('primaryUser', 'analyst', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Data Analysts</strong><br>SQL is their primary language.
+                                </button>
+                                <button onclick="selectOption('primaryUser', 'engineer', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Data Engineers/Scientists</strong><br>Python/Spark is their primary language.
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">2. Core Workload</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('workload', 'bi', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>BI & Reporting</strong><br>Dashboards, Ad-hoc queries.
+                                </button>
+                                <button onclick="selectOption('workload', 'ai', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>AI & Complex ETL</strong><br>Machine Learning models, Heavy transformation.
+                                </button>
+                            </div>
+                        </div>
+
+                         <!-- Q3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">3. Data Ownership</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="selectOption('dataFormat', 'managed', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Managed Service</strong><br>Platform manages storage & security.
+                                </button>
+                                <button onclick="selectOption('dataFormat', 'open', this)" class="option-btn border rounded p-3 text-sm text-slate-600 hover:bg-slate-50 text-left">
+                                    <strong>Open Formats</strong><br>I want raw Parquet/Delta in my own bucket.
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1">
+                    <div id="recommendation-card" class="bg-slate-800 text-white p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500">
+                        <i class="fas fa-server text-4xl text-slate-500 mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">Awaiting Input</h4>
+                        <p class="text-slate-400 text-sm">Select options to see the recommendation.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.selectOption = function(category, value, btnElement) {
+            state.decisionInputs[category] = value;
+            
+            // Visual Toggle
+            const parent = btnElement.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'border-indigo-500');
+                b.classList.add('border-slate-200');
+            });
+            btnElement.classList.remove('border-slate-200');
+            btnElement.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50', 'border-indigo-500');
+
+            calculateDecision();
+        }
+
+        function calculateDecision() {
+            const { primaryUser, workload, dataFormat } = state.decisionInputs;
+            if (!primaryUser || !workload || !dataFormat) return;
+
+            const card = document.getElementById('recommendation-card');
+            let title, icon, desc, bgClass;
+
+            let scoreSnowflake = 0;
+            let scoreDatabricks = 0;
+
+            // Logic
+            if (primaryUser === 'analyst') scoreSnowflake += 3; else scoreDatabricks += 3;
+            if (workload === 'bi') scoreSnowflake += 2; else scoreDatabricks += 2;
+            if (dataFormat === 'managed') scoreSnowflake += 2; else scoreDatabricks += 2;
+
+            if (scoreSnowflake > scoreDatabricks) {
+                title = "Use Snowflake";
+                icon = "fas fa-snowflake";
+                desc = "Your primary focus is BI and Warehousing. You value ease of use and SQL accessibility over granular engineering control.";
+                bgClass = "bg-snowflake";
+            } else {
+                title = "Use Databricks";
+                icon = "fas fa-layer-group";
+                desc = "Your primary focus is Data Engineering or AI. You need the flexibility of open formats and the power of Spark/Python.";
+                bgClass = "bg-databricks";
+            }
+
+            card.className = `p-6 rounded-xl shadow-lg h-full flex flex-col justify-center items-center text-center transition-all duration-500 ${bgClass} text-white`;
+            card.innerHTML = `
+                <div class="animate-bounce mb-4"><i class="${icon} text-4xl"></i></div>
+                <h4 class="text-2xl font-bold mb-3">${title}</h4>
+                <p class="text-white/90 text-sm leading-relaxed">${desc}</p>
+                <button onclick="navigateTo('compare')" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-xs uppercase tracking-wider font-bold transition-colors">Compare Details</button>
+            `;
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent('intro');
+
+            // Mobile Menu
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            btn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('translate-x-0');
+                overlay.classList.toggle('hidden');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                overlay.classList.add('hidden');
+            });
+        });
+    </script>
+
+<html><head></head><body><footer class="bg-stone-800 text-stone-300 py-16">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-2">
+                    <a class="flex items-center gap-3 mb-4" href="#">
+                        <img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+                        <span class="text-2xl font-bold text-white">Create Websites</span>
+                    </a>
+                    <p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+                    <ul class="space-y-3">
+
+						
+		  <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+          <li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+                        <li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+                    <ul class="space-y-3">
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+                        <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+						<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+                    </ul>
+                </div>
+
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+                 
+					<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+                </div>
+            </div>
+        </div>
+    </footer></body></html></body></html>
