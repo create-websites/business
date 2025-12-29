@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive educational guide on Fine-Tuned Models in Agentic AI Systems. Learn about multi-model orchestration, efficiency, reliability, and key techniques like LoRA and RLHF." name="description"/>
+    <meta content="Agentic AI, Fine-tuning, LLM, Machine Learning, Multi-model Orchestration, LoRA, RLHF, AI Agents, Artificial Intelligence, Educational" name="keywords"/>
+    <title>Fine-Tuned Models in Agentic AI Systems</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #2563eb;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-node {
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="text-blue-600 w-8 h-8" data-lucide="brain-circuit"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Agentic AI Edu</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-slate-600 hover:text-blue-600 transition-colors" href="#intro">Introduction</a>
+                    <a class="text-slate-600 hover:text-blue-600 transition-colors" href="#architecture">Architecture</a>
+                    <a class="text-slate-600 hover:text-blue-600 transition-colors" href="#techniques">Techniques</a>
+                    <a class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" href="#quiz">Take Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 to-blue-900 text-white py-24 overflow-hidden" id="intro">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#60a5fa 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Fine-Tuned Models in <br/><span class="text-blue-400">Agentic AI Systems</span></h1>
+            <p class="text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+                Explore how specialized AI agents perceive, plan, and act. Discover why "smaller and specialized" is often better than "bigger and general."
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-blue-100 hover:bg-blue-200 transition-colors" href="#architecture">
+                    Start Learning
+                    <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-blue-400 text-base font-medium rounded-md text-white hover:bg-white/10 transition-colors" href="#flashcards">
+                    Key Concepts
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Introduction Cards -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Why Fine-Tune for Agents?</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">General LLMs are powerful, but often too expensive or unreliable for specific agentic loops. Fine-tuning bridges the gap.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
+                        <i class="w-6 h-6" data-lucide="zap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Efficiency</h3>
+                    <p class="text-slate-600">Fine-tuning smaller models (1-7B params) for specific tasks like tool calling reduces cost and latency compared to using giant models like GPT-4 for everything.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 text-green-600">
+                        <i class="w-6 h-6" data-lucide="target"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Reliability</h3>
+                    <p class="text-slate-600">Specialized models are less likely to "hallucinate" formats. They can be trained to strictly output JSON or SQL, ensuring smooth system integration.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 text-purple-600">
+                        <i class="w-6 h-6" data-lucide="layers"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Composability</h3>
+                    <p class="text-slate-600">Instead of one monolith, agents use a "team" of models: a Planner, a Coder, and a Validator, each fine-tuned for its specific role.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Architecture Diagram -->
+    <section class="py-16 bg-slate-50" id="architecture">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Interactive Architecture: Multi-Model Orchestration</h2>
+            <p class="text-center text-slate-600 mb-12">Click on the components below to see how a fine-tuned agentic system processes a user request.</p>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Diagram Side -->
+                <div class="relative bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col gap-6 items-center">
+                        
+                        <!-- User Input -->
+                        <div class="w-full text-center">
+                            <div class="inline-block bg-slate-100 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 border border-slate-200">User Request</div>
+                            <div class="h-6 w-0.5 bg-slate-300 mx-auto"></div>
+                        </div>
+
+                        <!-- Router -->
+                        <div class="diagram-node w-full bg-indigo-50 border-2 border-indigo-200 p-4 rounded-xl cursor-pointer hover:bg-indigo-100 text-center group" onclick="showInfo('router')">
+                            <i class="mx-auto text-indigo-600 mb-2" data-lucide="git-branch"></i>
+                            <h4 class="font-bold text-indigo-900">Router Model</h4>
+                            <p class="text-xs text-indigo-600">Classifies Intent</p>
+                        </div>
+
+                        <div class="h-6 w-0.5 bg-slate-300 mx-auto"></div>
+
+                        <!-- Planner -->
+                        <div class="diagram-node w-full bg-blue-50 border-2 border-blue-200 p-4 rounded-xl cursor-pointer hover:bg-blue-100 text-center" onclick="showInfo('planner')">
+                            <i class="mx-auto text-blue-600 mb-2" data-lucide="map"></i>
+                            <h4 class="font-bold text-blue-900">Planner Model</h4>
+                            <p class="text-xs text-blue-600">Decomposes Task</p>
+                        </div>
+
+                        <div class="h-6 w-0.5 bg-slate-300 mx-auto"></div>
+
+                        <!-- Tool User -->
+                        <div class="diagram-node w-full bg-green-50 border-2 border-green-200 p-4 rounded-xl cursor-pointer hover:bg-green-100 text-center" onclick="showInfo('tool')">
+                            <i class="mx-auto text-green-600 mb-2" data-lucide="hammer"></i>
+                            <h4 class="font-bold text-green-900">Tool/Executor Model</h4>
+                            <p class="text-xs text-green-600">Calls APIs / Actions</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Info Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-blue-600 min-h-[400px] flex flex-col justify-center" id="info-panel">
+                    <div class="text-center" id="default-info">
+                        <i class="w-16 h-16 text-slate-300 mx-auto mb-4" data-lucide="mouse-pointer-click"></i>
+                        <h3 class="text-xl font-bold text-slate-700">Select a Component</h3>
+                        <p class="text-slate-500 mt-2">Click on the flowchart nodes to learn about their specific roles in an agentic system.</p>
+                    </div>
+                    
+                    <!-- Dynamic Content Placeholders -->
+                    <div class="hidden fade-enter" id="router-info">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 bg-indigo-100 rounded-lg"><i class="text-indigo-600" data-lucide="git-branch"></i></div>
+                            <h3 class="text-2xl font-bold text-indigo-900">The Router</h3>
+                        </div>
+                        <p class="text-slate-700 mb-4 leading-relaxed">
+                            The <strong>Router Model</strong> is often a small, efficient classifier. It doesn't solve the problem; it simply looks at the user's request and decides <em>which</em> specialist agent or toolset is needed.
+                        </p>
+                        <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="flex gap-2"><i class="w-4 h-4 text-green-500" data-lucide="check-circle"></i> Saves costs by preventing large model usage for simple queries.</li>
+                            <li class="flex gap-2"><i class="w-4 h-4 text-green-500" data-lucide="check-circle"></i> Can be fine-tuned on domain-specific routing logic.</li>
+                        </ul>
+                    </div>
+
+                    <div class="hidden fade-enter" id="planner-info">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 bg-blue-100 rounded-lg"><i class="text-blue-600" data-lucide="map"></i></div>
+                            <h3 class="text-2xl font-bold text-blue-900">The Planner</h3>
+                        </div>
+                        <p class="text-slate-700 mb-4 leading-relaxed">
+                            The <strong>Planner Model</strong> is fine-tuned to generate high-level plans or "Chain-of-Thought" reasoning. It breaks a complex goal (e.g., "Plan a travel itinerary") into sub-steps (1. Search flights, 2. Book hotel, 3. Find restaurants).
+                        </p>
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 text-sm italic text-blue-800">
+                            "The future of agents isn't making models bigger, it's making them more specialized and composable."
+                        </div>
+                    </div>
+
+                    <div class="hidden fade-enter" id="tool-info">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 bg-green-100 rounded-lg"><i class="text-green-600" data-lucide="hammer"></i></div>
+                            <h3 class="text-2xl font-bold text-green-900">The Executor</h3>
+                        </div>
+                        <p class="text-slate-700 mb-4 leading-relaxed">
+                            The <strong>Executor Model</strong> is fine-tuned strictly for syntax and API usage. It takes a sub-step from the planner and translates it into a precise computer command (e.g., JSON, SQL, or Python code).
+                        </p>
+                        <p class="text-slate-600 text-sm">
+                            <strong>Key Benefit:</strong> Fine-tuning here drastically reduces syntax errors compared to general models, ensuring reliable tool interaction.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flip Cards for Key Concepts -->
+    <section class="py-16 bg-white" id="flashcards">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-12 text-center">Key Concepts &amp; Terms</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="flip-card h-64" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="text-xl font-bold text-blue-900">LoRA</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Low-Rank Adaptation</h3>
+                            <p class="text-sm">A technique to fine-tune models efficiently by freezing most weights and only training small rank-decomposition matrices. Allows training on consumer hardware.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-64" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="text-xl font-bold text-blue-900">Behavioral Cloning</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Behavioral Cloning</h3>
+                            <p class="text-sm">Supervised Fine-Tuning (SFT) on sequences of expert observations and actions so the model learns to mimic expert decisions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-64" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="text-xl font-bold text-blue-900">RLHF</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">RL from Human Feedback</h3>
+                            <p class="text-sm">Using reinforcement learning with a reward model trained on human preferences to align the agent, reducing toxicity and increasing helpfulness.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-64" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3 class="text-xl font-bold text-blue-900">Sim-to-Real Gap</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Sim-to-Real Gap</h3>
+                            <p class="text-sm">The challenge where an agent trained in a digital simulation fails when deployed on physical robots due to real-world noise and physics differences.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Deep Dive Content Tabs -->
+    <section class="py-16 bg-slate-50" id="techniques">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200">
+                    <button class="flex-1 py-4 text-center font-medium text-blue-600 border-b-2 border-blue-600 bg-blue-50 transition-colors" id="btn-tab1" onclick="switchTab('tab1')">Fine-Tuning Techniques</button>
+                    <button class="flex-1 py-4 text-center font-medium text-slate-500 hover:text-blue-600 transition-colors" id="btn-tab2" onclick="switchTab('tab2')">Challenges</button>
+                    <button class="flex-1 py-4 text-center font-medium text-slate-500 hover:text-blue-600 transition-colors" id="btn-tab3" onclick="switchTab('tab3')">Real World Examples</button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab 1 -->
+                    <div class="tab-content block" id="tab1">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">How do we teach agents?</h3>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-blue-500" data-lucide="pen-tool"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">SFT on Demonstrations:</strong> 
+                                    <p class="text-slate-600">Collecting "expert traces" (e.g., from GPT-4) and training a smaller model to copy the reasoning steps. This effectively distills high intelligence into a faster model.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-blue-500" data-lucide="code"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">Tool Use Training:</strong> 
+                                    <p class="text-slate-600">Training on pairs of user queries and JSON function calls. Example: Converting "What's the weather in Tokyo?" into <code>{ "function": "get_weather", "args": "Tokyo" }</code>.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-blue-500" data-lucide="refresh-cw"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">Self-Play &amp; Feedback:</strong> 
+                                    <p class="text-slate-600">Robotics agents like RoboCat use self-generated data. They try a task, succeed, add that success to their training set, and re-train themselves.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab 2 -->
+                    <div class="tab-content hidden" id="tab2">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">The Difficulties</h3>
+                        <div class="grid gap-4">
+                            <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                                <h4 class="font-bold text-red-900">Alignment &amp; Safety</h4>
+                                <p class="text-sm text-red-800 mt-1">Fine-tuned agents might learn to maximize rewards unethically. If trained only to "solve the ticket," a support bot might lie to close the case quickly.</p>
+                            </div>
+                            <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                <h4 class="font-bold text-orange-900">Catastrophic Forgetting</h4>
+                                <p class="text-sm text-orange-800 mt-1">When fine-tuning heavily for one task (e.g., coding), the model may forget general knowledge or basic conversational skills.</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                                <h4 class="font-bold text-yellow-900">Data Scarcity</h4>
+                                <p class="text-sm text-yellow-800 mt-1">High-quality "thought-process" data is rare. We often have to rely on synthetic data generated by larger models, which can introduce bias.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3 -->
+                    <div class="tab-content hidden" id="tab3">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Agents in Action</h3>
+                        <div class="space-y-6">
+                            <div class="flex flex-col sm:flex-row gap-4 items-start">
+                                <img alt="Robot Icon" class="w-16 h-16 rounded-full bg-slate-200 object-cover flex-shrink-0" src="/api/placeholder/100/100"/> 
+                                <!-- Note: Placeholder logic handled by Lucide in real implementation for simplicity -->
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-lg">Google PaLM-E</h4>
+                                    <p class="text-slate-600 text-sm">A large embodied model fine-tuned on robot sensor data. It can look at a scene and output physical action plans.</p>
+                                </div>
+                            </div>
+                            <hr class="border-slate-100"/>
+                            <div class="flex flex-col sm:flex-row gap-4 items-start">
+                                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="text-blue-600 w-8 h-8" data-lucide="message-square"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-lg">Customer Support Bots</h4>
+                                    <p class="text-slate-600 text-sm">Fine-tuned on company chat logs to learn specific terminology, brand voice, and policy compliance, reducing human workload.</p>
+                                </div>
+                            </div>
+                            <hr class="border-slate-100"/>
+                            <div class="flex flex-col sm:flex-row gap-4 items-start">
+                                <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="text-purple-600 w-8 h-8" data-lucide="code-2"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-lg">AutoGPT &amp; Derivatives</h4>
+                                    <p class="text-slate-600 text-sm">While the original used prompting, modern versions use fine-tuned local models to replicate the "Reason + Act" loop more reliably and cheaply.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="py-16 bg-blue-900 text-white" id="quiz">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Knowledge Check</h2>
+            
+            <div class="space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="bg-blue-800 p-6 rounded-xl border border-blue-700">
+                    <p class="text-lg font-semibold mb-4">1. What is the primary benefit of using "LoRA" for agentic fine-tuning?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, false)">It allows models to understand images better.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, true)">It reduces memory requirements, allowing training on smaller hardware.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, false)">It increases the model's size to 100B parameters.</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-blue-800 p-6 rounded-xl border border-blue-700">
+                    <p class="text-lg font-semibold mb-4">2. In a multi-model architecture, what is the role of the "Router"?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, false)">To execute Python code.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, false)">To validate the final output for safety.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, true)">To classify the request and decide which tools or specialist agents are needed.</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-blue-800 p-6 rounded-xl border border-blue-700">
+                    <p class="text-lg font-semibold mb-4">3. What does "SFT" stand for in the context of training agents?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, true)">Supervised Fine-Tuning</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, false)">Standard Frequency Testing</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-blue-900 hover:bg-blue-700 transition-colors border border-blue-600" onclick="checkAnswer(this, false)">Systematic Feedback Training</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Diagram Logic
+        function showInfo(part) {
+            // Hide default
+            document.getElementById('default-info').classList.add('hidden');
+            
+            // Hide all specific infos
+            ['router-info', 'planner-info', 'tool-info'].forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.add('hidden');
+                el.classList.remove('fade-enter-active'); // Reset animation state
+            });
+
+            // Show selected info
+            const selected = document.getElementById(part + '-info');
+            selected.classList.remove('hidden');
+            
+            // Small timeout to trigger CSS transition
+            setTimeout(() => {
+                selected.classList.add('fade-enter-active');
+            }, 10);
+        }
+
+        // Flip Card Logic
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+
+        // Tab Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('button[id^="btn-tab"]').forEach(btn => {
+                btn.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Show specific tab
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Activate specific button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Disable all buttons in this group
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            // Highlight selected
+            btn.classList.remove('opacity-50');
+            btn.classList.remove('bg-blue-900');
+            
+            if (isCorrect) {
+                btn.classList.add('bg-green-600', 'border-green-400');
+                btn.innerHTML += ' <span class="ml-2">✅ Correct!</span>';
+            } else {
+                btn.classList.add('bg-red-600', 'border-red-400');
+                btn.innerHTML += ' <span class="ml-2">❌ Incorrect.</span>';
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.remove('opacity-50', 'bg-blue-900');
+                        b.classList.add('bg-green-600', 'border-green-400');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body></html>

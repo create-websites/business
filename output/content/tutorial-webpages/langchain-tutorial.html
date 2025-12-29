@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive tutorial on LangChain, covering LCEL, Chains, Agents, and Vector Stores. Learn to build context-aware AI applications." name="description"/>
+    <meta content="LangChain, Python, AI, LLM, LCEL, RAG, Agents, Tutorial, Interactive" name="keywords"/>
+    <title>LangChain: Building AI Applications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #0f172a; /* Slate-900 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-node {
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+        }
+        
+        code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="text-emerald-600 w-8 h-8" data-lucide="link"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">LangChain Edu</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-slate-600 hover:text-emerald-600 transition-colors" href="#intro">Basics</a>
+                    <a class="text-slate-600 hover:text-emerald-600 transition-colors" href="#lcel-diagram">The Pipeline</a>
+                    <a class="text-slate-600 hover:text-emerald-600 transition-colors" href="#components">Modules</a>
+                    <a class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors" href="#quiz">Take Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24 overflow-hidden" id="intro">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#34d399 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Mastering <br/><span class="text-emerald-400">LangChain</span></h1>
+            <p class="text-xl text-slate-300 max-w-2xl mx-auto mb-10">
+                The framework for building context-aware reasoning applications. Learn Chains, Agents, and LCEL.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-slate-900 bg-emerald-400 hover:bg-emerald-300 transition-colors" href="#lcel-diagram">
+                    Visualize LCEL
+                    <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-slate-500 text-base font-medium rounded-md text-white hover:bg-white/10 transition-colors" href="#cards">
+                    Key Concepts
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fundamental Concepts (Flip Cards) -->
+    <section class="py-16 bg-white" id="cards">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Core Concepts</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">LangChain provides the building blocks to glue LLMs to other data sources.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
+                                <i class="w-6 h-6" data-lucide="link-2"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Chains</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Linking Steps</h3>
+                            <p class="text-sm px-2">Sequences of calls. <br/><br/>Example: <br/>Input -&gt; Prompt -&gt; LLM -&gt; Output Parser.<br/><br/>This ensures modularity and reusability.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4 text-emerald-600">
+                                <i class="w-6 h-6" data-lucide="code-2"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">LCEL</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">LangChain Expression Language</h3>
+                            <p class="text-sm px-2">A declarative way to chain components using the `|` pipe operator.<br/><br/><code>chain = prompt | model | parser</code></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4 text-orange-600">
+                                <i class="w-6 h-6" data-lucide="database"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Retrievers</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Fetching Context</h3>
+                            <p class="text-sm px-2">Interfaces that return documents given an unstructured query.<br/><br/>Crucial for RAG (Retrieval Augmented Generation) pipelines.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 text-purple-600">
+                                <i class="w-6 h-6" data-lucide="bot"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Agents</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Reasoning Engines</h3>
+                            <p class="text-sm px-2">Unlike chains (hardcoded sequences), Agents use an LLM to decide what actions to take and in what order.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive LCEL Diagram -->
+    <section class="py-16 bg-slate-50" id="lcel-diagram">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">Interactive: The LCEL Pipeline</h2>
+            <p class="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+                In modern LangChain, we compose components using the pipe <code>|</code> operator. Click the nodes to see the code.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Diagram Side -->
+                <div class="relative bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col gap-4 items-center">
+                        
+                        <!-- Input -->
+                        <div class="w-full text-center mb-2">
+                            <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded text-sm">Input: { topic: "Ice Cream" }</span>
+                        </div>
+                        <div class="h-4 w-0.5 bg-slate-300 mb-2"></div>
+
+                        <!-- Prompt -->
+                        <div class="diagram-node w-full bg-blue-50 border-2 border-blue-200 p-4 rounded-xl cursor-pointer hover:bg-blue-100 text-center flex items-center justify-center gap-3" onclick="showInfo('prompt')">
+                            <i class="text-blue-600" data-lucide="message-square"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-900">Prompt Template</h4>
+                                <code class="text-xs text-blue-600">prompt = ChatPromptTemplate...</code>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center justify-center h-12 w-full">
+                            <div class="h-full w-0.5 bg-slate-300"></div>
+                            <div class="bg-slate-200 text-slate-600 rounded-full w-6 h-6 flex items-center justify-center -mt-6 z-10 text-xs font-bold">|</div>
+                        </div>
+
+                        <!-- Model -->
+                        <div class="diagram-node w-full bg-emerald-50 border-2 border-emerald-200 p-4 rounded-xl cursor-pointer hover:bg-emerald-100 text-center flex items-center justify-center gap-3" onclick="showInfo('model')">
+                            <i class="text-emerald-600" data-lucide="cpu"></i>
+                            <div>
+                                <h4 class="font-bold text-emerald-900">LLM / ChatModel</h4>
+                                <code class="text-xs text-emerald-600">model = ChatOpenAI()</code>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center justify-center h-12 w-full">
+                            <div class="h-full w-0.5 bg-slate-300"></div>
+                            <div class="bg-slate-200 text-slate-600 rounded-full w-6 h-6 flex items-center justify-center -mt-6 z-10 text-xs font-bold">|</div>
+                        </div>
+
+                        <!-- Output Parser -->
+                        <div class="diagram-node w-full bg-orange-50 border-2 border-orange-200 p-4 rounded-xl cursor-pointer hover:bg-orange-100 text-center flex items-center justify-center gap-3" onclick="showInfo('parser')">
+                            <i class="text-orange-600" data-lucide="file-json"></i>
+                            <div>
+                                <h4 class="font-bold text-orange-900">Output Parser</h4>
+                                <code class="text-xs text-orange-600">parser = StrOutputParser()</code>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Info Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-emerald-500 min-h-[400px] flex flex-col justify-center" id="info-panel">
+                    <div class="text-center" id="default-info">
+                        <i class="w-16 h-16 text-slate-300 mx-auto mb-4" data-lucide="mouse-pointer-click"></i>
+                        <h3 class="text-xl font-bold text-slate-700">Explore the Chain</h3>
+                        <p class="text-slate-500 mt-2">Click on the pipeline components to see the Python code behind them.</p>
+                    </div>
+                    
+                    <!-- Dynamic Content -->
+                    <div class="hidden fade-enter" id="prompt-info">
+                        <h3 class="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
+                            <i class="text-blue-500" data-lucide="message-square"></i> Prompt Template
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            Templates convert user input into a formatted prompt for the model.
+                        </p>
+                        <pre>from langchain_core.prompts import ChatPromptTemplate
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a comedian."),
+    ("user", "Tell me a joke about {topic}")
+])
+                        </pre>
+                    </div>
+
+                    <div class="hidden fade-enter" id="model-info">
+                        <h3 class="text-2xl font-bold text-emerald-900 mb-3 flex items-center gap-2">
+                            <i class="text-emerald-500" data-lucide="cpu"></i> The Model
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            The core LLM. LangChain supports OpenAI, Anthropic, HuggingFace, and many others through a unified interface.
+                        </p>
+                        <pre>from langchain_openai import ChatOpenAI
+
+model = ChatOpenAI(
+    model="gpt-4o", 
+    temperature=0.7
+)
+                        </pre>
+                    </div>
+
+                    <div class="hidden fade-enter" id="parser-info">
+                        <h3 class="text-2xl font-bold text-orange-900 mb-3 flex items-center gap-2">
+                            <i class="text-orange-500" data-lucide="file-json"></i> Output Parser
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            Parsers transform the raw `AIMessage` output from the model into a string, JSON, or other structured data.
+                        </p>
+                        <pre>from langchain_core.output_parsers import StrOutputParser
+
+parser = StrOutputParser()
+
+# The full chain syntax:
+chain = prompt | model | parser
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Tabs -->
+    <section class="py-16 bg-white" id="components">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Modules Deep Dive</h2>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200 overflow-x-auto">
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-emerald-600 border-b-2 border-emerald-600 bg-emerald-50 transition-colors whitespace-nowrap" id="btn-tab1" onclick="switchTab('tab1')">I/O (Prompts &amp; Parsers)</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-emerald-600 transition-colors whitespace-nowrap" id="btn-tab2" onclick="switchTab('tab2')">Retrieval (RAG)</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-emerald-600 transition-colors whitespace-nowrap" id="btn-tab3" onclick="switchTab('tab3')">Ecosystem</button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab 1: I/O -->
+                    <div class="tab-content block" id="tab1">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Input / Output</h3>
+                        <p class="text-slate-600 mb-4">LangChain standardizes inputs and outputs across different model providers.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <strong class="text-slate-900 block mb-2">Prompt Templates</strong>
+                                <p class="text-sm text-slate-600">
+                                    Manage variables and formatting. Supports `SystemMessage`, `HumanMessage`, and `AIMessage` roles.
+                                </p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <strong class="text-slate-900 block mb-2">Output Parsers</strong>
+                                <p class="text-sm text-slate-600">
+                                    From `StrOutputParser` (text only) to `JsonOutputParser` (enforce structured data) and `PydanticOutputParser` (validate data types).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Retrieval -->
+                    <div class="tab-content hidden" id="tab2">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Retrieval Augmented Generation</h3>
+                        <p class="text-slate-600 mb-4">Connect your LLM to private data sources.</p>
+                        
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-emerald-500 w-5 h-5" data-lucide="file-text"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">Document Loaders:</strong> 
+                                    <p class="text-sm text-slate-600">Load PDF, CSV, HTML, Notion, Slack, etc. (Over 100+ integrations).</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-emerald-500 w-5 h-5" data-lucide="scissors"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">Text Splitters:</strong> 
+                                    <p class="text-sm text-slate-600">Chunk data intelligently (e.g., `RecursiveCharacterTextSplitter`) to fit context windows.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-emerald-500 w-5 h-5" data-lucide="database"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">Vector Stores:</strong> 
+                                    <p class="text-sm text-slate-600">Integrations with Pinecone, Chroma, FAISS to store and retrieve embeddings.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab 3: Ecosystem -->
+                    <div class="tab-content hidden" id="tab3">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Beyond the Library</h3>
+                        <div class="grid gap-4">
+                            <div class="flex items-center gap-4 p-3 border rounded-lg hover:bg-slate-50">
+                                <div class="bg-orange-100 p-2 rounded"><i class="text-orange-600" data-lucide="layout-grid"></i></div>
+                                <div>
+                                    <h4 class="font-bold">LangSmith</h4>
+                                    <p class="text-xs text-slate-500">Observability platform. Debug, test, evaluate, and monitor your chains in production.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-3 border rounded-lg hover:bg-slate-50">
+                                <div class="bg-blue-100 p-2 rounded"><i class="text-blue-600" data-lucide="network"></i></div>
+                                <div>
+                                    <h4 class="font-bold">LangGraph</h4>
+                                    <p class="text-xs text-slate-500">Library for building stateful, multi-actor applications (Agents) with cycles.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-3 border rounded-lg hover:bg-slate-50">
+                                <div class="bg-purple-100 p-2 rounded"><i class="text-purple-600" data-lucide="server"></i></div>
+                                <div>
+                                    <h4 class="font-bold">LangServe</h4>
+                                    <p class="text-xs text-slate-500">Deploy any LangChain chain as a REST API instantly.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="py-16 bg-slate-900 text-white" id="quiz">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Knowledge Check</h2>
+            <p class="text-center text-slate-400 mb-8">Test your LangChain proficiency.</p>
+            
+            <div class="space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">1. What operator does LCEL use to compose components?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">The `+` plus operator</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">The `|` pipe operator</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">The `&gt;&gt;` shift operator</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">2. Which component is responsible for enforcing structured JSON output?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">PromptTemplate</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">OutputParser</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">VectorStore</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">3. What is the difference between a Chain and an Agent?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Chains are hardcoded sequences; Agents use an LLM to decide the sequence of actions.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Chains are for Python; Agents are for JavaScript.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">There is no difference.</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Diagram Logic
+        function showInfo(part) {
+            // Hide default
+            document.getElementById('default-info').classList.add('hidden');
+            
+            // Hide all specific infos
+            ['prompt-info', 'model-info', 'parser-info'].forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.add('hidden');
+                el.classList.remove('fade-enter-active'); // Reset animation state
+            });
+
+            // Show selected info
+            const selected = document.getElementById(part + '-info');
+            selected.classList.remove('hidden');
+            
+            // Small timeout to trigger CSS transition
+            setTimeout(() => {
+                selected.classList.add('fade-enter-active');
+            }, 10);
+        }
+
+        // Flip Card Logic
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+
+        // Tab Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('button[id^="btn-tab"]').forEach(btn => {
+                btn.classList.remove('text-emerald-600', 'border-b-2', 'border-emerald-600', 'bg-emerald-50');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Show specific tab
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Activate specific button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-emerald-600', 'border-b-2', 'border-emerald-600', 'bg-emerald-50');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Disable all buttons in this group
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            // Highlight selected
+            btn.classList.remove('opacity-50');
+            btn.classList.remove('bg-slate-700');
+            
+            if (isCorrect) {
+                btn.classList.add('bg-emerald-600', 'border-emerald-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">✅ Correct!</span>';
+            } else {
+                btn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">❌ Incorrect.</span>';
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.remove('opacity-50', 'bg-slate-700');
+                        b.classList.add('bg-emerald-600', 'border-emerald-400', 'text-white');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body></html>

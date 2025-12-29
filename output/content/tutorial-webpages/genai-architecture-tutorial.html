@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive tutorial on Generative AI System Architecture. Learn about RAG pipelines, Agentic workflows, Guardrails, and LLM Routers." name="description"/>
+    <meta content="GenAI Architecture, LLM Stack, RAG, Agents, Guardrails, Vector Database, System Design, Tutorial" name="keywords"/>
+    <title>GenAI Architecture: Building the Stack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #0891b2; /* Cyan-600 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-node {
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-node:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .diagram-path {
+            transition: stroke 0.3s ease, stroke-width 0.3s ease;
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="text-cyan-600 w-8 h-8" data-lucide="layers"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">GenAI Arch</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-slate-600 hover:text-cyan-600 transition-colors" href="#intro">Overview</a>
+                    <a class="text-slate-600 hover:text-cyan-600 transition-colors" href="#stack-diagram">The Stack</a>
+                    <a class="text-slate-600 hover:text-cyan-600 transition-colors" href="#patterns">Patterns</a>
+                    <a class="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors" href="#quiz">Take Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900 text-white py-24 overflow-hidden" id="intro">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#22d3ee 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Designing <br/><span class="text-cyan-400">Generative AI Systems</span></h1>
+            <p class="text-xl text-slate-300 max-w-2xl mx-auto mb-10">
+                Move beyond the prompt. Learn how to architect robust, scalable, and safe AI applications using Routers, RAG, and Agents.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-slate-900 bg-cyan-400 hover:bg-cyan-300 transition-colors" href="#stack-diagram">
+                    Explore the Stack
+                    <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-slate-500 text-base font-medium rounded-md text-white hover:bg-white/10 transition-colors" href="#cards">
+                    Core Components
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fundamental Concepts (Flip Cards) -->
+    <section class="py-16 bg-white" id="cards">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Building Blocks</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">A production AI system is more than just a model API call. It requires a supporting cast of infrastructure.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
+                                <i class="w-6 h-6" data-lucide="git-branch"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Model Router</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">The Traffic Controller</h3>
+                            <p class="text-sm px-2">Dynamically directs user requests to the best model. <br/><br/>Simple query? Use a fast 7B model.<br/>Complex logic? Route to GPT-4.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-4 text-cyan-600">
+                                <i class="w-6 h-6" data-lucide="shield-alert"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Guardrails</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Safety Layer</h3>
+                            <p class="text-sm px-2">Intercepts inputs and outputs.<br/><br/>Prevents PII leakage, blocks jailbreak attempts, and filters toxic content before it reaches the user.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4 text-indigo-600">
+                                <i class="w-6 h-6" data-lucide="database"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Vector Store</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Long-Term Memory</h3>
+                            <p class="text-sm px-2">Stores domain knowledge as embeddings.<br/><br/>Allows the LLM to access millions of documents via RAG (Retrieval Augmented Generation).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4 text-emerald-600">
+                                <i class="w-6 h-6" data-lucide="bot"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Orchestrator</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">The Brain</h3>
+                            <p class="text-sm px-2">Frameworks like LangChain or LangGraph that manage the flow.<br/><br/>They handle tool execution, retries, and maintaining conversation history.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Architecture Diagram -->
+    <section class="py-16 bg-slate-50" id="stack-diagram">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">Interactive: The Production Stack</h2>
+            <p class="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+                Click the components to trace how data flows through a modern Enterprise GenAI architecture.
+            </p>
+
+            <div class="grid lg:grid-cols-3 gap-8 items-start">
+                <!-- Diagram Side (2 cols) -->
+                <div class="lg:col-span-2 relative bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col gap-6 items-center">
+                        
+                        <!-- Top: Frontend -->
+                        <div class="diagram-node w-2/3 bg-slate-100 border-2 border-slate-300 p-3 rounded-lg cursor-pointer hover:bg-slate-200 text-center" onclick="showInfo('frontend')">
+                            <span class="font-bold text-slate-700">User App (Frontend)</span>
+                        </div>
+
+                        <div class="h-6 w-0.5 bg-slate-300"></div>
+
+                        <!-- Gateway + Guardrails -->
+                        <div class="grid grid-cols-2 gap-4 w-full">
+                            <div class="diagram-node bg-indigo-50 border-2 border-indigo-200 p-3 rounded-lg cursor-pointer hover:bg-indigo-100 text-center" onclick="showInfo('gateway')">
+                                <span class="font-bold text-indigo-900 text-sm">API Gateway</span>
+                            </div>
+                            <div class="diagram-node bg-red-50 border-2 border-red-200 p-3 rounded-lg cursor-pointer hover:bg-red-100 text-center" onclick="showInfo('guardrails')">
+                                <span class="font-bold text-red-900 text-sm">Input Guardrails</span>
+                            </div>
+                        </div>
+
+                        <div class="h-6 w-0.5 bg-slate-300"></div>
+
+                        <!-- The Brain: Router & Orchestration -->
+                        <div class="diagram-node w-full bg-cyan-50 border-2 border-cyan-500 p-6 rounded-xl cursor-pointer hover:bg-cyan-100 relative" onclick="showInfo('orchestrator')">
+                            <h4 class="font-bold text-cyan-900 text-center mb-4">Orchestration Layer</h4>
+                            
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="bg-white border border-cyan-200 p-2 rounded text-center text-xs">
+                                    <span class="font-semibold text-cyan-800">Router</span>
+                                </div>
+                                <div class="bg-white border border-cyan-200 p-2 rounded text-center text-xs">
+                                    <span class="font-semibold text-cyan-800">Memory</span>
+                                </div>
+                                <div class="bg-white border border-cyan-200 p-2 rounded text-center text-xs">
+                                    <span class="font-semibold text-cyan-800">Planner</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex w-full justify-around px-8">
+                            <div class="h-6 w-0.5 bg-slate-300 transform -rotate-12 origin-top"></div>
+                            <div class="h-6 w-0.5 bg-slate-300"></div>
+                            <div class="h-6 w-0.5 bg-slate-300 transform rotate-12 origin-top"></div>
+                        </div>
+
+                        <!-- Bottom: Capabilities -->
+                        <div class="grid grid-cols-3 gap-4 w-full">
+                            <div class="diagram-node bg-emerald-50 border-2 border-emerald-200 p-3 rounded-lg cursor-pointer hover:bg-emerald-100 text-center" onclick="showInfo('rag')">
+                                <i class="mx-auto text-emerald-600 mb-1 w-5 h-5" data-lucide="database"></i>
+                                <span class="font-bold text-emerald-900 text-xs">RAG / Knowledge</span>
+                            </div>
+                            <div class="diagram-node bg-purple-50 border-2 border-purple-200 p-3 rounded-lg cursor-pointer hover:bg-purple-100 text-center" onclick="showInfo('llm')">
+                                <i class="mx-auto text-purple-600 mb-1 w-5 h-5" data-lucide="cpu"></i>
+                                <span class="font-bold text-purple-900 text-xs">LLMs</span>
+                            </div>
+                            <div class="diagram-node bg-orange-50 border-2 border-orange-200 p-3 rounded-lg cursor-pointer hover:bg-orange-100 text-center" onclick="showInfo('tools')">
+                                <i class="mx-auto text-orange-600 mb-1 w-5 h-5" data-lucide="wrench"></i>
+                                <span class="font-bold text-orange-900 text-xs">Tools / APIs</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Info Side (1 col) -->
+                <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-cyan-600 h-full flex flex-col" id="info-panel">
+                    <div class="text-center my-auto" id="default-info">
+                        <i class="w-12 h-12 text-slate-300 mx-auto mb-4" data-lucide="mouse-pointer-click"></i>
+                        <h3 class="text-lg font-bold text-slate-700">Inspect the Blueprint</h3>
+                        <p class="text-sm text-slate-500 mt-2">Click any node in the diagram to understand its role in the system architecture.</p>
+                    </div>
+                    
+                    <!-- Dynamic Content -->
+                    <div class="hidden fade-enter" id="frontend-info">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">User Application</h3>
+                        <p class="text-sm text-slate-600 mb-4">The interface (React, Streamlit, Mobile) where users interact. It maintains the session state but contains no business logic.</p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="gateway-info">
+                        <h3 class="text-xl font-bold text-indigo-900 mb-2">API Gateway</h3>
+                        <p class="text-sm text-slate-600 mb-4">Handles Rate Limiting, Authentication, and Logging. Essential for cost control to prevent abuse of expensive LLM tokens.</p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="guardrails-info">
+                        <h3 class="text-xl font-bold text-red-900 mb-2">Guardrails</h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            <strong>Input:</strong> Detects Prompt Injection ("Ignore previous instructions") or PII.<br/>
+                            <strong>Output:</strong> Validates JSON schema and checks for hallucinations or toxicity.
+                        </p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="orchestrator-info">
+                        <h3 class="text-xl font-bold text-cyan-900 mb-2">Orchestrator</h3>
+                        <p class="text-sm text-slate-600 mb-4">The control center (often built with LangChain). It decides: "Do I need to search the database? Do I need a calculator? Or can I answer directly?"</p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="rag-info">
+                        <h3 class="text-xl font-bold text-emerald-900 mb-2">RAG Pipeline</h3>
+                        <p class="text-sm text-slate-600 mb-4">Retrieves relevant context from a Vector Database (Pinecone/Weaviate) to ground the model's answer in facts.</p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="llm-info">
+                        <h3 class="text-xl font-bold text-purple-900 mb-2">LLM Layer</h3>
+                        <p class="text-sm text-slate-600 mb-4">The models themselves. Often a mix of hosted (GPT-4) and open-source (Llama 3 via Groq) depending on the complexity routed by the orchestrator.</p>
+                    </div>
+                    
+                    <div class="hidden fade-enter" id="tools-info">
+                        <h3 class="text-xl font-bold text-orange-900 mb-2">Tools &amp; Actions</h3>
+                        <p class="text-sm text-slate-600 mb-4">External capabilities: Web Search, SQL Database connectors, or Python code interpreters that the agent can "call".</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design Patterns Tabs -->
+    <section class="py-16 bg-white" id="patterns">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Architectural Patterns</h2>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200 overflow-x-auto">
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-cyan-600 border-b-2 border-cyan-600 bg-cyan-50 transition-colors whitespace-nowrap" id="btn-tab1" onclick="switchTab('tab1')">RAG Pipeline</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-cyan-600 transition-colors whitespace-nowrap" id="btn-tab2" onclick="switchTab('tab2')">Agentic Loop</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-cyan-600 transition-colors whitespace-nowrap" id="btn-tab3" onclick="switchTab('tab3')">Eval Ops</button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab 1: RAG -->
+                    <div class="tab-content block" id="tab1">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Retrieval-Augmented Generation</h3>
+                        <p class="text-slate-600 mb-4">Best for: Question Answering over private data.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-slate-100 p-2 rounded text-sm font-mono">1</div>
+                                <div><strong class="text-slate-900">Ingestion:</strong> Documents are chunked and embedded into vectors.</div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-slate-100 p-2 rounded text-sm font-mono">2</div>
+                                <div><strong class="text-slate-900">Retrieval:</strong> User query fetches top-K relevant chunks.</div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-slate-100 p-2 rounded text-sm font-mono">3</div>
+                                <div><strong class="text-slate-900">Synthesis:</strong> LLM generates answer using ONLY retrieved context.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Agents -->
+                    <div class="tab-content hidden" id="tab2">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Autonomous Agents (ReAct)</h3>
+                        <p class="text-slate-600 mb-4">Best for: Multi-step tasks requiring tools (e.g., "Book a flight").</p>
+                        <div class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+                            Thought: The user wants to book a flight.<br/>
+                            Action: SearchFlights(destination="Paris")<br/>
+                            Observation: Found 3 flights...<br/>
+                            Thought: The first one is cheapest.<br/>
+                            Action: BookFlight(id="FL123")
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Ops -->
+                    <div class="tab-content hidden" id="tab3">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Evaluation &amp; Operations</h3>
+                        <p class="text-slate-600 mb-4">How do you know if it's working?</p>
+                        <ul class="space-y-3">
+                            <li class="flex gap-2 items-center">
+                                <i class="text-cyan-500 w-4 h-4" data-lucide="check-circle"></i>
+                                <span><strong>LLM-as-a-Judge:</strong> Use GPT-4 to grade the answers of smaller models.</span>
+                            </li>
+                            <li class="flex gap-2 items-center">
+                                <i class="text-cyan-500 w-4 h-4" data-lucide="check-circle"></i>
+                                <span><strong>Feedback Loops:</strong> Collect "Thumbs Up/Down" from users to fine-tune future models.</span>
+                            </li>
+                            <li class="flex gap-2 items-center">
+                                <i class="text-cyan-500 w-4 h-4" data-lucide="check-circle"></i>
+                                <span><strong>Tracing:</strong> Log every step (input, retrieval, tool output) to debug latency.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="py-16 bg-slate-900 text-white" id="quiz">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Architectural Review</h2>
+            <p class="text-center text-slate-400 mb-8">Test your system design knowledge.</p>
+            
+            <div class="space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">1. What is the primary purpose of a "Router" in GenAI architecture?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">To connect the frontend to the backend.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">To direct requests to the most appropriate model based on complexity and cost.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">To store vector embeddings.</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">2. Where should "Guardrails" be placed in the stack?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Only at the database level.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Only on the output.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Both on Input (to prevent injection) and Output (to validate safety/schema).</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">3. Which component acts as the "Long-Term Memory" for the system?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Vector Database</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">The Context Window</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">The API Gateway</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Diagram Logic
+        function showInfo(part) {
+            // Hide default
+            document.getElementById('default-info').classList.add('hidden');
+            
+            // Hide all specific infos
+            const allInfos = ['frontend-info', 'gateway-info', 'guardrails-info', 'orchestrator-info', 'rag-info', 'llm-info', 'tools-info'];
+            allInfos.forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.add('hidden');
+                el.classList.remove('fade-enter-active'); // Reset animation state
+            });
+
+            // Show selected info
+            const selected = document.getElementById(part + '-info');
+            if (selected) {
+                selected.classList.remove('hidden');
+                // Small timeout to trigger CSS transition
+                setTimeout(() => {
+                    selected.classList.add('fade-enter-active');
+                }, 10);
+            }
+        }
+
+        // Flip Card Logic
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+
+        // Tab Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('button[id^="btn-tab"]').forEach(btn => {
+                btn.classList.remove('text-cyan-600', 'border-b-2', 'border-cyan-600', 'bg-cyan-50');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Show specific tab
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Activate specific button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-cyan-600', 'border-b-2', 'border-cyan-600', 'bg-cyan-50');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Disable all buttons in this group
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            // Highlight selected
+            btn.classList.remove('opacity-50');
+            btn.classList.remove('bg-slate-700');
+            
+            if (isCorrect) {
+                btn.classList.add('bg-cyan-600', 'border-cyan-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">✅ Correct!</span>';
+            } else {
+                btn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">❌ Incorrect.</span>';
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.remove('opacity-50', 'bg-slate-700');
+                        b.classList.add('bg-cyan-600', 'border-cyan-400', 'text-white');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body></html>
