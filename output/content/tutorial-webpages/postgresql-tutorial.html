@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive tutorial on PostgreSQL. Learn about Relational Databases, ACID transactions, SQL Joins, and JSONB." name="description"/>
+    <meta content="PostgreSQL, SQL, Database, Relational, ACID, JSONB, Tutorial, Interactive" name="keywords"/>
+    <title>PostgreSQL: The World's Most Advanced Open Source Relational Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-row {
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-row:hover {
+            background-color: #f0f9ff;
+        }
+
+        .connector-line {
+            transition: width 0.5s ease, opacity 0.5s ease;
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+        }
+        
+        code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="text-sky-700 w-8 h-8" data-lucide="database"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Postgres Edu</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-slate-600 hover:text-sky-700 transition-colors" href="#intro">Basics</a>
+                    <a class="text-slate-600 hover:text-sky-700 transition-colors" href="#join-diagram">Visualizing SQL</a>
+                    <a class="text-slate-600 hover:text-sky-700 transition-colors" href="#features">Advanced</a>
+                    <a class="px-4 py-2 bg-sky-700 text-white rounded-lg hover:bg-sky-800 transition-colors" href="#quiz">Take Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-sky-900 to-slate-900 text-white py-24 overflow-hidden" id="intro">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#38bdf8 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">PostgreSQL <br/><span class="text-sky-400">The Relational Giant</span></h1>
+            <p class="text-xl text-sky-100 max-w-2xl mx-auto mb-10">
+                Robust, reliable, and ridiculously powerful. Master the database that powers the world's most critical financial and data systems.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-sky-900 bg-sky-100 hover:bg-sky-200 transition-colors" href="#join-diagram">
+                    Visualize JOINs
+                    <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-sky-400 text-base font-medium rounded-md text-white hover:bg-white/10 transition-colors" href="#cards">
+                    Core Concepts
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fundamental Concepts (Flip Cards) -->
+    <section class="py-16 bg-white" id="cards">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Why Postgres?</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">It's more than just tables. It's a guarantee that your data is safe and correct.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
+                                <i class="w-6 h-6" data-lucide="shield-check"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">ACID</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Data Integrity</h3>
+                            <p class="text-sm px-2">Atomicity, Consistency, Isolation, Durability.<br/><br/>Ensures that even if the power fails, your bank transaction doesn't vanish halfway through.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center mb-4 text-sky-600">
+                                <i class="w-6 h-6" data-lucide="table"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Relational</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Structured Data</h3>
+                            <p class="text-sm px-2">Data is organized into Tables (Relations) with Rows and Columns.<br/><br/>Strict schemas prevent "garbage in, garbage out."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4 text-indigo-600">
+                                <i class="w-6 h-6" data-lucide="key"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Foreign Key</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">The "Link"</h3>
+                            <p class="text-sm px-2">A column that references the ID of another table.<br/><br/>Example: An 'Order' must belong to a valid 'User'. Postgres enforces this link automatically.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 text-purple-600">
+                                <i class="w-6 h-6" data-lucide="code-2"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">JSONB</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">NoSQL in SQL</h3>
+                            <p class="text-sm px-2">Postgres can store Binary JSON documents.<br/><br/>You can index and query JSON fields just like regular columns. Best of both worlds.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive JOIN Diagram -->
+    <section class="py-16 bg-slate-50" id="join-diagram">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">Interactive: The INNER JOIN</h2>
+            <p class="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+                SQL gets its power from combining data from multiple tables. Click "Connect" to see how an Order finds its User.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Visualizer Side -->
+                <div class="relative bg-white p-6 rounded-2xl shadow-sm border border-slate-200 min-h-[400px]">
+                    
+                    <!-- Table A: Users -->
+                    <div class="absolute left-4 top-10 w-40">
+                        <div class="bg-blue-100 text-blue-800 font-bold p-2 rounded-t-lg text-center border border-blue-200">Users</div>
+                        <div class="border-x border-b border-slate-200 rounded-b-lg bg-white">
+                            <div class="diagram-row p-2 border-b text-xs flex justify-between cursor-pointer" id="user-1">
+                                <span class="font-mono text-slate-500">1</span>
+                                <span>Alice</span>
+                            </div>
+                            <div class="diagram-row p-2 border-b text-xs flex justify-between cursor-pointer" id="user-2">
+                                <span class="font-mono text-slate-500">2</span>
+                                <span>Bob</span>
+                            </div>
+                            <div class="diagram-row p-2 text-xs flex justify-between cursor-pointer" id="user-3">
+                                <span class="font-mono text-slate-500">3</span>
+                                <span>Charlie</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table B: Orders -->
+                    <div class="absolute right-4 top-10 w-48">
+                        <div class="bg-sky-100 text-sky-800 font-bold p-2 rounded-t-lg text-center border border-sky-200">Orders</div>
+                        <div class="border-x border-b border-slate-200 rounded-b-lg bg-white">
+                            <div class="diagram-row p-2 border-b text-xs flex justify-between cursor-pointer hover:bg-sky-50" id="order-101" onclick="visualizeJoin(101, 1)">
+                                <span class="font-mono text-slate-500">101</span>
+                                <span class="font-bold text-indigo-600">user_id: 1</span>
+                                <span>$50</span>
+                            </div>
+                            <div class="diagram-row p-2 border-b text-xs flex justify-between cursor-pointer hover:bg-sky-50" id="order-102" onclick="visualizeJoin(102, 2)">
+                                <span class="font-mono text-slate-500">102</span>
+                                <span class="font-bold text-indigo-600">user_id: 2</span>
+                                <span>$20</span>
+                            </div>
+                            <div class="diagram-row p-2 text-xs flex justify-between cursor-pointer hover:bg-sky-50" id="order-103" onclick="visualizeJoin(103, 1)">
+                                <span class="font-mono text-slate-500">103</span>
+                                <span class="font-bold text-indigo-600">user_id: 1</span>
+                                <span>$100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Result Box -->
+                    <div class="absolute bottom-8 left-0 right-0 mx-auto w-3/4 opacity-0 transition-opacity duration-500" id="result-box">
+                        <div class="bg-indigo-600 text-white text-xs font-bold p-1 rounded-t text-center">Result Row</div>
+                        <div class="bg-slate-800 text-green-400 font-mono text-xs p-3 rounded-b shadow-lg">
+                            { "Order": <span id="res-order">?</span>, "User": "<span id="res-user">?</span>", "Total": <span id="res-total">?</span> }
+                        </div>
+                    </div>
+
+                    <!-- SVG Connector Layer -->
+                    <svg class="absolute inset-0 pointer-events-none w-full h-full">
+                        <path d="M0,0" fill="none" id="connector" stroke="#4f46e5" stroke-dasharray="5,5" stroke-width="0"></path>
+                    </svg>
+
+                </div>
+
+                <!-- Info Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-sky-600 min-h-[400px] flex flex-col justify-center" id="info-panel">
+                    <div class="text-center" id="default-info">
+                        <i class="w-16 h-16 text-slate-300 mx-auto mb-4" data-lucide="git-merge"></i>
+                        <h3 class="text-xl font-bold text-slate-700">Click an Order</h3>
+                        <p class="text-slate-500 mt-2">Click on any row in the <strong>Orders</strong> table to see how Postgres finds the matching User.</p>
+                    </div>
+                    
+                    <!-- Dynamic Content -->
+                    <div class="hidden fade-enter" id="join-info">
+                        <h3 class="text-2xl font-bold text-sky-900 mb-3 flex items-center gap-2">
+                            <i class="text-sky-500" data-lucide="link"></i> INNER JOIN
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            Postgres looks at the <code>user_id</code> in the Order row, matches it to the <code>id</code> in the Users table, and creates a combined result.
+                        </p>
+                        <div class="bg-slate-100 p-4 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-slate-700 text-sm mb-2">SQL Query:</h4>
+                            <pre class="bg-slate-800 text-sky-300 text-xs p-2 rounded">SELECT Users.name, Orders.total
+FROM Orders
+JOIN Users ON Orders.user_id = Users.id
+WHERE Orders.id = <span class="text-white" id="sql-order-id">...</span>;
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deep Dive Features -->
+    <section class="py-16 bg-white" id="features">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Beyond Basic SQL</h2>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200 overflow-x-auto">
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-sky-600 border-b-2 border-sky-600 bg-sky-50 transition-colors whitespace-nowrap" id="btn-tab1" onclick="switchTab('tab1')">Extensions</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-sky-600 transition-colors whitespace-nowrap" id="btn-tab2" onclick="switchTab('tab2')">Indexing Power</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-sky-600 transition-colors whitespace-nowrap" id="btn-tab3" onclick="switchTab('tab3')">Advanced SQL</button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab 1: Extensions -->
+                    <div class="tab-content block" id="tab1">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Extend functionality without leaving DB</h3>
+                        <p class="text-slate-600 mb-4">One of Postgres's superpowers is its extension system.</p>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-green-500 w-5 h-5" data-lucide="map"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">PostGIS:</strong> 
+                                    <p class="text-sm text-slate-600">Adds support for geographic objects. Run queries like "Find all coffee shops within 500 meters of this GPS point."</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-purple-500 w-5 h-5" data-lucide="cpu"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">pgvector:</strong> 
+                                    <p class="text-sm text-slate-600">Turn Postgres into a Vector Database. Store embeddings and perform cosine similarity search right next to your relational data.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab 2: Indexing -->
+                    <div class="tab-content hidden" id="tab2">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">More than just B-Trees</h3>
+                        <p class="text-slate-600 mb-4">Postgres supports many index types for different data patterns.</p>
+                        
+                        <div class="grid gap-4">
+                            <div class="bg-slate-50 p-3 rounded border">
+                                <strong class="text-slate-900">B-Tree:</strong> Standard index for sorting and equality.
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded border">
+                                <strong class="text-slate-900">GIN (Generalized Inverted Index):</strong> Perfect for indexing JSONB keys or Full-Text Search vectors.
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded border">
+                                <strong class="text-slate-900">GiST:</strong> Used for geometric data (PostGIS) and nearest-neighbor search.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Advanced SQL -->
+                    <div class="tab-content hidden" id="tab3">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Modern SQL Features</h3>
+                        <div class="bg-slate-900 text-sky-300 p-4 rounded-lg text-sm font-mono overflow-x-auto">
+-- Common Table Expressions (CTEs)
+WITH RegionalSales AS (
+    SELECT region, SUM(amount) as total_sales
+    FROM orders
+    GROUP BY region
+)
+SELECT * FROM RegionalSales
+WHERE total_sales &gt; (SELECT AVG(total_sales) FROM RegionalSales);
+                        </div>
+                        <p class="text-slate-600 mt-4 text-sm">Features like CTEs, Window Functions, and Recursive Queries make complex analytics possible directly in SQL.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="py-16 bg-slate-900 text-white" id="quiz">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Knowledge Check</h2>
+            <p class="text-center text-slate-400 mb-8">Test your PostgreSQL proficiency.</p>
+            
+            <div class="space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">1. What ensures a Postgres transaction is reliable even after a power loss?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">The JSONB format</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">ACID Compliance (Specifically Durability)</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Foreign Keys</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">2. Which feature allows you to store flexible, schema-less data in Postgres?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">PostGIS</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">B-Tree Indexes</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">JSONB</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">3. What is a Foreign Key used for?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">To create a link between two tables and enforce referential integrity.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">To encrypt the database password.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">To allow access from foreign IP addresses.</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Diagram Logic
+        function visualizeJoin(orderId, userId) {
+            // Reset Styles
+            document.querySelectorAll('.diagram-row').forEach(row => {
+                row.classList.remove('bg-sky-100', 'bg-blue-100');
+            });
+
+            // Highlight Order
+            const orderEl = document.getElementById('order-' + orderId);
+            orderEl.classList.add('bg-sky-100');
+
+            // Highlight User
+            const userEl = document.getElementById('user-' + userId);
+            userEl.classList.add('bg-blue-100');
+
+            // Show Info Panel
+            document.getElementById('default-info').classList.add('hidden');
+            const joinInfo = document.getElementById('join-info');
+            joinInfo.classList.remove('hidden');
+            setTimeout(() => joinInfo.classList.add('fade-enter-active'), 10);
+
+            // Update Info Code
+            document.getElementById('sql-order-id').innerText = orderId;
+
+            // Show Result Box
+            const resBox = document.getElementById('result-box');
+            resBox.style.opacity = '1';
+            
+            // Populate Result
+            document.getElementById('res-order').innerText = orderId;
+            const userName = userEl.querySelector('span:last-child').innerText;
+            const amount = orderEl.querySelector('span:last-child').innerText;
+            document.getElementById('res-user').innerText = userName;
+            document.getElementById('res-total').innerText = amount;
+
+            // Draw Line (Simple implementation)
+            const svg = document.querySelector('svg');
+            const path = document.getElementById('connector');
+            
+            // Get coordinates relative to container
+            const container = document.querySelector('.relative.bg-white').getBoundingClientRect();
+            const orderRect = orderEl.getBoundingClientRect();
+            const userRect = userEl.getBoundingClientRect();
+
+            const startX = orderRect.left - container.left;
+            const startY = orderRect.top + (orderRect.height / 2) - container.top;
+            
+            const endX = userRect.right - container.left;
+            const endY = userRect.top + (userRect.height / 2) - container.top;
+
+            // Curve logic
+            const c1x = startX - 50;
+            const c1y = startY;
+            const c2x = endX + 50;
+            const c2y = endY;
+
+            path.setAttribute('d', `M${startX},${startY} C${c1x},${c1y} ${c2x},${c2y} ${endX},${endY}`);
+            path.setAttribute('stroke-width', '2');
+        }
+
+        // Flip Card Logic
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+
+        // Tab Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('button[id^="btn-tab"]').forEach(btn => {
+                btn.classList.remove('text-sky-600', 'border-b-2', 'border-sky-600', 'bg-sky-50');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Show specific tab
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Activate specific button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-sky-600', 'border-b-2', 'border-sky-600', 'bg-sky-50');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Disable all buttons in this group
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            // Highlight selected
+            btn.classList.remove('opacity-50');
+            btn.classList.remove('bg-slate-700');
+            
+            if (isCorrect) {
+                btn.classList.add('bg-sky-600', 'border-sky-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">✅ Correct!</span>';
+            } else {
+                btn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">❌ Incorrect.</span>';
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.remove('opacity-50', 'bg-slate-700');
+                        b.classList.add('bg-sky-600', 'border-sky-400', 'text-white');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body></html>

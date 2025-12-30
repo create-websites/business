@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive tutorial on Prompt Engineering. Master Zero-shot, Few-shot, Chain of Thought, and ReAct prompting techniques." name="description"/>
+    <meta content="Prompt Engineering, LLM, Chain of Thought, Zero-shot, Few-shot, AI, Tutorial, Interactive" name="keywords"/>
+    <title>Prompt Engineering: The Art of Talking to AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #d97706; /* Amber-600 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-node {
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+        }
+        
+        code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="text-amber-600 w-8 h-8" data-lucide="message-square-code"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Prompt Edu</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-slate-600 hover:text-amber-600 transition-colors" href="#intro">Basics</a>
+                    <a class="text-slate-600 hover:text-amber-600 transition-colors" href="#cot-diagram">Chain of Thought</a>
+                    <a class="text-slate-600 hover:text-amber-600 transition-colors" href="#strategies">Strategies</a>
+                    <a class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors" href="#quiz">Take Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-amber-900 to-slate-900 text-white py-24 overflow-hidden" id="intro">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#f59e0b 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Prompt Engineering <br/><span class="text-amber-400">The Art of Context</span></h1>
+            <p class="text-xl text-amber-100 max-w-2xl mx-auto mb-10">
+                Unlock the full potential of LLMs. Learn to guide, constrain, and optimize AI behavior through precise instructions.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-amber-900 bg-amber-100 hover:bg-amber-200 transition-colors" href="#cot-diagram">
+                    Visualize Reasoning
+                    <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-amber-400 text-base font-medium rounded-md text-white hover:bg-white/10 transition-colors" href="#cards">
+                    Key Terms
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fundamental Concepts (Flip Cards) -->
+    <section class="py-16 bg-white" id="cards">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">The Vocabulary</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Understanding the different modes of instructing an AI model.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
+                                <i class="w-6 h-6" data-lucide="zap"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Zero-Shot</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Ask Directly</h3>
+                            <p class="text-sm px-2">Asking the model to perform a task without any examples.<br/><br/>Example: "Translate 'Hello' to French."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 text-amber-600">
+                                <i class="w-6 h-6" data-lucide="copy"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Few-Shot</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Learning by Example</h3>
+                            <p class="text-sm px-2">Providing 1-3 examples before the actual request to guide style and format.<br/><br/>Significantly improves reliability.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 text-green-600">
+                                <i class="w-6 h-6" data-lucide="git-commit"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Chain of Thought</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Step-by-Step</h3>
+                            <p class="text-sm px-2">Asking the model to "think aloud" or break down steps before answering.<br/><br/>Crucial for math and logic puzzles.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 text-purple-600">
+                                <i class="w-6 h-6" data-lucide="user-cog"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">System Prompt</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Setting the Persona</h3>
+                            <p class="text-sm px-2">The initial instruction that defines behavior.<br/><br/>"You are a helpful coding assistant who explains bugs clearly."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Chain of Thought Diagram -->
+    <section class="py-16 bg-slate-50" id="cot-diagram">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">Interactive: The Reasoning Process</h2>
+            <p class="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+                See how different prompting styles lead to different outcomes. Click the buttons to simulate the model's path.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Simulation Side -->
+                <div class="relative bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col gap-6 items-center">
+                        
+                        <!-- Question -->
+                        <div class="w-full text-center">
+                            <div class="inline-block bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold text-slate-700 border border-slate-200">
+                                Question: "If I have 5 apples, eat 2, and buy 3 more, how many do I have?"
+                            </div>
+                        </div>
+
+                        <div class="h-8 w-0.5 bg-slate-300 mx-auto"></div>
+
+                        <!-- Button Group -->
+                        <div class="flex gap-4 w-full justify-center">
+                            <button class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold transition-colors" onclick="runSimulation('standard')">Standard Prompt</button>
+                            <button class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold transition-colors shadow-md ring-2 ring-amber-200" onclick="runSimulation('cot')">Chain of Thought</button>
+                        </div>
+
+                        <div class="h-8 w-0.5 bg-slate-300 mx-auto"></div>
+
+                        <!-- Result Display -->
+                        <div class="w-full bg-slate-50 border-2 border-dashed border-slate-300 p-6 rounded-xl min-h-[150px] flex items-center justify-center text-center" id="simulation-output">
+                            <span class="text-slate-400 italic">Select a prompt style above...</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Info Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-amber-500 min-h-[400px] flex flex-col justify-center" id="info-panel">
+                    <div class="text-center" id="default-info">
+                        <i class="w-16 h-16 text-slate-300 mx-auto mb-4" data-lucide="brain-circuit"></i>
+                        <h3 class="text-xl font-bold text-slate-700">Prompting Matters</h3>
+                        <p class="text-slate-500 mt-2">Standard prompts often rush to an answer. Chain of Thought forces the model to show its work, reducing errors.</p>
+                    </div>
+                    
+                    <!-- Dynamic Content -->
+                    <div class="hidden fade-enter" id="standard-info">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i class="text-slate-500" data-lucide="fast-forward"></i> Standard Prompting
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            Without specific instructions, LLMs predict the most likely *next tokens* immediately. For simple math, this often works, but for complex logic, it can lead to "hallucinated" shortcuts.
+                        </p>
+                        <div class="bg-red-50 p-3 rounded border border-red-200 text-sm text-red-800">
+                            <strong>Risk:</strong> High probability of logic errors in multi-step problems.
+                        </div>
+                    </div>
+
+                    <div class="hidden fade-enter" id="cot-info">
+                        <h3 class="text-2xl font-bold text-amber-900 mb-3 flex items-center gap-2">
+                            <i class="text-amber-500" data-lucide="list-checks"></i> Chain of Thought (CoT)
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            By adding <em>"Let's think step by step"</em>, you force the model to generate intermediate tokens. These tokens act as a "scratchpad," allowing the model to ground its final answer in its own previous reasoning.
+                        </p>
+                        <div class="bg-green-50 p-3 rounded border border-green-200 text-sm text-green-800">
+                            <strong>Benefit:</strong> Dramatically increases accuracy on math, logic, and reasoning tasks.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategies Tabs -->
+    <section class="py-16 bg-white" id="strategies">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Advanced Strategies</h2>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200 overflow-x-auto">
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-amber-600 border-b-2 border-amber-600 bg-amber-50 transition-colors whitespace-nowrap" id="btn-tab1" onclick="switchTab('tab1')">Constraint Prompting</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-amber-600 transition-colors whitespace-nowrap" id="btn-tab2" onclick="switchTab('tab2')">Role Playing</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-amber-600 transition-colors whitespace-nowrap" id="btn-tab3" onclick="switchTab('tab3')">Structured Output</button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab 1: Constraints -->
+                    <div class="tab-content block" id="tab1">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Less is More</h3>
+                        <p class="text-slate-600 mb-4">Models are chatty. Constraints rein them in.</p>
+                        <div class="space-y-4">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <strong class="text-slate-900 block mb-2">Negative Constraints</strong>
+                                <p class="text-sm text-slate-600">"Do NOT apologize. Do NOT say 'As an AI language model'. Do NOT include fluff."</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <strong class="text-slate-900 block mb-2">Length Constraints</strong>
+                                <p class="text-sm text-slate-600">"Answer in exactly 3 sentences." or "Summarize in under 50 words."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Role Playing -->
+                    <div class="tab-content hidden" id="tab2">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Persona Adoption</h3>
+                        <p class="text-slate-600 mb-4">Assigning a role changes the vocabulary, tone, and depth of the response.</p>
+                        
+                        <div class="grid gap-4">
+                            <div class="p-3 border rounded-lg bg-blue-50 border-blue-100">
+                                <strong class="text-blue-900">Role: Senior Engineer</strong>
+                                <p class="text-xs text-blue-800 mt-1">Output: Technical, concise, focuses on edge cases and scalability.</p>
+                            </div>
+                            <div class="p-3 border rounded-lg bg-green-50 border-green-100">
+                                <strong class="text-green-900">Role: Kindergarten Teacher</strong>
+                                <p class="text-xs text-green-800 mt-1">Output: Simple analogies, encouraging tone, avoids jargon.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Structured Output -->
+                    <div class="tab-content hidden" id="tab3">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">JSON Mode</h3>
+                        <p class="text-slate-600 mb-4">Don't parse regex. Ask for JSON.</p>
+                        <pre class="bg-slate-900 text-amber-300 p-4 rounded-lg text-sm font-mono overflow-x-auto">User: Extract the names and dates.
+
+System: You must output strictly valid JSON.
+Example: {"events": [{"name": "X", "date": "Y"}]}
+
+Output:
+{
+  "events": [
+    { "name": "Launch", "date": "2024-01-01" }
+  ]
+}
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="py-16 bg-slate-900 text-white" id="quiz">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Knowledge Check</h2>
+            <p class="text-center text-slate-400 mb-8">Test your Prompt Engineering skills.</p>
+            
+            <div class="space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">1. What is "Few-Shot" prompting?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Asking the model to answer in a few words.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Providing a few examples (input -&gt; output) in the prompt to guide the model.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Running the model a few times to get the best result.</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">2. Why is "Chain of Thought" useful?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">It makes the model faster.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">It improves reasoning capabilities by forcing the model to explain its steps.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">It connects multiple LLMs together.</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">3. What is the best way to get a JSON output?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Ask politely.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Explicitly instruct "Output valid JSON" and provide a JSON example schema.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">It is impossible for LLMs to output JSON.</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Diagram Logic
+        function runSimulation(type) {
+            const outputBox = document.getElementById('simulation-output');
+            const defaultInfo = document.getElementById('default-info');
+            
+            // Hide all infos first
+            document.getElementById('standard-info').classList.add('hidden');
+            document.getElementById('cot-info').classList.add('hidden');
+            defaultInfo.classList.add('hidden');
+
+            outputBox.innerHTML = '<div class="animate-pulse text-slate-500">Thinking...</div>';
+
+            setTimeout(() => {
+                if (type === 'standard') {
+                    outputBox.innerHTML = `
+                        <div class="text-slate-800 font-mono text-lg">
+                            "Answer: 6 apples."
+                        </div>
+                    `;
+                    outputBox.classList.remove('border-amber-400');
+                    outputBox.classList.add('border-slate-300');
+                    
+                    const info = document.getElementById('standard-info');
+                    info.classList.remove('hidden');
+                    setTimeout(() => info.classList.add('fade-enter-active'), 10);
+                } else {
+                    outputBox.innerHTML = `
+                        <div class="text-left font-mono text-sm text-slate-700 space-y-2">
+                            <p>1. Start with 5 apples.</p>
+                            <p>2. Eat 2: 5 - 2 = 3 apples left.</p>
+                            <p>3. Buy 3: 3 + 3 = 6 apples.</p>
+                            <p class="font-bold text-amber-600 pt-2 border-t border-slate-200">Answer: 6 apples.</p>
+                        </div>
+                    `;
+                    outputBox.classList.remove('border-slate-300');
+                    outputBox.classList.add('border-amber-400');
+
+                    const info = document.getElementById('cot-info');
+                    info.classList.remove('hidden');
+                    setTimeout(() => info.classList.add('fade-enter-active'), 10);
+                }
+            }, 800);
+        }
+
+        // Flip Card Logic
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+
+        // Tab Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('button[id^="btn-tab"]').forEach(btn => {
+                btn.classList.remove('text-amber-600', 'border-b-2', 'border-amber-600', 'bg-amber-50');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Show specific tab
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Activate specific button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-amber-600', 'border-b-2', 'border-amber-600', 'bg-amber-50');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Disable all buttons in this group
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            // Highlight selected
+            btn.classList.remove('opacity-50');
+            btn.classList.remove('bg-slate-700');
+            
+            if (isCorrect) {
+                btn.classList.add('bg-amber-600', 'border-amber-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">✅ Correct!</span>';
+            } else {
+                btn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">❌ Incorrect.</span>';
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.remove('opacity-50', 'bg-slate-700');
+                        b.classList.add('bg-amber-600', 'border-amber-400', 'text-white');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body></html>

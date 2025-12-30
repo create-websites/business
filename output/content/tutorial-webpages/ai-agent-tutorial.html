@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive tutorial on AI Agents. Learn about the ReAct loop, Tool use, Planning, and Memory." name="description"/>
+    <meta content="AI Agents, Autonomous Agents, ReAct, LLM, LangChain, AutoGPT, Tutorial, Interactive" name="keywords"/>
+    <title>AI Agents: From Chatbots to Do-Bots</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #e11d48; /* Rose-600 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-node {
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+        }
+        
+        code {
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="text-rose-600 w-8 h-8" data-lucide="bot"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Agent Edu</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-slate-600 hover:text-rose-600 transition-colors" href="#intro">Basics</a>
+                    <a class="text-slate-600 hover:text-rose-600 transition-colors" href="#react-diagram">The Loop</a>
+                    <a class="text-slate-600 hover:text-rose-600 transition-colors" href="#components">Components</a>
+                    <a class="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors" href="#quiz">Take Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-rose-900 to-slate-900 text-white py-24 overflow-hidden" id="intro">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fb7185 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">AI Agents <br/><span class="text-rose-400">From Chat to Action</span></h1>
+            <p class="text-xl text-rose-100 max-w-2xl mx-auto mb-10">
+                A chatbot talks. An agent acts. Learn how LLMs use tools, plan steps, and interact with the real world.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-rose-900 bg-rose-100 hover:bg-rose-200 transition-colors" href="#react-diagram">
+                    Visualize the Loop
+                    <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-rose-400 text-base font-medium rounded-md text-white hover:bg-white/10 transition-colors" href="#cards">
+                    Core Concepts
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fundamental Concepts (Flip Cards) -->
+    <section class="py-16 bg-white" id="cards">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">What makes an Agent?</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Agents add three superpowers to standard LLMs: Planning, Memory, and Tools.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
+                                <i class="w-6 h-6" data-lucide="wrench"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Tools</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Capability</h3>
+                            <p class="text-sm px-2">Agents can call external functions (APIs, Calculators, Google Search) to do things the LLM can't do alone.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-rose-100 rounded-lg flex items-center justify-center mb-4 text-rose-600">
+                                <i class="w-6 h-6" data-lucide="map"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Planning</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Decomposition</h3>
+                            <p class="text-sm px-2">Breaking a big goal ("Book a vacation") into smaller, manageable steps ("Search flights", "Book hotel").</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4 text-orange-600">
+                                <i class="w-6 h-6" data-lucide="brain"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Memory</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Context</h3>
+                            <p class="text-sm px-2">Short-term memory (conversation history) and Long-term memory (Vector DBs) allow agents to remember past actions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 text-purple-600">
+                                <i class="w-6 h-6" data-lucide="refresh-cw"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">ReAct</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Reason + Act</h3>
+                            <p class="text-sm px-2">A prompting pattern where the model "Thinks" about what to do, "Acts" (calls a tool), and "Observes" the output.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive ReAct Loop Diagram -->
+    <section class="py-16 bg-slate-50" id="react-diagram">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">Interactive: The Agent Loop</h2>
+            <p class="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+                Step through the lifecycle of an autonomous agent solving a problem.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Diagram Side -->
+                <div class="relative bg-white p-8 rounded-2xl shadow-sm border border-slate-200 min-h-[500px] flex flex-col items-center justify-center">
+                    
+                    <!-- Goal -->
+                    <div class="diagram-node w-2/3 bg-slate-100 border-2 border-slate-300 p-3 rounded-lg text-center mb-8" id="node-goal">
+                        <span class="font-bold text-slate-700">Goal: "What is the weather in Tokyo?"</span>
+                    </div>
+
+                    <!-- The Loop Circle -->
+                    <div class="relative w-64 h-64 rounded-full border-4 border-dashed border-rose-200 flex items-center justify-center">
+                        
+                        <!-- Thought -->
+                        <div class="absolute -top-6 bg-white border-2 border-rose-500 text-rose-600 p-2 rounded-lg font-bold shadow-sm cursor-pointer hover:bg-rose-50 transition-colors" id="node-thought" onclick="stepLoop('thought')">
+                            1. Thought
+                        </div>
+
+                        <!-- Action -->
+                        <div class="absolute -right-6 bg-white border-2 border-blue-500 text-blue-600 p-2 rounded-lg font-bold shadow-sm cursor-pointer hover:bg-blue-50 transition-colors" id="node-action" onclick="stepLoop('action')">
+                            2. Action
+                        </div>
+
+                        <!-- Observation -->
+                        <div class="absolute -bottom-6 bg-white border-2 border-green-500 text-green-600 p-2 rounded-lg font-bold shadow-sm cursor-pointer hover:bg-green-50 transition-colors" id="node-observation" onclick="stepLoop('observation')">
+                            3. Observation
+                        </div>
+
+                        <!-- Center Brain -->
+                        <div class="w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center shadow-lg">
+                            <i class="text-white w-10 h-10" data-lucide="brain-circuit"></i>
+                        </div>
+                    </div>
+
+                    <!-- Final Answer -->
+                    <div class="diagram-node w-2/3 bg-slate-800 text-white p-3 rounded-lg text-center mt-8 opacity-50 transition-opacity" id="node-final">
+                        <span class="font-bold">Final Answer</span>
+                    </div>
+
+                </div>
+
+                <!-- Info Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-rose-500 min-h-[400px] flex flex-col justify-center" id="info-panel">
+                    <div class="text-center" id="default-info">
+                        <i class="w-16 h-16 text-slate-300 mx-auto mb-4" data-lucide="play-circle"></i>
+                        <h3 class="text-xl font-bold text-slate-700">Start the Engine</h3>
+                        <p class="text-slate-500 mt-2">Click on the nodes in the circle (Thought -&gt; Action -&gt; Observation) to simulate the agent's reasoning.</p>
+                    </div>
+                    
+                    <!-- Dynamic Content -->
+                    <div class="hidden fade-enter" id="thought-info">
+                        <h3 class="text-2xl font-bold text-rose-900 mb-3 flex items-center gap-2">
+                            <i class="text-rose-500" data-lucide="lightbulb"></i> The Thought
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            The LLM analyzes the goal. It realizes it doesn't know the current weather in Tokyo because its training data is old.
+                        </p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-sm text-slate-700 border-l-4 border-rose-400">
+                            "I need to check the current weather. I should use the Weather API tool."
+                        </div>
+                    </div>
+
+                    <div class="hidden fade-enter" id="action-info">
+                        <h3 class="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
+                            <i class="text-blue-500" data-lucide="hammer"></i> The Action
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            The agent constructs a formatted command (often JSON) to call an external tool.
+                        </p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-sm text-slate-700 border-l-4 border-blue-400">
+                            { "tool": "weather_api", "query": "Tokyo, JP" }
+                        </div>
+                    </div>
+
+                    <div class="hidden fade-enter" id="observation-info">
+                        <h3 class="text-2xl font-bold text-green-900 mb-3 flex items-center gap-2">
+                            <i class="text-green-500" data-lucide="eye"></i> The Observation
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            The tool executes and returns real-world data. The agent reads this output.
+                        </p>
+                        <div class="bg-slate-100 p-3 rounded font-mono text-sm text-slate-700 border-l-4 border-green-400">
+                            API returned: "22°C, Sunny, Humidity 40%"
+                        </div>
+                        <p class="mt-4 text-sm text-slate-500">
+                            (The loop creates a new Thought: "I now have the answer.")
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Components Deep Dive -->
+    <section class="py-16 bg-white" id="components">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Inside the Agent</h2>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200 overflow-x-auto">
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-rose-600 border-b-2 border-rose-600 bg-rose-50 transition-colors whitespace-nowrap" id="btn-tab1" onclick="switchTab('tab1')">Planning</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-rose-600 transition-colors whitespace-nowrap" id="btn-tab2" onclick="switchTab('tab2')">Tools</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-rose-600 transition-colors whitespace-nowrap" id="btn-tab3" onclick="switchTab('tab3')">Frameworks</button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab 1: Planning -->
+                    <div class="tab-content block" id="tab1">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">How Agents Think</h3>
+                        <p class="text-slate-600 mb-4">Agents use advanced prompting strategies to break down complex tasks.</p>
+                        <div class="space-y-4">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <strong class="text-slate-900 block mb-2">Chain of Thought</strong>
+                                <p class="text-sm text-slate-600">Thinking step-by-step to avoid logical errors.</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <strong class="text-slate-900 block mb-2">Tree of Thoughts</strong>
+                                <p class="text-sm text-slate-600">Exploring multiple possibilities (branches) and selecting the most promising one.</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <strong class="text-slate-900 block mb-2">Reflexion</strong>
+                                <p class="text-sm text-slate-600">Reviewing past actions to self-correct ("Wait, that search failed, let me try a different keyword").</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Tools -->
+                    <div class="tab-content hidden" id="tab2">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Arms and Legs</h3>
+                        <p class="text-slate-600 mb-4">Without tools, an LLM is a brain in a jar. Tools connect it to the world.</p>
+                        
+                        <div class="grid gap-4">
+                            <div class="p-3 border rounded-lg bg-blue-50 border-blue-100 flex items-center gap-3">
+                                <i class="text-blue-600" data-lucide="globe"></i>
+                                <div>
+                                    <strong class="text-blue-900">Search</strong>
+                                    <p class="text-xs text-blue-800">Google / Bing (Retrieving real-time info)</p>
+                                </div>
+                            </div>
+                            <div class="p-3 border rounded-lg bg-green-50 border-green-100 flex items-center gap-3">
+                                <i class="text-green-600" data-lucide="calculator"></i>
+                                <div>
+                                    <strong class="text-green-900">Python REPL</strong>
+                                    <p class="text-xs text-green-800">Executing code for precise math/logic</p>
+                                </div>
+                            </div>
+                            <div class="p-3 border rounded-lg bg-purple-50 border-purple-100 flex items-center gap-3">
+                                <i class="text-purple-600" data-lucide="database"></i>
+                                <div>
+                                    <strong class="text-purple-900">Vector Store</strong>
+                                    <p class="text-xs text-purple-800">Retrieving long-term memory</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Frameworks -->
+                    <div class="tab-content hidden" id="tab3">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">Building Blocks</h3>
+                        <p class="text-slate-600 mb-4">Don't start from scratch. Use these libraries.</p>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-rose-500 w-5 h-5" data-lucide="layers"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">LangChain / LangGraph:</strong> 
+                                    <p class="text-sm text-slate-600">The industry standard. Highly composable, supports stateful multi-agent graphs.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-rose-500 w-5 h-5" data-lucide="users"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">CrewAI:</strong> 
+                                    <p class="text-sm text-slate-600">Focuses on "teams" of agents. You define a Researcher and a Writer, and they collaborate.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="mt-1"><i class="text-rose-500 w-5 h-5" data-lucide="zap"></i></div>
+                                <div>
+                                    <strong class="text-slate-900">AutoGPT:</strong> 
+                                    <p class="text-sm text-slate-600">One of the first autonomous agent experiments. Good for inspiration, less for production.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="py-16 bg-slate-900 text-white" id="quiz">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Knowledge Check</h2>
+            <p class="text-center text-slate-400 mb-8">Test your Agentic knowledge.</p>
+            
+            <div class="space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">1. What is the key difference between a Chatbot and an Agent?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Agents are faster.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Agents can take actions (use tools) to achieve a goal autonomously.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Chatbots only speak English.</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">2. What does "ReAct" stand for?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Response &amp; Action</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">ReactJS Framework</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Reason &amp; Act</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">3. Why does an agent need "Memory"?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">To remember past steps and observations so it doesn't get stuck in a loop.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">To store the entire internet.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Agents don't need memory.</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Diagram Logic
+        function stepLoop(part) {
+            // Hide default
+            document.getElementById('default-info').classList.add('hidden');
+            
+            // Hide all specific infos
+            ['thought-info', 'action-info', 'observation-info'].forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.add('hidden');
+                el.classList.remove('fade-enter-active'); // Reset animation state
+            });
+
+            // Show selected info
+            const selected = document.getElementById(part + '-info');
+            selected.classList.remove('hidden');
+            
+            // Small timeout to trigger CSS transition
+            setTimeout(() => {
+                selected.classList.add('fade-enter-active');
+            }, 10);
+
+            // Visual Feedback
+            document.getElementById('node-goal').classList.add('opacity-50'); // Dim goal to focus on loop
+            
+            if (part === 'observation') {
+                 // Reveal final answer node slightly to hint progress
+                 document.getElementById('node-final').classList.remove('opacity-50');
+                 document.getElementById('node-final').classList.add('opacity-100', 'bg-slate-900', 'scale-105');
+                 setTimeout(() => {
+                    document.getElementById('node-final').classList.remove('scale-105');
+                 }, 300);
+            }
+        }
+
+        // Flip Card Logic
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+
+        // Tab Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('button[id^="btn-tab"]').forEach(btn => {
+                btn.classList.remove('text-rose-600', 'border-b-2', 'border-rose-600', 'bg-rose-50');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Show specific tab
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Activate specific button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-rose-600', 'border-b-2', 'border-rose-600', 'bg-rose-50');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Disable all buttons in this group
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            // Highlight selected
+            btn.classList.remove('opacity-50');
+            btn.classList.remove('bg-slate-700');
+            
+            if (isCorrect) {
+                btn.classList.add('bg-rose-600', 'border-rose-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">✅ Correct!</span>';
+            } else {
+                btn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">❌ Incorrect.</span>';
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.remove('opacity-50', 'bg-slate-700');
+                        b.classList.add('bg-rose-600', 'border-rose-400', 'text-white');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body></html>

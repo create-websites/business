@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="Interactive tutorial on Multi-Agent Systems. Learn about Hierarchical, Sequential, and Joint agent architectures using CrewAI and AutoGen concepts." name="description"/>
+    <meta content="Multi-Agent Systems, AI Agents, Swarm Intelligence, CrewAI, AutoGen, LLM Orchestration, Tutorial" name="keywords"/>
+    <title>Multi-Agent Systems: The Power of Teams</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+
+        .flip-card-back {
+            background-color: #7c3aed; /* Violet-600 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .diagram-node {
+            transition: all 0.3s ease;
+        }
+        
+        .diagram-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+
+        /* Message Bubble Animation */
+        @keyframes floatMsg {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .msg-bubble {
+            animation: floatMsg 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="text-violet-600 w-8 h-8" data-lucide="users"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Swarm Edu</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a class="text-slate-600 hover:text-violet-600 transition-colors" href="#intro">Why Multi-Agent?</a>
+                    <a class="text-slate-600 hover:text-violet-600 transition-colors" href="#team-diagram">Orchestration</a>
+                    <a class="text-slate-600 hover:text-violet-600 transition-colors" href="#patterns">Architectures</a>
+                    <a class="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors" href="#quiz">Take Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-violet-900 to-slate-900 text-white py-24 overflow-hidden" id="intro">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#a78bfa 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Multi-Agent Systems <br/><span class="text-violet-400">The Power of the Swarm</span></h1>
+            <p class="text-xl text-violet-100 max-w-2xl mx-auto mb-10">
+                Stop trying to make one model do everything. Learn how to orchestrate specialized agents to solve complex problems together.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-violet-900 bg-violet-100 hover:bg-violet-200 transition-colors" href="#team-diagram">
+                    Visualize the Team
+                    <i class="ml-2 w-4 h-4" data-lucide="arrow-right"></i>
+                </a>
+                <a class="inline-flex items-center justify-center px-6 py-3 border border-violet-400 text-base font-medium rounded-md text-white hover:bg-white/10 transition-colors" href="#cards">
+                    Key Concepts
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Fundamental Concepts (Flip Cards) -->
+    <section class="py-16 bg-white" id="cards">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">Why build a team?</h2>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Just as you wouldn't hire one person to be CEO, Engineer, and Marketer, AI works better when roles are specialized.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
+                                <i class="w-6 h-6" data-lucide="award"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Specialization</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Expertise</h3>
+                            <p class="text-sm px-2">Assigning specific roles (e.g., "Python Coder", "Legal Analyst") creates narrower context windows and fewer hallucinations.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center mb-4 text-violet-600">
+                                <i class="w-6 h-6" data-lucide="network"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Collaboration</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Handoffs</h3>
+                            <p class="text-sm px-2">Agents pass tasks to each other. A "Researcher" finds facts, passes them to a "Writer" to draft, who passes to an "Editor" to refine.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4 text-orange-600">
+                                <i class="w-6 h-6" data-lucide="crown"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Manager Agent</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">The Orchestrator</h3>
+                            <p class="text-sm px-2">A central agent that breaks down user requests and delegates sub-tasks to the correct worker agents.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="flip-card h-72" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 text-green-600">
+                                <i class="w-6 h-6" data-lucide="message-square"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Dialogue</h3>
+                            <p class="text-sm text-slate-500 mt-2">(Click to reveal)</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="font-bold mb-2">Iterative Refinement</h3>
+                            <p class="text-sm px-2">Agents can "chat" with each other to critique and improve work before showing it to the human.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Team Diagram -->
+    <section class="py-16 bg-slate-50" id="team-diagram">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4 text-center">Interactive: Hierarchical Team</h2>
+            <p class="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+                See how a Manager Agent delegates a task to create a blog post about "SpaceX".
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Diagram Side -->
+                <div class="relative bg-white p-8 rounded-2xl shadow-sm border border-slate-200 min-h-[500px] flex flex-col items-center">
+                    
+                    <!-- Manager Node -->
+                    <div class="diagram-node w-40 bg-violet-100 border-2 border-violet-500 p-4 rounded-xl text-center cursor-pointer mb-12 z-10" id="agent-manager" onclick="triggerFlow('manager')">
+                        <div class="w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center mx-auto mb-2 text-white">
+                            <i data-lucide="crown"></i>
+                        </div>
+                        <span class="font-bold text-violet-900">Manager</span>
+                    </div>
+
+                    <!-- Connectors -->
+                    <div class="absolute top-[120px] w-64 h-20 border-l-2 border-r-2 border-t-2 border-slate-300 rounded-t-xl -z-0"></div>
+                    <div class="absolute top-[120px] h-20 border-l-2 border-slate-300 -z-0"></div>
+
+                    <!-- Worker Nodes -->
+                    <div class="flex gap-8 mt-4">
+                        <!-- Researcher -->
+                        <div class="diagram-node w-32 bg-blue-50 border-2 border-blue-300 p-3 rounded-xl text-center cursor-pointer opacity-50" id="agent-researcher" onclick="triggerFlow('researcher')">
+                            <div class="w-8 h-8 bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-2 text-blue-600">
+                                <i data-lucide="search"></i>
+                            </div>
+                            <span class="font-bold text-blue-900 text-sm">Researcher</span>
+                        </div>
+
+                        <!-- Writer -->
+                        <div class="diagram-node w-32 bg-green-50 border-2 border-green-300 p-3 rounded-xl text-center cursor-pointer opacity-50" id="agent-writer" onclick="triggerFlow('writer')">
+                            <div class="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center mx-auto mb-2 text-green-600">
+                                <i data-lucide="pen-tool"></i>
+                            </div>
+                            <span class="font-bold text-green-900 text-sm">Writer</span>
+                        </div>
+
+                        <!-- Editor -->
+                        <div class="diagram-node w-32 bg-orange-50 border-2 border-orange-300 p-3 rounded-xl text-center cursor-pointer opacity-50" id="agent-editor" onclick="triggerFlow('editor')">
+                            <div class="w-8 h-8 bg-orange-200 rounded-full flex items-center justify-center mx-auto mb-2 text-orange-600">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                            <span class="font-bold text-orange-900 text-sm">Editor</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Message Area -->
+                    <div class="mt-8 w-full bg-slate-50 border border-slate-200 p-4 rounded-lg min-h-[100px] flex items-center justify-center text-center italic text-slate-400" id="flow-message">
+                        Click the Manager to start the workflow...
+                    </div>
+
+                </div>
+
+                <!-- Info Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-violet-500 min-h-[400px] flex flex-col justify-center" id="info-panel">
+                    <div class="text-center" id="default-info">
+                        <i class="w-16 h-16 text-slate-300 mx-auto mb-4" data-lucide="layout-dashboard"></i>
+                        <h3 class="text-xl font-bold text-slate-700">Orchestration View</h3>
+                        <p class="text-slate-500 mt-2">Follow the delegation process. The Manager receives a goal and breaks it down for the workers.</p>
+                    </div>
+                    
+                    <!-- Dynamic Content -->
+                    <div class="hidden fade-enter" id="manager-info">
+                        <h3 class="text-2xl font-bold text-violet-900 mb-3 flex items-center gap-2">
+                            <i class="text-violet-500" data-lucide="crown"></i> The Manager
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            <strong>Role:</strong> Project Manager.<br/>
+                            <strong>Goal:</strong> "Write a factual blog post about SpaceX's latest launch."
+                        </p>
+                        <p class="text-slate-600 text-sm">
+                            The Manager realizes this task needs facts first, then writing, then checking. It activates the <strong>Researcher</strong> first.
+                        </p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="researcher-info">
+                        <h3 class="text-2xl font-bold text-blue-900 mb-3 flex items-center gap-2">
+                            <i class="text-blue-500" data-lucide="search"></i> The Researcher
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            <strong>Role:</strong> Senior Data Analyst.<br/>
+                            <strong>Tools:</strong> Web Search, Scraper.
+                        </p>
+                        <p class="text-slate-600 text-sm">
+                            It uses tools to find the latest dates, stats, and outcomes of the launch. It produces a bulleted list of facts and passes it back.
+                        </p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="writer-info">
+                        <h3 class="text-2xl font-bold text-green-900 mb-3 flex items-center gap-2">
+                            <i class="text-green-500" data-lucide="pen-tool"></i> The Writer
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            <strong>Role:</strong> Tech Content Writer.<br/>
+                            <strong>Tools:</strong> None (Pure LLM).
+                        </p>
+                        <p class="text-slate-600 text-sm">
+                            It takes the Researcher's notes and turns them into an engaging narrative. It focuses on tone and flow, trusting the facts provided.
+                        </p>
+                    </div>
+
+                    <div class="hidden fade-enter" id="editor-info">
+                        <h3 class="text-2xl font-bold text-orange-900 mb-3 flex items-center gap-2">
+                            <i class="text-orange-500" data-lucide="check-circle"></i> The Editor
+                        </h3>
+                        <p class="text-slate-700 mb-4">
+                            <strong>Role:</strong> Quality Assurance.<br/>
+                            <strong>Tools:</strong> Formatting checker.
+                        </p>
+                        <p class="text-slate-600 text-sm">
+                            It reviews the draft. If it finds the tone too casual, it might ask the Writer to revise. Otherwise, it approves the final output.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Patterns -->
+    <section class="py-16 bg-white" id="patterns">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Team Architectures</h2>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="flex border-b border-slate-200 overflow-x-auto">
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-violet-600 border-b-2 border-violet-600 bg-violet-50 transition-colors whitespace-nowrap" id="btn-tab1" onclick="switchTab('tab1')">Sequential</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-violet-600 transition-colors whitespace-nowrap" id="btn-tab2" onclick="switchTab('tab2')">Hierarchical</button>
+                    <button class="flex-1 py-4 px-4 text-center font-medium text-slate-500 hover:text-violet-600 transition-colors whitespace-nowrap" id="btn-tab3" onclick="switchTab('tab3')">Joint (Swarm)</button>
+                </div>
+                
+                <div class="p-8 min-h-[300px]">
+                    <!-- Tab 1: Sequential -->
+                    <div class="tab-content block" id="tab1">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">The Assembly Line</h3>
+                        <p class="text-slate-600 mb-4">One agent finishes, passes output to the next.</p>
+                        <div class="flex items-center gap-4 text-sm font-mono bg-slate-100 p-4 rounded-lg">
+                            <div class="bg-white p-2 border rounded">Input</div>
+                            <i class="text-slate-400" data-lucide="arrow-right"></i>
+                            <div class="bg-blue-100 p-2 border border-blue-300 rounded text-blue-800">Agent A</div>
+                            <i class="text-slate-400" data-lucide="arrow-right"></i>
+                            <div class="bg-green-100 p-2 border border-green-300 rounded text-green-800">Agent B</div>
+                            <i class="text-slate-400" data-lucide="arrow-right"></i>
+                            <div class="bg-white p-2 border rounded">Output</div>
+                        </div>
+                        <p class="mt-4 text-sm text-slate-500"><strong>Best for:</strong> Clearly defined workflows like "Research -&gt; Write -&gt; Translate".</p>
+                    </div>
+
+                    <!-- Tab 2: Hierarchical -->
+                    <div class="tab-content hidden" id="tab2">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">The Corporate Ladder</h3>
+                        <p class="text-slate-600 mb-4">A "Boss" agent decides who does what and reviews the work.</p>
+                        <ul class="space-y-3">
+                            <li class="flex gap-2 items-center">
+                                <i class="text-green-500" data-lucide="check"></i>
+                                <span>Can handle complex, dynamic tasks.</span>
+                            </li>
+                            <li class="flex gap-2 items-center">
+                                <i class="text-green-500" data-lucide="check"></i>
+                                <span>The manager can reject work and ask for redo.</span>
+                            </li>
+                        </ul>
+                        <p class="mt-4 text-sm text-slate-500"><strong>Best for:</strong> Complex projects requiring quality control (e.g., Software Development).</p>
+                    </div>
+
+                    <!-- Tab 3: Joint -->
+                    <div class="tab-content hidden" id="tab3">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">The Round Table</h3>
+                        <p class="text-slate-600 mb-4">Agents talk to each other freely to solve a problem together.</p>
+                        <div class="p-4 bg-violet-50 border border-violet-100 rounded-lg">
+                            <p class="text-sm text-violet-800 italic">"Agent A (Developer) and Agent B (QA) debate a bug fix until they agree on the solution."</p>
+                        </div>
+                        <p class="mt-4 text-sm text-slate-500"><strong>Best for:</strong> Creative brainstorming or difficult debugging where one-way handoff isn't enough.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="py-16 bg-slate-900 text-white" id="quiz">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Knowledge Check</h2>
+            <p class="text-center text-slate-400 mb-8">Test your Orchestration skills.</p>
+            
+            <div class="space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">1. Why use multiple agents instead of one big prompt?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">It is cheaper.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Specialization reduces hallucinations and improves focus on specific sub-tasks.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">It uses more electricity.</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">2. In a Hierarchical architecture, what is the role of the Manager?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">To do all the work itself.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">To fetch coffee.</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">To delegate tasks to workers and validate the results.</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <p class="text-lg font-semibold mb-4">3. Which pattern describes agents passing work in a straight line?</p>
+                    <div class="space-y-2">
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, true)">Sequential</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Round Robin</button>
+                        <button class="w-full text-left p-3 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors border border-slate-600" onclick="checkAnswer(this, false)">Random Walk</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Diagram Logic
+        function triggerFlow(role) {
+            // Reset UI
+            document.querySelectorAll('.diagram-node').forEach(node => {
+                node.classList.remove('ring-4', 'ring-violet-400', 'ring-blue-400', 'ring-green-400', 'ring-orange-400', 'opacity-100');
+                if(node.id !== 'agent-manager') node.classList.add('opacity-50');
+            });
+            document.getElementById('agent-manager').classList.remove('opacity-50'); // Manager always visible
+
+            // Hide all infos
+            ['manager-info', 'researcher-info', 'writer-info', 'editor-info'].forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.add('hidden');
+                el.classList.remove('fade-enter-active');
+            });
+            document.getElementById('default-info').classList.add('hidden');
+
+            const msgBox = document.getElementById('flow-message');
+            msgBox.classList.remove('italic', 'text-slate-400');
+            msgBox.classList.add('text-slate-800', 'font-medium', 'msg-bubble');
+
+            // Handle Click
+            if (role === 'manager') {
+                document.getElementById('agent-manager').classList.add('ring-4', 'ring-violet-400');
+                msgBox.innerHTML = '"I have a new goal: Write a blog about SpaceX. Researcher, I need facts!"';
+                document.getElementById('agent-researcher').classList.remove('opacity-50'); // Hint next step
+                
+                showInfo('manager');
+            } 
+            else if (role === 'researcher') {
+                document.getElementById('agent-researcher').classList.add('ring-4', 'ring-blue-400', 'opacity-100');
+                msgBox.innerHTML = '"Searching web... Found launch date (Oct 13), Success status, and payload details. Passing to Writer."';
+                document.getElementById('agent-writer').classList.remove('opacity-50'); // Hint next step
+                
+                showInfo('researcher');
+            }
+            else if (role === 'writer') {
+                document.getElementById('agent-writer').classList.add('ring-4', 'ring-green-400', 'opacity-100');
+                msgBox.innerHTML = '"Drafting content... \'SpaceX achieves new milestone...\' Draft complete. Sending to Editor."';
+                document.getElementById('agent-editor').classList.remove('opacity-50'); // Hint next step
+                
+                showInfo('writer');
+            }
+            else if (role === 'editor') {
+                document.getElementById('agent-editor').classList.add('ring-4', 'ring-orange-400', 'opacity-100');
+                msgBox.innerHTML = '"Checking facts... Tone looks good... No grammar errors. Approved for publishing!"';
+                
+                showInfo('editor');
+            }
+
+            // Reset animation
+            msgBox.style.animation = 'none';
+            msgBox.offsetHeight; /* trigger reflow */
+            msgBox.style.animation = 'floatMsg 0.5s ease forwards';
+        }
+
+        function showInfo(id) {
+            const el = document.getElementById(id + '-info');
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('fade-enter-active'), 10);
+        }
+
+        // Flip Card Logic
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+
+        // Tab Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('button[id^="btn-tab"]').forEach(btn => {
+                btn.classList.remove('text-violet-600', 'border-b-2', 'border-violet-600', 'bg-violet-50');
+                btn.classList.add('text-slate-500');
+            });
+
+            // Show specific tab
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Activate specific button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-violet-600', 'border-b-2', 'border-violet-600', 'bg-violet-50');
+            activeBtn.classList.remove('text-slate-500');
+        }
+
+        // Quiz Logic
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const buttons = parent.querySelectorAll('button');
+            
+            // Disable all buttons in this group
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            // Highlight selected
+            btn.classList.remove('opacity-50');
+            btn.classList.remove('bg-slate-700');
+            
+            if (isCorrect) {
+                btn.classList.add('bg-violet-600', 'border-violet-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">✅ Correct!</span>';
+            } else {
+                btn.classList.add('bg-red-600', 'border-red-400', 'text-white');
+                btn.innerHTML += ' <span class="ml-2">❌ Incorrect.</span>';
+                
+                // Highlight the correct one
+                buttons.forEach(b => {
+                    if (b.getAttribute('onclick').includes('true')) {
+                        b.classList.remove('opacity-50', 'bg-slate-700');
+                        b.classList.add('bg-violet-600', 'border-violet-400', 'text-white');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body></html>
