@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>Kreate – Card Dashboard (Lo-Fi)</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --border:#e5e7eb;
+      --text:#111827;
+      --muted:#6b7280;
+      --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .container{ max-width: 1440px; margin: 0 auto; }
+
+    /* NAV */
+    .nav{
+      height:64px; background:var(--card);
+      border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:10;
+    }
+    .nav-inner{
+      height:100%; padding:0 80px;
+      display:flex; align-items:center; gap:20px;
+    }
+    .brand{ font-weight:800; letter-spacing:.2px; }
+    .pill{
+      height:32px; padding:0 12px; border-radius:999px;
+      border:1px solid var(--border); display:inline-flex; align-items:center;
+      font-size:13px; color:var(--muted); background:#fff;
+    }
+    .nav-left,.nav-right{ display:flex; align-items:center; gap:10px; white-space:nowrap; }
+    .nav-center{ flex:1; display:flex; align-items:center; }
+    .search{
+      width:100%; height:42px; border:1px solid var(--border);
+      border-radius:12px; padding:0 14px;
+      display:flex; align-items:center; color:var(--muted); background:#fff;
+    }
+    .btn{
+      height:36px; padding:0 12px; border-radius:10px;
+      border:1px solid var(--border); background:#fff; cursor:pointer;
+      font-size:14px;
+    }
+
+    /* LAYOUT */
+    .page{
+      padding:28px 80px 80px;
+      display:flex; flex-direction:column; gap:22px;
+    }
+    .header{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+      margin-top:8px;
+    }
+    h1{ margin:0; font-size:22px; line-height:1.2; }
+    .sub{ color:var(--muted); font-size:14px; margin-top:6px; }
+
+    /* CARDS */
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .card-pad{ padding:16px; }
+    .row{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr; /* dashboard balance */
+      gap:16px;
+    }
+    .kpi{
+      display:flex; flex-direction:column; gap:6px;
+      min-height:88px;
+    }
+    .kpi .label{ color:var(--muted); font-size:13px; }
+    .kpi .value{ font-size:22px; font-weight:800; }
+    .kpi .hint{ color:var(--muted); font-size:12px; }
+
+    /* MAIN GRID (2 columns: left content + right sidebar) */
+    .main{
+      display:grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    /* ACTION CARDS */
+    .actions{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:16px;
+    }
+    .action-card{
+      min-height:140px;
+      display:flex; flex-direction:column; gap:10px;
+      padding:16px;
+    }
+    .action-top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+    }
+    .icon{
+      width:34px; height:34px; border-radius:12px;
+      border:1px solid var(--border); background:#fff;
+    }
+    .title{ font-weight:800; }
+    .desc{ color:var(--muted); font-size:13px; line-height:1.35; }
+    .cta{
+      margin-top:auto;
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      font-size:13px; color:var(--muted);
+      padding-top:10px; border-top:1px solid var(--border);
+    }
+
+    /* TEMPLATES */
+    .chips{ display:flex; gap:10px; overflow:auto; padding:10px 0 2px; }
+    .chip{
+      height:40px; padding:0 14px; border-radius:999px;
+      border:1px solid var(--border); background:#fff; white-space:nowrap;
+      display:inline-flex; align-items:center; font-size:13px;
+    }
+
+    /* PROJECTS GRID */
+    .projects-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    .project-card{
+      padding:14px;
+      display:flex; flex-direction:column; gap:10px;
+      min-height:110px;
+    }
+    .meta{ color:var(--muted); font-size:12px; }
+    .project-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .project-dot{
+      width:10px; height:10px; border-radius:999px;
+      border:1px solid var(--border); background:#fff;
+    }
+
+    /* ASSETS GRID */
+    .tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .tab{
+      height:32px; padding:0 12px; border-radius:999px;
+      border:1px solid var(--border); background:#fff; font-size:13px;
+    }
+    .tab.active{ background:#f3f4f6; border-color:#cbd5e1; }
+    .assets-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    .asset-card{
+      padding:12px;
+      display:flex; flex-direction:column; gap:10px;
+      min-height:140px;
+    }
+    .thumb{
+      height:62px; border-radius:12px;
+      border:1px dashed var(--border); background:#fff;
+    }
+
+    /* SIDEBAR LISTS */
+    .list{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+    .item{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:10px 0; border-top:1px solid var(--border);
+      font-size:13px;
+    }
+    .item:first-child{ border-top:none; padding-top:0; }
+    .left{
+      display:flex; flex-direction:column; gap:2px;
+      min-width:0;
+    }
+    .left .name{
+      font-weight:650;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      max-width: 240px;
+    }
+    .right{ color:var(--muted); white-space:nowrap; }
+
+    /* FAB */
+    .fab{
+      position:fixed; right:24px; bottom:24px;
+      width:56px; height:56px; border-radius:999px;
+      border:1px solid var(--border); background:#fff;
+      box-shadow: var(--shadow);
+      display:flex; align-items:center; justify-content:center;
+      font-size:24px; cursor:pointer;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px){
+      .nav-inner, .page{ padding-left:24px; padding-right:24px; }
+      .row{ grid-template-columns: repeat(2,1fr); }
+      .main{ grid-template-columns: 1fr; }
+      .projects-grid{ grid-template-columns: repeat(2,1fr); }
+      .assets-grid{ grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 640px){
+      .projects-grid{ grid-template-columns: 1fr; }
+      .assets-grid{ grid-template-columns: 1fr; }
+      .actions{ grid-template-columns: 1fr; }
+      .nav-right{ display:none; }
+      h1{ font-size:18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <div class="brand">Kreate</div>
+        <span class="pill">Projects ▾</span>
+        <span class="pill">Asset Library</span>
+      </div>
+
+      <div class="nav-center">
+        <div class="search">Create an asset, experience, or AI assistant… (⌘K)</div>
+      </div>
+
+      <div class="nav-right">
+        <button class="btn">Create ▾</button>
+        <span class="pill">🔔</span>
+        <span class="pill">Avatar</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container page">
+    <!-- HEADER -->
+    <section class="header">
+      <div>
+        <h1>Dashboard</h1>
+        <div class="sub">Pick a creation lane, resume recent work, or start from a template.</div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="btn">New Project</button>
+        <button class="btn">Import</button>
+      </div>
+    </section>
+
+    <!-- KPI ROW -->
+    <section class="row">
+      <div class="card card-pad kpi">
+        <div class="label">Assets created (7 days)</div>
+        <div class="value">24</div>
+        <div class="hint">Docs · images · slides · data</div>
+      </div>
+      <div class="card card-pad kpi">
+        <div class="label">Experiences published</div>
+        <div class="value">6</div>
+        <div class="hint">Pages · websites · SEO</div>
+      </div>
+      <div class="card card-pad kpi">
+        <div class="label">Assistants running</div>
+        <div class="value">3</div>
+        <div class="hint">Internal + customer-facing</div>
+      </div>
+      <div class="card card-pad kpi">
+        <div class="label">Automations active</div>
+        <div class="value">2</div>
+        <div class="hint">Scheduled workflows</div>
+      </div>
+    </section>
+
+    <!-- MAIN GRID -->
+    <section class="main">
+      <!-- LEFT -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <!-- ACTION CARDS -->
+        <div class="actions">
+          <div class="card action-card">
+            <div class="action-top">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div class="icon"></div>
+                <div>
+                  <div class="title">Create Assets</div>
+                  <div class="desc">Data · content · visuals — generate building blocks fast.</div>
+                </div>
+              </div>
+              <div class="pill">New</div>
+            </div>
+            <div class="cta">
+              <span>Docs, images, slides, structured data</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <div class="card action-card">
+            <div class="action-top">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div class="icon"></div>
+                <div>
+                  <div class="title">Create Experiences</div>
+                  <div class="desc">Webpages, landing pages, and full websites with SEO.</div>
+                </div>
+              </div>
+              <div class="pill">Build</div>
+            </div>
+            <div class="cta">
+              <span>Pages · sites · forms · SEO</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <div class="card action-card">
+            <div class="action-top">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div class="icon"></div>
+                <div>
+                  <div class="title">Create AI Assistants</div>
+                  <div class="desc">Task-aware copilots backed by your knowledge and tools.</div>
+                </div>
+              </div>
+              <div class="pill">Assist</div>
+            </div>
+            <div class="cta">
+              <span>Agents · copilots · knowledge bots</span>
+              <span>→</span>
+            </div>
+          </div>
+
+          <div class="card action-card">
+            <div class="action-top">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div class="icon"></div>
+                <div>
+                  <div class="title">Automate</div>
+                  <div class="desc">Connect assets → experiences → assistants into workflows.</div>
+                </div>
+              </div>
+              <div class="pill">Pro</div>
+            </div>
+            <div class="cta">
+              <span>Triggers · schedules · integrations</span>
+              <span>→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK START -->
+        <div class="card card-pad">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <h2>Start fast</h2>
+            <span class="pill">Templates</span>
+          </div>
+          <div class="chips">
+            <div class="chip">Blog → SEO page</div>
+            <div class="chip">Slides from doc</div>
+            <div class="chip">Landing page</div>
+            <div class="chip">AI assistant from files</div>
+            <div class="chip">Website from idea</div>
+          </div>
+        </div>
+
+        <!-- PROJECTS -->
+        <div class="card card-pad">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <h2>Projects</h2>
+            <span class="pill">View all →</span>
+          </div>
+          <div class="projects-grid">
+            <div class="card project-card" style="box-shadow:none;">
+              <div class="project-top">
+                <div style="font-weight:800;">Marketing Site</div>
+                <div class="project-dot"></div>
+              </div>
+              <div class="meta">Updated 2h ago</div>
+              <div class="meta">3 assets · 1 page · 1 assistant</div>
+            </div>
+
+            <div class="card project-card" style="box-shadow:none;">
+              <div class="project-top">
+                <div style="font-weight:800;">Sales Deck</div>
+                <div class="project-dot"></div>
+              </div>
+              <div class="meta">Updated yesterday</div>
+              <div class="meta">8 slides · 2 images</div>
+            </div>
+
+            <div class="card project-card" style="box-shadow:none;">
+              <div class="project-top">
+                <div style="font-weight:800;">Product Launch</div>
+                <div class="project-dot"></div>
+              </div>
+              <div class="meta">Updated 3d ago</div>
+              <div class="meta">SEO page · blog · assets</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ASSETS -->
+        <div class="card card-pad">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <h2>Your Assets</h2>
+            <span class="pill">Open library →</span>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active">All</button>
+            <button class="tab">Data</button>
+            <button class="tab">Content</button>
+            <button class="tab">Visuals</button>
+            <button class="tab">Experiences</button>
+            <button class="tab">Assistants</button>
+          </div>
+
+          <div class="assets-grid">
+            <div class="card asset-card" style="box-shadow:none;">
+              <div class="thumb"></div>
+              <div style="font-weight:800;">Q4 Report</div>
+              <div class="meta">Document · 2h ago</div>
+            </div>
+            <div class="card asset-card" style="box-shadow:none;">
+              <div class="thumb"></div>
+              <div style="font-weight:800;">Hero Image</div>
+              <div class="meta">Visual · yesterday</div>
+            </div>
+            <div class="card asset-card" style="box-shadow:none;">
+              <div class="thumb"></div>
+              <div style="font-weight:800;">Pitch Deck</div>
+              <div class="meta">Slides · 2d ago</div>
+            </div>
+            <div class="card asset-card" style="box-shadow:none;">
+              <div class="thumb"></div>
+              <div style="font-weight:800;">SEO Landing</div>
+              <div class="meta">Experience · 5d ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card card-pad">
+          <h2>Recent Activity</h2>
+          <div class="list">
+            <div class="item">
+              <div class="left">
+                <div class="name">Generated slides: “Sales Deck v3”</div>
+                <div class="meta">Slides · 12 minutes ago</div>
+              </div>
+              <div class="right">Open →</div>
+            </div>
+            <div class="item">
+              <div class="left">
+                <div class="name">Published: “SEO Landing /pricing”</div>
+                <div class="meta">Experience · 2 hours ago</div>
+              </div>
+              <div class="right">View →</div>
+            </div>
+            <div class="item">
+              <div class="left">
+                <div class="name">Updated assistant: “Support Copilot”</div>
+                <div class="meta">Assistant · yesterday</div>
+              </div>
+              <div class="right">Edit →</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <h2>Recommended</h2>
+          <div class="list">
+            <div class="item">
+              <div class="left">
+                <div class="name">Turn your blog into a landing page</div>
+                <div class="meta">1 click flow</div>
+              </div>
+              <div class="right">→</div>
+            </div>
+            <div class="item">
+              <div class="left">
+                <div class="name">Create an AI assistant from “Marketing Site”</div>
+                <div class="meta">Use project knowledge</div>
+              </div>
+              <div class="right">→</div>
+            </div>
+            <div class="item">
+              <div class="left">
+                <div class="name">Add SEO metadata to “Pricing Page”</div>
+                <div class="meta">Improve discoverability</div>
+              </div>
+              <div class="right">→</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <h2>Quick Actions</h2>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+            <button class="btn" style="width:100%; height:40px; border-radius:12px;">Create Asset</button>
+            <button class="btn" style="width:100%; height:40px; border-radius:12px;">Create Experience</button>
+            <button class="btn" style="width:100%; height:40px; border-radius:12px;">Create AI Assistant</button>
+            <button class="btn" style="width:100%; height:40px; border-radius:12px;">Create Automation</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+  <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer></main>
+
+  <button aria-label="Create" class="fab">+</button>
+
+
+</body></html>
