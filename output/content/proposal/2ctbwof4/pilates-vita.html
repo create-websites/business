@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Meta Description & Keywords -->
+    <meta name="description" content="Experience personalized Pilates training at Pilates Vita in South Kensington, London. Master Physio-Pilates instructors offering Private 1-1, Reformer, Pre/Post-Natal, and Duet sessions in a luxurious studio. Get 10% off your first session.">
+    <meta name="keywords" content="Pilates London, Pilates South Kensington, Private Pilates, Reformer Pilates, Physio-Pilates, Pre-Natal Pilates, Post-Natal Pilates, Men's Pilates, Boutique Pilates Studio, Pilates Vita">
+    <meta name="author" content="Pilates Vita">
+    
+    <title>Pilates Vita | Private & Boutique Pilates Studio South Kensington</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'vita-gold': '#C5A065',
+                        'vita-dark': '#2C2C2C',
+                        'vita-cream': '#F9F8F6',
+                        'vita-gray': '#8A8A8A',
+                        'vita-sage': '#E3E8E3',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Lato"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities */
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="font-sans text-vita-dark bg-vita-cream antialiased selection:bg-vita-gold selection:text-white">
+
+    <!-- Promo Banner -->
+    <div class="bg-vita-dark text-white text-center py-2 text-sm tracking-wide">
+        <span class="font-serif italic">New Client Special:</span> 10% off your first session. <a href="#contact" class="underline decoration-vita-gold underline-offset-4 hover:text-vita-gold transition">Inquire Now</a>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="font-serif text-2xl font-bold tracking-widest text-vita-dark uppercase border-b-2 border-vita-gold pb-1">
+                        Pilates Vita
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#about" class="text-sm uppercase tracking-widest hover:text-vita-gold transition duration-300">About</a>
+                    <a href="#services" class="text-sm uppercase tracking-widest hover:text-vita-gold transition duration-300">Sessions</a>
+                    <a href="#studio" class="text-sm uppercase tracking-widest hover:text-vita-gold transition duration-300">The Studio</a>
+                    <a href="#reviews" class="text-sm uppercase tracking-widest hover:text-vita-gold transition duration-300">Reviews</a>
+                    <a href="#contact" class="bg-vita-dark text-white px-6 py-2 text-sm uppercase tracking-widest hover:bg-vita-gold transition duration-300">Book Now</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-vita-dark hover:text-vita-gold focus:outline-none">
+                        <i data-lucide="menu" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full">
+            <div class="px-4 pt-2 pb-6 space-y-2 text-center">
+                <a href="#about" class="block py-3 text-base font-medium text-gray-700 hover:text-vita-gold border-b border-gray-100">About</a>
+                <a href="#services" class="block py-3 text-base font-medium text-gray-700 hover:text-vita-gold border-b border-gray-100">Sessions</a>
+                <a href="#studio" class="block py-3 text-base font-medium text-gray-700 hover:text-vita-gold border-b border-gray-100">The Studio</a>
+                <a href="#reviews" class="block py-3 text-base font-medium text-gray-700 hover:text-vita-gold border-b border-gray-100">Reviews</a>
+                <a href="#contact" class="block py-3 mt-4 text-base font-bold text-white bg-vita-dark mx-10">Book Session</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen hero-bg flex items-center justify-center text-center px-4">
+        <div class="relative z-10 max-w-4xl mx-auto fade-in-up pt-16">
+            <p class="text-white/90 text-sm md:text-base uppercase tracking-[0.3em] mb-4">South Kensington, London</p>
+            <h1 class="text-5xl md:text-7xl font-serif text-white font-bold mb-6 text-shadow leading-tight">
+                Tailored to <br/> <span class="italic font-light">Your Body</span>
+            </h1>
+            <p class="text-white/90 text-lg md:text-xl font-light mb-10 max-w-2xl mx-auto leading-relaxed">
+                A boutique studio blending classical Pilates with modern physiotherapy. Experience private, personal, and attentive training designed for your unique needs.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#services" class="bg-vita-gold text-white px-8 py-3 uppercase tracking-widest text-sm font-bold hover:bg-white hover:text-vita-gold transition duration-300 border border-vita-gold">
+                    View Sessions
+                </a>
+                <a href="#contact" class="bg-transparent border border-white text-white px-8 py-3 uppercase tracking-widest text-sm font-bold hover:bg-white hover:text-vita-dark transition duration-300">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#about" class="text-white/80 hover:text-white">
+                <i data-lucide="arrow-down" class="w-8 h-8"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- About / Philosophy Section -->
+    <section id="about" class="py-20 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="relative">
+                    <div class="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-vita-gold"></div>
+                    <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80" alt="Pilates Instructor adjusting posture" class="w-full h-auto object-cover grayscale hover:grayscale-0 transition duration-700 ease-in-out shadow-xl">
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-vita-gold"></div>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-vita-gold uppercase tracking-widest mb-2">Our Philosophy</h2>
+                    <h3 class="text-3xl md:text-4xl font-serif font-bold text-vita-dark mb-6">Precision, Control, and Personal Care</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Founded by Patricia A. Robinson, a Second Generation Master Instructor, Pilates Vita is more than just a workout. We focus on Joseph Pilates' original "Contrology" method, integrated with modern physiotherapy principles.
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Whether you are recovering from an injury, looking to improve athletic performance, or simply want to reconnect with your body, our studio offers a safe, non-judgmental space tailored to helping you achieve a balanced, healthy life.
+                    </p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-700">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-vita-gold mr-3"></i>
+                            Master Physio-Pilates Instructors
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-vita-gold mr-3"></i>
+                            Private & Semi-Private Focus
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-vita-gold mr-3"></i>
+                            Classical & Contemporary Equipment
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-vita-cream relative overflow-hidden">
+        <!-- Decorative Background Element -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-white rounded-full opacity-50 blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-sm font-bold text-vita-gold uppercase tracking-widest mb-2">Our Services</h2>
+                <h3 class="text-3xl md:text-4xl font-serif font-bold text-vita-dark">Session Types</h3>
+                <p class="mt-4 text-gray-500 max-w-2xl mx-auto">
+                    From rehabilitation to high-intensity athletic conditioning, we offer a range of sessions suited to your individual goals.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Card 1: Private 1-1 -->
+                <div class="bg-white p-8 shadow-sm hover:shadow-xl transition duration-300 border-t-4 border-vita-gold group">
+                    <div class="h-12 w-12 bg-vita-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-vita-gold transition duration-300">
+                        <i data-lucide="user" class="w-6 h-6 text-vita-dark group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold mb-3">Private 1-1 Sessions</h4>
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                        Undivided attention from a Master Instructor. Mandatory for new clients to ensure safety and proper technique. Ideal for injury recovery or specific goals.
+                    </p>
+                    <div class="text-sm font-bold text-vita-dark border-t border-gray-100 pt-4 flex justify-between items-center">
+                        <span>Single: £176</span>
+                        <a href="#contact" class="text-vita-gold hover:underline">Book Now &rarr;</a>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 italic">Packages available (5, 10 sessions)</p>
+                </div>
+
+                <!-- Card 2: Duet/Trio -->
+                <div class="bg-white p-8 shadow-sm hover:shadow-xl transition duration-300 border-t-4 border-gray-200 hover:border-vita-gold group">
+                    <div class="h-12 w-12 bg-vita-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-vita-gold transition duration-300">
+                        <i data-lucide="users" class="w-6 h-6 text-vita-dark group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold mb-3">Duet & Trio Sessions</h4>
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                        Semi-private classes for 2-3 friends or matched partners. Enjoy the motivation of a small group while maintaining high standards of individual focus.
+                    </p>
+                    <div class="text-sm font-bold text-vita-dark border-t border-gray-100 pt-4 flex justify-between items-center">
+                        <span>From £98 / person</span>
+                        <a href="#contact" class="text-vita-gold hover:underline">Book Now &rarr;</a>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 italic">Requires similar experience level</p>
+                </div>
+
+                <!-- Card 3: Pre/Post Natal -->
+                <div class="bg-white p-8 shadow-sm hover:shadow-xl transition duration-300 border-t-4 border-gray-200 hover:border-vita-gold group">
+                    <div class="h-12 w-12 bg-vita-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-vita-gold transition duration-300">
+                        <i data-lucide="baby" class="w-6 h-6 text-vita-dark group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold mb-3">Pre & Post-Natal</h4>
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                        Safe, effective exercises tailored for expecting and new mothers. Maintain strength, pelvic stability, and aid postpartum recovery with expert guidance.
+                    </p>
+                    <div class="text-sm font-bold text-vita-dark border-t border-gray-100 pt-4 flex justify-between items-center">
+                        <span>Private Pricing</span>
+                        <a href="#contact" class="text-vita-gold hover:underline">Book Now &rarr;</a>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 italic">Specialized care for mom & baby</p>
+                </div>
+
+                <!-- Card 4: Reformer & Cardio -->
+                <div class="bg-white p-8 shadow-sm hover:shadow-xl transition duration-300 border-t-4 border-gray-200 hover:border-vita-gold group">
+                    <div class="h-12 w-12 bg-vita-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-vita-gold transition duration-300">
+                        <i data-lucide="activity" class="w-6 h-6 text-vita-dark group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold mb-3">Reformer & Cardio</h4>
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                        A dynamic blend of 20 minutes cardio and 40 minutes Pilates apparatus. Maximize calorie burn and core strength in one efficient session.
+                    </p>
+                    <div class="text-sm font-bold text-vita-dark border-t border-gray-100 pt-4 flex justify-between items-center">
+                        <span>Single: £85</span>
+                        <a href="#contact" class="text-vita-gold hover:underline">Book Now &rarr;</a>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 italic">Full body conditioning</p>
+                </div>
+
+                <!-- Card 5: Men's Pilates -->
+                <div class="bg-white p-8 shadow-sm hover:shadow-xl transition duration-300 border-t-4 border-gray-200 hover:border-vita-gold group">
+                    <div class="h-12 w-12 bg-vita-cream rounded-full flex items-center justify-center mb-6 group-hover:bg-vita-gold transition duration-300">
+                        <i data-lucide="dumbbell" class="w-6 h-6 text-vita-dark group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-serif font-bold mb-3">Men's Pilates</h4>
+                    <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                        Tailored for male physiology. Focus on core strength, flexibility (hamstrings/hips), and athletic performance enhancement.
+                    </p>
+                    <div class="text-sm font-bold text-vita-dark border-t border-gray-100 pt-4 flex justify-between items-center">
+                        <span>Private Pricing</span>
+                        <a href="#contact" class="text-vita-gold hover:underline">Book Now &rarr;</a>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 italic">Build power & flexibility</p>
+                </div>
+
+                <!-- Card 6: New Client Offer -->
+                <div class="bg-vita-dark text-white p-8 shadow-xl flex flex-col justify-center items-center text-center border-t-4 border-vita-gold">
+                    <h4 class="text-2xl font-serif font-bold mb-2 text-vita-gold">New to Vita?</h4>
+                    <p class="text-gray-300 text-sm mb-6">
+                        Start your journey with a discounted introductory session.
+                    </p>
+                    <div class="text-4xl font-bold mb-2">10% OFF</div>
+                    <p class="text-xs uppercase tracking-widest mb-6 text-vita-gold">First Session</p>
+                    <a href="#contact" class="inline-block border border-vita-gold text-vita-gold px-6 py-2 hover:bg-vita-gold hover:text-white transition duration-300 uppercase text-xs font-bold tracking-widest">
+                        Claim Offer
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Studio / Parallax Section -->
+    <section id="studio" class="py-20 bg-fixed bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80');">
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center text-center">
+            <h2 class="text-white text-3xl md:text-5xl font-serif font-bold mb-6">The Studio</h2>
+            <p class="text-gray-200 max-w-2xl text-lg mb-10">
+                Located in the heart of South Kensington, our studio features state-of-the-art Balanced Body reformers, including the unique KONNECTOR system. We utilize the full range of apparatus—Cadillac, Wunda Chair, and Barrels—to ensure a complete Pilates experience.
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl">
+                <div class="text-white flex flex-col items-center">
+                    <i data-lucide="map-pin" class="w-8 h-8 text-vita-gold mb-2"></i>
+                    <span class="text-sm font-bold uppercase tracking-wider">South Kensington</span>
+                </div>
+                <div class="text-white flex flex-col items-center">
+                    <i data-lucide="award" class="w-8 h-8 text-vita-gold mb-2"></i>
+                    <span class="text-sm font-bold uppercase tracking-wider">Master Instructors</span>
+                </div>
+                <div class="text-white flex flex-col items-center">
+                    <i data-lucide="star" class="w-8 h-8 text-vita-gold mb-2"></i>
+                    <span class="text-sm font-bold uppercase tracking-wider">Premium Equipment</span>
+                </div>
+                <div class="text-white flex flex-col items-center">
+                    <i data-lucide="coffee" class="w-8 h-8 text-vita-gold mb-2"></i>
+                    <span class="text-sm font-bold uppercase tracking-wider">Luxurious Amenities</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="reviews" class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-sm font-bold text-vita-gold uppercase tracking-widest mb-2">Client Stories</h2>
+            <h3 class="text-3xl md:text-4xl font-serif font-bold text-vita-dark mb-12">What Our Clients Say</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-vita-cream p-8 rounded-lg text-left relative">
+                    <i data-lucide="quote" class="w-8 h-8 text-vita-gold/20 absolute top-4 right-4"></i>
+                    <p class="text-gray-600 italic mb-4">"After 3 sessions, I am a new man... incorporates physiotherapy with Pilates – a rare feat. The attention to detail is unmatched."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-500 font-bold text-xs mr-3">JM</div>
+                        <div>
+                            <p class="font-bold text-sm text-vita-dark">James M.</p>
+                            <p class="text-xs text-vita-gold">Private Session Client</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="bg-vita-cream p-8 rounded-lg text-left relative">
+                    <i data-lucide="quote" class="w-8 h-8 text-vita-gold/20 absolute top-4 right-4"></i>
+                    <p class="text-gray-600 italic mb-4">"The studio is beautiful and serene. Patricia's knowledge of the body helped me through my pregnancy feeling strong and healthy."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-500 font-bold text-xs mr-3">SL</div>
+                        <div>
+                            <p class="font-bold text-sm text-vita-dark">Sarah L.</p>
+                            <p class="text-xs text-vita-gold">Pre-Natal Client</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Footer -->
+    <footer id="contact" class="bg-vita-dark text-white pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                
+                <!-- Brand Info -->
+                <div class="space-y-4">
+                    <h3 class="font-serif text-2xl font-bold tracking-widest uppercase mb-4 text-vita-gold">Pilates Vita</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Empowering you with knowledge and control over your body's movement. A private sanctuary in South Kensington.
+                    </p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-vita-gold transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-vita-gold transition"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+
+                <!-- Contact Details -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-serif font-bold text-white mb-2">Get in Touch</h4>
+                    <p class="text-gray-400 text-sm">We handle all bookings personally to ensure the best fit for your needs.</p>
+                    
+                    <div class="flex items-start space-x-3 text-sm text-gray-300">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-vita-gold mt-1 flex-shrink-0"></i>
+                        <span>South Kensington, London<br>(Full address upon booking)</span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3 text-sm text-gray-300">
+                        <i data-lucide="mail" class="w-5 h-5 text-vita-gold flex-shrink-0"></i>
+                        <a href="mailto:patricia.patricia@mac.com" class="hover:text-white transition">patricia.patricia@mac.com</a>
+                    </div>
+
+                    <div class="flex items-center space-x-3 text-sm text-gray-300">
+                        <i data-lucide="phone" class="w-5 h-5 text-vita-gold flex-shrink-0"></i>
+                        <a href="tel:+44000000000" class="hover:text-white transition">+44 (0) 20 1234 5678</a>
+                    </div>
+                </div>
+
+                <!-- Opening Hours -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-serif font-bold text-white mb-2">Opening Hours</h4>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li class="flex justify-between border-b border-gray-700 pb-1">
+                            <span>Mon - Fri</span>
+                            <span>7:00am - 8:00pm</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-700 pb-1">
+                            <span>Saturday</span>
+                            <span>8:00am - 2:00pm</span>
+                        </li>
+                        <li class="flex justify-between pb-1">
+                            <span>Sunday</span>
+                            <span class="text-vita-gold">Closed</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Booking CTA -->
+                <div class="bg-white/5 p-6 border border-gray-700 rounded-sm">
+                    <h4 class="text-lg font-serif font-bold text-white mb-4">Ready to Start?</h4>
+                    <p class="text-xs text-gray-400 mb-4">Contact us via WhatsApp or Email to schedule your consultation.</p>
+                    <a href="https://wa.me/" class="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-3 text-sm font-bold uppercase tracking-widest transition duration-300 flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Us
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Bottom Footer -->
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2024 Pilates Vita. All rights reserved.</p>
+                <div class="space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Cancellation Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu & Scroll -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Sticky Navbar Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md', 'py-0');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+        });
+
+        // Smooth Scroll handling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                menu.classList.add('hidden'); // Close mobile menu if open
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
