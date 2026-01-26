@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pilates Vita | Private & Small-Group Pilates in London</title>
+  <meta name="description" content="Pilates Vita offers private and small-group Pilates sessions with a calm, modern approach. Book a session in London." />
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --panel:#0f1318;
+      --text:#f3f5f7;
+      --muted:#b5bec9;
+      --line:rgba(255,255,255,.10);
+      --brand:#c7b08a;
+      --brand2:#7aa7ff;
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1120px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(199,176,138,.25), transparent 60%),
+        radial-gradient(900px 500px at 110% 10%, rgba(122,167,255,.18), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:24px}
+    .nav{
+      position:sticky; top:0; z-index:30;
+      backdrop-filter: blur(10px);
+      background: rgba(11,13,16,.55);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{height:34px;width:auto}
+    .brand span{font-weight:600;letter-spacing:.2px}
+    .navlinks{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:flex-end}
+    .navlinks a{color:var(--muted);font-size:14px}
+    .navlinks a:hover{color:var(--text)}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(199,176,138,.55);
+      background: linear-gradient(180deg, rgba(199,176,138,.22), rgba(199,176,138,.10));
+      box-shadow: 0 8px 18px rgba(0,0,0,.20);
+      font-weight:600;font-size:14px;
+      cursor:pointer;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn.secondary{
+      border-color: rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+    }
+
+    .hero{padding:34px 0 10px}
+    .hero-grid{display:grid;grid-template-columns: 1.05fr .95fr; gap:22px; align-items:stretch}
+    .card{
+      background: rgba(15,19,24,.72);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card.pad{padding:26px}
+    h1{margin:0 0 10px;font-size:44px;line-height:1.12;letter-spacing:-.6px}
+    .lead{color:var(--muted);font-size:16px;margin:0 0 18px;max-width:58ch}
+    .pillrow{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 22px}
+    .pill{
+      padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);font-size:13px
+    }
+    .cta{display:flex;gap:12px;flex-wrap:wrap}
+    .hero-media{position:relative; min-height:420px; display:flex; align-items:stretch;}
+    .hero-media img{width:100%; height:100%; object-fit:cover; display:block;}
+    .hero-badge{
+      position:absolute;left:18px;bottom:18px;right:18px;
+      padding:14px 14px;border-radius: 14px;
+      background: rgba(11,13,16,.55);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+      display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap
+    }
+    .badge-title{font-weight:700}
+    .badge-sub{color:var(--muted);font-size:13px;margin-top:2px;max-width:60ch}
+    .badge-mini{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:12px}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);display:inline-block}
+
+    section{padding:18px 0}
+    .section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 14px}
+    .section-title h2{margin:0;font-size:24px;letter-spacing:-.2px}
+    .section-title p{margin:0;color:var(--muted);font-size:14px;max-width:70ch}
+    .grid3{display:grid;grid-template-columns: repeat(3, 1fr);gap:14px}
+    .grid2{display:grid;grid-template-columns: repeat(2, 1fr);gap:14px}
+    .tile{padding:18px;border-radius: var(--radius);border:1px solid var(--line);background: rgba(255,255,255,.03)}
+    .tile h3{margin:0 0 8px;font-size:16px}
+    .tile p{margin:0;color:var(--muted);font-size:14px}
+    .media-tile{overflow:hidden;padding:0}
+    .media-tile img{width:100%;height:260px;object-fit:cover;display:block}
+    .media-tile .cap{padding:16px}
+    .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .kpi .pill{border-color: rgba(199,176,138,.35); color: rgba(243,245,247,.88)}
+
+    .quote{font-size:15px;color:rgba(243,245,247,.92)}
+    .who{margin-top:10px;color:var(--muted);font-size:13px}
+    .reviewimg{width:100%;height:auto;display:block;border-radius:14px;border:1px solid var(--line)}
+
+    .contact{display:grid;grid-template-columns: 1.1fr .9fr; gap:14px; align-items:stretch}
+    .form{display:grid;gap:10px;margin-top:10px}
+    label{font-size:13px;color:var(--muted)}
+    input, textarea{
+      width:100%;padding:12px 12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      outline:none;
+    }
+    textarea{min-height:110px;resize:vertical}
+    .fine{color:var(--muted);font-size:12px;margin:10px 0 0}
+    .footer{padding:28px 0 40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:18px}
+    .footgrid{display:grid;grid-template-columns: 1.2fr .8fr;gap:14px;align-items:start}
+    .smalllinks{display:flex;gap:12px;flex-wrap:wrap}
+    .smalllinks a{color:var(--muted)}
+    .smalllinks a:hover{color:var(--text)}
+    .note{font-size:12px;color:rgba(181,190,201,.9)}
+
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr;gap:14px}
+      .hero-media{min-height:360px}
+      h1{font-size:38px}
+      .contact{grid-template-columns:1fr}
+    }
+    @media (max-width: 760px){
+      .grid3{grid-template-columns:1fr}
+      .grid2{grid-template-columns:1fr}
+      .wrap{padding:18px}
+      h1{font-size:34px}
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Pilates Vita home">
+        <img src="assets/pilates-vita-logo-200-white.webp" alt="Pilates Vita logo" />
+        <span>Pilates Vita</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#approach">Approach</a>
+        <a href="#sessions">Sessions</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#contact" class="btn">Book / Enquire</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero" aria-label="Hero">
+      <div class="hero-grid">
+        <div class="card pad">
+          <h1>Private & small-group Pilates in London</h1>
+          <p class="lead">
+            A calm, modern practice focused on strength, mobility, posture and confidence—guided sessions tailored to your body and your goals.
+          </p>
+          <div class="pillrow" role="list" aria-label="Highlights">
+            <span class="pill" role="listitem">1:1 Private Sessions</span>
+            <span class="pill" role="listitem">Small Groups</span>
+            <span class="pill" role="listitem">Reformer & Mat</span>
+            <span class="pill" role="listitem">Beginners Welcome</span>
+          </div>
+          <div class="cta">
+            <a class="btn" href="#contact">Book a session</a>
+            <a class="btn secondary" href="#sessions">View options</a>
+          </div>
+          <p class="fine">
+            Note: This is a static, offline HTML template intended for local use. For live booking, use the official site.
+          </p>
+        </div>
+
+        <div class="card hero-media" aria-label="Studio image">
+          <img src="assets/IMG_2461.webp" alt="Pilates Vita studio / session image" />
+          <div class="hero-badge">
+            <div>
+              <div class="badge-title">Pilates Vita</div>
+              <div class="badge-sub">Personalised programming, clear coaching cues, and a supportive pace—whether you are brand-new or progressing your practice.</div>
+            </div>
+            <div class="badge-mini" aria-label="Location indicator">
+              <span class="dot" aria-hidden="true"></span>
+              <span>London</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="approach" aria-label="Approach">
+      <div class="section-title">
+        <h2>Our approach</h2>
+        <p>Structured sessions that balance alignment, breath, control and progressive strength, with modifications that meet you where you are.</p>
+      </div>
+      <div class="grid3">
+        <div class="tile">
+          <h3>Assessment-led</h3>
+          <p>We start with your movement history and current goals to build an appropriate plan and progression.</p>
+          <div class="kpi">
+            <span class="pill">Posture</span>
+            <span class="pill">Core</span>
+            <span class="pill">Mobility</span>
+          </div>
+        </div>
+        <div class="tile">
+          <h3>Technique first</h3>
+          <p>Clear cues, high-quality reps, and pacing that helps you build control and confidence without rushing.</p>
+          <div class="kpi">
+            <span class="pill">Form</span>
+            <span class="pill">Breath</span>
+            <span class="pill">Control</span>
+          </div>
+        </div>
+        <div class="tile">
+          <h3>Progressive strength</h3>
+          <p>Step-by-step progressions that improve strength and resilience, supporting everyday life and sport.</p>
+          <div class="kpi">
+            <span class="pill">Strength</span>
+            <span class="pill">Stability</span>
+            <span class="pill">Balance</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sessions" aria-label="Sessions">
+      <div class="section-title">
+        <h2>Sessions</h2>
+        <p>Choose a format that matches your goals and schedule. Private sessions are ideal for targeted progress; small groups are great for consistency.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="tile media-tile card">
+          <img src="assets/IMG_2465.webp" alt="Pilates session image" />
+          <div class="cap">
+            <h3>Private 1:1</h3>
+            <p>Highly personalised coaching for technique, rehabilitation-aware programming, and accelerated progression.</p>
+          </div>
+        </div>
+
+        <div class="tile media-tile card">
+          <img src="assets/IMG_2442.webp" alt="Small group Pilates image" />
+          <div class="cap">
+            <h3>Small Group</h3>
+            <p>Motivating, structured sessions with individual attention—ideal for building a weekly routine.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid3" style="margin-top:14px">
+        <div class="tile">
+          <h3>Beginners</h3>
+          <p>Foundational technique, safe progressions, and clear movement education to build confidence.</p>
+        </div>
+        <div class="tile">
+          <h3>Strength & posture</h3>
+          <p>Improve alignment, glute/hip strength, core control, and upper-body support for daily life.</p>
+        </div>
+        <div class="tile">
+          <h3>Mobility & recovery</h3>
+          <p>Gentle but effective work to restore range of motion and resilience, tailored to your needs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials" aria-label="Testimonials">
+      <div class="section-title">
+        <h2>Testimonials</h2>
+        <p>Example client feedback blocks plus a downloaded testimonial image from the homepage assets.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="tile card">
+          <p class="quote">“Beautifully paced sessions. I feel stronger and more aligned, and the coaching cues make everything click.”</p>
+          <div class="who">— Client feedback (example)</div>
+        </div>
+        <div class="tile card">
+          <p class="quote">“The private sessions were a game-changer for my posture and back comfort. Very attentive and professional.”</p>
+          <div class="who">— Client feedback (example)</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px" class="tile media-tile card">
+        <img src="assets/London_Pilates_Testimonial.webp" alt="Testimonial graphic" />
+        <div class="cap">
+          <h3>Featured testimonial</h3>
+          <p>Image downloaded for offline viewing.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews" aria-label="Reviews">
+      <div class="section-title">
+        <h2>Reviews</h2>
+        <p>Visual review snippets captured as images for the offline page.</p>
+      </div>
+      <div class="grid3">
+        <div class="tile card">
+          <img class="reviewimg" src="assets/Pilates_Vita_Review.webp" alt="Pilates Vita review" />
+        </div>
+        <div class="tile card">
+          <img class="reviewimg" src="assets/South_Kensington_Pilates_Review.webp" alt="South Kensington Pilates review" />
+        </div>
+        <div class="tile card">
+          <img class="reviewimg" src="assets/IMG_1782.webp" alt="Additional studio/session image" />
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" aria-label="Contact">
+      <div class="section-title">
+        <h2>Book / enquire</h2>
+        <p>This offline template includes a contact form UI. Wire it to a backend or mail service if you want submissions to work.</p>
+      </div>
+
+      <div class="contact">
+        <div class="card pad">
+          <h3 style="margin:0 0 6px">Send an enquiry</h3>
+          <p class="lead" style="margin:0 0 10px">Share your goals and availability. We will suggest the best session format.</p>
+
+          <form class="form" onsubmit="return false;" aria-label="Enquiry form">
+            <div>
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" placeholder="Your name" />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" />
+            </div>
+            <div>
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us what you’re looking for (private, small group, goals, injuries, preferred days/times)"></textarea>
+            </div>
+            <div class="cta">
+              <button class="btn" type="submit">Submit enquiry</button>
+              <a class="btn secondary" href="#top">Back to top</a>
+            </div>
+            <p class="fine">Form submission is disabled in this static offline build.</p>
+          </form>
+        </div>
+
+        <div class="card pad">
+          <h3 style="margin:0 0 6px">Details</h3>
+          <p class="lead" style="margin:0 0 12px">
+            For current schedules, prices and booking links, use the official Pilates Vita website.
+          </p>
+
+          <div class="tile" style="background:rgba(255,255,255,.02)">
+            <h3 style="margin:0 0 8px;font-size:15px">Location</h3>
+            <p style="margin:0;color:var(--muted);font-size:14px">London (exact studio details on the live site)</p>
+          </div>
+
+          <div class="tile" style="margin-top:12px;background:rgba(255,255,255,.02)">
+            <h3 style="margin:0 0 8px;font-size:15px">What to bring</h3>
+            <p style="margin:0;color:var(--muted);font-size:14px">Comfortable clothing, water, and any relevant movement notes.</p>
+          </div>
+
+          <div class="tile" style="margin-top:12px;background:rgba(255,255,255,.02)">
+            <h3 style="margin:0 0 8px;font-size:15px">Preparation</h3>
+            <p style="margin:0;color:var(--muted);font-size:14px">Arrive a few minutes early and let your instructor know about injuries or limitations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer" aria-label="Footer">
+      <div class="footgrid">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <img src="assets/pilates-vita-logo-200-white.webp" alt="Pilates Vita logo" style="height:28px;width:auto" />
+            <strong style="color:var(--text)">Pilates Vita</strong>
+          </div>
+          <div class="note">
+            Static offline page generated for local use. Content and branding belong to their respective owners.
+          </div>
+        </div>
+        <div>
+          <div class="smalllinks" aria-label="Links">
+            <a href="#approach">Approach</a>
+            <a href="#sessions">Sessions</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <div class="note" style="margin-top:10px">
+            © <span id="year"></span> Pilates Vita (offline template)
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reviews | Pilates Vita (Offline)</title>
+  <meta name="description" content="Client reviews and testimonials for Pilates Vita. Offline static HTML version." />
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111827;
+      --muted:#4b5563;
+      --line:#e5e7eb;
+      --soft:#f9fafb;
+      --accent:#b08a54;
+      --max:1080px;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:20px}
+
+    header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{height:28px;filter:invert(1) brightness(0)}
+    .brand span{font-weight:700}
+    nav{display:flex;gap:14px;flex-wrap:wrap}
+    nav a{font-size:14px;color:var(--muted)}
+    nav a:hover{color:var(--text)}
+
+    h1{margin:14px 0 8px;font-size:36px;letter-spacing:-.4px}
+    .lead{margin:0;color:var(--muted);max-width:80ch}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin-top:18px;
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:#fff;
+      overflow:hidden;
+    }
+    .card img{width:100%;height:auto;display:block}
+    .card .cap{padding:12px}
+    .quote{font-size:14px;color:var(--text)}
+    .who{margin-top:6px;font-size:13px;color:var(--muted)}
+
+    footer{
+      margin-top:22px;
+      border-top:1px solid var(--line);
+      padding:18px 0 28px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 600px){
+      .grid{grid-template-columns:1fr}
+      h1{font-size:30px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap head">
+      <a class="brand" href="#top">
+        <img src="assets/pilates-vita-logo-200-white.webp" alt="Pilates Vita logo" />
+        <span>Pilates Vita</span>
+      </a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/sessions">Sessions</a>
+        <a href="#reviews">Reviews</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <h1>Client reviews</h1>
+    <p class="lead">
+      A selection of client reviews and testimonials from Pilates Vita. This is a static, offline version for reference only.
+    </p>
+
+    <section id="reviews" class="grid" aria-label="Reviews grid">
+      <div class="card">
+        <img src="assets/Pilates_Vita_Review.webp" alt="Pilates Vita review" />
+        <div class="cap">
+          <div class="quote">Professional, welcoming, and extremely effective sessions.</div>
+          <div class="who">— Client review</div>
+        </div>
+      </div>
+      <div class="card">
+        <img src="assets/South_Kensington_Pilates_Review.webp" alt="South Kensington Pilates review" />
+        <div class="cap">
+          <div class="quote">Noticeable improvements in posture and strength.</div>
+          <div class="who">— Client review</div>
+        </div>
+      </div>
+      <div class="card">
+        <img src="assets/London_Pilates_Testimonial.webp" alt="London Pilates testimonial" />
+        <div class="cap">
+          <div class="quote">Calm, focused sessions with expert guidance.</div>
+          <div class="who">— Client testimonial</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> Pilates Vita (offline template)
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

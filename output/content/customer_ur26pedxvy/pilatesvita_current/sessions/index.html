@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sessions & Prices | Pilates Vita (Offline)</title>
+  <meta name="description" content="Offline, static HTML template capturing Pilates Vita Sessions & Prices layout and key content." />
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --panel:#0f1318;
+      --text:#f3f5f7;
+      --muted:#b5bec9;
+      --line:rgba(255,255,255,.10);
+      --brand:#c7b08a;
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1120px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(199,176,138,.22), transparent 60%),
+        radial-gradient(900px 500px at 110% 10%, rgba(255,255,255,.10), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:24px}
+    .nav{
+      position:sticky; top:0; z-index:30;
+      backdrop-filter: blur(10px);
+      background: rgba(11,13,16,.60);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{height:34px;width:auto}
+    .brand span{font-weight:600}
+    .navlinks{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+    .navlinks a{color:var(--muted);font-size:14px}
+    .navlinks a:hover{color:var(--text)}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      border:1px solid rgba(199,176,138,.55);
+      background: linear-gradient(180deg, rgba(199,176,138,.22), rgba(199,176,138,.10));
+      box-shadow: 0 8px 18px rgba(0,0,0,.20);
+      font-weight:600;font-size:14px;
+      cursor:pointer;
+    }
+    .btn.secondary{
+      border-color: rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+    }
+
+    .hero{padding:26px 0 8px}
+    h1{margin:0 0 10px;font-size:40px;letter-spacing:-.6px;line-height:1.12}
+    .lead{color:var(--muted);margin:0;max-width:75ch}
+    .note{color:var(--muted);font-size:12px;margin-top:10px}
+
+    .grid{display:grid;grid-template-columns: 1fr;gap:14px}
+    .card{
+      background: rgba(15,19,24,.72);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap:0;
+      align-items:stretch;
+    }
+    .media img{width:100%;height:100%;min-height:300px;object-fit:cover;display:block}
+    .content{padding:20px}
+    h2{margin:0 0 8px;font-size:20px}
+    p{margin:0 0 10px;color:rgba(243,245,247,.92)}
+    ul{margin:10px 0 0 18px;color:var(--muted)}
+    li{margin:6px 0}
+    .prices{
+      margin-top:12px;
+      border-top:1px solid rgba(255,255,255,.10);
+      padding-top:12px;
+      display:grid;
+      gap:8px;
+    }
+    .price-row{
+      display:flex;justify-content:space-between;gap:10px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      background: rgba(255,255,255,.03);
+      font-size:14px;
+    }
+    .price-row span:last-child{color:rgba(243,245,247,.95);font-weight:700}
+    .save{color:rgba(199,176,138,.95);font-weight:600;font-size:13px}
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .subcard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      background: rgba(255,255,255,.03);
+      padding:12px;
+    }
+    .subcard h3{margin:0 0 6px;font-size:14px}
+    .subcard p{margin:0;color:var(--muted);font-size:13px}
+    .footer{
+      padding:26px 0 40px;
+      color:var(--muted);
+      font-size:13px;
+      border-top:1px solid var(--line);
+      margin-top:18px;
+    }
+    .footgrid{display:grid;grid-template-columns: 1.2fr .8fr;gap:14px;align-items:start}
+    .smalllinks{display:flex;gap:12px;flex-wrap:wrap}
+    .smalllinks a{color:var(--muted)}
+    .smalllinks a:hover{color:var(--text)}
+    .badge{
+      display:flex;align-items:center;gap:12px;
+      padding:12px;border-radius:16px;border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      margin-top:12px;
+    }
+    .badge img{height:44px;width:auto}
+    .badge div{font-size:12px;color:rgba(181,190,201,.95)}
+    @media (max-width: 980px){
+      .row{grid-template-columns:1fr}
+      .media img{min-height:240px}
+      h1{font-size:34px}
+      .split{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Pilates Vita sessions (offline)">
+        <img src="assets/logo.webp" alt="Pilates Vita logo" />
+        <span>Pilates Vita</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#private">Private</a>
+        <a href="#duet">Duet/Trio</a>
+        <a href="#reformer">Reformer & Cardio</a>
+        <a href="#prenatal">Pre/Post-Natal</a>
+        <a href="#mens">Men's</a>
+        <a href="#policies" class="btn">Policies</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero">
+      <h1>Sessions & prices</h1>
+      <p class="lead">
+        Offline, static template of the Pilates Vita “Sessions” page. Pricing and descriptions are included as captured content; for live availability and booking, use the official website.
+      </p>
+      <p class="note">Form/booking links are intentionally not functional in this offline build.</p>
+    </section>
+
+    <section class="grid" aria-label="Sessions list">
+      <!-- Private -->
+      <article id="private" class="card row">
+        <div class="media"><img src="assets/unnamed-1.webp" alt="Private Pilates session" /></div>
+        <div class="content">
+          <h2>Private 1-1 Session (55 mins)</h2>
+          <p>Experience the luxury of a private session where you work closely with an expert instructor. Tailored to your individual goals and preferences, this session offers a personalised workout using the Pilates equipment of your choice.</p>
+          <p>If you’re new to Pilates, recovering from an injury, or haven’t exercised in a while, a private session is typically required before joining group classes.</p>
+
+          <div class="prices" aria-label="Private pricing">
+            <div class="price-row"><span>1 Private Session</span><span>£176</span></div>
+            <div class="price-row"><span>5 Private Sessions</span><span>£815</span></div>
+            <div class="save">Save £65</div>
+            <div class="price-row"><span>10 Private Sessions</span><span>£1588</span></div>
+            <div class="save">Save £170</div>
+            <div class="price-row"><span>20 Private Sessions</span><span>£2769</span></div>
+            <div class="save">Save £752</div>
+          </div>
+
+          <div class="split" aria-label="New student packages">
+            <div class="subcard">
+              <h3>New Student Sessions</h3>
+              <p>Required for clients new to Pilates before joining any group sessions.</p>
+            </div>
+            <div class="subcard">
+              <h3>3 Sessions</h3>
+              <p><strong style="color:var(--text)">£489</strong> <span class="save">(save £39)</span></p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Duet/Trio -->
+      <article id="duet" class="card row">
+        <div class="media"><img src="assets/duet.webp" alt="Duet or trio Pilates session" /></div>
+        <div class="content">
+          <h2>Duet/Trio Session (55 mins)</h2>
+          <p>Sessions for 2 or 3 clients on Pilates equipment under expert guidance. Bring your own partner or be matched based on level and availability. Prices are per person.</p>
+
+          <div class="split">
+            <div class="subcard">
+              <h3>Duet pricing (per person)</h3>
+              <div class="prices" style="margin-top:8px;padding-top:0;border-top:0">
+                <div class="price-row"><span>1 Duet Session</span><span>£112</span></div>
+                <div class="price-row"><span>5 Duet Sessions</span><span>£533</span></div>
+                <div class="save">Save £27 per person</div>
+                <div class="price-row"><span>10 Duet Sessions</span><span>£968</span></div>
+                <div class="save">Save £152 per person</div>
+                <div class="price-row"><span>20 Duet Sessions</span><span>£1898</span></div>
+                <div class="save">Save £342 per person</div>
+              </div>
+            </div>
+            <div class="subcard">
+              <h3>Trio pricing (per person)</h3>
+              <div class="prices" style="margin-top:8px;padding-top:0;border-top:0">
+                <div class="price-row"><span>1 Trio Session</span><span>£98</span></div>
+                <div class="price-row"><span>5 Trio Sessions</span><span>£469</span></div>
+                <div class="save">Save £21 per person</div>
+                <div class="price-row"><span>10 Trio Sessions</span><span>£860</span></div>
+                <div class="save">Save £120 per person</div>
+                <div class="price-row"><span>20 Trio Sessions</span><span>£1690</span></div>
+                <div class="save">Save £320 per person</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Reformer & Cardio -->
+      <article id="reformer" class="card row">
+        <div class="media"><img src="assets/reformer-cardio.webp" alt="Reformer and cardio session" /></div>
+        <div class="content">
+          <h2>Reformer & Cardio Session (35 min)</h2>
+          <p>These sessions merge reformer strength work with cardio intervals for a full-body workout designed to enhance strength, flexibility, cardiovascular health, and support recovery. This is a group session.</p>
+
+          <div class="prices" aria-label="Reformer & cardio pricing">
+            <div class="price-row"><span>1 Session</span><span>£85</span></div>
+            <div class="price-row"><span>5 Sessions</span><span>£398</span></div>
+            <div class="save">Save £27</div>
+            <div class="price-row"><span>10 Sessions</span><span>£730</span></div>
+            <div class="save">Save £120</div>
+            <div class="price-row"><span>20 Sessions</span><span>£1530</span></div>
+            <div class="save">Save £170</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Pre/Post-Natal -->
+      <article id="prenatal" class="card row">
+        <div class="media"><img src="assets/pre-post-natal.webp" alt="Pre and post natal Pilates session" /></div>
+        <div class="content">
+          <h2>Pre- and Post-Natal Session (55 mins)</h2>
+          <p>Specialised sessions for new and expecting mothers, focusing on safe, effective exercises to support strength, flexibility, and recovery through pregnancy and postpartum.</p>
+
+          <div class="prices" aria-label="Pre/Post-Natal pricing">
+            <div class="price-row"><span>1 Session</span><span>£176</span></div>
+            <div class="price-row"><span>5 Sessions</span><span>£815</span></div>
+            <div class="save">Save £65</div>
+            <div class="price-row"><span>10 Sessions</span><span>£1588</span></div>
+            <div class="save">Save £170</div>
+            <div class="price-row"><span>20 Sessions</span><span>£2769</span></div>
+            <div class="save">Save £752</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Men's -->
+      <article id="mens" class="card row">
+        <div class="media"><img src="assets/mens.webp" alt="Men's Pilates session" /></div>
+        <div class="content">
+          <h2>Men’s Pilates Session (55 mins)</h2>
+          <p>Sessions designed to meet men’s fitness needs—building core strength, improving flexibility, supporting injury recovery, and enhancing athletic performance.</p>
+
+          <div class="prices" aria-label="Men's pricing">
+            <div class="price-row"><span>1 Session</span><span>£176</span></div>
+            <div class="price-row"><span>5 Sessions</span><span>£815</span></div>
+            <div class="save">Save £65</div>
+            <div class="price-row"><span>10 Sessions</span><span>£1588</span></div>
+            <div class="save">Save £170</div>
+            <div class="price-row"><span>20 Sessions</span><span>£2769</span></div>
+            <div class="save">Save £752</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Offer -->
+      <article class="card row" aria-label="Offer">
+        <div class="media"><img src="assets/offer.webp" alt="Promotional image" /></div>
+        <div class="content">
+          <h2>Still not sure?</h2>
+          <p>Try your first session and get 10% off (see the official site for eligibility and booking).</p>
+          <div class="badge">
+            <img src="assets/pilates-method-alliance-certified.gif" alt="Pilates Method Alliance Certified" />
+            <div>Certification badge downloaded from site assets for offline viewing.</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Policies -->
+      <article id="policies" class="card" style="padding:20px" aria-label="Policies">
+        <h2 style="margin:0 0 8px">Booking & cancellation policy (summary)</h2>
+        <p style="color:var(--muted);margin:0">
+          To secure a session, prior payment and booking are required. Cancellations typically require at least 48 hours’ notice. Packages are generally valid for six months, with extensions possible under certain conditions. This is an offline summary; refer to the official site for the complete policy wording.
+        </p>
+      </article>
+    </section>
+
+    <footer class="footer" aria-label="Footer">
+      <div class="footgrid">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <img src="assets/logo.webp" alt="Pilates Vita logo" style="height:28px;width:auto" />
+            <strong style="color:var(--text)">Pilates Vita</strong>
+          </div>
+          <div class="note">
+            Static offline page generated for local use. Content, prices, and branding belong to their respective owners.
+          </div>
+        </div>
+        <div>
+          <div class="smalllinks" aria-label="Links">
+            <a href="#private">Private</a>
+            <a href="#duet">Duet/Trio</a>
+            <a href="#reformer">Reformer & Cardio</a>
+            <a href="#prenatal">Pre/Post-Natal</a>
+            <a href="#mens">Men's</a>
+          </div>
+          <div class="note" style="margin-top:10px">© <span id="year"></span> Pilates Vita (offline template)</div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
