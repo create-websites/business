@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore the six foundational principles of Pilates: Concentration, Control, Centering, Flow, Precision, and Breathing. A guide to strengthening the body and mind.">
+    <meta name="keywords" content="Pilates, Joseph Pilates, Concentration, Control, Centering, Flow, Precision, Breathing, Mind-Body Connection, Core Strength, Wellness">
+    <title>The Six Pilates Principles and Why They Matter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #333;
+            background-color: #fcfcfc;
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-overlay {
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5));
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .principle-number {
+            font-family: 'Playfair Display', serif;
+            opacity: 0.1;
+            position: absolute;
+            top: -20px;
+            right: 10px;
+            font-size: 8rem;
+            line-height: 1;
+            pointer-events: none;
+            color: #7dd3fc;
+        }
+    </style>
+</head>
+<body class="smooth-scroll antialiased selection:bg-teal-100 selection:text-teal-900">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <i data-lucide="activity" class="h-6 w-6 text-teal-600"></i>
+                    <span class="serif font-bold text-xl tracking-wide text-gray-800">Pilates<span class="text-teal-600">Method</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#intro" class="text-gray-600 hover:text-teal-600 transition-colors font-medium">Introduction</a>
+                    <a href="#principles" class="text-gray-600 hover:text-teal-600 transition-colors font-medium">The Principles</a>
+                    <a href="#benefits" class="text-gray-600 hover:text-teal-600 transition-colors font-medium">Benefits</a>
+                </div>
+                <div class="md:hidden">
+                    <!-- Mobile menu button placeholder -->
+                    <button class="text-gray-600 hover:text-teal-600">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen flex items-center justify-center text-white overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://storage.googleapis.com/imagesu/pilates/pilates1.jpg" alt="Pilates Pose" class="w-full h-full object-cover object-center">
+            <div class="hero-overlay absolute inset-0"></div>
+        </div>
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto animate-fade-in-up">
+            <p class="text-teal-300 font-bold tracking-widest uppercase mb-4 text-sm md:text-base">Movement Education</p>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">The Six Pilates Principles</h1>
+            <p class="text-xl md:text-2xl font-light opacity-90 mb-10 max-w-2xl mx-auto">More than just exercise—a method to strengthen the body, sharpen the mind, and cultivate efficient movement.</p>
+            <a href="#principles" class="inline-flex items-center gap-2 bg-teal-600 text-white px-8 py-4 rounded-full font-medium hover:bg-teal-700 transition-all transform hover:scale-105 shadow-lg border border-transparent">
+                Explore the Method
+                <i data-lucide="arrow-down" class="h-4 w-4"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Introduction -->
+    <section id="intro" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="flex justify-center mb-6">
+                <i data-lucide="flower" class="h-10 w-10 text-teal-600"></i>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-gray-800">Mind Guides Body</h2>
+            <p class="text-lg text-gray-600 leading-relaxed mb-6">
+                Developed by Joseph Pilates in the early 20th century, Pilates is built on six foundational principles: <strong class="text-teal-700">concentration, control, centering, flow, precision, and breathing</strong>. 
+            </p>
+            <p class="text-lg text-gray-600 leading-relaxed">
+                These principles are not abstract concepts—they are practical tools. When applied consistently, they improve technique, reduce injury risk, and deepen the mind–body connection that distinguishes Pilates from many other forms of exercise.
+            </p>
+        </div>
+    </section>
+
+    <!-- Principles Grid -->
+    <section id="principles" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-800 mb-4">The 6 Pillars of Pilates</h2>
+                <div class="w-24 h-1 bg-teal-600 mx-auto"></div>
+            </div>
+
+            <!-- Principle 1 & 2 -->
+            <div class="grid md:grid-cols-2 gap-12 mb-20 items-center">
+                <div class="relative group overflow-hidden rounded-2xl shadow-xl h-96">
+                    <img src="https://storage.googleapis.com/imagesu/pilates/pilates2.jpg" alt="Concentration and Control" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <p class="text-sm font-bold uppercase tracking-wider text-teal-300 mb-1">Focus</p>
+                        <h3 class="text-2xl font-bold">Mindful Movement</h3>
+                    </div>
+                </div>
+                <div class="space-y-10">
+                    <!-- Principle 1 -->
+                    <div class="relative pl-8 border-l-4 border-teal-200 hover:border-teal-600 transition-colors duration-300">
+                        <span class="principle-number">1</span>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Concentration</h3>
+                        <p class="text-gray-600 mb-4">
+                            "Mind guides body." Concentration refers to giving full mental attention to each movement. Without it, movements become mechanical and lose their therapeutic value.
+                        </p>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <span class="text-xs font-bold text-teal-600 uppercase">Why It Matters</span>
+                            <p class="text-sm text-gray-600 mt-1">Improves movement quality and enhances neuromuscular coordination by actively involving the mind.</p>
+                        </div>
+                    </div>
+                    <!-- Principle 2 -->
+                    <div class="relative pl-8 border-l-4 border-teal-200 hover:border-teal-600 transition-colors duration-300">
+                        <span class="principle-number">2</span>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Control</h3>
+                        <p class="text-gray-600 mb-4">
+                            Often called "Contrology," this is the ability to execute movements with intention rather than momentum. Every phase—lifting, lowering, transitioning—is guided.
+                        </p>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <span class="text-xs font-bold text-teal-600 uppercase">Why It Matters</span>
+                            <p class="text-sm text-gray-600 mt-1">Prevents injury and builds true strength by ensuring muscles work eccentrically and concentrically.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Principle 3 & 4 (Reversed Layout) -->
+            <div class="grid md:grid-cols-2 gap-12 mb-20 items-center">
+                <div class="space-y-10 order-2 md:order-1">
+                    <!-- Principle 3 -->
+                    <div class="relative pl-8 border-l-4 border-teal-200 hover:border-teal-600 transition-colors duration-300">
+                        <span class="principle-number">3</span>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Centering</h3>
+                        <p class="text-gray-600 mb-4">
+                            Focusing on the "powerhouse"—deep abdominal muscles, pelvic floor, diaphragm, and muscles supporting the spine. All movement originates here.
+                        </p>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <span class="text-xs font-bold text-teal-600 uppercase">Why It Matters</span>
+                            <p class="text-sm text-gray-600 mt-1">Supports spinal health and improves balance. Power from the center reduces strain on extremities.</p>
+                        </div>
+                    </div>
+                    <!-- Principle 4 -->
+                    <div class="relative pl-8 border-l-4 border-teal-200 hover:border-teal-600 transition-colors duration-300">
+                        <span class="principle-number">4</span>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Flow</h3>
+                        <p class="text-gray-600 mb-4">
+                            Exercises are linked in a rhythmic sequence. Flow means seamless transitions and a sense of ease, even during challenging work.
+                        </p>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <span class="text-xs font-bold text-teal-600 uppercase">Why It Matters</span>
+                            <p class="text-sm text-gray-600 mt-1">Promotes coordination and builds endurance without unnecessary tension.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl shadow-xl h-96 order-1 md:order-2">
+                    <img src="https://storage.googleapis.com/imagesu/pilates/pilates3.jpg" alt="Centering and Flow" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <p class="text-sm font-bold uppercase tracking-wider text-teal-300 mb-1">Core</p>
+                        <h3 class="text-2xl font-bold">The Powerhouse</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Principle 5 & 6 -->
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative group overflow-hidden rounded-2xl shadow-xl h-96">
+                    <img src="https://storage.googleapis.com/imagesu/pilates/pilates4.jpg" alt="Precision and Breathing" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 text-white">
+                        <p class="text-sm font-bold uppercase tracking-wider text-teal-300 mb-1">Detail</p>
+                        <h3 class="text-2xl font-bold">Intentional Breath</h3>
+                    </div>
+                </div>
+                <div class="space-y-10">
+                    <!-- Principle 5 -->
+                    <div class="relative pl-8 border-l-4 border-teal-200 hover:border-teal-600 transition-colors duration-300">
+                        <span class="principle-number">5</span>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Precision</h3>
+                        <p class="text-gray-600 mb-4">
+                            Quality over quantity. Precision emphasizes correct alignment and exact placement. Fewer repetitions done correctly are more valuable than many done poorly.
+                        </p>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <span class="text-xs font-bold text-teal-600 uppercase">Why It Matters</span>
+                            <p class="text-sm text-gray-600 mt-1">Maximizes effectiveness and reinforces healthy movement patterns by reducing compensations.</p>
+                        </div>
+                    </div>
+                    <!-- Principle 6 -->
+                    <div class="relative pl-8 border-l-4 border-teal-200 hover:border-teal-600 transition-colors duration-300">
+                        <span class="principle-number">6</span>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Breathing</h3>
+                        <p class="text-gray-600 mb-4">
+                            Intentional, three-dimensional breathing. Breath facilitates movement, enhances control, and releases unnecessary tension.
+                        </p>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                            <span class="text-xs font-bold text-teal-600 uppercase">Why It Matters</span>
+                            <p class="text-sm text-gray-600 mt-1">Activates deep abdominal muscles, improves oxygenation, and promotes relaxation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section id="benefits" class="relative py-24 bg-teal-900 text-white overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <img src="https://storage.googleapis.com/imagesu/pilates/pilates5.jpg" alt="Background" class="w-full h-full object-cover grayscale">
+        </div>
+        <div class="relative z-10 max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">How They Work Together</h2>
+                    <p class="text-teal-100 text-lg mb-8 leading-relaxed">
+                        While each principle has its own focus, they are deeply interconnected. Concentration enhances control; control supports precision; precision improves flow; breathing reinforces centering.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="mt-1 bg-teal-500 rounded-full p-1">
+                                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Better Technique</h4>
+                                <p class="text-teal-200 text-sm">Movements are efficient, intentional, and effective.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="mt-1 bg-teal-500 rounded-full p-1">
+                                <i data-lucide="shield" class="h-4 w-4 text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Safer Workouts</h4>
+                                <p class="text-teal-200 text-sm">Proper control and alignment reduce injury risk.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="mt-1 bg-teal-500 rounded-full p-1">
+                                <i data-lucide="brain" class="h-4 w-4 text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Mind–Body Connection</h4>
+                                <p class="text-teal-200 text-sm">Awareness extending beyond the studio into everyday life.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
+                    <i data-lucide="quote" class="h-10 w-10 text-teal-300 mb-4 opacity-80"></i>
+                    <p class="text-2xl font-serif italic leading-relaxed mb-6">
+                        "Ultimately, Pilates is not about doing more—it is about moving better."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="h-12 w-12 rounded-full bg-teal-500 flex items-center justify-center font-bold text-xl">P</div>
+                        <div>
+                            <p class="font-bold">Joseph Pilates' Legacy</p>
+                            <p class="text-teal-300 text-sm">Movement Education</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="serif font-bold text-2xl text-white">Pilates<span class="text-teal-600">Method</span></span>
+                    <p class="text-sm mt-2">Cultivating strength, flexibility, and balance.</p>
+                </div>
+                <div class="flex space-x-6 text-sm">
+                    <a href="#" class="hover:text-white transition-colors">Principles</a>
+                    <a href="#" class="hover:text-white transition-colors">History</a>
+                    <a href="#" class="hover:text-white transition-colors">Contact</a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-xs">
+                <p>&copy; 2025 Pilates Method Education. All rights reserved.</p>
+                <p class="mt-2 text-gray-600">Based on "The Six Pilates Principles and Why They Matter"</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Simple scroll effect for Navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.add('bg-white/95');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.remove('bg-white/90');
+                navbar.classList.add('bg-white/90'); // keep slight opacity
+            }
+        });
+    </script>
+</body>
+</html>

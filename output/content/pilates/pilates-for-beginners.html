@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Requested Meta Tags -->
+    <meta name="description" content="Discover 5 essential beginner Pilates exercises you can do at home. Build core strength, improve flexibility, and develop body awareness with this step-by-step guide.">
+    <meta name="keywords" content="pilates, beginner pilates, home workout, core strength, flexibility, pelvic curl, chest lift, spine stretch, pilates routine, home fitness">
+    
+    <title>Beginner Pilates Exercises | Home Guide</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+    </style>
+</head>
+<body class="text-slate-900 bg-white selection:bg-teal-100 selection:text-teal-900">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <div class="font-serif text-2xl font-semibold text-slate-800 flex items-center gap-2">
+                <span class="bg-teal-600 text-white p-1 rounded-full flex items-center justify-center w-8 h-8">
+                    <!-- Heart Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                </span>
+                Pilates<span class="text-teal-600">Home</span>
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 text-slate-600 font-medium">
+                <a href="#intro" class="hover:text-teal-600 transition-colors">About</a>
+                <a href="#exercises" class="hover:text-teal-600 transition-colors">Exercises</a>
+                <a href="#routine" class="hover:text-teal-600 transition-colors">Routine</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-slate-800 p-2">
+                <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                <svg id="close-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white shadow-lg flex-col items-center py-6 gap-6 text-lg font-medium text-slate-700">
+            <a href="#intro" class="mobile-link hover:text-teal-600">About</a>
+            <a href="#exercises" class="mobile-link hover:text-teal-600">Exercises</a>
+            <a href="#routine" class="mobile-link hover:text-teal-600">Routine</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-[90vh] flex items-center justify-center bg-slate-50 overflow-hidden">
+        <!-- Abstract Background Shapes -->
+        <div class="absolute top-0 right-0 w-2/3 h-full bg-teal-50/50 rounded-l-[100px] -mr-20 z-0"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-rose-50 rounded-full blur-3xl -ml-20 -mb-20 z-0"></div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center pt-20">
+            <div class="space-y-6 fade-in-up">
+                <span class="inline-block px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-semibold tracking-wide uppercase mb-2">
+                    Beginner Friendly
+                </span>
+                <h1 class="text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
+                    Find Balance <br/>
+                    <span class="text-teal-600 italic">Within</span>
+                </h1>
+                <p class="text-lg text-slate-600 max-w-md leading-relaxed">
+                    Discover 5 essential Pilates exercises you can do at home. Build core strength, improve flexibility, and develop confidence without any equipment.
+                </p>
+                <a href="#intro" class="group inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-3 rounded-full hover:bg-teal-600 transition-all duration-300 shadow-lg hover:shadow-teal-500/30">
+                    Start Your Journey
+                    <svg class="group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+            </div>
+            <div class="relative hidden md:block fade-in-up delay-100">
+                <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+                    <img 
+                        src="https://storage.googleapis.com/imagesu/pilates/pilates4.jpg" 
+                        alt="Pilates Stretch" 
+                        class="w-full h-auto object-cover"
+                        onerror="this.src='https://placehold.co/600x800/e2e8f0/64748b?text=Pilates+Hero'"
+                    />
+                </div>
+                <!-- Decorative frame -->
+                <div class="absolute -inset-4 border-2 border-teal-200 rounded-2xl -z-0 -rotate-2"></div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+    </header>
+
+    <!-- Intro Section -->
+    <section id="intro" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-6 text-center space-y-8 fade-in-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800">Why Start Pilates?</h2>
+            <p class="text-lg text-slate-600 leading-relaxed">
+                Pilates is an ideal form of exercise for beginners because it emphasizes controlled movement, proper alignment, and mindful breathing rather than intensity or impact. You do not need expensive equipment or a large space to begin—many foundational Pilates exercises can be performed safely and effectively at home using only a mat or a comfortable floor surface.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <!-- Card 1 -->
+                <div class="p-6 rounded-2xl bg-slate-50 hover:bg-teal-50 transition-colors">
+                    <div class="mb-4 flex justify-center text-teal-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-2">Core Strength</h3>
+                    <p class="text-slate-600 text-sm">Build a stable foundation for all movement.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="p-6 rounded-2xl bg-slate-50 hover:bg-teal-50 transition-colors">
+                    <div class="mb-4 flex justify-center text-teal-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-2">Flexibility</h3>
+                    <p class="text-slate-600 text-sm">Lengthen muscles and improve range of motion.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="p-6 rounded-2xl bg-slate-50 hover:bg-teal-50 transition-colors">
+                    <div class="mb-4 flex justify-center text-teal-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-2">Mindfulness</h3>
+                    <p class="text-slate-600 text-sm">Connect breath with movement for total focus.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercises Section -->
+    <section id="exercises" class="bg-white">
+        <div class="text-center py-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800">The 5 Exercises</h2>
+            <div class="w-20 h-1 bg-teal-500 mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <!-- Exercise 1 -->
+        <div class="py-16 md:py-24 border-b border-slate-100">
+            <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative group">
+                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl bg-slate-200">
+                        <img src="https://storage.googleapis.com/imagesu/pilates/pilates1.jpg" alt="Pelvic Curl" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400?text=Pelvic+Curl'">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-teal-50 rounded-full -z-10"></div>
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-rose-50 rounded-full -z-10"></div>
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-sm">
+                        <span class="text-teal-800 font-bold text-xl">#1</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-serif font-bold text-slate-800 mb-4">Pelvic Curl (Bridge)</h3>
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl border-l-4 border-teal-500">
+                        <h4 class="flex items-center gap-2 text-sm font-bold text-teal-700 uppercase tracking-wider mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Purpose
+                        </h4>
+                        <p class="text-slate-700">Strengthens the glutes and core, mobilizes the spine, and improves body awareness. Excellent for learning spinal articulation.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-2">How to Do It</h4>
+                            <ol class="space-y-2 text-slate-600">
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">1</span> Lie on your back with knees bent and feet hip-width apart.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">2</span> Place arms alongside body, palms facing down.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">3</span> Exhale, tilt pelvis to flatten back, and slowly lift spine one vertebra at a time.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">4</span> Inhale at the top, then exhale to roll back down slowly.</li>
+                            </ol>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1 bg-teal-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-teal-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Reps</h4>
+                                <p class="text-sm text-teal-900">6–8 slow, controlled repetitions</p>
+                            </div>
+                            <div class="flex-1 bg-rose-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-rose-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Tips</h4>
+                                <ul class="text-sm text-rose-900 list-disc list-inside">
+                                    <li>Focus on lifting from the core/glutes.</li>
+                                    <li>Keep ribs relaxed, don't arch back.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 2 -->
+        <div class="py-16 md:py-24 border-b border-slate-100">
+            <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center md:grid-flow-col-dense">
+                <div class="md:col-start-2 relative group">
+                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl bg-slate-200">
+                        <img src="https://storage.googleapis.com/imagesu/pilates/pilates2.jpg" alt="Chest Lift" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400?text=Chest+Lift'">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-teal-50 rounded-full -z-10"></div>
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-rose-50 rounded-full -z-10"></div>
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-sm">
+                        <span class="text-teal-800 font-bold text-xl">#2</span>
+                    </div>
+                </div>
+                <div class="md:col-start-1">
+                    <h3 class="text-3xl font-serif font-bold text-slate-800 mb-4">Chest Lift</h3>
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl border-l-4 border-teal-500">
+                        <h4 class="flex items-center gap-2 text-sm font-bold text-teal-700 uppercase tracking-wider mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Purpose
+                        </h4>
+                        <p class="text-slate-700">Strengthens the abdominal muscles while teaching proper head and neck support—an essential skill for many Pilates exercises.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-2">How to Do It</h4>
+                            <ol class="space-y-2 text-slate-600">
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">1</span> Lie on back, knees bent, feet flat. Hands behind head.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">2</span> Exhale, lift head/shoulders keeping neck long.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">3</span> Hold for one breath, maintaining engagement.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">4</span> Inhale and lower back down with control.</li>
+                            </ol>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1 bg-teal-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-teal-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Reps</h4>
+                                <p class="text-sm text-teal-900">5–8 repetitions</p>
+                            </div>
+                            <div class="flex-1 bg-rose-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-rose-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Tips</h4>
+                                <ul class="text-sm text-rose-900 list-disc list-inside">
+                                    <li>Don't pull neck with hands.</li>
+                                    <li>Lift rib cage toward pelvis.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 3 -->
+        <div class="py-16 md:py-24 border-b border-slate-100">
+            <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative group">
+                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl bg-slate-200">
+                        <img src="https://storage.googleapis.com/imagesu/pilates/pilates3.jpg" alt="Single Leg Toe Taps" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400?text=Toe+Taps'">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-teal-50 rounded-full -z-10"></div>
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-rose-50 rounded-full -z-10"></div>
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-sm">
+                        <span class="text-teal-800 font-bold text-xl">#3</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-serif font-bold text-slate-800 mb-4">Single Leg Toe Taps</h3>
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl border-l-4 border-teal-500">
+                        <h4 class="flex items-center gap-2 text-sm font-bold text-teal-700 uppercase tracking-wider mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Purpose
+                        </h4>
+                        <p class="text-slate-700">Builds deep core stability while maintaining a neutral spine. Ideal for beginners learning how to control movement from the center.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-2">How to Do It</h4>
+                            <ol class="space-y-2 text-slate-600">
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">1</span> Lie on back, lift legs to tabletop (90 degrees).</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">2</span> Exhale, slowly lower one foot to tap the floor.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">3</span> Inhale and return leg to tabletop.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">4</span> Alternate legs.</li>
+                            </ol>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1 bg-teal-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-teal-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Reps</h4>
+                                <p class="text-sm text-teal-900">8–10 total, alternating</p>
+                            </div>
+                            <div class="flex-1 bg-rose-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-rose-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Tips</h4>
+                                <ul class="text-sm text-rose-900 list-disc list-inside">
+                                    <li>Keep pelvis stable.</li>
+                                    <li>Move slowly for control.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 4 -->
+        <div class="py-16 md:py-24 border-b border-slate-100">
+            <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center md:grid-flow-col-dense">
+                <div class="md:col-start-2 relative group">
+                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl bg-slate-200">
+                        <img src="https://storage.googleapis.com/imagesu/pilates/pilates4.jpg" alt="Spine Stretch Forward" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400?text=Spine+Stretch'">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-teal-50 rounded-full -z-10"></div>
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-rose-50 rounded-full -z-10"></div>
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-sm">
+                        <span class="text-teal-800 font-bold text-xl">#4</span>
+                    </div>
+                </div>
+                <div class="md:col-start-1">
+                    <h3 class="text-3xl font-serif font-bold text-slate-800 mb-4">Spine Stretch Forward</h3>
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl border-l-4 border-teal-500">
+                        <h4 class="flex items-center gap-2 text-sm font-bold text-teal-700 uppercase tracking-wider mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Purpose
+                        </h4>
+                        <p class="text-slate-700">Improves flexibility in the spine and hamstrings while reinforcing proper posture and breathing.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-2">How to Do It</h4>
+                            <ol class="space-y-2 text-slate-600">
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">1</span> Sit tall, legs extended forward. Arms shoulder height.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">2</span> Inhale to lengthen spine.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">3</span> Exhale, round forward reaching toward toes, drawing abs in.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">4</span> Exhale and stack spine back up to vertical.</li>
+                            </ol>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1 bg-teal-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-teal-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Reps</h4>
+                                <p class="text-sm text-teal-900">5–6 slow repetitions</p>
+                            </div>
+                            <div class="flex-1 bg-rose-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-rose-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Tips</h4>
+                                <ul class="text-sm text-rose-900 list-disc list-inside">
+                                    <li>Round spine, don't force stretch.</li>
+                                    <li>Shoulders away from ears.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 5 -->
+        <div class="py-16 md:py-24 border-b border-slate-100">
+            <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative group">
+                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl bg-slate-200">
+                        <img src="https://storage.googleapis.com/imagesu/pilates/pilates5.jpg" alt="Side-Lying Leg Lifts" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/600x400?text=Leg+Lifts'">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-teal-50 rounded-full -z-10"></div>
+                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-rose-50 rounded-full -z-10"></div>
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-sm">
+                        <span class="text-teal-800 font-bold text-xl">#5</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-serif font-bold text-slate-800 mb-4">Side-Lying Leg Lifts</h3>
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl border-l-4 border-teal-500">
+                        <h4 class="flex items-center gap-2 text-sm font-bold text-teal-700 uppercase tracking-wider mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Purpose
+                        </h4>
+                        <p class="text-slate-700">Strengthens the hips and outer thighs while improving balance and pelvic stability.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-2">How to Do It</h4>
+                            <ol class="space-y-2 text-slate-600">
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">1</span> Lie on side, body straight, head supported.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">2</span> Engage core to stabilize torso.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">3</span> Exhale and lift top leg without rocking hips.</li>
+                                <li class="flex gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold mt-0.5">4</span> Inhale to lower leg with control. Switch sides.</li>
+                            </ol>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1 bg-teal-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-teal-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Reps</h4>
+                                <p class="text-sm text-teal-900">8–12 reps each side</p>
+                            </div>
+                            <div class="flex-1 bg-rose-50 p-4 rounded-xl">
+                                <h4 class="flex items-center gap-2 font-bold text-rose-800 mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Tips</h4>
+                                <ul class="text-sm text-rose-900 list-disc list-inside">
+                                    <li>Toes point forward, not up.</li>
+                                    <li>Focus on control, not height.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Routine Section -->
+    <section id="routine" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Background decoration -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1" fill="currentColor" />
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">Create Your Home Routine</h2>
+            <p class="text-slate-300 mb-12 max-w-2xl mx-auto">
+                Perform these exercises in the following order for a complete 15–25 minute session. 
+                All you need is a mat and comfortable clothing.
+            </p>
+
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 inline-block text-left w-full max-w-lg">
+                <div class="space-y-4">
+                    <!-- List Items -->
+                    <div class="flex items-center justify-between group cursor-default">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm">1</span>
+                            <span class="text-lg font-medium text-slate-100 group-hover:text-teal-300 transition-colors">Pelvic Curl</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between group cursor-default">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm">2</span>
+                            <span class="text-lg font-medium text-slate-100 group-hover:text-teal-300 transition-colors">Chest Lift</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between group cursor-default">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm">3</span>
+                            <span class="text-lg font-medium text-slate-100 group-hover:text-teal-300 transition-colors">Single Leg Toe Taps</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between group cursor-default">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm">4</span>
+                            <span class="text-lg font-medium text-slate-100 group-hover:text-teal-300 transition-colors">Spine Stretch Forward</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between group cursor-default">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm">5</span>
+                            <span class="text-lg font-medium text-slate-100 group-hover:text-teal-300 transition-colors">Side-Lying Leg Lifts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-white/20 flex justify-center gap-6 text-sm text-slate-400">
+                    <span class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15-25 Mins
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Low Impact
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 py-16">
+        <div class="max-w-4xl mx-auto px-6 text-center space-y-6">
+            <div class="inline-block p-3 bg-white rounded-full shadow-sm mb-4">
+                <svg class="text-rose-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </div>
+            <h3 class="text-2xl font-serif font-bold text-slate-800">Final Thoughts</h3>
+            <p class="text-slate-600 leading-relaxed italic">
+                "Consistency is more important than intensity. Start slowly, focus on form, and allow your practice to evolve over time. Pilates is not about doing more—it is about moving with awareness, precision, and purpose."
+            </p>
+            <p class="text-sm text-slate-400 pt-8">
+                © 2025 Beginner Pilates Guide. Images courtesy of user uploads.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('bg-white/90', 'backdrop-blur-md', 'shadow-sm', 'py-2');
+                navbar.classList.remove('py-4', 'bg-transparent');
+            } else {
+                navbar.classList.remove('bg-white/90', 'backdrop-blur-md', 'shadow-sm', 'py-2');
+                navbar.classList.add('py-4', 'bg-transparent');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

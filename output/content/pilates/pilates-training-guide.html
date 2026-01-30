@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Requested Meta Tags -->
+    <meta name="description" content="A comprehensive UK guide to Pilates training. Learn about its history, benefits for beginners, seniors, and athletes, safety tips, and how to find qualified instructors in the UK.">
+    <meta name="keywords" content="Pilates UK, Pilates benefits, Reformer vs Mat, Pilates for beginners, Pilates for seniors, Pilates injury rehabilitation, UK Pilates certification, Pilates vs Yoga">
+    
+    <title>Pilates Training Guide (UK Edition)</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .tab-active {
+            border-bottom: 2px solid #0d9488;
+            color: #0d9488;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-person-walking-arrow-right text-teal-600 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Pilates<span class="text-teal-600">UK</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#history" class="text-slate-600 hover:text-teal-600 transition">History</a>
+                    <a href="#benefits" class="text-slate-600 hover:text-teal-600 transition">Benefits</a>
+                    <a href="#comparison" class="text-slate-600 hover:text-teal-600 transition">Comparisons</a>
+                    <a href="#training-uk" class="text-slate-600 hover:text-teal-600 transition">UK Guide</a>
+                    <a href="#safety" class="text-slate-600 hover:text-teal-600 transition">Safety</a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-teal-600 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <a href="#history" class="block px-4 py-2 text-slate-600 hover:bg-slate-100">History</a>
+            <a href="#benefits" class="block px-4 py-2 text-slate-600 hover:bg-slate-100">Benefits</a>
+            <a href="#comparison" class="block px-4 py-2 text-slate-600 hover:bg-slate-100">Comparisons</a>
+            <a href="#training-uk" class="block px-4 py-2 text-slate-600 hover:bg-slate-100">UK Guide</a>
+            <a href="#safety" class="block px-4 py-2 text-slate-600 hover:bg-slate-100">Safety</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-bg h-screen flex items-center justify-center text-center px-4 relative" id="top">
+        <div class="max-w-4xl mx-auto text-white">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Pilates Training Guide <br><span class="text-teal-300 text-3xl md:text-5xl block mt-2">UK Edition</span></h1>
+            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto drop-shadow-md">Discover the art of Contrology. Build strength, flexibility, and body alignment with a method that has stood the test of time.</p>
+            <a href="#history" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg transform hover:scale-105">Start Learning</a>
+        </div>
+    </header>
+
+    <!-- History Section -->
+    <section id="history" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <span class="text-teal-600 font-semibold tracking-wide uppercase text-sm">Origins</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-900">Brief History & Origin</h2>
+                <div class="w-20 h-1 bg-teal-600 mx-auto mt-4 rounded"></div>
+            </div>
+            <div class="prose prose-lg text-slate-600 mx-auto text-justify">
+                <p class="mb-4">
+                    Pilates is a mind-body exercise system developed in the early 20th century by Joseph Pilates, a German physical trainer. During World War I, while interned in a British camp, Pilates began devising his method (which he originally called "Contrology") to help fellow detainees maintain their fitness and rehabilitate injuries.
+                </p>
+                <p class="mb-4">
+                    He famously rigged bed springs to hospital cots so that even bedridden patients could perform resistance exercises – a creative innovation that later inspired the specialized Pilates apparatus. After the war, Pilates emigrated to the United States in 1926 with his wife Clara. They opened a studio in New York City, where the method gained a devoted following, particularly among dancers and performing artists seeking core strength and injury recovery.
+                </p>
+                <p>
+                    Today, Pilates is practiced by millions for its unique blend of strength, flexibility, and body alignment training, a legacy of Joseph’s original "Contrology" system.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16">
+                <span class="text-teal-600 font-semibold tracking-wide uppercase text-sm">Who is it for?</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-900">Benefits by Group</h2>
+                <p class="mt-4 text-slate-500 max-w-2xl mx-auto">Pilates is highly adaptable, offering unique advantages for everyone from beginners to elite athletes.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Beginners -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="bg-teal-600 p-4 flex justify-center items-center">
+                        <i class="fa-solid fa-seedling text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-slate-800">For Beginners</h3>
+                        <p class="text-slate-600 mb-4">An excellent choice for those new to exercise due to its low-impact nature. It builds core strength, lays a foundation for better posture, and improves flexibility without the intimidation of heavy weights.</p>
+                        <ul class="text-sm text-slate-500 list-disc list-inside">
+                            <li>Gentle on joints</li>
+                            <li>Reduces stress</li>
+                            <li>Teaches body awareness</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Seniors -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="bg-teal-700 p-4 flex justify-center items-center">
+                        <i class="fa-solid fa-person-cane text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-slate-800">For Seniors</h3>
+                        <p class="text-slate-600 mb-4">Counteracts age-related declines in strength and balance. Research shows Pilates improves gait and stability, significantly reducing the risk of falls.</p>
+                        <ul class="text-sm text-slate-500 list-disc list-inside">
+                            <li>Alleviates back pain</li>
+                            <li>Sharper cognitive function</li>
+                            <li>Adaptable for arthritis</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Athletes -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="bg-teal-800 p-4 flex justify-center items-center">
+                        <i class="fa-solid fa-person-running text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-slate-800">For Athletes</h3>
+                        <p class="text-slate-600 mb-4">Outstanding cross-training that builds deep core power and corrects muscle imbalances. It improves dynamic flexibility and fine-tunes technique.</p>
+                        <ul class="text-sm text-slate-500 list-disc list-inside">
+                            <li>Enhances agility</li>
+                            <li>Reduces injury risk</li>
+                            <li>Better running economy</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Pregnant Women -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="bg-pink-500 p-4 flex justify-center items-center">
+                        <i class="fa-solid fa-baby-carriage text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-slate-800">For Pregnant Women</h3>
+                        <p class="text-slate-600 mb-4">Safe and effective for staying active. It strengthens the pelvic floor and back muscles, helping to alleviate common pregnancy discomforts.</p>
+                        <ul class="text-sm text-slate-500 list-disc list-inside">
+                            <li>Prepares body for labor</li>
+                            <li>Speeds postpartum recovery</li>
+                            <li>Supports spine stability</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Injury Rehab -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="bg-blue-600 p-4 flex justify-center items-center">
+                        <i class="fa-solid fa-user-doctor text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-slate-800">Injury Rehabilitation</h3>
+                        <p class="text-slate-600 mb-4">Originally evolved as a rehab tool. It gently strengthens supporting muscles without aggravating injuries, focusing on alignment and controlled range of motion.</p>
+                        <ul class="text-sm text-slate-500 list-disc list-inside">
+                            <li>Corrects movement mechanics</li>
+                            <li>Enhances proprioception</li>
+                            <li>Supports recovery from back pain</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Office Workers -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                    <div class="bg-slate-700 p-4 flex justify-center items-center">
+                        <i class="fa-solid fa-laptop-medical text-white text-4xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-slate-800">Office Workers</h3>
+                        <p class="text-slate-600 mb-4">Directly targets issues caused by sedentary routines. It reverses slouched shoulders, strengthens the back, and provides a mental reset from "computer fatigue."</p>
+                        <ul class="text-sm text-slate-500 list-disc list-inside">
+                            <li>Improves posture</li>
+                            <li>Releases tight hip flexors</li>
+                            <li>Boosts circulation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <span class="text-teal-600 font-semibold tracking-wide uppercase text-sm">Context</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-900">Pilates vs. Other Methods</h2>
+            </div>
+
+            <!-- Custom Tabs -->
+            <div class="flex flex-wrap justify-center border-b border-slate-200 mb-8">
+                <button onclick="openTab('yoga')" id="tab-yoga" class="tab-button tab-active px-6 py-3 text-lg focus:outline-none transition">Vs. Yoga</button>
+                <button onclick="openTab('weights')" id="tab-weights" class="tab-button px-6 py-3 text-lg text-slate-500 hover:text-teal-600 focus:outline-none transition">Vs. Strength Training</button>
+                <button onclick="openTab('cardio')" id="tab-cardio" class="tab-button px-6 py-3 text-lg text-slate-500 hover:text-teal-600 focus:outline-none transition">Vs. Aerobic (Cardio)</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="content-yoga" class="tab-content active bg-slate-50 p-8 rounded-lg border border-slate-100">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Pilates vs. Yoga</h3>
+                        <p class="mb-4 text-slate-600">While both are mind-body exercises, <strong>Yoga</strong> is an ancient spiritual practice focusing on flexibility, balance, and meditation. <strong>Pilates</strong> is a newer (1920s) fitness system focusing on core strength, rehabilitation, and precise body mechanics.</p>
+                        <p class="text-slate-600"><strong>Key Difference:</strong> Yoga challenges flexibility and calms the mind through static holds and flow. Pilates challenges core strength and coordination through repetitive, controlled movements.</p>
+                    </div>
+                    <div class="md:w-1/3 text-center">
+                        <div class="bg-teal-100 rounded-full p-8 inline-block">
+                            <i class="fa-solid fa-om text-5xl text-teal-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-weights" class="tab-content bg-slate-50 p-8 rounded-lg border border-slate-100">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Pilates vs. Weight Lifting</h3>
+                        <p class="mb-4 text-slate-600"><strong>Weight Training</strong> aims for maximal strength and muscle mass (hypertrophy). <strong>Pilates</strong> uses body weight and springs for "functional strength," endurance, and deep stabilizer muscles.</p>
+                        <p class="text-slate-600"><strong>Key Difference:</strong> If you want big muscles, lift weights. If you want a lean, stable core and pain-free movement, choose Pilates. Ideally, they complement each other.</p>
+                    </div>
+                    <div class="md:w-1/3 text-center">
+                        <div class="bg-indigo-100 rounded-full p-8 inline-block">
+                            <i class="fa-solid fa-dumbbell text-5xl text-indigo-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-cardio" class="tab-content bg-slate-50 p-8 rounded-lg border border-slate-100">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Pilates vs. Cardio</h3>
+                        <p class="mb-4 text-slate-600">Pilates is generally <strong>not</strong> a cardiovascular workout. It focuses on form and strength, rarely elevating the heart rate enough to improve aerobic capacity.</p>
+                        <p class="text-slate-600"><strong>Advice:</strong> Pilates is not a substitute for aerobic exercise. For optimal health, pair Pilates (for strength/mobility) with activities like running, swimming, or cycling (for heart/lungs).</p>
+                    </div>
+                    <div class="md:w-1/3 text-center">
+                        <div class="bg-rose-100 rounded-full p-8 inline-block">
+                            <i class="fa-solid fa-heart-pulse text-5xl text-rose-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UK Guide Section -->
+    <section id="training-uk" class="py-20 bg-teal-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-teal-100">Choosing a Qualified Trainer (UK)</h2>
+                    <p class="text-teal-50 mb-6 leading-relaxed">
+                        In the UK, finding a qualified instructor is crucial. Reputable instructors typically hold a <strong>Level 3 Diploma in Teaching Pilates</strong>. Look for credentials from organizations like Active IQ, YMCA Awards, or OCR.
+                    </p>
+                    <p class="text-teal-50 mb-6 leading-relaxed">
+                        Many instructors are registered with <strong>CIMSPA</strong> (formerly REPs) or are members of the <strong>Pilates Foundation UK</strong>, <strong>Body Control Pilates</strong>, or <strong>APPI</strong> (for physio-led Pilates).
+                    </p>
+                    
+                    <div class="bg-teal-800 p-6 rounded-lg mt-6">
+                        <h4 class="font-bold text-lg mb-3 flex items-center"><i class="fa-solid fa-sterling-sign mr-2"></i> Typical UK Pricing</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex justify-between border-b border-teal-700 pb-2">
+                                <span>Group Mat Classes</span>
+                                <span class="font-semibold">£10 - £20 per class</span>
+                            </li>
+                            <li class="flex justify-between border-b border-teal-700 pb-2">
+                                <span>Group Reformer Classes</span>
+                                <span class="font-semibold">£20 - £35 per class</span>
+                            </li>
+                            <li class="flex justify-between border-b border-teal-700 pb-2">
+                                <span>Private Lessons (1-on-1)</span>
+                                <span class="font-semibold">£50 - £90 per hour</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Online Classes</span>
+                                <span class="font-semibold">£5 - £10 per class</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-teal-100">Class Types</h3>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-start mb-4">
+                            <div class="bg-teal-600 p-3 rounded-lg mr-4">
+                                <i class="fa-solid fa-layer-group text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white">Mat Pilates</h4>
+                                <p class="text-teal-200 text-sm mt-1">Performed on the floor using body weight. Accessible and focuses on core endurance. Often found in gyms and community centres.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start mb-4">
+                            <div class="bg-teal-600 p-3 rounded-lg mr-4">
+                                <i class="fa-solid fa-bed text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-white">Reformer Pilates</h4>
+                                <p class="text-teal-200 text-sm mt-1">Uses a bed-like frame with springs. Provides resistance and assistance, making it excellent for specific strength goals and rehab.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-6 text-teal-100 mt-10">Group vs. Private</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-teal-800 p-4 rounded-lg">
+                            <h5 class="font-bold mb-2">Group Classes</h5>
+                            <ul class="list-disc list-inside text-xs text-teal-100 space-y-1">
+                                <li>Social & Motivating</li>
+                                <li>Cost-effective</li>
+                                <li>Structured schedule</li>
+                                <li>Less individual feedback</li>
+                            </ul>
+                        </div>
+                        <div class="bg-teal-800 p-4 rounded-lg">
+                            <h5 class="font-bold mb-2">Private (1-on-1)</h5>
+                            <ul class="list-disc list-inside text-xs text-teal-100 space-y-1">
+                                <li>Customized for injuries</li>
+                                <li>Rapid progress</li>
+                                <li>Correction on every rep</li>
+                                <li>Higher investment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety Section -->
+    <section id="safety" class="py-20 bg-slate-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <span class="text-teal-600 font-semibold tracking-wide uppercase text-sm">Best Practices</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-900">Safety Tips & Precautions</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <details class="group bg-white rounded-lg shadow-sm border border-slate-200">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 group-open:bg-teal-50 group-open:text-teal-800">
+                        <span> Consult with Your Healthcare Provider</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-600 p-6 pt-0 mt-4 group-open:mt-0">
+                        If you have pre-existing conditions, injuries, or are pregnant, get clearance from your doctor. Always heed medical advice regarding contraindicated movements.
+                    </div>
+                </details>
+
+                <details class="group bg-white rounded-lg shadow-sm border border-slate-200">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 group-open:bg-teal-50 group-open:text-teal-800">
+                        <span> Never Push Through Pain</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-600 p-6 pt-0 mt-4 group-open:mt-0">
+                        Sharp or intense pain is a warning sign. Differentiate between "working discomfort" and bad pain. If it hurts, stop immediately and ask for a modification.
+                    </div>
+                </details>
+
+                <details class="group bg-white rounded-lg shadow-sm border border-slate-200">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 group-open:bg-teal-50 group-open:text-teal-800">
+                        <span> Quality Over Quantity</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-600 p-6 pt-0 mt-4 group-open:mt-0">
+                        Pilates is about precision and control, not speed or reps. Focus on engaging the correct muscles. Small, properly executed movements yield better results than sloppy ones.
+                    </div>
+                </details>
+
+                <details class="group bg-white rounded-lg shadow-sm border border-slate-200">
+                    <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 group-open:bg-teal-50 group-open:text-teal-800">
+                        <span> Use Modifications</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <div class="text-slate-600 p-6 pt-0 mt-4 group-open:mt-0">
+                        Don't be afraid to use props or simplified versions of exercises. Modifications exist to keep you safe while building strength.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+            <h2 class="text-2xl font-bold text-white mb-4 font-serif">Pilates Training Guide</h2>
+            <p class="mb-8">"Physical fitness is the first requisite of happiness." — Joseph Pilates</p>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="hover:text-teal-500 transition"><i class="fa-brands fa-facebook text-2xl"></i></a>
+                <a href="#" class="hover:text-teal-500 transition"><i class="fa-brands fa-instagram text-2xl"></i></a>
+                <a href="#" class="hover:text-teal-500 transition"><i class="fa-brands fa-twitter text-2xl"></i></a>
+            </div>
+            <p class="text-sm">&copy; 2024 Pilates Guide UK Edition. Information intended for educational purposes.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Tab Functionality
+        function openTab(tabName) {
+            // Hide all content
+            var contents = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].style.display = "none";
+                contents[i].classList.remove("active");
+            }
+            
+            // Remove active style from all buttons
+            var buttons = document.getElementsByClassName("tab-button");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("tab-active", "text-teal-600", "font-bold");
+                buttons[i].classList.add("text-slate-500");
+            }
+
+            // Show current content
+            document.getElementById("content-" + tabName).style.display = "block";
+            
+            // Add active style to current button
+            var activeBtn = document.getElementById("tab-" + tabName);
+            activeBtn.classList.add("tab-active", "text-teal-600", "font-bold");
+            activeBtn.classList.remove("text-slate-500");
+        }
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById("mobile-menu-btn");
+        const menu = document.getElementById("mobile-menu");
+
+        btn.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+
+        // Initialize first tab
+        document.addEventListener("DOMContentLoaded", () => {
+            openTab('yoga');
+        });
+    </script>
+</body>
+</html>

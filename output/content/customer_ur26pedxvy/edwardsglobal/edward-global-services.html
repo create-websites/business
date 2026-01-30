@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services | Edwards Global Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        egs: {
+                            navy: '#0f172a',
+                            blue: '#1e3a8a',
+                            gold: '#ca8a04',
+                            goldlight: '#fde047',
+                            light: '#f8fafc',
+                            gray: '#64748b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #f1f5f9 1px, transparent 1px), linear-gradient(to bottom, #f1f5f9 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        .service-card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .bg-grid-slate {
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation (Consistent with Home) -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer">
+                    <a href="index.html" class="flex items-center">
+                        <div class="w-10 h-10 bg-egs-navy rounded-lg flex items-center justify-center mr-3 shadow-lg">
+                            <span class="text-egs-gold font-serif text-2xl font-bold">E</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-egs-navy font-bold text-lg leading-tight tracking-tight">EDWARDS</span>
+                            <span class="text-slate-500 text-xs font-semibold tracking-widest uppercase">Global Services</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="text-slate-600 hover:text-egs-blue font-medium transition-colors">Home</a>
+                    <a href="#" class="text-egs-blue font-bold transition-colors">Services</a>
+                    <a href="#" class="text-slate-600 hover:text-egs-blue font-medium transition-colors">GlobalTeam™</a>
+                    <a href="#" class="text-slate-600 hover:text-egs-blue font-medium transition-colors">Insights</a>
+                    <a href="#contact" class="px-5 py-2.5 bg-egs-navy text-white font-semibold rounded-full hover:bg-egs-blue transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        Contact Us
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-egs-navy focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full shadow-xl">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="index.html" class="block px-3 py-3 text-slate-600 hover:text-egs-blue hover:bg-slate-50 rounded-md font-medium">Home</a>
+                <a href="#" class="block px-3 py-3 text-egs-blue bg-blue-50 rounded-md font-bold">Services</a>
+                <a href="#" class="block px-3 py-3 text-slate-600 hover:text-egs-blue hover:bg-slate-50 rounded-md font-medium">GlobalTeam™</a>
+                <a href="#contact" class="block mt-4 px-5 py-3 bg-egs-navy text-white text-center rounded-lg font-semibold">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Services Hero -->
+    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-24 bg-egs-navy overflow-hidden">
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-egs-blue rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h1 class="text-5xl lg:text-7xl font-bold text-white tracking-tight mb-6 font-serif">
+                Proprietary Tools for <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-egs-gold to-yellow-200">Global Domination.</span>
+            </h1>
+            <p class="text-xl text-blue-100 mb-10 leading-relaxed max-w-3xl mx-auto">
+                We don't just offer advice; we offer a system. From initial assessment to on-the-ground management, our 4-step process eliminates the guesswork of international expansion.
+            </p>
+            
+            <!-- Process Indicators -->
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-12">
+                <div class="flex items-center text-white/80 text-sm font-semibold tracking-wider uppercase">
+                    <span class="w-8 h-8 rounded-full border border-egs-gold text-egs-gold flex items-center justify-center mr-3">1</span> Assess
+                </div>
+                <div class="w-8 h-px bg-white/20 hidden md:block"></div>
+                <div class="flex items-center text-white/80 text-sm font-semibold tracking-wider uppercase">
+                    <span class="w-8 h-8 rounded-full border border-white/30 text-white/50 flex items-center justify-center mr-3">2</span> Research
+                </div>
+                <div class="w-8 h-px bg-white/20 hidden md:block"></div>
+                <div class="flex items-center text-white/80 text-sm font-semibold tracking-wider uppercase">
+                    <span class="w-8 h-8 rounded-full border border-white/30 text-white/50 flex items-center justify-center mr-3">3</span> Financials
+                </div>
+                <div class="w-8 h-px bg-white/20 hidden md:block"></div>
+                <div class="flex items-center text-white/80 text-sm font-semibold tracking-wider uppercase">
+                    <span class="w-8 h-8 rounded-full border border-white/30 text-white/50 flex items-center justify-center mr-3">4</span> Operations
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- STEP 1: GlobalAssess -->
+    <section id="globalassess" class="py-24 bg-white relative">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-slate-50 -skew-x-12 hidden lg:block z-0"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="inline-block px-3 py-1 bg-blue-100 text-egs-blue rounded-full text-xs font-bold tracking-widest uppercase mb-4">Step 01: Analysis</div>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-egs-navy mb-6">GlobalAssess™</h2>
+                    <h3 class="text-xl text-egs-gold font-medium mb-6">Is your brand actually ready?</h3>
+                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                        Most franchises fail internationally because they expand before they are ready, or they choose the wrong market. GlobalAssess™ is our proprietary diagnostic tool that audits your brand against 25 critical success factors.
+                    </p>
+                    <p class="text-slate-600 mb-8">
+                        We deliver a "Green light, Red light" report. If it's red, we tell you exactly what to fix. If it's green, we tell you exactly where to go.
+                    </p>
+
+                    <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl">
+                        <h4 class="font-bold text-egs-navy mb-4 flex items-center"><i class="fas fa-clipboard-check text-egs-gold mr-2"></i> What We Analyze</h4>
+                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <li class="flex items-center text-sm text-slate-600"><i class="fas fa-check text-green-500 mr-2"></i> Supply Chain Adaptability</li>
+                            <li class="flex items-center text-sm text-slate-600"><i class="fas fa-check text-green-500 mr-2"></i> Training Capabilities</li>
+                            <li class="flex items-center text-sm text-slate-600"><i class="fas fa-check text-green-500 mr-2"></i> Intellectual Property Status</li>
+                            <li class="flex items-center text-sm text-slate-600"><i class="fas fa-check text-green-500 mr-2"></i> Unit Economics Model</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="order-1 lg:order-2 mb-10 lg:mb-0 relative">
+                    <!-- Graphic Representation -->
+                    <div class="bg-white rounded-3xl shadow-2xl p-2 border border-slate-100 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                        <div class="bg-slate-800 rounded-2xl overflow-hidden relative h-[400px] flex items-center justify-center">
+                            <div class="absolute inset-0 bg-grid-slate opacity-10"></div>
+                            <!-- Mock Dashboard UI -->
+                            <div class="text-center">
+                                <div class="w-32 h-32 rounded-full border-8 border-green-500 flex items-center justify-center mx-auto mb-4 relative shadow-[0_0_30px_rgba(34,197,94,0.3)]">
+                                    <span class="text-4xl font-bold text-white">92<span class="text-sm align-top">%</span></span>
+                                    <div class="absolute bottom-0 bg-slate-800 px-2 text-xs text-green-400 font-bold uppercase tracking-wider">Ready</div>
+                                </div>
+                                <h5 class="text-white text-lg font-bold">Global Readiness Score</h5>
+                                <p class="text-slate-400 text-sm mt-2">Brand: BurgerCo US</p>
+                                
+                                <div class="mt-8 flex justify-center gap-4">
+                                    <div class="px-4 py-2 bg-white/10 rounded-lg text-left">
+                                        <div class="text-xs text-slate-400">Operations</div>
+                                        <div class="text-white font-bold">High</div>
+                                    </div>
+                                    <div class="px-4 py-2 bg-white/10 rounded-lg text-left">
+                                        <div class="text-xs text-slate-400">Legal</div>
+                                        <div class="text-yellow-400 font-bold">Med</div>
+                                    </div>
+                                    <div class="px-4 py-2 bg-white/10 rounded-lg text-left">
+                                        <div class="text-xs text-slate-400">Marketing</div>
+                                        <div class="text-white font-bold">High</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STEP 2: Market Research -->
+    <section class="py-24 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 gap-16 items-center">
+                <div class="mb-10 lg:mb-0 relative">
+                     <div class="absolute -inset-4 bg-egs-gold/20 rounded-full blur-2xl"></div>
+                     <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Data Analysis" class="rounded-3xl shadow-xl relative z-10 w-full">
+                     <!-- Floating Card -->
+                     <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-lg border border-slate-100 z-20 max-w-xs">
+                         <p class="text-sm font-bold text-egs-navy mb-2">"Don't sell ice to Eskimos."</p>
+                         <p class="text-xs text-slate-500">We find markets hungry for your specific product.</p>
+                     </div>
+                </div>
+
+                <div>
+                    <div class="inline-block px-3 py-1 bg-blue-100 text-egs-blue rounded-full text-xs font-bold tracking-widest uppercase mb-4">Step 02: Research</div>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-egs-navy mb-6">Market Prioritization</h2>
+                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                        The world is big. You can't go everywhere at once. We analyze 40+ countries to determine your top 3 target markets based on real data, not gut feeling.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0 w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center text-egs-blue border border-slate-100">
+                                <i class="fas fa-search-dollar text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-egs-navy">Competitor Analysis</h4>
+                                <p class="text-slate-600 text-sm">Who is already there? What do they charge? We secret shop your competition in-country.</p>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex-shrink-0 w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center text-egs-blue border border-slate-100">
+                                <i class="fas fa-landmark text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-egs-navy">Regulatory Landscape</h4>
+                                <p class="text-slate-600 text-sm">We assess franchise laws, IP protection, and repatriation of funds (getting your money back out).</p>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex-shrink-0 w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center text-egs-blue border border-slate-100">
+                                <i class="fas fa-utensils text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-egs-navy">Cultural Fit</h4>
+                                <p class="text-slate-600 text-sm">Will locals eat your food? Buy your service? We analyze cultural acceptance and necessary menu/service adaptations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STEP 3: LicensePro -->
+    <section class="py-24 bg-egs-navy text-white relative overflow-hidden">
+        <!-- Background Decor -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-egs-blue rounded-full blur-[100px] opacity-30"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-egs-gold rounded-full blur-[100px] opacity-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="inline-block px-3 py-1 bg-white/10 text-egs-goldlight rounded-full text-xs font-bold tracking-widest uppercase mb-4">Step 03: Financials</div>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">LicensePro™</h2>
+                    <h3 class="text-xl text-blue-200 mb-6">Structuring the Deal for Profitability.</h3>
+                    <p class="text-lg text-slate-300 mb-6 leading-relaxed">
+                        Setting international fees is an art and a science. Charge too much, and the franchisee fails. Charge too little, and you leave money on the table.
+                    </p>
+                    <p class="text-slate-300 mb-8">
+                        LicensePro™ is our financial modeling service that calculates the exact Initial License Fee and Royalty structure needed to ensure ROI for <strong>both</strong> the franchisor and the master franchisee.
+                    </p>
+                    
+                    <a href="#contact" class="inline-flex items-center text-egs-gold font-bold hover:text-white transition-colors">
+                        Get a Financial Assessment <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="order-1 lg:order-2 mb-10 lg:mb-0">
+                    <div class="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 shadow-2xl">
+                        <div class="flex items-center justify-between mb-8">
+                            <h4 class="text-xl font-bold">5-Year Pro Forma</h4>
+                            <div class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded font-bold">Healthy ROI</div>
+                        </div>
+                        
+                        <!-- Abstract Chart Bars -->
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Master Franchisee Revenue</span>
+                                    <span>$4.2M</span>
+                                </div>
+                                <div class="w-full h-2 bg-white/10 rounded-full">
+                                    <div class="w-[85%] h-full bg-blue-500 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Royalty Flow (To You)</span>
+                                    <span>$850k</span>
+                                </div>
+                                <div class="w-full h-2 bg-white/10 rounded-full">
+                                    <div class="w-[45%] h-full bg-egs-gold rounded-full"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Marketing Fund</span>
+                                    <span>$120k</span>
+                                </div>
+                                <div class="w-full h-2 bg-white/10 rounded-full">
+                                    <div class="w-[25%] h-full bg-slate-500 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-white/10">
+                            <p class="text-sm text-slate-300 italic">"EGS helped us structure a deal that kept our Master Franchisee happy while maximizing our royalty stream."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STEP 4: GlobalTeam (Operations) -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-block px-3 py-1 bg-blue-100 text-egs-blue rounded-full text-xs font-bold tracking-widest uppercase mb-4">Step 04: Operations</div>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-egs-navy mb-6">GlobalTeam™ Implementation</h2>
+                <p class="text-lg text-slate-600">
+                    Signing the deal is just the beginning. Now you have to open. GlobalTeam™ acts as your outsourced International Operations Department.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 service-card-hover transition-all duration-300">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center text-egs-navy text-2xl mb-6">
+                        <i class="fas fa-truck-loading"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-egs-navy mb-3">Supply Chain Setup</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        We identify local suppliers that match your quality standards and negotiate pricing. We solve the "How do I get my special sauce there?" problem.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 service-card-hover transition-all duration-300">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center text-egs-navy text-2xl mb-6">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-egs-navy mb-3">Training & Onboarding</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        We help you culturally adapt your training manuals and even conduct the initial training for your Master Franchisee in-country.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 service-card-hover transition-all duration-300">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center text-egs-navy text-2xl mb-6">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-egs-navy mb-3">Ongoing Management</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        We provide monthly monitoring of your international licensees, ensuring royalty compliance and brand standards are met.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="py-20 bg-gradient-to-br from-egs-navy to-slate-900 text-white text-center">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-5xl font-serif font-bold mb-6">Don't guess. Assess.</h2>
+            <p class="text-xl text-blue-100 mb-8">
+                Start with a GlobalAssess™ audit and find out where your biggest opportunities (and risks) lie.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="index.html#contact" class="px-8 py-4 bg-egs-gold text-egs-navy font-bold rounded-full shadow-lg hover:bg-white transition-all transform hover:-translate-y-1">
+                    Request an Assessment
+                </a>
+                <a href="#" class="px-8 py-4 bg-transparent border border-white/30 text-white font-bold rounded-full hover:bg-white/10 transition-all">
+                    Download Services Brochure
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Same as Index) -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center mb-6">
+                        <span class="text-egs-gold font-serif text-3xl font-bold mr-2">E</span>
+                        <div class="flex flex-col">
+                            <span class="text-white font-bold text-lg leading-tight">EDWARDS</span>
+                            <span class="text-slate-500 text-xs tracking-widest uppercase">Global Services</span>
+                        </div>
+                    </div>
+                    <p class="text-sm leading-relaxed mb-6">
+                        Helping franchisors take their business global profitably since 2001. Headquartered in Irvine, California.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6">Services</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#globalassess" class="hover:text-egs-gold transition-colors">GlobalAssess™</a></li>
+                        <li><a href="#" class="hover:text-egs-gold transition-colors">Market Research</a></li>
+                        <li><a href="#" class="hover:text-egs-gold transition-colors">GlobalTeam™</a></li>
+                        <li><a href="#" class="hover:text-egs-gold transition-colors">LicensePro™</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6">Company</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-egs-gold transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-egs-gold transition-colors">Our Leadership</a></li>
+                        <li><a href="#" class="hover:text-egs-gold transition-colors">Case Studies</a></li>
+                        <li><a href="#" class="hover:text-egs-gold transition-colors">Awards</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6">Contact</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-3 text-egs-gold"></i> Irvine, CA 92612, USA</li>
+                        <li class="flex items-center"><i class="fas fa-phone-alt mr-3 text-egs-gold"></i> +1 (949) 224-3896</li>
+                        <li class="flex items-center"><i class="fas fa-envelope mr-3 text-egs-gold"></i> info@edwardsglobal.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
+                <p>&copy; 2026 Edwards Global Services, Inc. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Sticky Navbar effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.replace('py-4', 'py-0'); 
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body>
+</html>
