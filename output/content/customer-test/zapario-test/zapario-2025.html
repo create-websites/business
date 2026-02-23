@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags Added -->
+    <meta name="description" content="Zapario delivers end-to-end engineering solutions: high-speed electronics design, embedded software services, and scalable electronics manufacturing (EMS). We bridge the gap between complex hardware, intelligent firmware, and mass production for IoT, Industrial, and Automotive sectors.">
+    <meta name="keywords" content="Electronics Engineering, Electronics Design, Embedded Software Services, Electronics Manufacturing, EMS, PCB Design, FPGA Development, Firmware, High-Speed Digital Design, IoT Development, Zapario">
+    <meta name="author" content="Zapario">
+
+    <title>Zapario | 2025 Engineering & Manufacturing Insights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            /* Zapario Brand Colors - Professional Blue & Energetic Orange */
+            --color-primary: #0f172a; /* Slate 900 */
+            --color-secondary: #f8fafc; /* Slate 50 */
+            --color-accent: #f97316; /* Orange 500 */
+            --color-accent-hover: #ea580c; /* Orange 600 */
+            --color-tech-blue: #3b82f6; /* Blue 500 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-secondary);
+            color: var(--color-primary);
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Strict Chart Containers */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+            height: 320px;
+            max-height: 400px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 260px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-item {
+            border-left: 3px solid transparent;
+        }
+        .nav-item.active {
+            background-color: #fff;
+            color: var(--color-accent);
+            border-left-color: var(--color-accent);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Utilities */
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: var(--color-tech-blue);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- 
+      Application Structure Plan:
+      1. Brand Identity: Zapario.com (Engineering/Manufacturing/Software).
+      2. Navigation: Mapped directly to company services (Design, Software, Manufacturing).
+      3. Content Flow:
+         - Dashboard: The "Why" (Market complexity requires expert partners).
+         - Electronics Design: Focus on PCB density, High-Speed signals.
+         - Software Services: Focus on Embedded AI, Firmware security.
+         - Manufacturing: Focus on Yield rates, DFM (Design for Mfg).
+      4. Interactive Elements:
+         - Cost/Time Simulator (Manufacturing).
+         - Tech Stack Explorer (Software).
+         - Complexity Trends (Design).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="h-screen overflow-hidden flex flex-col md:flex-row">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center z-20">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl text-orange-500 font-bold">Z</span>
+            <h1 class="text-lg font-bold text-gray-800">Zapario Insights</h1>
+        </div>
+        <button id="mobile-menu-btn" class="text-gray-600 focus:outline-none text-2xl">☰</button>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="bg-slate-50 border-r border-gray-200 w-full md:w-64 flex-shrink-0 flex flex-col h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10">
+        <div class="p-6 border-b border-gray-200 hidden md:block">
+            <div class="flex items-center gap-2 mb-1">
+                <div class="w-8 h-8 bg-orange-500 rounded flex items-center justify-center text-white font-bold text-xl">Z</div>
+                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">ZAPARIO</h1>
+            </div>
+            <p class="text-xs text-gray-500 font-medium tracking-wide uppercase">Engineering Intelligence</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-6">
+            <div class="px-6 mb-2 text-xs font-semibold text-gray-400 uppercase">Report Sections</div>
+            <ul class="space-y-1">
+                <li>
+                    <button onclick="navigateTo('overview')" class="nav-item active w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3 w-5 text-center">📊</span> Market Overview
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigateTo('electronics')" class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3 w-5 text-center">⚡</span> Electronics Design
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigateTo('software')" class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3 w-5 text-center">💻</span> Software Services
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigateTo('manufacturing')" class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3 w-5 text-center">🏭</span> Manufacturing
+                    </button>
+                </li>
+            </ul>
+
+            <div class="mt-8 px-6">
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <h4 class="text-sm font-bold text-blue-900 mb-2">Need a Partner?</h4>
+                    <p class="text-xs text-blue-700 mb-3">From concept to production, Zapario handles the full lifecycle.</p>
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded transition-colors">
+                        Start a Project
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6 border-t border-gray-200">
+            <p class="text-xs text-gray-400">© 2025 Zapario.com</p>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 h-full overflow-y-auto bg-white relative w-full scroll-smooth">
+        <div class="max-w-6xl mx-auto p-4 md:p-10 pb-20">
+            
+            <!-- SECTION 1: OVERVIEW -->
+            <section id="overview" class="space-y-8 animate-fade-in">
+                <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-gray-100 pb-6 gap-4">
+                    <div>
+                        <div class="inline-block px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full mb-3">2025 INDUSTRY REPORT</div>
+                        <h2 class="text-4xl font-bold text-slate-900">The Hardware-Software Convergence</h2>
+                        <p class="mt-4 text-gray-600 max-w-2xl leading-relaxed">
+                            Welcome to Zapario's interactive insights. In 2025, product success isn't just about hardware or software—it's about the seamless integration of <strong>complex electronics</strong>, <strong>intelligent software</strong>, and <strong>scalable manufacturing</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Strategic Pillars Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm card-hover cursor-pointer" onclick="navigateTo('electronics')">
+                        <div class="w-12 h-12 rounded-lg feature-icon flex items-center justify-center text-2xl mb-4">⚡</div>
+                        <h3 class="text-lg font-bold text-gray-900">Engineering Complexity</h3>
+                        <p class="text-sm text-gray-500 mt-2 mb-4">High-speed design & HDI are now standard. See how density is increasing.</p>
+                        <span class="text-blue-600 text-sm font-semibold hover:underline">Explore Electronics &rarr;</span>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm card-hover cursor-pointer" onclick="navigateTo('software')">
+                        <div class="w-12 h-12 rounded-lg feature-icon flex items-center justify-center text-2xl mb-4" style="color: #d97706; background: #fff7ed;">💻</div>
+                        <h3 class="text-lg font-bold text-gray-900">Software Intelligence</h3>
+                        <p class="text-sm text-gray-500 mt-2 mb-4">The shift from "Code" to "AI on Edge". Firmware is the new differentiator.</p>
+                        <span class="text-orange-600 text-sm font-semibold hover:underline">Explore Software &rarr;</span>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm card-hover cursor-pointer" onclick="navigateTo('manufacturing')">
+                        <div class="w-12 h-12 rounded-lg feature-icon flex items-center justify-center text-2xl mb-4" style="color: #059669; background: #ecfdf5;">🏭</div>
+                        <h3 class="text-lg font-bold text-gray-900">Manufacturing Agility</h3>
+                        <p class="text-sm text-gray-500 mt-2 mb-4">Supply chain resilience and DFM (Design for Manufacturing) strategies.</p>
+                        <span class="text-emerald-600 text-sm font-semibold hover:underline">Explore Production &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Trend Chart -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 mt-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">Time-to-Market Pressure vs. Complexity</h3>
+                            <p class="text-sm text-gray-500">Industry average timeline (Months) vs. Component Count</p>
+                        </div>
+                        <div class="mt-2 md:mt-0 px-3 py-1 bg-white border rounded text-xs text-gray-500 font-mono">Data Source: Zapario Internal Projects</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: ELECTRONICS ENGINEERING -->
+            <section id="electronics" class="hidden space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-blue-500 font-bold tracking-wider text-xs uppercase">Zapario Engineering</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">Electronics Design Challenges</h2>
+                    <p class="mt-3 text-gray-600 max-w-3xl">
+                        Modern PCBs are dense, fast, and power-hungry. Our engineering teams specialize in <strong>High-Speed Digital Design</strong>, <strong>FPGA development</strong>, and complex <strong>Power Management</strong>.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Complexity Chart -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-2">The Rise of High-Density Interconnect (HDI)</h3>
+                        <p class="text-xs text-gray-500 mb-6">Layer count trends in consumer vs industrial IoT devices.</p>
+                        <div class="chart-container">
+                            <canvas id="pcbChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Capabilities -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-gray-800">Core Design Capabilities</h3>
+                        
+                        <div class="group border border-gray-200 rounded-xl p-4 hover:border-blue-500 cursor-pointer transition-colors bg-white" onclick="updateDesignDetail('fpga')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-blue-50 text-blue-600 rounded">⚙️</div>
+                                    <span class="font-semibold text-gray-700">FPGA & ASIC Design</span>
+                                </div>
+                                <span class="text-gray-400 group-hover:text-blue-500">↓</span>
+                            </div>
+                            <div id="desc-fpga" class="hidden mt-3 text-sm text-gray-600 pl-12 border-l-2 border-blue-100">
+                                Verilog/VHDL expertise for Xilinx & Altera. Custom IP cores for video processing and signal modulation.
+                            </div>
+                        </div>
+
+                        <div class="group border border-gray-200 rounded-xl p-4 hover:border-blue-500 cursor-pointer transition-colors bg-white" onclick="updateDesignDetail('power')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-blue-50 text-blue-600 rounded">🔋</div>
+                                    <span class="font-semibold text-gray-700">Power Management (PMIC)</span>
+                                </div>
+                                <span class="text-gray-400 group-hover:text-blue-500">↓</span>
+                            </div>
+                            <div id="desc-power" class="hidden mt-3 text-sm text-gray-600 pl-12 border-l-2 border-blue-100">
+                                Ultra-low quiescent current designs for battery-operated IoT. GaN technology integration for high-efficiency converters.
+                            </div>
+                        </div>
+
+                        <div class="group border border-gray-200 rounded-xl p-4 hover:border-blue-500 cursor-pointer transition-colors bg-white" onclick="updateDesignDetail('rf')">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-blue-50 text-blue-600 rounded">📡</div>
+                                    <span class="font-semibold text-gray-700">RF & Wireless Connectivity</span>
+                                </div>
+                                <span class="text-gray-400 group-hover:text-blue-500">↓</span>
+                            </div>
+                            <div id="desc-rf" class="hidden mt-3 text-sm text-gray-600 pl-12 border-l-2 border-blue-100">
+                                Antenna matching and tuning for BLE, LoRaWAN, Wi-Fi 6E, and Cellular IoT. EMI/EMC pre-compliance testing.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: SOFTWARE SERVICES -->
+            <section id="software" class="hidden space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                     <div class="flex items-center gap-2 mb-2">
+                        <span class="text-orange-500 font-bold tracking-wider text-xs uppercase">Zapario Software</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">Embedded & Cloud Software</h2>
+                    <p class="mt-3 text-gray-600 max-w-3xl">
+                        Hardware is only as good as its code. We bridge the gap between <strong>bare-metal firmware</strong> and <strong>cloud dashboards</strong>.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Stack Column 1 -->
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Firmware
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> RTOS (FreeRTOS, Zephyr)</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Bare Metal C/C++</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> OTA Bootloaders</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Driver Development</li>
+                        </ul>
+                    </div>
+                     <!-- Stack Column 2 -->
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-orange-500"></span> Edge AI
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> TensorFlow Lite Micro</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Computer Vision (OpenCV)</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Sensor Fusion Algorithms</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Predictive Maintenance</li>
+                        </ul>
+                    </div>
+                     <!-- Stack Column 3 -->
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-purple-500"></span> Application
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Embedded Linux (Yocto)</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Mobile Apps (React Native)</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Cloud Connectors (AWS/Azure)</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> UI/UX for HMI</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Software Visualization -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-gray-800">Zapario Project Distribution</h3>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200" onclick="updateSoftwareChart('type')">By Type</button>
+                            <button class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200" onclick="updateSoftwareChart('lang')">By Language</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="softwareChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+             <!-- SECTION 4: MANUFACTURING -->
+             <section id="manufacturing" class="hidden space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-emerald-500 font-bold tracking-wider text-xs uppercase">Zapario Production</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">Electronics Manufacturing Services (EMS)</h2>
+                    <p class="mt-3 text-gray-600 max-w-3xl">
+                        Seamlessly transition from prototype to mass production. We handle sourcing, SMT assembly, testing, and final box build.
+                    </p>
+                </div>
+
+                <!-- DFM Calculator / Interactive Tool -->
+                <div class="bg-emerald-50 rounded-2xl p-8 border border-emerald-100">
+                    <div class="grid md:grid-cols-2 gap-10 items-center">
+                        <div>
+                            <h3 class="text-xl font-bold text-emerald-900 mb-2">DFM (Design for Manufacturing) Impact</h3>
+                            <p class="text-sm text-emerald-700 mb-6">
+                                See how involving Zapario early in the design phase affects your production yield and costs.
+                            </p>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="flex justify-between text-sm font-semibold text-emerald-800 mb-2">
+                                        <span>Engagement Stage</span>
+                                        <span id="engagement-label">Concept Phase</span>
+                                    </label>
+                                    <input type="range" id="dfm-slider" min="0" max="2" step="1" value="0" class="w-full h-2 bg-emerald-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+                                    <div class="flex justify-between text-xs text-emerald-600 mt-1">
+                                        <span>Concept</span>
+                                        <span>Prototype</span>
+                                        <span>Pre-Production</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-100">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                    <span class="text-gray-600 text-sm">Projected Yield Rate</span>
+                                    <span class="font-bold text-emerald-600 text-xl" id="yield-rate">99.8%</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                    <span class="text-gray-600 text-sm">Production Cost</span>
+                                    <span class="font-bold text-emerald-600 text-xl" id="cost-save">-15%</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 text-sm">Time to Market</span>
+                                    <span class="font-bold text-emerald-600 text-xl" id="time-market">Accelerated</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-3 bg-emerald-50 rounded text-xs text-emerald-800 italic" id="dfm-insight">
+                                Early engagement allows for component consolidation and automated testing strategy integration.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Steps -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="p-4 border border-gray-100 rounded-lg text-center hover:bg-gray-50 transition">
+                        <div class="text-2xl mb-2">🔍</div>
+                        <h4 class="font-bold text-gray-700 text-sm">Sourcing</h4>
+                        <p class="text-xs text-gray-500 mt-1">Global authorized distributors.</p>
+                    </div>
+                    <div class="p-4 border border-gray-100 rounded-lg text-center hover:bg-gray-50 transition">
+                        <div class="text-2xl mb-2">🤖</div>
+                        <h4 class="font-bold text-gray-700 text-sm">SMT Assembly</h4>
+                        <p class="text-xs text-gray-500 mt-1">High-speed pick & place.</p>
+                    </div>
+                    <div class="p-4 border border-gray-100 rounded-lg text-center hover:bg-gray-50 transition">
+                        <div class="text-2xl mb-2">⚡</div>
+                        <h4 class="font-bold text-gray-700 text-sm">Testing</h4>
+                        <p class="text-xs text-gray-500 mt-1">ICT, FCT, and Burn-in.</p>
+                    </div>
+                    <div class="p-4 border border-gray-100 rounded-lg text-center hover:bg-gray-50 transition">
+                        <div class="text-2xl mb-2">📦</div>
+                        <h4 class="font-bold text-gray-700 text-sm">Box Build</h4>
+                        <p class="text-xs text-gray-500 mt-1">Final assembly & packaging.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CALL TO ACTION FOOTER -->
+            <div class="mt-12 bg-slate-900 rounded-2xl p-8 text-center text-white">
+                <h2 class="text-2xl font-bold mb-3">Ready to Engineer the Future?</h2>
+                <p class="text-slate-400 mb-6 max-w-xl mx-auto">Zapario brings together design, software, and manufacturing under one roof.</p>
+                <button class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-orange-500/20">
+                    Contact Our Engineering Team
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- Navigation Logic ---
+        function navigateTo(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('main > div > section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Reset Nav Buttons
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Set Active Nav Button (Simplified logic)
+            // In a real app, I'd map IDs to buttons more robustly
+            const btnMap = {
+                'overview': 0, 'electronics': 1, 'software': 2, 'manufacturing': 3
+            };
+            const index = btnMap[sectionId];
+            if (index !== undefined) {
+                document.querySelectorAll('.nav-item')[index].classList.add('active');
+            }
+
+            // Close mobile menu if open
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+            }
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // --- Interaction: Design Details ---
+        function updateDesignDetail(id) {
+            // Hide all descriptions first
+            ['desc-fpga', 'desc-power', 'desc-rf'].forEach(d => {
+                document.getElementById(d).classList.add('hidden');
+            });
+            // Toggle clicked one
+            const el = document.getElementById('desc-' + id);
+            el.classList.remove('hidden');
+        }
+
+        // --- Interaction: DFM Slider ---
+        const dfmSlider = document.getElementById('dfm-slider');
+        if(dfmSlider) {
+            dfmSlider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value);
+                const labels = ["Concept Phase", "Prototype Phase", "Pre-Production Phase"];
+                const yields = ["99.8%", "95.0%", "88.5%"];
+                const costs = ["-15%", "-5%", "+10%"];
+                const times = ["Accelerated", "Standard", "Delayed"];
+                const insights = [
+                    "Early engagement allows for component consolidation and automated testing strategy integration.",
+                    "Optimization possible, but PCB layout changes may incur minor re-spin costs.",
+                    "Changes at this stage are costly. DFM focuses primarily on assembly process tuning rather than design efficiency."
+                ];
+
+                document.getElementById('engagement-label').innerText = labels[val];
+                document.getElementById('yield-rate').innerText = yields[val];
+                document.getElementById('cost-save').innerText = costs[val];
+                document.getElementById('time-market').innerText = times[val];
+                document.getElementById('dfm-insight').innerText = insights[val];
+
+                // Color coding logic
+                const rateEl = document.getElementById('yield-rate');
+                if(val === 0) rateEl.className = "font-bold text-emerald-600 text-xl";
+                else if(val === 1) rateEl.className = "font-bold text-yellow-600 text-xl";
+                else rateEl.className = "font-bold text-red-600 text-xl";
+            });
+        }
+
+        // --- Charts Initialization ---
+        let softwareChart;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, font: {family: 'Inter'} } }
+                }
+            };
+
+            // 1. Overview Chart: Complexity vs Time
+            const ctxOverview = document.getElementById('overviewChart').getContext('2d');
+            new Chart(ctxOverview, {
+                type: 'line',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025'],
+                    datasets: [{
+                        label: 'Avg Component Count (Complexity)',
+                        data: [150, 220, 310, 450, 580],
+                        borderColor: '#f97316', // Orange
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        yAxisID: 'y',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Time to Market (Weeks)',
+                        data: [32, 30, 28, 24, 20], // Decreasing due to Zapario efficiency
+                        borderColor: '#3b82f6', // Blue
+                        borderDash: [5, 5],
+                        yAxisID: 'y1',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { type: 'linear', display: true, position: 'left', title: {display:true, text: 'Component Count'} },
+                        y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display:true, text: 'Weeks'} }
+                    }
+                }
+            });
+
+            // 2. Electronics Chart: PCB Layers
+            const ctxPCB = document.getElementById('pcbChart').getContext('2d');
+            new Chart(ctxPCB, {
+                type: 'bar',
+                data: {
+                    labels: ['Wearables', 'Industrial IoT', 'Medical Devices', 'Automotive ECU'],
+                    datasets: [{
+                        label: 'Avg PCB Layers (2020)',
+                        data: [4, 4, 6, 6],
+                        backgroundColor: '#cbd5e1'
+                    }, {
+                        label: 'Avg PCB Layers (2025)',
+                        data: [8, 8, 12, 14], // Increasing density
+                        backgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, title: {display:true, text: 'Layer Count'} }
+                    }
+                }
+            });
+
+            // 3. Software Chart (Dynamic)
+            const ctxSoft = document.getElementById('softwareChart').getContext('2d');
+            
+            const dataByType = {
+                labels: ['Firmware/RTOS', 'Embedded Linux', 'Cloud/Backend', 'Mobile Apps'],
+                datasets: [{
+                    label: 'Projects by Type',
+                    data: [40, 25, 20, 15],
+                    backgroundColor: ['#3b82f6', '#0f172a', '#f97316', '#10b981']
+                }]
+            };
+
+            const dataByLang = {
+                labels: ['C/C++', 'Python (AI)', 'Rust', 'JavaScript/TS'],
+                datasets: [{
+                    label: 'Codebase Distribution',
+                    data: [55, 20, 10, 15],
+                    backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444', '#10b981']
+                }]
+            };
+
+            softwareChart = new Chart(ctxSoft, {
+                type: 'doughnut',
+                data: dataByType,
+                options: {
+                    ...commonOptions,
+                    cutout: '60%'
+                }
+            });
+
+            window.updateSoftwareChart = (mode) => {
+                if(mode === 'type') {
+                    softwareChart.data = dataByType;
+                } else {
+                    softwareChart.data = dataByLang;
+                }
+                softwareChart.update();
+            };
+        });
+    </script>
+</body>
+</html>

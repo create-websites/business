@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT 2025: The Intelligence of Things - Interactive Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --color-bg-main: #fcfcfc;
+            --color-bg-secondary: #f4f4f5; /* Warm Gray 100 */
+            --color-text-primary: #18181b; /* Zinc 900 */
+            --color-text-secondary: #52525b; /* Zinc 600 */
+            --color-accent: #d97706; /* Amber 600 */
+            --color-accent-soft: #fcd34d; /* Amber 300 */
+            --color-success: #10b981; /* Emerald 500 */
+            --color-card: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg-secondary);
+            color: var(--color-text-primary);
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        /* Custom Scrollbar for side panels */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        .nav-item.active {
+            background-color: #fff;
+            color: var(--color-accent);
+            border-left: 4px solid var(--color-accent);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .transition-panel {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Toggle Switch Styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: var(--color-accent);
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: var(--color-accent);
+        }
+    </style>
+    <!-- Chosen Palette: Warm Professional (Amber/Zinc) - Minimalistic and harmonious for data reading -->
+    <!-- Application Structure Plan: 
+         1. Layout: Sidebar navigation (responsive) + Main Content Area. 
+         2. Sections: 
+            - Executive Dashboard: High-level KPIs and summary text.
+            - Market Landscape: Quantitative data on growth and sectors (Charts).
+            - Technology Stack: Exploratory cards for Edge AI, 5G, Security.
+            - Future Outlook: Interactive scenario modeling for 2030.
+         3. Rationale: The structure moves from "What is happening now" (Dashboard) to "Where is it happening" (Landscape) to "How does it work" (Tech) and finally "What's next" (Future). This narrative flow aids understanding.
+    -->
+    <!-- Visualization & Content Choices:
+         - Growth Trend: Line Chart (Chart.js) -> Shows the trajectory from 2020-2030.
+         - Sector Breakdown: Doughnut Chart (Chart.js) -> Goal: Compare. Interaction: Click slice to update detail text.
+         - Edge vs Cloud Latency: Bar Chart -> Goal: Inform/Compare efficiency. 
+         - Tech Cards: HTML Grid -> Goal: Education. Interaction: Click to expand details.
+         - 2030 Scenarios: Interactive Slider/Buttons -> Goal: Engagement/Change. Updates text based on "Optimistic" vs "Conservative" predictions.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="h-screen overflow-hidden flex flex-col md:flex-row">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center z-20">
+        <h1 class="text-xl font-bold text-gray-800">IoT 2025 Report</h1>
+        <button id="mobile-menu-btn" class="text-gray-600 focus:outline-none text-2xl">
+            ☰
+        </button>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="bg-gray-50 border-r border-gray-200 w-full md:w-64 flex-shrink-0 flex flex-col h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 absolute md:relative z-10">
+        <div class="p-6 border-b border-gray-200 hidden md:block">
+            <h1 class="text-2xl font-bold text-gray-800 tracking-tight">IoT Horizon <span class="text-amber-600">2025</span></h1>
+            <p class="text-xs text-gray-500 mt-1">Research & Insights Report</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <button onclick="navigateTo('dashboard')" class="nav-item active w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3">📊</span> Executive Dashboard
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigateTo('market')" class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3">📈</span> Market Landscape
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigateTo('technology')" class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3">📡</span> Technology Stack
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigateTo('challenges')" class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3">🛡️</span> Risks & Challenges
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigateTo('future')" class="nav-item w-full text-left px-6 py-3 text-gray-600 hover:bg-white font-medium flex items-center transition-colors">
+                        <span class="mr-3">🔮</span> Future Outlook 2030
+                    </button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="p-6 border-t border-gray-200 bg-gray-100">
+            <p class="text-xs text-gray-500">Source: Global Tech Analysis 2025</p>
+            <p class="text-xs text-gray-400 mt-1">Generated: Dec 2025</p>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 h-full overflow-y-auto bg-white relative w-full">
+        <div class="max-w-7xl mx-auto p-4 md:p-8 pb-20">
+            
+            <!-- SECTION 1: DASHBOARD -->
+            <section id="dashboard" class="space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                    <h2 class="text-3xl font-bold text-gray-800">State of the IoT 2025</h2>
+                    <p class="mt-2 text-gray-600 max-w-3xl leading-relaxed">
+                        Welcome to the interactive summary of the "IoT Progress & Future" report. 
+                        In 2025, the Internet of Things has transitioned from a phase of "connection" to "intelligence" (AIoT). 
+                        This dashboard provides a high-level overview of the critical metrics defining the current ecosystem.
+                    </p>
+                </div>
+
+                <!-- KPI Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-orange-50 p-6 rounded-xl border border-orange-100 card-hover">
+                        <div class="text-orange-600 text-sm font-semibold uppercase tracking-wide">Active Connections</div>
+                        <div class="text-4xl font-bold text-gray-900 mt-2">27.1 B</div>
+                        <div class="mt-2 text-sm text-gray-600">↑ 18% YoY Growth</div>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 card-hover">
+                        <div class="text-gray-500 text-sm font-semibold uppercase tracking-wide">Market Value</div>
+                        <div class="text-4xl font-bold text-gray-900 mt-2">$1.6 T</div>
+                        <div class="mt-2 text-sm text-gray-600">Global Revenue</div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 card-hover">
+                        <div class="text-blue-600 text-sm font-semibold uppercase tracking-wide">Data Generated</div>
+                        <div class="text-4xl font-bold text-gray-900 mt-2">80 ZB</div>
+                        <div class="mt-2 text-sm text-gray-600">Zettabytes Annually</div>
+                    </div>
+                    <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-100 card-hover">
+                        <div class="text-emerald-600 text-sm font-semibold uppercase tracking-wide">AI Integration</div>
+                        <div class="text-4xl font-bold text-gray-900 mt-2">62%</div>
+                        <div class="mt-2 text-sm text-gray-600">Devices with Edge AI</div>
+                    </div>
+                </div>
+
+                <!-- Key Takeaways Panel -->
+                <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="bg-gray-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-2">!</span>
+                        Key Strategic Findings
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-amber-500 mr-2 mt-1">●</span>
+                                <p class="text-gray-600 text-sm"><strong class="text-gray-800">The Edge AI Shift:</strong> Processing is moving from cloud to device to reduce latency and bandwidth costs.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-amber-500 mr-2 mt-1">●</span>
+                                <p class="text-gray-600 text-sm"><strong class="text-gray-800">Security Mesh:</strong> "Zero Trust" architecture is now the standard requirement for Industrial IoT (IIoT).</p>
+                            </li>
+                        </ul>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-amber-500 mr-2 mt-1">●</span>
+                                <p class="text-gray-600 text-sm"><strong class="text-gray-800">Sustainability:</strong> Energy harvesting sensors (solar, vibration) are extending device lifecycles to 10+ years.</p>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-amber-500 mr-2 mt-1">●</span>
+                                <p class="text-gray-600 text-sm"><strong class="text-gray-800">Connectivity:</strong> 5G RedCap (Reduced Capability) and Wi-Fi 7 are dominating new deployments.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: MARKET LANDSCAPE -->
+            <section id="market" class="hidden space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                    <h2 class="text-3xl font-bold text-gray-800">Market Landscape</h2>
+                    <p class="mt-2 text-gray-600 max-w-3xl">
+                        A detailed breakdown of global adoption. While consumer devices (wearables, smart home) drive volume, the industrial sector (IIoT) drives value and efficiency gains.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Chart 1: Sector Breakdown -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Device Distribution by Sector</h3>
+                        <p class="text-xs text-gray-500 mb-4">Click a sector to view specific use cases below.</p>
+                        <div class="flex-grow flex items-center justify-center bg-gray-50 rounded-lg p-2">
+                            <div class="chart-container">
+                                <canvas id="sectorChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Dynamic Detail Box -->
+                        <div id="sector-detail" class="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-100 min-h-[100px] transition-panel">
+                            <h4 class="font-bold text-amber-800 text-sm mb-1" id="sector-title">Select a sector above</h4>
+                            <p class="text-gray-700 text-sm" id="sector-desc">Interactive details will appear here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Growth Trajectory -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Global Connection Growth (2020-2030)</h3>
+                        <p class="text-xs text-gray-500 mb-4">Billions of active endpoints. Projected vs Historical.</p>
+                        <div class="flex-grow flex items-center justify-center bg-gray-50 rounded-lg p-2">
+                             <div class="chart-container">
+                                <canvas id="growthChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+                            <div class="p-2 bg-gray-50 rounded">
+                                <div class="text-xs text-gray-500">2020</div>
+                                <div class="font-bold text-gray-800">11.3 B</div>
+                            </div>
+                            <div class="p-2 bg-amber-50 rounded border border-amber-100">
+                                <div class="text-xs text-amber-600">2025 (Now)</div>
+                                <div class="font-bold text-amber-800">27.1 B</div>
+                            </div>
+                            <div class="p-2 bg-gray-50 rounded">
+                                <div class="text-xs text-gray-500">2030 (Est)</div>
+                                <div class="font-bold text-gray-800">45.4 B</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: TECHNOLOGY STACK -->
+            <section id="technology" class="hidden space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                    <h2 class="text-3xl font-bold text-gray-800">Technology Stack</h2>
+                    <p class="mt-2 text-gray-600 max-w-3xl">
+                        The 2025 IoT ecosystem is built on three converging pillars: Advanced Connectivity, Edge Computing, and Security protocols. Explore the components below.
+                    </p>
+                </div>
+
+                <!-- Interactive Tech Cards -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer group" onclick="toggleTechDetail('tech-connectivity')">
+                        <div class="h-2 bg-blue-500"></div>
+                        <div class="p-6">
+                            <div class="text-3xl mb-3">📡</div>
+                            <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Connectivity</h3>
+                            <p class="text-sm text-gray-500 mt-2">5G RedCap, Wi-Fi 7, and Satellite IoT.</p>
+                            <div class="mt-4 text-xs font-semibold text-blue-600 flex items-center">
+                                View Specs <span class="ml-1">↓</span>
+                            </div>
+                        </div>
+                        <div id="tech-connectivity" class="hidden bg-gray-50 p-6 border-t border-gray-100 text-sm text-gray-600">
+                            <ul class="list-disc pl-4 space-y-2">
+                                <li><strong>5G RedCap:</strong> Lower cost/power than full 5G. Ideal for wearables.</li>
+                                <li><strong>Wi-Fi 7:</strong> Ultra-low latency (<5ms) for industrial robotics.</li>
+                                <li><strong>LoRaWAN:</strong> Remains dominant for long-range agricultural sensors.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer group" onclick="toggleTechDetail('tech-edge')">
+                        <div class="h-2 bg-amber-500"></div>
+                        <div class="p-6">
+                            <div class="text-3xl mb-3">⚡</div>
+                            <h3 class="text-xl font-bold text-gray-800 group-hover:text-amber-600 transition-colors">Edge AI</h3>
+                            <p class="text-sm text-gray-500 mt-2">On-device processing (NPU/TPU).</p>
+                            <div class="mt-4 text-xs font-semibold text-amber-600 flex items-center">
+                                View Specs <span class="ml-1">↓</span>
+                            </div>
+                        </div>
+                        <div id="tech-edge" class="hidden bg-gray-50 p-6 border-t border-gray-100 text-sm text-gray-600">
+                            <ul class="list-disc pl-4 space-y-2">
+                                <li><strong>TinyML:</strong> Running ML models on microcontrollers (KB of RAM).</li>
+                                <li><strong>Benefits:</strong> Privacy (data stays on device) and zero latency.</li>
+                                <li><strong>Hardware:</strong> Rise of RISC-V architecture for custom IoT chips.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer group" onclick="toggleTechDetail('tech-security')">
+                        <div class="h-2 bg-emerald-500"></div>
+                        <div class="p-6">
+                            <div class="text-3xl mb-3">🔐</div>
+                            <h3 class="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">Security Mesh</h3>
+                            <p class="text-sm text-gray-500 mt-2">Zero Trust & Matter Protocol.</p>
+                            <div class="mt-4 text-xs font-semibold text-emerald-600 flex items-center">
+                                View Specs <span class="ml-1">↓</span>
+                            </div>
+                        </div>
+                        <div id="tech-security" class="hidden bg-gray-50 p-6 border-t border-gray-100 text-sm text-gray-600">
+                            <ul class="list-disc pl-4 space-y-2">
+                                <li><strong>Matter 2.0:</strong> Unifying smart home security standards.</li>
+                                <li><strong>Hardware Root of Trust:</strong> Embedded security in 85% of new chips.</li>
+                                <li><strong>Quantum Safe:</strong> Early testing of post-quantum cryptography.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latency Comparison Chart -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 mt-8">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Impact of Edge Computing on Latency</h3>
+                    <p class="text-sm text-gray-500 mb-6">Comparison of processing time for standard image recognition tasks.</p>
+                    <div class="chart-container">
+                        <canvas id="latencyChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+             <!-- SECTION 4: CHALLENGES -->
+             <section id="challenges" class="hidden space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                    <h2 class="text-3xl font-bold text-gray-800">Risks & Challenges</h2>
+                    <p class="mt-2 text-gray-600 max-w-3xl">
+                        Despite rapid growth, the ecosystem faces significant hurdles regarding security, interoperability, and supply chain resilience.
+                    </p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Challenge Area</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Severity</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mitigation Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="py-4 px-6 text-sm font-medium text-gray-900">Legacy OT Security</td>
+                                <td class="py-4 px-6 text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">High</span></td>
+                                <td class="py-4 px-6 text-sm text-gray-600">Unpatched machinery connected to networks vulnerable to ransomware.</td>
+                                <td class="py-4 px-6 text-sm text-gray-600">Network segmentation & Air-gapping.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-sm font-medium text-gray-900">E-Waste</td>
+                                <td class="py-4 px-6 text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">Medium</span></td>
+                                <td class="py-4 px-6 text-sm text-gray-600">Billions of disposable sensors creating environmental hazards.</td>
+                                <td class="py-4 px-6 text-sm text-gray-600">Biodegradable PCBs & Battery-less tech.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-sm font-medium text-gray-900">Spectrum Congestion</td>
+                                <td class="py-4 px-6 text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Low</span></td>
+                                <td class="py-4 px-6 text-sm text-gray-600">Interference in 2.4GHz bands due to device density.</td>
+                                <td class="py-4 px-6 text-sm text-gray-600">Migration to 6GHz (Wi-Fi 6E/7).</td>
+                            </tr>
+                             <tr>
+                                <td class="py-4 px-6 text-sm font-medium text-gray-900">Privacy Regs</td>
+                                <td class="py-4 px-6 text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">Medium</span></td>
+                                <td class="py-4 px-6 text-sm text-gray-600">GDPR/CCPA compliance for personal data on smart devices.</td>
+                                <td class="py-4 px-6 text-sm text-gray-600">Data minimization strategies.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 5: FUTURE OUTLOOK -->
+            <section id="future" class="hidden space-y-8 animate-fade-in">
+                <div class="border-b border-gray-100 pb-4">
+                    <h2 class="text-3xl font-bold text-gray-800">Future Outlook: 2030</h2>
+                    <p class="mt-2 text-gray-600 max-w-3xl">
+                        Simulate the market trajectory based on different economic and technological adoption scenarios. Adjust the slider to see how variables impact the 2030 forecast.
+                    </p>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="mb-8">
+                        <label for="scenario-slider" class="block text-sm font-medium text-gray-700 mb-2">Adoption Scenario: <span id="scenario-label" class="font-bold text-amber-600">Baseline Growth</span></label>
+                        <input type="range" min="1" max="3" value="2" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-amber-600" id="scenario-slider">
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span>Conservative</span>
+                            <span>Baseline</span>
+                            <span>Optimistic</span>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Projected Outcomes (2030)</h3>
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm font-medium text-gray-700">Total Connected Devices</span>
+                                        <span class="text-sm font-bold text-gray-900" id="stat-devices">45.4 Billion</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="bar-devices" class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm font-medium text-gray-700">Global Economic Impact</span>
+                                        <span class="text-sm font-bold text-gray-900" id="stat-impact">$4.2 Trillion</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="bar-impact" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm font-medium text-gray-700">Automation Level</span>
+                                        <span class="text-sm font-bold text-gray-900" id="stat-auto">Level 3 (Conditional)</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="bar-auto" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg border border-gray-100">
+                            <h4 class="font-bold text-gray-800 mb-2">Scenario Narrative</h4>
+                            <p class="text-sm text-gray-600 leading-relaxed" id="scenario-text">
+                                The baseline scenario assumes steady growth in 5G rollouts and moderate AI adoption. Supply chains remain stable, and security standards like Matter see widespread industry acceptance by 2027.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // --- State Management ---
+        const state = {
+            currentSection: 'dashboard',
+            sectorData: {
+                'Industrial': 'Factory automation, predictive maintenance, and digital twins. The highest value segment.',
+                'Consumer': 'Smart home devices, wearables, and personal entertainment. Highest volume segment.',
+                'Automotive': 'Telematics, fleet management, and V2X (Vehicle-to-Everything) communication.',
+                'Healthcare': 'Remote patient monitoring (IoMT) and smart hospital infrastructure.',
+                'Infrastructure': 'Smart cities, utility grids, and traffic management systems.'
+            },
+            charts: {}
+        };
+
+        // --- Navigation Logic ---
+        function navigateTo(sectionId) {
+            // Update State
+            state.currentSection = sectionId;
+
+            // Update UI - Sections
+            document.querySelectorAll('main > div > section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Update UI - Sidebar Buttons
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('active', 'text-amber-600', 'bg-white', 'border-l-4', 'border-amber-600', 'shadow-sm');
+                // Basic reset
+                btn.classList.add('text-gray-600');
+            });
+            
+            // Highlight active button (Logic to find the button calling this or matching ID)
+            // Simplified: Re-render logic or loop buttons to find match.
+            const buttons = document.querySelectorAll('.nav-item');
+            const sections = ['dashboard', 'market', 'technology', 'challenges', 'future'];
+            const index = sections.indexOf(sectionId);
+            if (index >= 0 && buttons[index]) {
+                buttons[index].classList.add('active');
+                buttons[index].classList.remove('text-gray-600');
+            }
+
+            // Mobile Menu Close
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
+
+        // --- Mobile Menu Toggle ---
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // --- Interaction: Tech Details ---
+        function toggleTechDetail(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // --- Interaction: Future Scenarios ---
+        document.getElementById('scenario-slider').addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            const label = document.getElementById('scenario-label');
+            const text = document.getElementById('scenario-text');
+            const statDev = document.getElementById('stat-devices');
+            const barDev = document.getElementById('bar-devices');
+            const statImp = document.getElementById('stat-impact');
+            const barImp = document.getElementById('bar-impact');
+            const statAuto = document.getElementById('stat-auto');
+            const barAuto = document.getElementById('bar-auto');
+
+            if (val === 1) { // Conservative
+                label.innerText = "Conservative Stagnation";
+                label.className = "font-bold text-gray-600";
+                text.innerText = "Global economic headwinds and continued chip shortages slow deployment. Security concerns limit consumer adoption to basic devices.";
+                
+                statDev.innerText = "35.2 Billion";
+                barDev.style.width = "40%";
+                
+                statImp.innerText = "$2.8 Trillion";
+                barImp.style.width = "30%";
+                
+                statAuto.innerText = "Level 2 (Assist)";
+                barAuto.style.width = "20%";
+
+            } else if (val === 2) { // Baseline
+                label.innerText = "Baseline Growth";
+                label.className = "font-bold text-amber-600";
+                text.innerText = "The baseline scenario assumes steady growth in 5G rollouts and moderate AI adoption. Supply chains remain stable, and security standards like Matter see widespread industry acceptance by 2027.";
+                
+                statDev.innerText = "45.4 Billion";
+                barDev.style.width = "60%";
+                
+                statImp.innerText = "$4.2 Trillion";
+                barImp.style.width = "50%";
+                
+                statAuto.innerText = "Level 3 (Conditional)";
+                barAuto.style.width = "40%";
+
+            } else { // Optimistic
+                label.innerText = "Hyper-Connectivity";
+                label.className = "font-bold text-emerald-600";
+                text.innerText = "Breakthroughs in 6G and solid-state batteries accelerate adoption. Ubiquitous AI integration creates a fully autonomous machine economy.";
+                
+                statDev.innerText = "60+ Billion";
+                barDev.style.width = "90%";
+                
+                statImp.innerText = "$8.5 Trillion";
+                barImp.style.width = "85%";
+                
+                statAuto.innerText = "Level 4 (High Auto)";
+                barAuto.style.width = "80%";
+            }
+        });
+
+        // --- Chart Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Common Chart Options
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Inter', size: 11 },
+                            usePointStyle: true,
+                            boxWidth: 8
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1f2937',
+                        bodyColor: '#4b5563',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        padding: 10,
+                        titleFont: { family: 'Inter', size: 13, weight: 'bold' },
+                        bodyFont: { family: 'Inter', size: 12 },
+                        displayColors: true,
+                        boxPadding: 4
+                    }
+                }
+            };
+
+            // 1. Sector Breakdown (Doughnut)
+            const ctxSector = document.getElementById('sectorChart').getContext('2d');
+            state.charts.sector = new Chart(ctxSector, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Industrial (IIoT)', 'Consumer', 'Automotive', 'Healthcare', 'Infrastructure'],
+                    datasets: [{
+                        data: [35, 30, 15, 12, 8],
+                        backgroundColor: [
+                            '#d97706', // Amber 600
+                            '#fbbf24', // Amber 400
+                            '#3b82f6', // Blue 500
+                            '#10b981', // Emerald 500
+                            '#6b7280'  // Gray 500
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    cutout: '65%',
+                    onClick: (e, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const label = state.charts.sector.data.labels[index];
+                            
+                            // Update Detail Panel
+                            document.getElementById('sector-title').innerText = label;
+                            document.getElementById('sector-desc').innerText = state.sectorData[label.split(' ')[0]];
+                        }
+                    }
+                }
+            });
+
+            // 2. Growth Chart (Line)
+            const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+            state.charts.growth = new Chart(ctxGrowth, {
+                type: 'line',
+                data: {
+                    labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                    datasets: [{
+                        label: 'Active Connections (Billions)',
+                        data: [11.3, 13.8, 16.4, 19.8, 23.5, 27.1, 30.9, 34.2, 37.8, 41.5, 45.4],
+                        borderColor: '#d97706',
+                        backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#d97706',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { borderDash: [2, 4], color: '#f3f4f6' },
+                            ticks: { font: { family: 'Inter', size: 10 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Inter', size: 10 } }
+                        }
+                    }
+                }
+            });
+
+            // 3. Latency Chart (Bar)
+            const ctxLatency = document.getElementById('latencyChart').getContext('2d');
+            state.charts.latency = new Chart(ctxLatency, {
+                type: 'bar',
+                data: {
+                    labels: ['Traditional Cloud', 'Edge Computing (2025)', '5G + Edge (Optimized)'],
+                    datasets: [{
+                        label: 'Round Trip Latency (ms)',
+                        data: [120, 35, 8],
+                        backgroundColor: [
+                            '#e5e7eb', // Gray 200
+                            '#fbbf24', // Amber 400
+                            '#10b981'  // Emerald 500
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Milliseconds (Lower is Better)' }
+                        },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
