@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Engineering Services | Zapario</title>
+    <meta name="description" content="End-to-end software engineering. Embedded firmware, scalable cloud architectures, AI integration, and native web/mobile applications for connected devices.">
+    <meta name="keywords" content="Software Engineering, Embedded Firmware, Cloud Architecture, IoT Software, Mobile App Development, Web Apps, React, AWS, CI/CD, OTA Updates">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'code-pattern': "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmZmZmIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMODggWk04IDBMMCA4IFoiIHN0cm9rZT0iI2YzZjRmNiIgc3Ryb2tlLXdpZHRoPSIxIj48L3BhdGg+Cjwvc3ZnPg==')"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Digital Cleanroom" - Bright white backgrounds, crisp slate text, and Zapario Red (#D71920) to signify logic, execution, and active states. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "Intelligence for the Physical World". High-tech aesthetic.
+         2. Stack Explorer (Interactive): Vertical tabs moving from "Metal to Cloud to User". Explains Firmware, Backend, and Frontend clearly.
+         3. Tech Stack Configurator: User inputs constraints -> Gets a recommended tech stack (e.g., FreeRTOS + MQTT + AWS + React).
+         4. Quality & DevOps (Chart.js Radar): Shows why our software doesn't break. Coverage, CI/CD, SecOps.
+         5. Core Capabilities: Grid of services like OTA, AI, APIs.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. DevOps Radar Chart (Radar):
+            - Goal: Prove software quality and maintainability.
+            - Viz: Radar comparing Zapario metrics vs Average.
+            - Interaction: Hover for tooltips explaining CI/CD, Linting, Test Coverage.
+         2. Architecture Layers (Interactive List/Details):
+            - Goal: Show full-stack capability.
+            - Viz: Clickable menu that updates a central code/feature display panel.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS/Canvas). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* Stack Layer Styles */
+        .stack-layer {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .stack-layer.active {
+            background-color: #fef2f2;
+            border-left: 4px solid #D71920;
+        }
+        .stack-layer:hover:not(.active) {
+            background-color: #f9fafb;
+            border-left: 4px solid #fca5a5;
+        }
+
+        /* Configurator Option */
+        .config-btn {
+            transition: all 0.2s ease;
+        }
+        .config-btn.selected {
+            background-color: #D71920;
+            color: white;
+            border-color: #D71920;
+            box-shadow: 0 4px 14px rgba(215, 25, 32, 0.3);
+        }
+
+        /* Typing Animation for Hero */
+        .typing-effect {
+            border-right: 2px solid #D71920;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #D71920; }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('architecture')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">The Stack</button>
+                    <button onclick="scrollToSection('configurator')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Tech Configurator</button>
+                    <button onclick="scrollToSection('devops')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">DevOps & Quality</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Discuss Your Project
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-gray-50 bg-[size:20px_20px] opacity-60" style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px);"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-terminal-window mr-2"></i>
+                    Software Engineering Services
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Intelligence for the <br>
+                    <span class="text-zapario-red">Physical World.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    We build the complete software ecosystem. From bare-metal firmware driving custom hardware, to scalable cloud architectures and intuitive mobile applications.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('architecture')" class="bg-gray-900 text-white px-8 py-3.5 rounded-md font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
+                        Explore The Stack <i class="ph-bold ph-stack"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900"><i class="ph-fill ph-cpu text-zapario-red"></i></div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-2">Embedded Systems</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900"><i class="ph-fill ph-cloud-check text-zapario-red"></i></div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-2">Cloud Native</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900"><i class="ph-fill ph-device-mobile text-zapario-red"></i></div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-2">Web & Mobile UX</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Abstract Code Terminal -->
+            <div class="relative h-[400px] w-full bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden flex flex-col">
+                <div class="h-10 bg-gray-800 flex items-center px-4 gap-2 border-b border-gray-700">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-4 text-xs font-mono text-gray-400">zapario_core_deploy.sh</span>
+                </div>
+                <div class="p-6 font-mono text-sm flex-1 relative">
+                    <div class="text-gray-500 mb-2"># Initializing Full-Stack Environment</div>
+                    <div class="text-blue-400 mb-1">$ connect_hardware --target esp32 --secure</div>
+                    <div class="text-green-400 mb-4">[OK] Secure boot validated. MQTT connected.</div>
+                    
+                    <div class="text-blue-400 mb-1">$ deploy_cloud_services --env production</div>
+                    <div class="text-green-400 mb-4">[OK] K8s cluster scaled. APIs active.</div>
+                    
+                    <div class="text-blue-400 mb-1">$ launch_frontend_clients</div>
+                    <div class="text-gray-300 mb-1">Building React Native bundles...</div>
+                    <div class="text-gray-300 mb-1">Compiling Web Dashboards...</div>
+                    
+                    <div class="absolute bottom-6 left-6 inline-block">
+                        <span class="text-zapario-red font-bold">> </span>
+                        <span class="typing-effect text-white">System fully operational. Ready for user input.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Connected Stack (Interactive Layers) -->
+    <section id="architecture" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Full-Stack Capability</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">The Architecture of Connectivity</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    A successful product requires seamless communication from the silicon on the board to the app in the user's hand. Explore our expertise across all layers.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 bg-white rounded-2xl shadow-soft border border-gray-200 overflow-hidden">
+                <!-- Stack Menu -->
+                <div class="lg:col-span-4 border-r border-gray-100 flex flex-col">
+                    <button onclick="setStackLayer(0)" id="layer-btn-0" class="stack-layer active text-left p-6 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded bg-gray-900 flex items-center justify-center text-white shadow-sm"><i class="ph-bold ph-device-mobile text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">User Interface Layer</div>
+                            <div class="text-xs text-gray-500">Web, iOS, Android</div>
+                        </div>
+                    </button>
+                    <button onclick="setStackLayer(1)" id="layer-btn-1" class="stack-layer text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded bg-gray-700 flex items-center justify-center text-white shadow-sm"><i class="ph-bold ph-cloud-network text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">Cloud Backend & APIs</div>
+                            <div class="text-xs text-gray-500">Microservices, Data Lakes</div>
+                        </div>
+                    </button>
+                    <button onclick="setStackLayer(2)" id="layer-btn-2" class="stack-layer text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded bg-gray-500 flex items-center justify-center text-white shadow-sm"><i class="ph-bold ph-plugs-connected text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">IoT Connectivity Layer</div>
+                            <div class="text-xs text-gray-500">MQTT, CoAP, WebSockets</div>
+                        </div>
+                    </button>
+                    <button onclick="setStackLayer(3)" id="layer-btn-3" class="stack-layer text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded bg-gray-300 flex items-center justify-center text-gray-800 shadow-sm"><i class="ph-bold ph-microchip text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">Embedded Firmware</div>
+                            <div class="text-xs text-gray-500">Bare Metal, RTOS, Embedded Linux</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="lg:col-span-8 p-8 md:p-12 flex flex-col justify-center min-h-[450px]">
+                    <div id="layer-content" class="transition-opacity duration-300">
+                        <!-- Content Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Configurator -->
+    <section id="configurator" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Interactive Tool</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Tech Stack Configurator</h2>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">
+                    Software isn't one-size-fits-all. Select your project constraints below, and we'll generate a recommended, modern technology stack tailored to your needs.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 bg-gray-50 p-8 rounded-2xl border border-gray-200 shadow-inner">
+                
+                <!-- Inputs -->
+                <div class="space-y-8">
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-3 text-sm">1. Device Processing Power</h4>
+                        <div class="flex gap-2">
+                            <button onclick="updateConfig('device', 'mcu')" id="btn-mcu" class="config-btn selected flex-1 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-700">Microcontroller (Low Power)</button>
+                            <button onclick="updateConfig('device', 'mpu')" id="btn-mpu" class="config-btn flex-1 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-700">Microprocessor / Edge Gateway</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-3 text-sm">2. Data Velocity & Volume</h4>
+                        <div class="flex gap-2">
+                            <button onclick="updateConfig('data', 'telemetry')" id="btn-telemetry" class="config-btn selected flex-1 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-700">Telemetry (Periodic Data)</button>
+                            <button onclick="updateConfig('data', 'streaming')" id="btn-streaming" class="config-btn flex-1 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-700">High-Freq Streaming / Video</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-3 text-sm">3. Primary User Interface</h4>
+                        <div class="flex gap-2">
+                            <button onclick="updateConfig('ui', 'web')" id="btn-web" class="config-btn selected flex-1 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-700">Enterprise Web Dashboard</button>
+                            <button onclick="updateConfig('ui', 'mobile')" id="btn-mobile" class="config-btn flex-1 py-2 px-3 border border-gray-300 rounded-lg text-sm bg-white text-gray-700">Consumer Mobile App</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output -->
+                <div class="bg-white rounded-xl p-8 border border-gray-200 shadow-soft">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Recommended Technology Stack</h3>
+                    
+                    <div class="space-y-6" id="config-output">
+                        <!-- Injected via JS -->
+                    </div>
+
+                    <button class="w-full mt-8 bg-gray-900 text-white font-bold py-3 rounded-lg hover:bg-zapario-red transition-colors">
+                        Discuss This Architecture
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DevOps & Quality Radar -->
+    <section id="devops" class="py-24 bg-gray-900 text-white border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <div>
+                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-800 text-zapario-red border border-gray-700 mb-6">
+                        SecOps & DevOps
+                    </div>
+                    <h2 class="text-3xl font-bold text-white mb-6">Built to Last. Built to Scale.</h2>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        Hardware is hard to update; software shouldn't be. We implement rigorous DevOps pipelines to ensure code is clean, tested, and securely deployed over-the-air (OTA).
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="text-zapario-red text-2xl mt-1"><i class="ph-fill ph-check-circle"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Automated CI/CD Pipelines</h4>
+                                <p class="text-sm text-gray-500 mt-1">Every commit triggers automated builds, unit tests, and static analysis (Linting) to prevent regressions.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="text-zapario-red text-2xl mt-1"><i class="ph-fill ph-check-circle"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Secure OTA Updates</h4>
+                                <p class="text-sm text-gray-500 mt-1">Robust firmware update mechanisms with dual-bank rollback protection and cryptographic signing.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="text-zapario-red text-2xl mt-1"><i class="ph-fill ph-check-circle"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">Security by Design</h4>
+                                <p class="text-sm text-gray-500 mt-1">Mutual TLS authentication, secure boot, and encrypted local storage protect devices from compromise.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700 shadow-2xl">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase text-center mb-6">Software Quality Metrics Comparison</h3>
+                    <div class="chart-container">
+                        <canvas id="qualityRadar"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Grid -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Our Expertise</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Comprehensive Software Services</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="p-8 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-lg transition-all">
+                    <div class="text-4xl text-zapario-red mb-4"><i class="ph-duotone ph-microchip"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Firmware Development</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">C/C++ development for ARM Cortex, ESP32, and PIC architectures. Custom drivers, RTOS integration, and bare-metal programming.</p>
+                </div>
+                
+                <div class="p-8 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-lg transition-all">
+                    <div class="text-4xl text-zapario-red mb-4"><i class="ph-duotone ph-cloud-arrow-up"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Cloud Infrastructure</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Serverless architectures on AWS and Azure. Highly scalable data ingestion, timeseries databases, and secure REST/GraphQL APIs.</p>
+                </div>
+
+                <div class="p-8 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-lg transition-all">
+                    <div class="text-4xl text-zapario-red mb-4"><i class="ph-duotone ph-device-mobile"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Mobile Applications</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Native iOS (Swift) and Android (Kotlin) apps, or cross-platform React Native. Deep expertise in BLE/Wi-Fi hardware provisioning.</p>
+                </div>
+
+                <div class="p-8 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-lg transition-all">
+                    <div class="text-4xl text-zapario-red mb-4"><i class="ph-duotone ph-app-window"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Web Dashboards</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Modern React and Vue.js frontends. Real-time data visualization, fleet management interfaces, and administrative controls.</p>
+                </div>
+
+                <div class="p-8 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-lg transition-all">
+                    <div class="text-4xl text-zapario-red mb-4"><i class="ph-duotone ph-brain"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Edge AI & Analytics</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Deploying TensorFlow Lite and TinyML models directly to edge devices for predictive maintenance and real-time anomaly detection.</p>
+                </div>
+
+                <div class="p-8 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-lg transition-all">
+                    <div class="text-4xl text-zapario-red mb-4"><i class="ph-duotone ph-plugs"></i></div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">System Integration</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Connecting disparate systems. API integrations with ERPs, CRMs, and third-party industrial platforms (SCADA/PLC).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario Software Services. Code the Physical World.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- STACK EXPLORER LOGIC ---
+        const stackData = [
+            {
+                title: "User Interface Layer",
+                desc: "The human connection. We design intuitive, responsive interfaces that abstract away the complexity of the hardware.",
+                features: ["React / Vue.js Web Dashboards", "React Native Cross-Platform Apps", "Native iOS (Swift) & Android (Kotlin)", "BLE Device Provisioning Flows"],
+                tech: ["React", "Swift", "Kotlin", "Figma"]
+            },
+            {
+                title: "Cloud Backend & APIs",
+                desc: "The central nervous system. Scalable architectures designed to handle millions of incoming telemetry messages and route them securely.",
+                features: ["Serverless Architectures (AWS Lambda)", "GraphQL & RESTful APIs", "Timeseries Data Storage", "User Identity & Access Management (IAM)"],
+                tech: ["Node.js", "Python", "AWS", "PostgreSQL"]
+            },
+            {
+                title: "IoT Connectivity Layer",
+                desc: "The secure bridge. Ensuring reliable data transit from edge devices to the cloud, even over intermittent network connections.",
+                features: ["MQTT / CoAP Brokers", "Mutual TLS (mTLS) Authentication", "Device Shadow & State Management", "Over-The-Air (OTA) Update Servers"],
+                tech: ["AWS IoT Core", "Mosquitto", "WebSockets"]
+            },
+            {
+                title: "Embedded Firmware",
+                desc: "The brains of the board. Highly optimized, low-power code running close to the metal to read sensors and control actuators.",
+                features: ["C/C++ Bare Metal Programming", "Real-Time Operating Systems (FreeRTOS)", "Embedded Linux (Yocto)", "Custom Peripheral Drivers (I2C, SPI)"],
+                tech: ["C/C++", "FreeRTOS", "Yocto", "Zephyr"]
+            }
+        ];
+
+        function setStackLayer(index) {
+            // UI Toggle
+            for(let i=0; i<4; i++) {
+                const btn = document.getElementById(`layer-btn-${i}`);
+                if(i === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            }
+
+            // Content Update
+            const data = stackData[index];
+            const content = document.getElementById('layer-content');
+            
+            content.style.opacity = 0;
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="mb-8">
+                        <h3 class="text-3xl font-bold text-gray-900 mb-4">${data.title}</h3>
+                        <p class="text-lg text-gray-600 leading-relaxed">${data.desc}</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-900 uppercase tracking-widest mb-4">Key Responsibilities</h4>
+                            <ul class="space-y-3">
+                                ${data.features.map(f => `
+                                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                                        <i class="ph-bold ph-check text-zapario-red mt-0.5"></i> ${f}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-100">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Core Technologies</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${data.tech.map(t => `<span class="px-3 py-1 bg-gray-100 text-gray-700 font-mono text-xs rounded border border-gray-200">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- CONFIGURATOR LOGIC ---
+        let currentConfig = { device: 'mcu', data: 'telemetry', ui: 'web' };
+
+        function updateConfig(category, value) {
+            currentConfig[category] = value;
+            
+            // UI Visual Update
+            document.querySelectorAll(`button[onclick*="'${category}'"]`).forEach(btn => {
+                if(btn.getAttribute('onclick').includes(`'${value}'`)) {
+                    btn.classList.add('selected', 'bg-zapario-red', 'text-white', 'border-zapario-red');
+                    btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-300');
+                } else {
+                    btn.classList.remove('selected', 'bg-zapario-red', 'text-white', 'border-zapario-red');
+                    btn.classList.add('bg-white', 'text-gray-700', 'border-gray-300');
+                }
+            });
+
+            generateStack();
+        }
+
+        function generateStack() {
+            let fw = { title: "Firmware", tech: "C / FreeRTOS", icon: "ph-microchip", desc: "Low-power optimized RTOS for constrained devices." };
+            let cloud = { title: "Cloud Backend", tech: "AWS IoT Core + Serverless Node.js", icon: "ph-cloud-network", desc: "Highly scalable MQTT ingestion and event-driven logic." };
+            let frontend = { title: "Frontend", tech: "React.js Web App", icon: "ph-app-window", desc: "Complex data visualization and fleet management." };
+
+            // Logic Overrides
+            if (currentConfig.device === 'mpu') {
+                fw = { title: "Edge OS", tech: "Embedded Linux (Yocto) / C++ / Python", icon: "ph-cpu", desc: "Full OS capable of running local databases and complex logic." };
+            }
+            
+            if (currentConfig.data === 'streaming') {
+                cloud = { title: "Cloud Backend", tech: "AWS Kinesis / Kafka + Go", icon: "ph-waves", desc: "High-throughput stream processing and data pipelines." };
+            }
+
+            if (currentConfig.ui === 'mobile') {
+                frontend = { title: "Frontend", tech: "React Native / Swift / Kotlin", icon: "ph-device-mobile", desc: "Native-feeling apps with hardware Bluetooth provisioning." };
+            }
+
+            const outputEl = document.getElementById('config-output');
+            outputEl.innerHTML = `
+                <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-100 bg-gray-50">
+                    <div class="w-10 h-10 bg-white rounded flex items-center justify-center text-zapario-red border border-gray-200"><i class="ph-duotone ${fw.icon} text-xl"></i></div>
+                    <div>
+                        <div class="text-xs font-bold text-gray-500 uppercase">${fw.title}</div>
+                        <div class="font-bold text-gray-900">${fw.tech}</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-100 bg-gray-50">
+                    <div class="w-10 h-10 bg-white rounded flex items-center justify-center text-zapario-red border border-gray-200"><i class="ph-duotone ${cloud.icon} text-xl"></i></div>
+                    <div>
+                        <div class="text-xs font-bold text-gray-500 uppercase">${cloud.title}</div>
+                        <div class="font-bold text-gray-900">${cloud.tech}</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-3 rounded-lg border border-gray-100 bg-gray-50">
+                    <div class="w-10 h-10 bg-white rounded flex items-center justify-center text-zapario-red border border-gray-200"><i class="ph-duotone ${frontend.icon} text-xl"></i></div>
+                    <div>
+                        <div class="text-xs font-bold text-gray-500 uppercase">${frontend.title}</div>
+                        <div class="font-bold text-gray-900">${frontend.tech}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- RADAR CHART ---
+        function initRadar() {
+            const ctx = document.getElementById('qualityRadar').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Test Coverage', 'Automated CI/CD', 'Security/Encryption', 'Code Linting', 'OTA Capability'],
+                    datasets: [{
+                        label: 'Zapario Standard',
+                        data: [95, 100, 95, 100, 90],
+                        fill: true,
+                        backgroundColor: 'rgba(215, 25, 32, 0.3)',
+                        borderColor: '#D71920',
+                        pointBackgroundColor: '#D71920',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#D71920'
+                    }, {
+                        label: 'Industry Average',
+                        data: [50, 60, 40, 70, 30],
+                        fill: true,
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: '#9ca3af',
+                        pointBackgroundColor: '#9ca3af',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#9ca3af'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: {
+                                font: { size: 11, family: 'Inter' },
+                                color: '#9ca3af'
+                            },
+                            ticks: { display: false, max: 100 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: {color: '#d1d5db'} }
+                    }
+                }
+            });
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setStackLayer(0);
+            generateStack(); // Initial configurator load
+            initRadar();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

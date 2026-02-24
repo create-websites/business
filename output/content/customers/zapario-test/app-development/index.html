@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT App Development & Dashboards | Zapario</title>
+    <meta name="description" content="Custom IoT application development. Native mobile apps for device provisioning and control, plus scalable web dashboards for fleet management and analytics.">
+    <meta name="keywords" content="IoT App Development, React Native, Swift, Kotlin, BLE Provisioning, Web Dashboards, Fleet Management, User Experience, UI/UX">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Digital Experience" - Clean white backgrounds (#ffffff), dark slate text for readability (#1f2937), and Zapario Red (#D71920) for calls to action, active states, and data highlights. Focuses on a modern, app-like feel. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "The Human-Hardware Interface". Visualizing a phone communicating with a device.
+         2. Ecosystem Toggle: Split view between "Companion Mobile App" and "Enterprise Dashboard". Explains the dual nature of IoT software.
+         3. Provisioning Simulator: Interactive step-by-step visualizer of the BLE-to-WiFi onboarding process (a major pain point for IoT).
+         4. Live Telemetry Dashboard: Chart.js real-time line chart proving data handling capability.
+         5. Capabilities/Tech Grid: Security, Offline Mode, Frameworks (React, Swift, etc.).
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Real-time Telemetry (Line Chart):
+            - Goal: Show web dashboard capabilities.
+            - Viz: Scrolling line chart with multiple datasets (Temp/Humidity).
+            - Interaction: Auto-updates every second; hover for tooltips.
+         2. Provisioning Flow (CSS/JS Animation sequence):
+            - Goal: Explain complex hardware onboarding.
+            - Viz: CSS-styled 'Phone' and 'Device' passing 'packets' (dots) back and forth.
+            - Interaction: "Next Step" button walks user through Discovery -> Handshake -> Wi-Fi Pass -> Cloud Connect.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS shapes). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* Phone & Device CSS Mockups */
+        .css-phone {
+            width: 160px;
+            height: 320px;
+            border-radius: 24px;
+            border: 8px solid #1f2937;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .css-phone::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 60px; height: 12px;
+            background: #1f2937;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .css-device {
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 -4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Packet Animation */
+        @keyframes sendPacketRight {
+            0% { transform: translate(0, 0); opacity: 1; }
+            80% { transform: translate(120px, 0); opacity: 1; }
+            100% { transform: translate(140px, 0); opacity: 0; }
+        }
+        @keyframes sendPacketLeft {
+            0% { transform: translate(0, 0); opacity: 1; }
+            80% { transform: translate(-120px, 0); opacity: 1; }
+            100% { transform: translate(-140px, 0); opacity: 0; }
+        }
+        .packet-right { animation: sendPacketRight 1s ease-in-out infinite; }
+        .packet-left { animation: sendPacketLeft 1s ease-in-out infinite; }
+
+        /* Ecosystem Tab Styles */
+        .eco-tab {
+            transition: all 0.3s ease;
+        }
+        .eco-tab.active {
+            background-color: #D71920;
+            color: white;
+            border-color: #D71920;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('ecosystem')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">The App Ecosystem</button>
+                    <button onclick="scrollToSection('provisioning')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Device Provisioning</button>
+                    <button onclick="scrollToSection('dashboards')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Live Dashboards</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Start Your App Project
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#f8fafc_1px,transparent_1px),linear-gradient(to_bottom,#f8fafc_1px,transparent_1px)] bg-[size:40px_40px] opacity-80"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-device-mobile-camera mr-2"></i>
+                    IoT Application Development
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    The Interface to <br>
+                    <span class="text-zapario-red">Your Hardware.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    Great hardware fails with bad software. We build intuitive native mobile apps to control devices, and scalable web dashboards to manage global fleets.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('provisioning')" class="bg-zapario-red text-white px-8 py-3.5 rounded-md font-bold shadow-lg shadow-red-200 hover:shadow-xl hover:bg-zapario-dark transition-all flex items-center gap-2">
+                        Explore User Experience <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="text-2xl text-gray-900 mb-2"><i class="ph-duotone ph-bluetooth"></i></div>
+                        <div class="font-bold text-gray-900">BLE / Wi-Fi</div>
+                        <div class="text-xs text-gray-500 uppercase mt-1">Local Control</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 mb-2"><i class="ph-duotone ph-globe-hemisphere-west"></i></div>
+                        <div class="font-bold text-gray-900">Cloud Sync</div>
+                        <div class="text-xs text-gray-500 uppercase mt-1">Remote Access</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 mb-2"><i class="ph-duotone ph-fingerprint"></i></div>
+                        <div class="font-bold text-gray-900">Secure</div>
+                        <div class="text-xs text-gray-500 uppercase mt-1">Biometric Login</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Abstract Ecosystem -->
+            <div class="relative h-[450px] bg-gray-50 rounded-2xl shadow-soft border border-gray-200 flex items-center justify-center p-8 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-tr from-transparent to-red-50/30"></div>
+                
+                <div class="relative w-full h-full flex items-center justify-between px-8">
+                    <!-- Phone -->
+                    <div class="css-phone flex flex-col items-center pt-8 bg-white z-20">
+                        <div class="w-10 h-10 rounded-full bg-red-50 text-zapario-red flex items-center justify-center text-xl mb-4">
+                            <i class="ph-fill ph-house"></i>
+                        </div>
+                        <div class="w-24 h-4 bg-gray-200 rounded mb-2"></div>
+                        <div class="w-16 h-3 bg-gray-100 rounded mb-6"></div>
+                        <div class="grid grid-cols-2 gap-2 px-4 w-full">
+                            <div class="w-full h-12 bg-gray-100 rounded flex items-center justify-center"><i class="ph-bold ph-power text-gray-400"></i></div>
+                            <div class="w-full h-12 bg-zapario-red rounded flex items-center justify-center"><i class="ph-bold ph-sliders-horizontal text-white"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Wireless Waves -->
+                    <div class="flex-1 flex justify-center text-zapario-red/30 text-4xl animate-pulse">
+                        <i class="ph-bold ph-waves"></i>
+                    </div>
+
+                    <!-- Device -->
+                    <div class="css-device z-20">
+                        <div class="w-12 h-12 rounded-full border-4 border-zapario-red flex items-center justify-center relative">
+                            <div class="w-4 h-4 bg-zapario-red rounded-full"></div>
+                            <!-- Ring pulse -->
+                            <div class="absolute inset-0 border-2 border-zapario-red rounded-full animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Ecosystem Split -->
+    <section id="ecosystem" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Two Interfaces, One System</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">The IoT Software Ecosystem</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    A complete IoT solution usually requires two distinct applications: a mobile app for the end-user or installer, and a web dashboard for administrative oversight.
+                </p>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-center mb-12 max-w-md mx-auto bg-white p-1 rounded-lg border border-gray-200 shadow-sm">
+                <button onclick="setEcosystem('mobile')" id="btn-mobile" class="eco-tab active flex-1 py-3 font-bold text-sm rounded-md">
+                    <i class="ph-bold ph-device-mobile mr-2"></i> Companion App
+                </button>
+                <button onclick="setEcosystem('web')" id="btn-web" class="eco-tab flex-1 py-3 font-bold text-sm text-gray-600 rounded-md bg-white">
+                    <i class="ph-bold ph-app-window mr-2"></i> Web Dashboard
+                </button>
+            </div>
+
+            <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-soft border border-gray-200 p-8 md:p-12 min-h-[400px] flex items-center transition-all duration-300" id="ecosystem-content">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Provisioning Simulator -->
+    <section id="provisioning" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">UX Engineering</span>
+                <h2 class="text-3xl font-bold text-white mt-2">The Provisioning Challenge</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">
+                    Connecting a headless device (no screen) to local Wi-Fi is the highest point of friction for users. We engineer seamless BLE handshakes to make onboarding flawless.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-12 items-center bg-gray-800 rounded-2xl border border-gray-700 p-8 shadow-2xl">
+                
+                <!-- Visualization -->
+                <div class="lg:col-span-7 flex items-center justify-between relative px-4 md:px-12 py-12 border-b lg:border-b-0 lg:border-r border-gray-700">
+                    
+                    <!-- App Interface Mockup -->
+                    <div class="css-phone scale-75 md:scale-100 transform origin-left z-20 flex flex-col items-center pt-10 px-4 bg-gray-900 border-gray-600">
+                        <div class="text-white text-sm font-bold mb-4" id="sim-app-title">Searching...</div>
+                        <div class="w-12 h-12 rounded-full border-2 border-gray-600 flex items-center justify-center mb-6" id="sim-app-icon">
+                            <i class="ph-bold ph-bluetooth text-blue-400 animate-pulse"></i>
+                        </div>
+                        <div class="w-full h-8 bg-zapario-red rounded flex items-center justify-center text-[10px] font-bold text-white opacity-50" id="sim-app-btn">SCANNING</div>
+                    </div>
+
+                    <!-- Communication Path -->
+                    <div class="flex-1 flex justify-center items-center h-12 relative overflow-hidden mx-4">
+                        <div class="w-full h-px bg-gray-700 absolute top-1/2 -translate-y-1/2"></div>
+                        <div class="w-3 h-3 rounded-full bg-blue-400 absolute top-1/2 -translate-y-1/2" id="sim-packet" style="opacity: 0;"></div>
+                    </div>
+
+                    <!-- Hardware Device -->
+                    <div class="css-device z-20 bg-gray-900 border-gray-600">
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 rounded border border-gray-700 flex items-center justify-center mb-2" id="sim-dev-icon">
+                                <i class="ph-duotone ph-microchip text-gray-500"></i>
+                            </div>
+                            <div class="flex gap-1" id="sim-dev-leds">
+                                <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                                <div class="w-2 h-2 rounded-full bg-gray-700"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Controls & Steps -->
+                <div class="lg:col-span-5 flex flex-col justify-center">
+                    <div class="mb-8">
+                        <div class="text-xs font-mono text-zapario-red mb-2" id="sim-step-indicator">STEP 1 OF 4</div>
+                        <h3 class="text-2xl font-bold text-white mb-3" id="sim-text-title">BLE Discovery</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed" id="sim-text-desc">
+                            The app scans for Bluetooth Low Energy advertisements. The device broadcasts its presence securely without needing to be paired through OS settings.
+                        </p>
+                    </div>
+                    
+                    <button onclick="nextSimStep()" class="w-full bg-zapario-red text-white font-bold py-3 rounded-lg hover:bg-zapario-dark transition-colors flex items-center justify-center gap-2">
+                        Execute Next Step <i class="ph-bold ph-play"></i>
+                    </button>
+                    <button onclick="resetSim()" class="w-full mt-3 text-gray-500 text-sm font-semibold hover:text-white transition-colors">
+                        Reset Simulator
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Dashboards (Chart.js) -->
+    <section id="dashboards" class="py-24 bg-white border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-4 space-y-6">
+                    <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Enterprise Web Apps</span>
+                    <h2 class="text-3xl font-bold text-gray-900">Fleet Analytics & Control</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Manage thousands of devices globally. We build secure, role-based web portals utilizing modern frameworks (React/Vue) and high-throughput timeseries databases to visualize real-time telemetry.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-zapario-red mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">Real-time Visualization</h4>
+                                <p class="text-xs text-gray-500">Live data streaming via WebSockets/MQTT.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-zapario-red mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">Over-The-Air (OTA) Management</h4>
+                                <p class="text-xs text-gray-500">Push firmware updates to specific device cohorts.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-zapario-red mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">Role-Based Access (RBAC)</h4>
+                                <p class="text-xs text-gray-500">Secure access controls for admins vs. end-users.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Live Chart Visualization -->
+                <div class="lg:col-span-8 bg-white rounded-2xl border border-gray-200 shadow-xl p-6 relative">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <i class="ph-duotone ph-chart-line-up text-2xl text-zapario-red"></i>
+                            <h3 class="font-bold text-gray-900">Asset Telemetry</h3>
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded text-xs font-bold font-mono">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            LIVE CONNECTION
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="liveChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Grid -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">Modern App Capabilities</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-wifi-slash"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Offline-First Logic</h4>
+                    <p class="text-xs text-gray-500">Apps cache data and commands locally, syncing automatically when connectivity is restored.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-fingerprint"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Secure Enclave</h4>
+                    <p class="text-xs text-gray-500">Integration with FaceID/TouchID and secure key storage for device credentials.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-bell-ringing"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Push Notifications</h4>
+                    <p class="text-xs text-gray-500">Critical hardware alerts sent via APNs and FCM directly to the user's lock screen.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-plug"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">3rd Party APIs</h4>
+                    <p class="text-xs text-gray-500">Integrations with Alexa, Google Home, IFTTT, and industrial ERP/CRM systems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario App Development. Connecting Humans and Hardware.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- ECOSYSTEM TOGGLE LOGIC ---
+        const ecoData = {
+            mobile: {
+                title: "Companion Mobile Apps",
+                icon: "ph-device-mobile",
+                desc: "The remote control in your pocket. Built natively (Swift/Kotlin) or cross-platform (React Native), these apps interface directly with hardware via Bluetooth or local Wi-Fi, even without internet access.",
+                features: ["BLE Device Provisioning", "Local Network Control", "Push Notifications", "Biometric Authentication"]
+            },
+            web: {
+                title: "Enterprise Web Dashboards",
+                icon: "ph-app-window",
+                desc: "The control tower. Scalable, browser-based portals designed for managing thousands of devices. We build these using modern frameworks like React.js backed by secure REST/GraphQL APIs.",
+                features: ["Real-time Data Visualization", "Fleet Firmware OTA Management", "Role-Based Access Control (RBAC)", "Historical Data Analytics"]
+            }
+        };
+
+        function setEcosystem(type) {
+            // UI
+            document.getElementById('btn-mobile').className = "eco-tab flex-1 py-3 font-bold text-sm rounded-md text-gray-600 bg-white";
+            document.getElementById('btn-web').className = "eco-tab flex-1 py-3 font-bold text-sm rounded-md text-gray-600 bg-white";
+            
+            const activeBtn = document.getElementById(`btn-${type}`);
+            activeBtn.className = "eco-tab active flex-1 py-3 font-bold text-sm rounded-md";
+
+            // Content
+            const data = ecoData[type];
+            const content = document.getElementById('ecosystem-content');
+            
+            content.style.opacity = 0;
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="grid md:grid-cols-2 gap-12 items-center w-full">
+                        <div>
+                            <div class="w-16 h-16 rounded-2xl bg-red-50 text-zapario-red flex items-center justify-center text-4xl mb-6 border border-red-100">
+                                <i class="ph-duotone ${data.icon}"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-900 mb-4">${data.title}</h3>
+                            <p class="text-lg text-gray-600 leading-relaxed">${data.desc}</p>
+                        </div>
+                        <div class="bg-gray-50 border border-gray-100 rounded-xl p-8 h-full">
+                            <h4 class="text-sm font-bold text-gray-900 uppercase tracking-widest mb-6">Key Capabilities</h4>
+                            <ul class="space-y-5">
+                                ${data.features.map(f => `
+                                    <li class="flex items-start gap-3">
+                                        <i class="ph-fill ph-check-circle text-zapario-red mt-0.5 text-lg"></i>
+                                        <span class="text-gray-700 font-medium">${f}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- PROVISIONING SIMULATOR LOGIC ---
+        let simStep = 0;
+        const simData = [
+            {
+                title: "BLE Discovery",
+                desc: "The app scans for Bluetooth Low Energy advertisements. The device broadcasts its presence securely.",
+                appText: "Searching...",
+                appIcon: "ph-bluetooth text-blue-400 animate-pulse",
+                appBtn: "SCANNING",
+                packetClass: "",
+                devLeds: '<div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div><div class="w-2 h-2 rounded-full bg-gray-700"></div>'
+            },
+            {
+                title: "Secure Handshake",
+                desc: "The user selects the device. A secure, encrypted BLE connection is established to exchange credentials safely.",
+                appText: "Device Found",
+                appIcon: "ph-lock-key text-green-400",
+                appBtn: "CONNECT",
+                packetClass: "packet-right bg-blue-400",
+                devLeds: '<div class="w-2 h-2 rounded-full bg-blue-500"></div><div class="w-2 h-2 rounded-full bg-gray-700"></div>'
+            },
+            {
+                title: "Credential Transfer",
+                desc: "The user inputs their local Wi-Fi password into the app. The app securely transmits this data over the BLE link to the device.",
+                appText: "Send Wi-Fi",
+                appIcon: "ph-wifi-high text-yellow-400",
+                appBtn: "TRANSMIT",
+                packetClass: "packet-right bg-yellow-400",
+                devLeds: '<div class="w-2 h-2 rounded-full bg-blue-500"></div><div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>'
+            },
+            {
+                title: "Cloud Connection",
+                desc: "The device drops the BLE connection, connects to the local Wi-Fi router, authenticates with the Cloud, and registers as online in the App.",
+                appText: "Online",
+                appIcon: "ph-cloud-check text-green-500",
+                appBtn: "DASHBOARD",
+                packetClass: "packet-left bg-green-500",
+                devLeds: '<div class="w-2 h-2 rounded-full bg-gray-700"></div><div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>'
+            }
+        ];
+
+        function nextSimStep() {
+            simStep++;
+            if (simStep >= simData.length) return; // Keep at end until reset
+            
+            updateSimUI();
+        }
+
+        function resetSim() {
+            simStep = 0;
+            updateSimUI();
+        }
+
+        function updateSimUI() {
+            const data = simData[simStep];
+            
+            // Text Updates
+            document.getElementById('sim-step-indicator').innerText = `STEP ${simStep + 1} OF 4`;
+            document.getElementById('sim-text-title').innerText = data.title;
+            document.getElementById('sim-text-desc').innerText = data.desc;
+
+            // App Mockup Updates
+            document.getElementById('sim-app-title').innerText = data.appText;
+            document.getElementById('sim-app-icon').innerHTML = `<i class="ph-bold ${data.appIcon}"></i>`;
+            document.getElementById('sim-app-btn').innerText = data.appBtn;
+            if(simStep === simData.length -1) {
+                document.getElementById('sim-app-btn').className = "w-full h-8 bg-green-600 rounded flex items-center justify-center text-[10px] font-bold text-white";
+            } else {
+                document.getElementById('sim-app-btn').className = "w-full h-8 bg-zapario-red rounded flex items-center justify-center text-[10px] font-bold text-white opacity-90";
+            }
+
+            // Hardware Updates
+            document.getElementById('sim-dev-leds').innerHTML = data.devLeds;
+
+            // Packet Animation
+            const packet = document.getElementById('sim-packet');
+            packet.className = `w-3 h-3 rounded-full absolute top-1/2 -translate-y-1/2 ${data.packetClass}`;
+            packet.style.opacity = data.packetClass === "" ? "0" : "1";
+        }
+
+        // --- LIVE DASHBOARD CHART LOGIC ---
+        let liveChart;
+
+        function initLiveChart() {
+            const ctx = document.getElementById('liveChart').getContext('2d');
+            const initialData1 = Array(15).fill(0).map(() => Math.random() * 5 + 65); // Temp
+            const initialData2 = Array(15).fill(0).map(() => Math.random() * 10 + 40); // Humidity
+            
+            liveChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(15).fill(''), // X axis
+                    datasets: [
+                        {
+                            label: 'Temperature (°F)',
+                            data: initialData1,
+                            borderColor: '#D71920',
+                            backgroundColor: 'rgba(215, 25, 32, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Humidity (%)',
+                            data: initialData2,
+                            borderColor: '#3b82f6', // Blue 500
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 0 }, // Disable animation for live scrolling effect
+                    plugins: { 
+                        legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: {family: 'Inter'} } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: {
+                            display: true, 
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: '#9ca3af' },
+                            min: 30,
+                            max: 80
+                        },
+                        x: { display: false }
+                    }
+                }
+            });
+
+            // Simulate incoming data
+            setInterval(() => {
+                const datasets = liveChart.data.datasets;
+                
+                // Add new data point (random walk)
+                const lastTemp = datasets[0].data[datasets[0].data.length - 1];
+                datasets[0].data.shift();
+                datasets[0].data.push(lastTemp + (Math.random() - 0.5) * 2);
+
+                const lastHum = datasets[1].data[datasets[1].data.length - 1];
+                datasets[1].data.shift();
+                datasets[1].data.push(lastHum + (Math.random() - 0.5) * 3);
+
+                liveChart.update();
+            }, 1500);
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setEcosystem('mobile');
+            updateSimUI();
+            initLiveChart();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

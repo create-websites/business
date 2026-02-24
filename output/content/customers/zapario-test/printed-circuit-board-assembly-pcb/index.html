@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printed Circuit Board Assembly (PCBA) | Zapario</title>
+    <meta name="description" content="High-precision PCBA services. From rapid prototyping to high-volume manufacturing. Expertise in SMT, BGA, 01005 components, and IPC Class 2/3 standards.">
+    <meta name="keywords" content="PCBA, PCB Assembly, SMT, Surface Mount Technology, BGA Assembly, Reflow Soldering, AOI, Rapid PCBA Prototyping, IPC-A-610">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'pcb-dots': "radial-gradient(#e5e7eb 2px, transparent 2px)"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Precision" - White background emphasizing cleanliness and accuracy. Zapario Red (#D71920) for laser/heat representations and primary UI actions. Slate grays for mechanical/hardware elements. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "Precision Assembly". Highlighting specs (01005, BGA).
+         2. SMT Process Explorer: Interactive vertical tabs replacing a static list. Users click through the SMT line stages (Paste, Place, Reflow, Inspect) to understand the rigorous methodology.
+         3. Thermal Reflow Simulator: An interactive Chart.js line graph showing the temperature profile of an oven, educating the user on the science of soldering (Lead vs Lead-Free).
+         4. Prototype vs Production Scale: A quick visual toggle showing how testing and tooling change based on volume.
+         5. Standards & Capabilities: Grid layout of IPC standards and component types handled.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Thermal Reflow Chart (Line Chart):
+            - Goal: Demonstrate deep technical expertise in the soldering process.
+            - Viz: Line chart with specific thermal zones (Preheat, Soak, Reflow, Cool).
+            - Interaction: Buttons to toggle between different solder alloy profiles.
+         2. SMT Process Explorer (Tabs/Cards):
+            - Goal: Walk user through the assembly line.
+            - Viz: Side navigation updating a central detail panel with Phosphor icons acting as machine representations.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling - Strictly constrained */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* Abstract SMT Animation */
+        @keyframes place-component {
+            0% { transform: translateY(-20px) scale(1.2); opacity: 0; }
+            50% { transform: translateY(0) scale(1.2); opacity: 1; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .smt-chip {
+            animation: place-component 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+        }
+
+        /* Process Step Styles */
+        .smt-step {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        .smt-step.active {
+            background-color: #fef2f2;
+            border-left: 3px solid #D71920;
+        }
+        .smt-step:hover:not(.active) {
+            background-color: #f9fafb;
+            border-left: 3px solid #fca5a5;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('smt-line')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">The SMT Line</button>
+                    <button onclick="scrollToSection('reflow-sim')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Thermal Reflow</button>
+                    <button onclick="scrollToSection('scale')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Scale & Quality</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Quote Your PCBA
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <!-- Pad array background -->
+        <div class="absolute inset-0 bg-pcb-dots bg-[size:20px_20px] opacity-[0.15]"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <span class="w-2 h-2 rounded-full bg-zapario-red mr-2 animate-pulse"></span>
+                    Printed Circuit Board Assembly
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Flawless Placement.<br>
+                    <span class="text-zapario-red">Perfect Solder.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    High-precision PCBA services tailored to your volume. From 24-hour rapid prototyping runs to highly automated, million-unit mass production adhering to IPC-A-610 Class 3 standards.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('smt-line')" class="bg-gray-900 text-white px-6 py-3 rounded-md font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
+                        Explore Assembly Process <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 flex flex-wrap gap-8 border-t border-gray-100 pt-6">
+                    <div class="flex items-center gap-3">
+                        <i class="ph-duotone ph-microchip text-3xl text-zapario-red"></i>
+                        <div>
+                            <div class="font-bold text-gray-900">01005</div>
+                            <div class="text-xs text-gray-500 uppercase">Min Chip Size</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="ph-duotone ph-scan text-3xl text-zapario-red"></i>
+                        <div>
+                            <div class="font-bold text-gray-900">0.3mm</div>
+                            <div class="text-xs text-gray-500 uppercase">Min BGA Pitch</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="ph-duotone ph-clock-counter-clockwise text-3xl text-zapario-red"></i>
+                        <div>
+                            <div class="font-bold text-gray-900">24-48 Hr</div>
+                            <div class="text-xs text-gray-500 uppercase">Proto Turns</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Abstract Pick & Place -->
+            <div class="relative h-[400px] bg-white rounded-2xl shadow-soft border border-gray-200 overflow-hidden flex items-center justify-center p-8">
+                <!-- PCB Base -->
+                <div class="w-64 h-64 bg-green-800 rounded-lg border-2 border-green-700 shadow-inner relative grid grid-cols-5 grid-rows-5 gap-2 p-2 transform rotate-12">
+                    <!-- Gold Pads -->
+                    <div class="absolute inset-2 border border-green-600 opacity-30"></div>
+                    
+                    <!-- JS will inject the chips here to animate them -->
+                    <div id="chip-grid" class="absolute inset-2 grid grid-cols-5 grid-rows-5 gap-2 z-10"></div>
+                    
+                    <!-- Pick & Place Head (CSS representation) -->
+                    <div class="absolute top-0 left-0 w-8 h-8 border-2 border-zapario-red rounded-full shadow-[0_0_15px_rgba(215,25,32,0.5)] z-20 transition-all duration-300 pointer-events-none" id="pn-head" style="transform: translate(-20px, -20px);">
+                        <div class="absolute inset-1/4 bg-zapario-red rounded-full opacity-50 animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive SMT Line Explorer -->
+    <section id="smt-line" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">The Factory Floor</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Surface Mount Technology (SMT) Line</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    PCBA is a continuous, automated process. Explore the highly controlled stages required to ensure perfect electrical and mechanical bonds.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 bg-white rounded-2xl shadow-soft border border-gray-200 overflow-hidden">
+                <!-- SMT Steps Menu -->
+                <div class="lg:col-span-4 border-r border-gray-100 bg-gray-50/50 flex flex-col">
+                    <button onclick="setSmtStep(0)" id="smt-btn-0" class="smt-step active text-left p-6 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-printer"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">1. Solder Paste Printing</div>
+                            <div class="text-xs text-gray-500">Stencils & SPI</div>
+                        </div>
+                    </button>
+                    <button onclick="setSmtStep(1)" id="smt-btn-1" class="smt-step text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-crosshair"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">2. Pick and Place</div>
+                            <div class="text-xs text-gray-500">High-Speed Component Mounting</div>
+                        </div>
+                    </button>
+                    <button onclick="setSmtStep(2)" id="smt-btn-2" class="smt-step text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-thermometer-hot"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">3. Reflow Soldering</div>
+                            <div class="text-xs text-gray-500">Multi-zone Thermal Ovens</div>
+                        </div>
+                    </button>
+                    <button onclick="setSmtStep(3)" id="smt-btn-3" class="smt-step text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-scan"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">4. Automated Inspection</div>
+                            <div class="text-xs text-gray-500">3D AOI & X-Ray (AXI)</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="lg:col-span-8 p-8 md:p-12 flex flex-col justify-center">
+                    <div id="smt-detail" class="transition-opacity duration-300">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reflow Profile Simulator (Chart.js) -->
+    <section id="reflow-sim" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-800 text-zapario-red border border-gray-700">
+                        Thermal Engineering
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">Reflow Soldering Profiles</h2>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Perfect solder joints require exact thermal management. Too hot, and components incur thermal shock. Too cool, and cold joints form. View the required temperature curves for different alloys.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <button onclick="updateReflowChart('sac305')" id="btn-sac" class="w-full text-left px-4 py-3 rounded-lg border border-zapario-red bg-zapario-red/20 flex justify-between items-center transition-all group">
+                            <div>
+                                <div class="font-bold text-white text-sm">Lead-Free (SAC305)</div>
+                                <div class="text-xs text-gray-300">Standard RoHS Compliant</div>
+                            </div>
+                            <div class="text-zapario-red font-mono text-sm group-hover:scale-110 transition-transform">Peak: 245°C</div>
+                        </button>
+                        
+                        <button onclick="updateReflowChart('lead')" id="btn-lead" class="w-full text-left px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 flex justify-between items-center hover:border-gray-500 transition-all group">
+                            <div>
+                                <div class="font-bold text-white text-sm">Leaded (Sn63Pb37)</div>
+                                <div class="text-xs text-gray-400">Aerospace / Defense / Medical</div>
+                            </div>
+                            <div class="text-gray-400 font-mono text-sm group-hover:scale-110 transition-transform">Peak: 215°C</div>
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-800 p-4 rounded-lg mt-6 border border-gray-700">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Thermal Zones</h4>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="flex items-center gap-2"><span class="w-2 h-2 bg-blue-500 rounded-full"></span> Preheat (Activation)</div>
+                            <div class="flex items-center gap-2"><span class="w-2 h-2 bg-yellow-500 rounded-full"></span> Thermal Soak</div>
+                            <div class="flex items-center gap-2"><span class="w-2 h-2 bg-zapario-red rounded-full"></span> Reflow (Liquid)</div>
+                            <div class="flex items-center gap-2"><span class="w-2 h-2 bg-gray-400 rounded-full"></span> Cooling</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-2xl">
+                    <div class="text-center text-xs text-gray-400 uppercase tracking-widest font-mono mb-2">Oven Temperature Profile (Time vs. Temp)</div>
+                    <div class="chart-container">
+                        <canvas id="reflowChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Prototype vs Mass Production Scale -->
+    <section id="scale" class="py-24 bg-white border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Agility to Scale</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Any Volume. Consistent Quality.</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                
+                <!-- Prototype Card -->
+                <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm relative overflow-hidden group hover:border-zapario-red hover:shadow-lg transition-all">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gray-100 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-red-50 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">Rapid Prototyping</h3>
+                                <div class="text-sm text-gray-500 mt-1">1 to 50 Units</div>
+                            </div>
+                            <div class="w-12 h-12 bg-gray-100 text-gray-600 rounded-xl flex items-center justify-center text-2xl group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                                <i class="ph-duotone ph-rocket"></i>
+                            </div>
+                        </div>
+                        <ul class="space-y-4 text-sm text-gray-600 mb-8">
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Speed:</span> 24, 48, or 72-hour turns available.</li>
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Setup:</span> No NRE or tooling costs. Paste dispensing or quick-turn stencils.</li>
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Testing:</span> Flying Probe testing (no custom fixture required).</li>
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Sourcing:</span> Tape/reel strips, digi-reels, or customer-consigned kits.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Production Card -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-sm relative overflow-hidden group hover:border-zapario-red hover:shadow-lg transition-all">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gray-200 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-red-50 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">Mass Production</h3>
+                                <div class="text-sm text-gray-500 mt-1">500 to 100,000+ Units</div>
+                            </div>
+                            <div class="w-12 h-12 bg-white border border-gray-200 text-gray-600 rounded-xl flex items-center justify-center text-2xl group-hover:border-zapario-red group-hover:text-zapario-red transition-colors">
+                                <i class="ph-duotone ph-factory"></i>
+                            </div>
+                        </div>
+                        <ul class="space-y-4 text-sm text-gray-600 mb-8">
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Efficiency:</span> Highly automated, multi-lane SMT lines.</li>
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Tooling:</span> Laser-cut stainless stencils, custom reflow pallets.</li>
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Testing:</span> Custom In-Circuit Test (ICT) fixtures (bed-of-nails) & Automated FCT.</li>
+                            <li class="flex items-start gap-3"><i class="ph-bold ph-check text-zapario-red mt-0.5"></i> <span class="font-medium">Sourcing:</span> Turnkey procurement, full reels, long-term forecasting & VMI.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities & Standards Grid -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">Capabilities & Certifications</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 text-center hover:bg-white hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-scan"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-1">BGA, QFN, LGA</h4>
+                    <p class="text-xs text-gray-500">Fine pitch down to 0.3mm. 100% X-Ray inspection for hidden voids.</p>
+                </div>
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 text-center hover:bg-white hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-corners-out"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-1">Rigid-Flex PCBA</h4>
+                    <p class="text-xs text-gray-500">Specialized tooling and thermal profiling for flexible polymide substrates.</p>
+                </div>
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 text-center hover:bg-white hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-shield-check"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-1">IPC-A-610 Class 2 & 3</h4>
+                    <p class="text-xs text-gray-500">Standard industrial to high-reliability aerospace/medical assembly specs.</p>
+                </div>
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 text-center hover:bg-white hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-drop"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-1">Washing & Coating</h4>
+                    <p class="text-xs text-gray-500">Aqueous board washing (No-Clean available) and automated conformal coating.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario PCBA Services. Precision Assembly.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- HERO ANIMATION LOGIC ---
+        function runPickAndPlaceAnimation() {
+            const grid = document.getElementById('chip-grid');
+            const head = document.getElementById('pn-head');
+            if(!grid || !head) return;
+
+            grid.innerHTML = ''; // clear
+            let positions = [];
+            for(let r=0; r<5; r++) {
+                for(let c=0; c<5; c++) {
+                    positions.push({r, c});
+                }
+            }
+            // Shuffle
+            positions.sort(() => Math.random() - 0.5);
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if(i >= positions.length) {
+                    clearInterval(interval);
+                    setTimeout(runPickAndPlaceAnimation, 3000); // Restart after pause
+                    return;
+                }
+
+                const pos = positions[i];
+                // Move Head
+                const cellWidth = grid.offsetWidth / 5;
+                const cellHeight = grid.offsetHeight / 5;
+                const x = pos.c * cellWidth + (cellWidth/2) - 16; // 16 is half head width
+                const y = pos.r * cellHeight + (cellHeight/2) - 16;
+                head.style.transform = `translate(${x}px, ${y}px)`;
+
+                // Place Chip slightly after head moves
+                setTimeout(() => {
+                    const chip = document.createElement('div');
+                    chip.className = 'w-full h-full bg-gray-900 rounded-sm border border-gray-700 smt-chip flex items-center justify-center';
+                    chip.style.gridColumnStart = pos.c + 1;
+                    chip.style.gridRowStart = pos.r + 1;
+                    // Add tiny silver pins visually
+                    chip.innerHTML = '<div class="w-[80%] h-[1px] bg-gray-400 absolute top-0"></div><div class="w-[80%] h-[1px] bg-gray-400 absolute bottom-0"></div>';
+                    grid.appendChild(chip);
+                }, 150);
+
+                i++;
+            }, 300); // Speed of placement
+        }
+
+        // --- SMT LINE EXPLORER LOGIC ---
+        const smtData = [
+            {
+                title: "Solder Paste Printing & SPI",
+                icon: "ph-printer",
+                desc: "The foundation of a good solder joint. We use laser-cut stainless steel stencils to deposit solder paste onto the pads. Immediately after, an automated Solder Paste Inspection (SPI) machine uses 3D optics to verify the volume, alignment, and height of every deposit. 70% of assembly defects originate here, so SPI is critical.",
+                stats: ["100% 3D SPI Verification", "Type 4/5 Paste Formulations", "Automated Stencil Cleaning"]
+            },
+            {
+                title: "High-Speed Pick & Place",
+                icon: "ph-crosshair",
+                desc: "Robotic placement heads, guided by optical recognition cameras, pick components from tape reels or trays and place them precisely onto the solder paste. Our lines balance ultra-high-speed 'chip shooters' for small passives with high-precision heads for large BGAs and QFPs.",
+                stats: ["Down to 01005 (Imperial) Size", "±30µm Placement Accuracy", "Optical Centering & Verification"]
+            },
+            {
+                title: "Reflow Soldering",
+                icon: "ph-thermometer-hot",
+                desc: "The board travels through a multi-zone reflow oven. The temperature profile is carefully engineered to activate the flux, safely raise component temperatures without thermal shock, melt the solder into liquidus, and cool it to form strong, shiny intermetallic bonds.",
+                stats: ["10+ Heating/Cooling Zones", "Nitrogen (N2) Reflow Capable", "Strict Thermal Profiling"]
+            },
+            {
+                title: "Automated Inspection",
+                icon: "ph-scan",
+                desc: "Post-reflow quality assurance. 3D Automated Optical Inspection (AOI) scans the board for missing parts, polarity errors, tombstones, and solder bridges. For components with hidden leads (like BGAs), 3D X-Ray (AXI) looks through the silicon to verify void ratios and joint integrity.",
+                stats: ["100% 3D AOI Scanning", "Inline 3D X-Ray for BGAs/QFNs", "IPC-A-610 Defect Criteria"]
+            }
+        ];
+
+        function setSmtStep(index) {
+            // UI
+            for(let i=0; i<4; i++) {
+                const btn = document.getElementById(`smt-btn-${i}`);
+                if(i === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            }
+
+            // Content
+            const data = smtData[index];
+            const content = document.getElementById('smt-detail');
+            content.style.opacity = 0;
+            
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-red-50 text-zapario-red border border-red-100 flex items-center justify-center text-4xl shadow-sm">
+                            <i class="ph-duotone ${data.icon}"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Process Stage ${index+1}</div>
+                            <h3 class="text-3xl font-bold text-gray-900">${data.title}</h3>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed text-lg mb-8">${data.desc}</p>
+                    
+                    <div class="bg-gray-50 border border-gray-100 p-6 rounded-xl">
+                        <h4 class="text-sm font-bold text-gray-900 mb-4">Stage Capabilities</h4>
+                        <div class="grid sm:grid-cols-2 gap-y-3 gap-x-6">
+                            ${data.stats.map(s => `
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="ph-bold ph-check text-zapario-red"></i> ${s}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- REFLOW CHART LOGIC ---
+        let reflowChart;
+
+        const profiles = {
+            sac305: { // Lead-free
+                data: [25, 100, 150, 175, 200, 245, 220, 150, 80, 25],
+                color: '#D71920',
+                label: 'SAC305 (Lead-Free)'
+            },
+            lead: { // Sn63Pb37
+                data: [25, 80, 120, 150, 183, 215, 180, 120, 60, 25],
+                color: '#9ca3af',
+                label: 'Sn63Pb37 (Leaded)'
+            }
+        };
+
+        function initReflowChart() {
+            const ctx = document.getElementById('reflowChart').getContext('2d');
+            const labels = ['0s', '30s', '60s', '90s', '120s', '150s (Peak)', '180s', '210s', '240s', '270s'];
+
+            reflowChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: profiles.sac305.label,
+                            data: profiles.sac305.data,
+                            borderColor: profiles.sac305.color,
+                            backgroundColor: 'rgba(215, 25, 32, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#1f2937'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return context.raw + " °C"; }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Temperature (°C)', color: '#9ca3af' },
+                            grid: { color: '#374151' },
+                            ticks: { color: '#9ca3af' },
+                            min: 0, max: 280
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9ca3af' }
+                        }
+                    }
+                },
+                plugins: [{
+                    // Plugin to draw background zones
+                    id: 'thermalZones',
+                    beforeDraw: (chart) => {
+                        const ctx = chart.canvas.getContext('2d');
+                        const xAxis = chart.scales.x;
+                        const yAxis = chart.scales.y;
+                        const top = yAxis.top;
+                        const bottom = yAxis.bottom;
+
+                        function drawZone(startX, endX, color, text) {
+                            const x1 = xAxis.getPixelForValue(startX);
+                            const x2 = xAxis.getPixelForValue(endX);
+                            ctx.fillStyle = color;
+                            ctx.fillRect(x1, top, x2 - x1, bottom - top);
+                            
+                            // Text
+                            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                            ctx.font = '10px Inter';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(text, x1 + (x2-x1)/2, top + 20);
+                        }
+
+                        // Preheat (0-2)
+                        drawZone(0, 2, 'rgba(59, 130, 246, 0.05)', 'PREHEAT');
+                        // Soak (2-4)
+                        drawZone(2, 4, 'rgba(234, 179, 8, 0.05)', 'SOAK (FLUX ACT.)');
+                        // Reflow (4-6)
+                        drawZone(4, 6, 'rgba(215, 25, 32, 0.08)', 'REFLOW (LIQUIDUS)');
+                        // Cool (6-9)
+                        drawZone(6, 9, 'rgba(156, 163, 175, 0.05)', 'COOLING');
+                    }
+                }]
+            });
+        }
+
+        function updateReflowChart(alloy) {
+            // UI
+            document.getElementById('btn-sac').className = "w-full text-left px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 flex justify-between items-center hover:border-gray-500 transition-all group";
+            document.getElementById('btn-lead').className = "w-full text-left px-4 py-3 rounded-lg border border-gray-700 bg-gray-800 flex justify-between items-center hover:border-gray-500 transition-all group";
+            
+            const activeBtn = alloy === 'sac305' ? 'btn-sac' : 'btn-lead';
+            document.getElementById(activeBtn).className = "w-full text-left px-4 py-3 rounded-lg border border-zapario-red bg-zapario-red/20 flex justify-between items-center transition-all group";
+
+            // Chart
+            const p = profiles[alloy];
+            reflowChart.data.datasets[0].data = p.data;
+            reflowChart.data.datasets[0].label = p.label;
+            reflowChart.data.datasets[0].borderColor = p.color;
+            reflowChart.data.datasets[0].backgroundColor = alloy === 'sac305' ? 'rgba(215, 25, 32, 0.1)' : 'rgba(156, 163, 175, 0.1)';
+            reflowChart.update();
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runPickAndPlaceAnimation, 500);
+            setSmtStep(0);
+            initReflowChart();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

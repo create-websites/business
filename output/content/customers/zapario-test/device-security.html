@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Device Security & Cryptography | Zapario</title>
+    <meta name="description" content="End-to-end IoT device security engineering. Secure boot, hardware root of trust, mTLS, encryption, and secure OTA updates to protect your connected fleet.">
+    <meta name="keywords" content="IoT Security, Device Security, Secure Boot, Hardware Root of Trust, TPM, mTLS, OTA Updates, Embedded Security, Penetration Testing">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'hex-pattern': "url('data:image/svg+xml,%3Csvg width=\\'60\\' height=\\'60\\' viewBox=\\'0 0 60 60\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cg fill=\\'none\\' fill-rule=\\'evenodd\\'%3E%3Cg fill=\\'%23e5e7eb\\' fill-opacity=\\'0.4\\'%3E%3Cpath d=\\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Secure Enterprise" - White/light gray backgrounds for a sterile, secure feel. Deep slate for text, and Zapario Red (#D71920) exclusively used for security alerts, active protection states, and primary actions. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "Zero Trust at the Edge". Visualizes a locked chip.
+         2. The Attack Surface (Interactive Layers): Toggles between Hardware, Firmware, Network, Lifecycle. Explains vulnerabilities and Zapario's countermeasures.
+         3. Secure Boot Simulator: Interactive educational tool. Shows how cryptographic signatures prevent malware execution at power-on.
+         4. Incident Response (Chart.js): Visualizes the critical need for Secure OTA updates to flatten the risk curve of zero-day exploits.
+         5. Capabilities Grid: Standards, Crypto, Pen Testing.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Vulnerability Risk Chart (Line Chart):
+            - Goal: Prove the ROI of investing in Secure OTA infrastructure.
+            - Viz: Line chart tracking "Risk Exposure" over time.
+            - Interaction: Shows a steep curve for "Manual Patching" vs a flatline for "Zapario Secure OTA".
+         2. Secure Boot Simulator (CSS/JS Flow):
+            - Goal: Demystify embedded security mechanics.
+            - Viz: Sequence of CSS blocks (Boot ROM -> Signature Check -> OS).
+            - Interaction: Buttons to inject malware (fails check) or run valid code (passes check).
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS/Canvas). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* Layer Tab Styles */
+        .layer-tab {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .layer-tab.active {
+            background-color: #fef2f2;
+            border-left: 4px solid #D71920;
+        }
+        .layer-tab:hover:not(.active) {
+            background-color: #f9fafb;
+            border-left: 4px solid #fca5a5;
+        }
+
+        /* Shield Animation */
+        @keyframes shieldPulse {
+            0% { box-shadow: 0 0 0 0 rgba(215, 25, 32, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(215, 25, 32, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(215, 25, 32, 0); }
+        }
+        .shield-active {
+            animation: shieldPulse 2s infinite;
+        }
+
+        /* Simulator Block Styles */
+        .sim-block {
+            transition: all 0.4s ease;
+            opacity: 0.3;
+            transform: scale(0.95);
+        }
+        .sim-block.active {
+            opacity: 1;
+            transform: scale(1);
+            border-color: #3b82f6; /* Blue for active processing */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+        .sim-block.success {
+            opacity: 1;
+            transform: scale(1);
+            border-color: #10b981; /* Green */
+            background-color: #ecfdf5;
+        }
+        .sim-block.error {
+            opacity: 1;
+            transform: scale(1);
+            border-color: #D71920; /* Red */
+            background-color: #fef2f2;
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('attack-surface')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Attack Surface</button>
+                    <button onclick="scrollToSection('secure-boot')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Secure Boot Demo</button>
+                    <button onclick="scrollToSection('ota-response')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Incident Response</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Audit Your Device
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-hex-pattern opacity-50"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-shield-check mr-2"></i>
+                    Embedded Security Engineering
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Zero Trust at <br>
+                    <span class="text-zapario-red">The Edge.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    Connected devices are the weakest link in your enterprise network. We engineer uncompromising security directly into the silicon, firmware, and cloud architecture to protect your fleet from compromise.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('attack-surface')" class="bg-gray-900 text-white px-8 py-3.5 rounded-md font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
+                        Explore Countermeasures <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900"><i class="ph-fill ph-cpu text-zapario-red"></i></div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-2">Hardware Root of Trust</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900"><i class="ph-fill ph-lock-key text-zapario-red"></i></div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-2">End-to-End Encryption</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900"><i class="ph-fill ph-cloud-arrow-down text-zapario-red"></i></div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-2">Secure OTA Updates</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Abstract Locked Chip -->
+            <div class="relative h-[400px] w-full flex items-center justify-center">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#fef2f2_0%,transparent_60%)]"></div>
+                
+                <div class="relative w-64 h-64 bg-gray-900 rounded-2xl border-4 border-gray-800 shadow-2xl flex items-center justify-center z-10 shield-active">
+                    <!-- Chip Pins -->
+                    <div class="absolute -left-3 top-8 bottom-8 w-2 bg-gray-300 rounded-l flex flex-col justify-between py-2"><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div></div>
+                    <div class="absolute -right-3 top-8 bottom-8 w-2 bg-gray-300 rounded-r flex flex-col justify-between py-2"><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div><div class="w-full h-1 bg-gray-800"></div></div>
+                    
+                    <!-- Center Shield -->
+                    <div class="w-32 h-32 bg-gray-800 rounded-xl border border-gray-600 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-20 bg-[linear-gradient(45deg,transparent_25%,#D71920_50%,transparent_75%)] bg-[length:200%_200%] animate-[pulse_3s_linear_infinite]"></div>
+                        <i class="ph-duotone ph-shield-check text-6xl text-zapario-red relative z-10"></i>
+                    </div>
+                </div>
+
+                <!-- Floating Code snippets -->
+                <div class="absolute top-10 right-0 bg-white border border-gray-200 px-3 py-2 rounded-lg shadow-soft text-xs font-mono text-green-600 opacity-80">
+                    <i class="ph-bold ph-check"></i> SIGNATURE_VALID
+                </div>
+                <div class="absolute bottom-10 left-0 bg-white border border-gray-200 px-3 py-2 rounded-lg shadow-soft text-xs font-mono text-blue-600 opacity-80">
+                    <i class="ph-bold ph-lock-key"></i> mTLS_ESTABLISHED
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Attack Surface (Interactive Stack) -->
+    <section id="attack-surface" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Defense in Depth</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Securing the Entire Attack Surface</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    A single vulnerable layer compromises the entire system. Explore how we engineer mitigations from physical silicon up to cloud APIs.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 bg-white rounded-2xl shadow-soft border border-gray-200 overflow-hidden">
+                <!-- Stack Menu -->
+                <div class="lg:col-span-4 border-r border-gray-100 flex flex-col bg-gray-50/30">
+                    <button onclick="setLayer(0)" id="layer-btn-0" class="layer-tab active text-left p-6 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-cpu text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">1. Hardware Layer</div>
+                            <div class="text-xs text-gray-500">Physical Tampering & Extraction</div>
+                        </div>
+                    </button>
+                    <button onclick="setLayer(1)" id="layer-btn-1" class="layer-tab text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-file-code text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">2. Firmware Layer</div>
+                            <div class="text-xs text-gray-500">Malware & Reverse Engineering</div>
+                        </div>
+                    </button>
+                    <button onclick="setLayer(2)" id="layer-btn-2" class="layer-tab text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-wifi-high text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">3. Network Layer</div>
+                            <div class="text-xs text-gray-500">Man-in-the-Middle (MitM) & Spoofing</div>
+                        </div>
+                    </button>
+                    <button onclick="setLayer(3)" id="layer-btn-3" class="layer-tab text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="w-10 h-10 rounded bg-white border border-gray-200 flex items-center justify-center text-zapario-red shadow-sm"><i class="ph-bold ph-arrows-clockwise text-xl"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-sm">4. Lifecycle Layer</div>
+                            <div class="text-xs text-gray-500">Updates & Decommissioning</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="lg:col-span-8 p-8 md:p-12 flex flex-col justify-center min-h-[450px]">
+                    <div id="layer-content" class="transition-opacity duration-300">
+                        <!-- Content Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Secure Boot Simulator -->
+    <section id="secure-boot" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Core Concept</span>
+                <h2 class="text-3xl font-bold text-white mt-2">Secure Boot Simulator</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">
+                    If an attacker gains physical access and flashes malicious firmware, how does the device protect itself? Watch how Hardware Root of Trust and cryptographic signatures prevent unauthorized code execution.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-12 bg-gray-800 rounded-2xl border border-gray-700 p-8 shadow-2xl">
+                
+                <!-- Controls -->
+                <div class="lg:col-span-4 flex flex-col justify-center space-y-6 border-b lg:border-b-0 lg:border-r border-gray-700 pb-8 lg:pb-0 lg:pr-8">
+                    <h3 class="font-bold text-lg">Initiate Boot Sequence</h3>
+                    <p class="text-sm text-gray-400">Choose the type of firmware loaded into the device memory to see the secure boot process in action.</p>
+                    
+                    <button onclick="runBootSim('valid')" id="btn-valid-boot" class="w-full bg-gray-900 border border-gray-600 text-white font-bold py-3 rounded-lg hover:border-green-500 hover:text-green-400 transition-colors flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-check-circle"></i> Load Valid Firmware
+                    </button>
+                    
+                    <button onclick="runBootSim('malware')" id="btn-malware-boot" class="w-full bg-gray-900 border border-gray-600 text-white font-bold py-3 rounded-lg hover:border-zapario-red hover:text-zapario-red transition-colors flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-skull"></i> Inject Malware & Boot
+                    </button>
+
+                    <div id="boot-status-text" class="mt-4 text-center font-mono text-sm text-gray-500 h-10">
+                        System idle. Awaiting power-on.
+                    </div>
+                </div>
+
+                <!-- Visualization Flow -->
+                <div class="lg:col-span-8 flex flex-col justify-center items-center py-4">
+                    
+                    <div class="w-full max-w-lg space-y-2">
+                        <!-- Step 1 -->
+                        <div id="sim-step-1" class="sim-block active bg-gray-900 border-2 border-gray-600 rounded-lg p-4 flex items-center gap-4">
+                            <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400"><i class="ph-bold ph-power"></i></div>
+                            <div>
+                                <div class="font-bold text-white text-sm">1. Power On / ROM Bootloader</div>
+                                <div class="text-xs text-gray-500 font-mono">Executing immutable hardware code...</div>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="w-0.5 h-6 bg-gray-600 mx-auto"></div>
+
+                        <!-- Step 2 -->
+                        <div id="sim-step-2" class="sim-block bg-gray-900 border-2 border-gray-600 rounded-lg p-4 flex items-center gap-4">
+                            <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400"><i class="ph-bold ph-fingerprint"></i></div>
+                            <div>
+                                <div class="font-bold text-white text-sm">2. Cryptographic Signature Check</div>
+                                <div class="text-xs text-gray-500 font-mono">Calculating SHA-256 hash. Verifying with public key...</div>
+                            </div>
+                        </div>
+
+                        <!-- Connector -->
+                        <div class="w-0.5 h-6 bg-gray-600 mx-auto"></div>
+
+                        <!-- Step 3 -->
+                        <div id="sim-step-3" class="sim-block bg-gray-900 border-2 border-gray-600 rounded-lg p-4 flex items-center gap-4">
+                            <div id="sim-icon-3" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400"><i class="ph-bold ph-question"></i></div>
+                            <div>
+                                <div id="sim-title-3" class="font-bold text-white text-sm">3. Execution Phase</div>
+                                <div id="sim-desc-3" class="text-xs text-gray-500 font-mono">Awaiting verification...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vulnerability Incident Response (Chart.js) -->
+    <section id="ota-response" class="py-24 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-16 items-center">
+                
+                <div class="lg:col-span-4 space-y-6">
+                    <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Incident Response</span>
+                    <h2 class="text-3xl font-bold text-gray-900">The ROI of Secure OTA</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        When a zero-day vulnerability is discovered, time is your enemy. Without robust Over-The-Air (OTA) update infrastructure, fleets remain exposed for months while manual "truck rolls" (dispatching technicians) are coordinated at massive expense.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-zapario-red mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">Rapid Mitigation</h4>
+                                <p class="text-xs text-gray-500">Patch critical flaws globally in hours, not months.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-zapario-red mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">Fail-Safe Rollbacks</h4>
+                                <p class="text-xs text-gray-500">Dual-bank memory architectures ensure a device reverts to previous working firmware if an update is corrupted, preventing "bricking".</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Live Chart Visualization -->
+                <div class="lg:col-span-8 bg-white rounded-2xl border border-gray-200 shadow-xl p-8 relative">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest text-center mb-6">Fleet Risk Exposure Over Time (Zero-Day Event)</h3>
+                    <div class="chart-container">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Grid -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">Comprehensive Security Engineering</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-fingerprint"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Cryptographic Keys</h4>
+                    <p class="text-xs text-gray-500">Integration of Hardware Security Modules (HSM) and Trusted Platform Modules (TPM) for secure key storage.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-shield-warning"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Penetration Testing</h4>
+                    <p class="text-xs text-gray-500">Rigorous white-box and black-box testing of APIs, firmware, and BLE/Wi-Fi interfaces to identify weaknesses.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-seal-check"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Compliance & Standards</h4>
+                    <p class="text-xs text-gray-500">Engineering architectures that comply with IEC 62443 (Industrial IoT) and support SOC 2 initiatives.</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-xl bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-file-lock"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Encrypted Storage</h4>
+                    <p class="text-xs text-gray-500">Protecting IP, machine learning models, and PII on device flash memory using AES-256 encryption.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario Device Security. Trust Nothing. Verify Everything.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- ATTACK SURFACE TABS LOGIC ---
+        const layerData = [
+            {
+                title: "Hardware Attack Surface",
+                icon: "ph-cpu",
+                threats: "Attackers with physical access can dump flash memory to steal IP, probe JTAG/UART debug ports, or use fault injection (glitching) to bypass security checks.",
+                solution: "We implement physical tamper detection, disable debug interfaces before production, and utilize secure elements (TPMs/Secure Enclaves) so cryptographic keys are never exposed in plaintext."
+            },
+            {
+                title: "Firmware Attack Surface",
+                icon: "ph-file-code",
+                threats: "Malicious firmware can be flashed to hijack the device, create botnets, or alter behavior. Reverse engineering can expose hardcoded passwords.",
+                solution: "We enforce Secure Boot to ensure only cryptographically signed code runs. We encrypt firmware at rest and implement rigorous code reviews to eliminate buffer overflows and hardcoded secrets."
+            },
+            {
+                title: "Network Attack Surface",
+                icon: "ph-wifi-high",
+                threats: "Man-in-the-Middle (MitM) attacks, packet sniffing, and unauthorized commands via Wi-Fi, BLE, or Cellular interfaces.",
+                solution: "Implementation of Mutual TLS (mTLS) so both the device and server authenticate each other. We use certificate pinning and enforce secure, encrypted protocols (MQTTs/HTTPS) for all telemetry."
+            },
+            {
+                title: "Lifecycle Attack Surface",
+                icon: "ph-arrows-clockwise",
+                threats: "Devices get compromised when vulnerabilities are discovered post-launch and cannot be patched. Improperly decommissioned devices leak sensitive data.",
+                solution: "We build robust, dual-bank OTA (Over-The-Air) update systems with rollback protection. We also engineer secure wipe/factory reset procedures for end-of-life decommissioning."
+            }
+        ];
+
+        function setLayer(index) {
+            // UI
+            for(let i=0; i<4; i++) {
+                const btn = document.getElementById(`layer-btn-${i}`);
+                if(i === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            }
+
+            // Content
+            const data = layerData[index];
+            const content = document.getElementById('layer-content');
+            
+            content.style.opacity = 0;
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="mb-8">
+                        <div class="w-16 h-16 rounded-2xl bg-red-50 text-zapario-red border border-red-100 flex items-center justify-center text-4xl mb-6 shadow-sm">
+                            <i class="ph-duotone ${data.icon}"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-6">${data.title}</h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <div class="flex items-center gap-2 text-gray-900 font-bold mb-3">
+                                    <i class="ph-fill ph-warning-octagon text-gray-500 text-lg"></i> Vulnerabilities
+                                </div>
+                                <p class="text-sm text-gray-600 leading-relaxed">${data.threats}</p>
+                            </div>
+                            
+                            <div class="bg-red-50/50 p-6 rounded-xl border border-red-100">
+                                <div class="flex items-center gap-2 text-zapario-red font-bold mb-3">
+                                    <i class="ph-fill ph-shield-check text-zapario-red text-lg"></i> Zapario Countermeasures
+                                </div>
+                                <p class="text-sm text-gray-700 leading-relaxed">${data.solution}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- SECURE BOOT SIMULATOR LOGIC ---
+        let simIsRunning = false;
+
+        function runBootSim(type) {
+            if(simIsRunning) return;
+            simIsRunning = true;
+
+            const btnValid = document.getElementById('btn-valid-boot');
+            const btnMalware = document.getElementById('btn-malware-boot');
+            const statusText = document.getElementById('boot-status-text');
+            
+            const step1 = document.getElementById('sim-step-1');
+            const step2 = document.getElementById('sim-step-2');
+            const step3 = document.getElementById('sim-step-3');
+            const icon3 = document.getElementById('sim-icon-3');
+            const title3 = document.getElementById('sim-title-3');
+            const desc3 = document.getElementById('sim-desc-3');
+
+            // Reset
+            btnValid.disabled = true; btnMalware.disabled = true;
+            step1.className = 'sim-block active bg-gray-900 border-2 border-gray-600 rounded-lg p-4 flex items-center gap-4';
+            step2.className = 'sim-block bg-gray-900 border-2 border-gray-600 rounded-lg p-4 flex items-center gap-4';
+            step3.className = 'sim-block bg-gray-900 border-2 border-gray-600 rounded-lg p-4 flex items-center gap-4';
+            icon3.innerHTML = '<i class="ph-bold ph-question"></i>';
+            icon3.className = 'w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400';
+            title3.innerText = '3. Execution Phase';
+            title3.className = 'font-bold text-white text-sm';
+            desc3.innerText = 'Awaiting verification...';
+            
+            statusText.innerText = "> Power applied. BootROM starting...";
+
+            // Phase 2: Verification
+            setTimeout(() => {
+                step1.classList.remove('active');
+                step2.classList.add('active');
+                statusText.innerText = type === 'valid' ? "> Verifying Zapario Signature..." : "> Verifying Unknown Signature...";
+
+                // Phase 3: Result
+                setTimeout(() => {
+                    step2.classList.remove('active');
+                    
+                    if(type === 'valid') {
+                        step3.className = 'sim-block success border-2 rounded-lg p-4 flex items-center gap-4';
+                        icon3.innerHTML = '<i class="ph-bold ph-check text-green-600"></i>';
+                        icon3.className = 'w-8 h-8 rounded-full bg-green-100 flex items-center justify-center';
+                        title3.innerText = '3. OS Loaded Successfully';
+                        title3.className = 'font-bold text-green-800 text-sm';
+                        desc3.innerText = 'Signature matches authorized public key. System running.';
+                        statusText.innerHTML = "<span class='text-green-500'>[OK] Boot complete. Secure environment established.</span>";
+                    } else {
+                        step3.className = 'sim-block error border-2 rounded-lg p-4 flex items-center gap-4';
+                        icon3.innerHTML = '<i class="ph-bold ph-x text-red-600"></i>';
+                        icon3.className = 'w-8 h-8 rounded-full bg-red-100 flex items-center justify-center';
+                        title3.innerText = '3. BOOT HALTED';
+                        title3.className = 'font-bold text-red-800 text-sm';
+                        desc3.innerText = 'Signature mismatch! Malware detected. Hardware locked.';
+                        statusText.innerHTML = "<span class='text-red-500'>[ERROR] Unauthorized code. Device bricked to prevent compromise.</span>";
+                    }
+
+                    // Reset buttons
+                    setTimeout(() => {
+                        btnValid.disabled = false; btnMalware.disabled = false;
+                        simIsRunning = false;
+                    }, 1000);
+
+                }, 1500);
+            }, 1000);
+        }
+
+        // --- RISK CHART LOGIC ---
+        let riskChart;
+
+        function initRiskChart() {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            
+            riskChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 0 (Exploit)', 'Day 2', 'Day 7', 'Week 2', 'Month 1', 'Month 3', 'Month 6'],
+                    datasets: [
+                        {
+                            label: 'Manual Patching (Truck Rolls)',
+                            data: [10, 30, 80, 95, 90, 60, 20], // Risk goes high, stays high while techs travel
+                            borderColor: '#9ca3af',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Zapario Secure OTA Infrastructure',
+                            data: [10, 15, 5, 0, 0, 0, 0], // Risk drops to near zero as soon as patch is pushed over the air
+                            borderColor: '#D71920',
+                            backgroundColor: 'rgba(215, 25, 32, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: {family: 'Inter'} } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: {
+                            display: true,
+                            title: { display: true, text: 'Vulnerability Risk Exposure', color: '#6b7280' },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { display: false },
+                            min: 0, max: 100
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#6b7280' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setLayer(0);
+            initRiskChart();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

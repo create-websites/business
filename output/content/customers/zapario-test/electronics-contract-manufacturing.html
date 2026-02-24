@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronics Contract Manufacturing & PCBA | Zapario</title>
+    <meta name="description" content="Turnkey electronics contract manufacturing (ECM). Rapid PCBA prototyping, box build assembly, and high-volume mass production with rigorous quality control.">
+    <meta name="keywords" content="Contract Manufacturing, PCBA, SMT Assembly, Box Build, EMS, Electronics Manufacturing Services, New Product Introduction, NPI, AOI Testing">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'factory-pattern': "linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6), linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6)"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Factory Floor" - Bright white backgrounds for a sterile, precise aesthetic. Zapario Red (#D71920) for action items and data highlights. Cool grays to represent machinery and metal. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "Scale with Precision". Focus on capacity, speed, and quality.
+         2. NPI Tracker (Interactive): Step-by-step flow from Design to Mass Production. Crucial for showing we don't just "build to print" blindly.
+         3. Production Scale Estimator: Slider tool mapping volume to manufacturing strategy (HMLV vs HVLM).
+         4. Quality Assurance (Chart.js): Bar chart demonstrating defect catch rates across different testing gates.
+         5. Capabilities Grid: Physical manufacturing services (SMT, Box Build, Coating).
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Quality Catch Rate (Bar Chart):
+            - Goal: Prove high yield and reliability.
+            - Viz: Stepped bar chart showing cumulative quality assurance.
+            - Interaction: Tooltips detailing what each test (AOI, X-Ray) actually looks for.
+         2. NPI Tracker (Tabbed Stepper):
+            - Goal: Explain the complex onboarding process clearly.
+            - Viz: Horizontal connected nodes updating a central detail panel.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and HTML/CSS styling). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling - Strictly constrained */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            accent-color: #D71920;
+        }
+
+        /* Stepper Styles */
+        .npi-step {
+            transition: all 0.3s ease;
+        }
+        .npi-step.active {
+            border-color: #D71920;
+            background-color: #fef2f2;
+        }
+        .npi-step.active .step-num {
+            background-color: #D71920;
+            color: white;
+            border-color: #D71920;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('npi')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">NPI Process</button>
+                    <button onclick="scrollToSection('estimator')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Scale & Capacity</button>
+                    <button onclick="scrollToSection('quality')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Quality Assurance</button>
+                    <button onclick="scrollToSection('capabilities')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Capabilities</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Request Manufacturing Quote
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <!-- Subtle factory floor pattern -->
+        <div class="absolute inset-0 bg-factory-pattern bg-[size:60px_60px] bg-[position:0_0,30px_30px] opacity-[0.03]"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <span class="w-2 h-2 rounded-full bg-zapario-red mr-2 animate-pulse"></span>
+                    Turnkey Contract Manufacturing
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Scale Production <br>
+                    <span class="text-zapario-red">With Absolute Precision</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    From rapid PCBA prototyping to high-volume box build assembly. We combine state-of-the-art SMT lines with rigorous quality control to bring your hardware to market flawlessly.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('estimator')" class="bg-gray-900 text-white px-6 py-3 rounded-md font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
+                        Calculate Production Scale <i class="ph-bold ph-calculator"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="font-bold text-2xl text-zapario-red">01005</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Min Component Size</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-zapario-red">ISO</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">9001 / 13485 Certified</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-zapario-red">99.8%</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">First Pass Yield</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Abstract SMT Line -->
+            <div class="relative h-[450px] bg-gray-50 rounded-2xl shadow-inner border border-gray-200 overflow-hidden flex flex-col items-center justify-center p-8">
+                <div class="absolute top-4 left-4 flex items-center gap-2 bg-white px-3 py-1 rounded shadow-sm border border-gray-200 z-20">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-xs font-bold text-gray-600 font-mono">SMT LINE 1 : ACTIVE</span>
+                </div>
+
+                <!-- Conveyor Belt Concept -->
+                <div class="w-full h-32 bg-gray-200 relative overflow-hidden rounded-lg border-y-4 border-gray-300">
+                    <!-- PCBs moving on belt -->
+                    <div class="absolute top-1/2 -translate-y-1/2 left-0 flex gap-12 animate-[conveyor_4s_linear_infinite]">
+                        <!-- Board 1 -->
+                        <div class="w-24 h-16 bg-green-700 rounded border-2 border-green-600 shadow-md relative">
+                            <div class="absolute inset-2 border border-green-500 opacity-50"></div>
+                            <div class="absolute top-2 left-2 w-4 h-4 bg-gray-900"></div>
+                        </div>
+                        <!-- Board 2 -->
+                        <div class="w-24 h-16 bg-green-700 rounded border-2 border-green-600 shadow-md relative">
+                            <div class="absolute inset-2 border border-green-500 opacity-50"></div>
+                            <div class="absolute top-2 left-2 w-4 h-4 bg-gray-900"></div>
+                        </div>
+                        <!-- Board 3 -->
+                        <div class="w-24 h-16 bg-green-700 rounded border-2 border-green-600 shadow-md relative">
+                            <div class="absolute inset-2 border border-green-500 opacity-50"></div>
+                            <div class="absolute top-2 left-2 w-4 h-4 bg-gray-900"></div>
+                        </div>
+                        <!-- Board 4 (to ensure seamless loop) -->
+                        <div class="w-24 h-16 bg-green-700 rounded border-2 border-green-600 shadow-md relative">
+                            <div class="absolute inset-2 border border-green-500 opacity-50"></div>
+                            <div class="absolute top-2 left-2 w-4 h-4 bg-gray-900"></div>
+                        </div>
+                        <!-- Board 5 (to ensure seamless loop) -->
+                        <div class="w-24 h-16 bg-green-700 rounded border-2 border-green-600 shadow-md relative">
+                            <div class="absolute inset-2 border border-green-500 opacity-50"></div>
+                            <div class="absolute top-2 left-2 w-4 h-4 bg-gray-900"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pick and Place Head -->
+                <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-12 h-32 bg-gray-800 rounded-b-lg border-2 border-gray-700 z-10 flex flex-col items-center">
+                    <div class="w-full h-8 bg-gray-900 rounded-b-lg"></div>
+                    <div class="w-2 h-full bg-gray-400"></div>
+                    <div class="w-6 h-6 bg-zapario-red rounded-full -mt-2 shadow-[0_0_15px_rgba(215,25,32,0.8)]"></div>
+                </div>
+
+                <style>
+                    @keyframes conveyor {
+                        0% { transform: translateX(0); }
+                        100% { transform: translateX(-144px); } /* Width of board (96) + gap (48) */
+                    }
+                </style>
+            </div>
+        </div>
+    </section>
+
+    <!-- NPI Tracker -->
+    <section id="npi" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">New Product Introduction</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">The Path to Mass Production</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    We don't just "build to print." Our engineering-first NPI process ensures your design is optimized for yield, cost, and reliability before hitting the high-volume lines.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8">
+                <!-- Steps List -->
+                <div class="lg:col-span-4 space-y-3">
+                    <div onclick="setNpiStep(0)" class="npi-step active cursor-pointer p-5 rounded-xl border border-gray-200 bg-white flex items-center gap-4 shadow-sm">
+                        <div class="step-num w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold shrink-0">1</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">DFM & DFT Review</h3>
+                            <p class="text-xs text-gray-500 mt-1">Design for Manufacturing / Testing</p>
+                        </div>
+                    </div>
+                    <div onclick="setNpiStep(1)" class="npi-step cursor-pointer p-5 rounded-xl border border-gray-200 bg-white flex items-center gap-4 shadow-sm">
+                        <div class="step-num w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold shrink-0">2</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Rapid Prototyping</h3>
+                            <p class="text-xs text-gray-500 mt-1">PCBA First Articles</p>
+                        </div>
+                    </div>
+                    <div onclick="setNpiStep(2)" class="npi-step cursor-pointer p-5 rounded-xl border border-gray-200 bg-white flex items-center gap-4 shadow-sm">
+                        <div class="step-num w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold shrink-0">3</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Pilot Run (EVT/DVT)</h3>
+                            <p class="text-xs text-gray-500 mt-1">Process Validation & Tooling</p>
+                        </div>
+                    </div>
+                    <div onclick="setNpiStep(3)" class="npi-step cursor-pointer p-5 rounded-xl border border-gray-200 bg-white flex items-center gap-4 shadow-sm">
+                        <div class="step-num w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold shrink-0">4</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Mass Production</h3>
+                            <p class="text-xs text-gray-500 mt-1">High-Volume Scale & Optimization</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="lg:col-span-8 bg-white rounded-2xl border border-gray-200 shadow-soft p-8 flex flex-col justify-center min-h-[400px]">
+                    <div id="npi-content" class="transition-opacity duration-300">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Production Scale Estimator -->
+    <section id="estimator" class="py-24 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Capacity Planning</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Production Strategy Configurator</h2>
+                <p class="text-gray-500 mt-4">Adjust your expected annual volume to see our recommended manufacturing strategy and typical lead times.</p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl border border-gray-200 shadow-inner p-8 md:p-12">
+                <div class="mb-12">
+                    <div class="flex justify-between mb-4">
+                        <label class="text-lg font-bold text-gray-900">Target Annual Volume</label>
+                        <span id="volume-val" class="text-2xl font-mono font-bold text-zapario-red">10,000 Units</span>
+                    </div>
+                    <input type="range" id="volumeInput" min="100" max="500000" step="100" value="10000" class="w-full h-3 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-sm font-bold text-gray-400 mt-2 uppercase">
+                        <span>Low Volume</span>
+                        <span>Mid Volume</span>
+                        <span>High Volume</span>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 bg-white p-8 rounded-xl shadow-soft border border-gray-100">
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Recommended Strategy</h4>
+                        <div id="strategy-title" class="text-2xl font-bold text-gray-900 mb-2">High-Mix, Low-Volume (HMLV)</div>
+                        <p id="strategy-desc" class="text-gray-600 text-sm leading-relaxed">
+                            Focus on agility. We utilize flexible SMT lines designed for rapid changeovers, allowing for frequent design iterations and smaller batch builds.
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center gap-4 border-t md:border-t-0 md:border-l border-gray-100 pt-6 md:pt-0 md:pl-8">
+                        <div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Standard PCBA Lead Time</div>
+                            <div id="lead-time" class="text-xl font-bold text-zapario-red">3-5 Weeks</div>
+                            <div class="text-xs text-gray-500 mt-1">*Post-component procurement</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Dedicated Testing</div>
+                            <div id="testing-strategy" class="font-bold text-gray-800">AOI + Flying Probe</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quality Assurance (Chart) -->
+    <section id="quality" class="py-24 bg-gray-900 text-white border-y border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-16 items-center">
+                
+                <div class="lg:col-span-5">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-800 text-zapario-red border border-gray-700 mb-6">
+                        Zero Defect Philosophy
+                    </div>
+                    <h2 class="text-3xl font-bold text-white mb-6">Multi-Gate Quality Assurance</h2>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        Quality cannot be inspected *into* a product at the end of the line; it must be built in. We utilize a multi-gate inspection process to catch and correct anomalies at the source.
+                    </p>
+                    
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded bg-gray-800 border border-gray-700 flex items-center justify-center text-zapario-red shrink-0"><i class="ph-bold ph-eye"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">SPI & 3D AOI</h4>
+                                <p class="text-sm text-gray-500">Solder Paste Inspection and Automated Optical Inspection ensure perfect volumetric solder deposits and component placement.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded bg-gray-800 border border-gray-700 flex items-center justify-center text-zapario-red shrink-0"><i class="ph-bold ph-scan"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">X-Ray (AXI)</h4>
+                                <p class="text-sm text-gray-500">Essential for verifying hidden solder joints on BGA, QFN, and LGA packages.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded bg-gray-800 border border-gray-700 flex items-center justify-center text-zapario-red shrink-0"><i class="ph-bold ph-lightning"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">ICT & FCT</h4>
+                                <p class="text-sm text-gray-500">In-Circuit Testing checks individual component values, while Functional Testing verifies the board operates to specification.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-7 bg-gray-800 p-8 rounded-2xl border border-gray-700 shadow-2xl">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase text-center mb-6">Defect Catch Rate by Inspection Gate</h3>
+                    <div class="chart-container">
+                        <canvas id="qualityChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-4">*Data represents cumulative defect identification leading to 99.8% FPY.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Manufacturing Capabilities Grid -->
+    <section id="capabilities" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Factory Floor Services</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Comprehensive Manufacturing</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- SMT -->
+                <div class="p-8 rounded-xl border border-gray-200 bg-white hover:border-red-200 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-3xl mb-6 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-circuitry"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">SMT & THT Assembly</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        High-speed Surface Mount Technology placing components down to 01005 size. Automated through-hole insertion and selective soldering.
+                    </p>
+                </div>
+
+                <!-- Box Build -->
+                <div class="p-8 rounded-xl border border-gray-200 bg-white hover:border-red-200 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-3xl mb-6 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-package"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Box Build & Integration</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Complete electro-mechanical assembly. Enclosure integration, thermal management installation, final packaging, and logistics.
+                    </p>
+                </div>
+
+                <!-- Conformal Coating -->
+                <div class="p-8 rounded-xl border border-gray-200 bg-white hover:border-red-200 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-3xl mb-6 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-drop"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Conformal Coating & Potting</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Automated spray coating and resin potting to protect sensitive electronics against moisture, dust, chemicals, and extreme temperatures.
+                    </p>
+                </div>
+
+                <!-- Cable Assembly -->
+                <div class="p-8 rounded-xl border border-gray-200 bg-white hover:border-red-200 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-3xl mb-6 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-plug"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Cable & Harness Assembly</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Custom cable harnesses built to IPC/WHMA-A-620 standards. Overmolding, crimping, and automated continuity testing.
+                    </p>
+                </div>
+
+                <!-- Supply Chain -->
+                <div class="p-8 rounded-xl border border-gray-200 bg-white hover:border-red-200 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-3xl mb-6 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-globe-hemisphere-west"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Turnkey Supply Chain</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        We manage the entire BOM. Global component sourcing, counterfeit mitigation, inventory management, and obsolescence tracking.
+                    </p>
+                </div>
+
+                <!-- Test Engineering -->
+                <div class="p-8 rounded-xl border border-gray-200 bg-white hover:border-red-200 hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-3xl mb-6 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-terminal-window"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Custom Test Engineering</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Development of custom test fixtures (bed-of-nails) and automated test scripts to ensure 100% functional verification before shipment.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario Contract Manufacturing. Built to Spec. Built to Scale.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- NPI STEPPER LOGIC ---
+        const npiData = [
+            {
+                title: "DFM & DFT Review",
+                icon: "ph-magnifying-glass",
+                desc: "Before a single board is manufactured, our engineers scrutinize the design files (Gerbers, BOM, Pick & Place). We identify footprint mismatches, soldering risks, and ensure testability (Design for Test).",
+                checklist: ["BOM Scrub & Component Availability", "Footprint & Pad Size Verification", "Test Point Coverage Analysis"]
+            },
+            {
+                title: "Rapid Prototyping",
+                icon: "ph-lightning",
+                desc: "We run the First Article Inspection (FAI) build. This small batch validates the assembly process, verifies the firmware can be flashed, and provides boards for the client's initial testing.",
+                checklist: ["Machine Setup & Solder Paste Stencil", "First Article Inspection (FAI) Report", "Initial Bring-up Support"]
+            },
+            {
+                title: "Pilot Run (EVT/DVT)",
+                icon: "ph-chart-bar",
+                desc: "Engineering and Design Verification Testing. A larger batch (e.g., 50-200 units) to stabilize the manufacturing process, build custom test fixtures, and optimize line speed.",
+                checklist: ["Test Fixture Development", "Process Capability (Cpk) Study", "Yield Optimization"]
+            },
+            {
+                title: "Mass Production",
+                icon: "ph-factory",
+                desc: "The design is locked, the process is stable. We shift to high-speed automated lines focused on maximum throughput, sustained quality, and cost reduction.",
+                checklist: ["Automated Optical & X-Ray Inspection", "Full Functional Testing", "Supply Chain Long-Term Forecasting"]
+            }
+        ];
+
+        function setNpiStep(index) {
+            // UI Toggle
+            document.querySelectorAll('.npi-step').forEach((el, i) => {
+                if(i === index) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+
+            // Content Update
+            const data = npiData[index];
+            const contentEl = document.getElementById('npi-content');
+            
+            contentEl.style.opacity = 0;
+            setTimeout(() => {
+                contentEl.innerHTML = `
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="p-3 bg-red-50 text-zapario-red rounded-xl border border-red-100">
+                            <i class="ph-duotone ${data.icon} text-4xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-gray-900">${data.title}</h3>
+                    </div>
+                    <p class="text-lg text-gray-500 leading-relaxed mb-8">${data.desc}</p>
+                    
+                    <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Phase Milestones</h4>
+                        <div class="grid gap-3">
+                            ${data.checklist.map(item => `
+                                <div class="flex items-center gap-3">
+                                    <i class="ph-fill ph-check-circle text-zapario-red"></i>
+                                    <span class="text-sm font-medium text-gray-700">${item}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                contentEl.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- ESTIMATOR LOGIC ---
+        function updateEstimator() {
+            const vol = parseInt(document.getElementById('volumeInput').value);
+            document.getElementById('volume-val').innerText = vol.toLocaleString() + " Units / Yr";
+
+            const titleEl = document.getElementById('strategy-title');
+            const descEl = document.getElementById('strategy-desc');
+            const leadEl = document.getElementById('lead-time');
+            const testEl = document.getElementById('testing-strategy');
+
+            if (vol < 5000) {
+                titleEl.innerText = "High-Mix, Low-Volume (HMLV)";
+                descEl.innerText = "Focus on agility. We utilize flexible SMT lines designed for rapid changeovers, allowing for frequent design iterations and smaller batch builds.";
+                leadEl.innerText = "2-4 Weeks";
+                testEl.innerText = "AOI + Flying Probe";
+            } else if (vol < 50000) {
+                titleEl.innerText = "Mid-Volume Production";
+                descEl.innerText = "Balancing speed and cost. Production runs on dedicated, higher-speed lines with automated material handling to ensure consistent quality at scale.";
+                leadEl.innerText = "4-6 Weeks";
+                testEl.innerText = "AOI + Custom ICT Fixture";
+            } else {
+                titleEl.innerText = "High-Volume, Low-Mix (HVLM)";
+                descEl.innerText = "Focus on throughput and cost reduction. Fully automated SMT lines with inline inspection, dedicated tooling, and long-term supply chain buffering.";
+                leadEl.innerText = "6-8 Weeks";
+                testEl.innerText = "Inline AOI/AXI + Automated FCT";
+            }
+        }
+
+        // --- QUALITY CHART ---
+        function initQualityChart() {
+            const ctx = document.getElementById('qualityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Solder Paste (SPI)', 'Placement (AOI)', 'Hidden Joints (X-Ray)', 'Component/Shorts (ICT)', 'Functional (FCT)'],
+                    datasets: [{
+                        label: 'Defect Catch Proportion',
+                        data: [45, 30, 15, 8, 2], // Adds up to 100% of defects caught
+                        backgroundColor: '#D71920',
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + "% of total defects caught here";
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '% of Defects Caught', color: '#9ca3af' },
+                            grid: { color: '#374151' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#d1d5db', font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setNpiStep(0);
+            document.getElementById('volumeInput').addEventListener('input', updateEstimator);
+            initQualityChart();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

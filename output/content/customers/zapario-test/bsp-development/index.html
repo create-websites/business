@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSP Development & Embedded Linux | Zapario</title>
+    <meta name="description" content="Custom Board Support Package (BSP) development. Yocto Embedded Linux, FreeRTOS, custom device drivers, and bootloader optimization for custom hardware.">
+    <meta name="keywords" content="BSP Development, Board Support Package, Embedded Linux, Yocto Project, U-Boot, Device Drivers, Hardware Bring-up, Custom OS, NXP i.MX">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'circuit-grid': "radial-gradient(#e5e7eb 2px, transparent 2px)"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Core Engineering" - Bright, clean white backgrounds with Zapario Red (#D71920) used specifically to highlight the "BSP Layer" as the critical connection between hardware and software. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "The Bridge Between Silicon and Software." Visualizes the software/hardware connection.
+         2. Architecture Stack (Interactive): A layered view (App -> OS -> BSP -> Hardware). Users explore the specific components of the BSP (U-Boot, Kernel, Device Tree).
+         3. Boot Optimization Simulator (Chart.js): Interactive tool showing how Zapario reduces boot times from generic 20s down to <3s for critical applications.
+         4. Ecosystem Matrix: Grids showing supported silicon (NXP, ST) and OS options (Yocto, RTOS).
+         5. Capabilities: Custom drivers, power management, HAL.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Boot Time Optimizer (Stacked Bar Chart):
+            - Goal: Demonstrate tangible value of custom BSP optimization.
+            - Viz: Stacked bar chart breaking down boot phases (Bootloader, Kernel, Userspace).
+            - Interaction: Slider reduces times, updating chart and displaying technical techniques used (e.g., "Stripped initramfs").
+         2. BSP Architecture Visualizer (Interactive UI):
+            - Goal: Explain what a BSP actually is to non-firmware engineers.
+            - Viz: Layered block diagram. Clicking the red "BSP" sub-blocks reveals technical details.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS borders/shapes). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* Stack Interactive Styles */
+        .bsp-component {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .bsp-component.active {
+            background-color: #D71920;
+            color: white;
+            border-color: #D71920;
+            box-shadow: 0 4px 15px rgba(215, 25, 32, 0.4);
+            transform: scale(1.02);
+            z-index: 10;
+        }
+        .bsp-component:hover:not(.active) {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            accent-color: #D71920;
+        }
+
+        /* Data Flow Animation */
+        @keyframes dataFlowDown {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        @keyframes dataFlowUp {
+            0% { transform: translateY(100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100%); opacity: 0; }
+        }
+        .flow-down { animation: dataFlowDown 2s infinite; }
+        .flow-up { animation: dataFlowUp 2s infinite reverse; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('architecture')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Architecture</button>
+                    <button onclick="scrollToSection('optimization')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Boot Optimization</button>
+                    <button onclick="scrollToSection('ecosystem')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Silicon Ecosystem</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Discuss Firmware
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-circuit-grid bg-[size:30px_30px] opacity-[0.25]"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-code-block mr-2"></i>
+                    Board Support Package (BSP) Engineering
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    The Bridge Between <br>
+                    <span class="text-zapario-red">Silicon and Software.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    Custom hardware requires custom firmware. We develop robust, secure, and highly optimized Board Support Packages (BSPs) to bring your proprietary circuit boards to life.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('architecture')" class="bg-gray-900 text-white px-8 py-3.5 rounded-md font-bold shadow-lg hover:bg-gray-800 transition-all flex items-center gap-2">
+                        Explore the BSP Stack <i class="ph-bold ph-stack"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">Linux</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Yocto / Buildroot</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">RTOS</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">FreeRTOS / Zephyr</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">AOSP</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Android Customization</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Abstract Stack -->
+            <div class="relative h-[450px] bg-white rounded-2xl shadow-soft border border-gray-200 overflow-hidden flex items-center justify-center p-8">
+                <div class="w-64 flex flex-col gap-4 relative z-10">
+                    <!-- App Layer -->
+                    <div class="h-16 bg-gray-100 rounded-lg border-2 border-gray-200 flex items-center justify-center text-gray-500 font-bold shadow-sm relative">
+                        <span class="z-10">User Application</span>
+                        <div class="absolute -bottom-4 w-1 h-4 bg-gray-300 overflow-hidden"><div class="w-full h-2 bg-zapario-red flow-down"></div></div>
+                    </div>
+                    
+                    <!-- OS Layer -->
+                    <div class="h-16 bg-gray-200 rounded-lg border-2 border-gray-300 flex items-center justify-center text-gray-600 font-bold shadow-sm relative">
+                        <span class="z-10">Operating System</span>
+                        <div class="absolute -bottom-4 w-1 h-4 bg-zapario-red/30 overflow-hidden"><div class="w-full h-2 bg-zapario-red flow-down"></div></div>
+                    </div>
+                    
+                    <!-- BSP Layer (Focus) -->
+                    <div class="h-24 bg-red-50 rounded-lg border-2 border-zapario-red flex flex-col items-center justify-center text-zapario-red font-bold shadow-[0_0_20px_rgba(215,25,32,0.2)] relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,#fca5a5_50%,transparent_75%)] bg-[length:200%_200%] animate-[pulse_3s_linear_infinite] opacity-20"></div>
+                        <span class="z-10">Zapario BSP Layer</span>
+                        <span class="z-10 text-xs font-mono mt-1 opacity-80">&lt; Drivers, Kernel, HAL &gt;</span>
+                        <div class="absolute -bottom-4 w-1 h-4 bg-zapario-red/30 overflow-hidden"><div class="w-full h-2 bg-zapario-red flow-down"></div></div>
+                    </div>
+
+                    <!-- Hardware Layer -->
+                    <div class="h-20 bg-gray-900 rounded-lg border-2 border-gray-800 flex items-center justify-center text-white font-bold shadow-xl relative">
+                        <i class="ph-duotone ph-cpu text-3xl absolute left-4 text-gray-700"></i>
+                        <span class="z-10">Custom PCB / Hardware</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Stack Explorer -->
+    <section id="architecture" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">System Integration</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Inside the Board Support Package</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    A BSP is not a single piece of software. It is a collection of low-level components tailored specifically to the physical traces and chips on your custom board.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Interactive Stack Visual -->
+                <div class="lg:col-span-5 bg-white p-8 rounded-2xl shadow-soft border border-gray-200">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 text-center">Interactive BSP Architecture</h3>
+                    
+                    <div class="flex flex-col gap-3">
+                        <div class="p-3 text-center bg-gray-100 text-gray-500 rounded border border-gray-200 text-sm font-bold">User Space / UI</div>
+                        
+                        <!-- BSP Components -->
+                        <div class="p-4 border-2 border-dashed border-red-200 rounded-xl relative">
+                            <div class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-zapario-red">The Zapario BSP</div>
+                            
+                            <div class="flex flex-col gap-2">
+                                <div onclick="setBspLayer(0)" id="bsp-0" class="bsp-component active p-3 text-center rounded border border-red-200 text-zapario-red font-bold text-sm bg-red-50">
+                                    Root Filesystem (RootFS)
+                                </div>
+                                <div onclick="setBspLayer(1)" id="bsp-1" class="bsp-component p-3 text-center rounded border border-gray-200 text-gray-600 font-bold text-sm">
+                                    Custom Device Drivers
+                                </div>
+                                <div onclick="setBspLayer(2)" id="bsp-2" class="bsp-component p-3 text-center rounded border border-gray-200 text-gray-600 font-bold text-sm">
+                                    OS Kernel & Device Tree
+                                </div>
+                                <div onclick="setBspLayer(3)" id="bsp-3" class="bsp-component p-3 text-center rounded border border-gray-200 text-gray-600 font-bold text-sm">
+                                    Bootloader (U-Boot / Barebox)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 text-center bg-gray-900 text-white rounded border border-gray-800 text-sm font-bold mt-2">Physical Hardware (Silicon)</div>
+                    </div>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="lg:col-span-7 flex flex-col justify-center">
+                    <div id="bsp-content" class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm min-h-[350px] transition-opacity duration-300">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Boot Optimization Simulator (Chart.js) -->
+    <section id="optimization" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Performance Engineering</span>
+                <h2 class="text-3xl font-bold text-white mt-2">Boot Time Optimization</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">
+                    Off-the-shelf vendor BSPs contain massive overhead. For automotive, medical, or industrial devices, a 20-second boot is unacceptable. Adjust the slider to see how we strip the fat.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-12 bg-gray-800 rounded-2xl border border-gray-700 p-8 shadow-2xl">
+                
+                <!-- Controls -->
+                <div class="lg:col-span-5 flex flex-col justify-center space-y-8 border-b lg:border-b-0 lg:border-r border-gray-700 pb-8 lg:pb-0 lg:pr-8">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-bold text-gray-300">Engineering Effort / Optimization</label>
+                            <span id="opt-level-val" class="text-zapario-red font-bold">Standard Vendor BSP</span>
+                        </div>
+                        <input type="range" id="optimizationInput" min="0" max="3" value="0" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                    </div>
+
+                    <div class="bg-gray-900 p-6 rounded-xl border border-gray-600">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Techniques Applied</h4>
+                        <ul id="opt-techniques" class="space-y-3 text-sm text-gray-300 font-mono">
+                            <li class="flex items-start gap-2"><i class="ph-bold ph-x text-gray-500 mt-0.5"></i> Default U-Boot delay</li>
+                            <li class="flex items-start gap-2"><i class="ph-bold ph-x text-gray-500 mt-0.5"></i> Monolithic bloated Kernel</li>
+                            <li class="flex items-start gap-2"><i class="ph-bold ph-x text-gray-500 mt-0.5"></i> Sequential init system</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="lg:col-span-7 relative">
+                    <div class="flex justify-between items-end mb-4">
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Cold Boot Sequence Time</h3>
+                        <div class="text-right">
+                            <div class="text-xs text-gray-500 uppercase">Total Time</div>
+                            <div id="total-boot-time" class="text-4xl font-mono font-bold text-zapario-red">18.5s</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="bootChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Silicon & OS Ecosystem -->
+    <section id="ecosystem" class="py-24 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Technology Agnostic</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Silicon & OS Ecosystem</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    We adapt the software to the best hardware for the job, maintaining deep expertise across the major semiconductor providers and embedded operating systems.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Silicon -->
+                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <i class="ph-duotone ph-cpu text-zapario-red"></i> Primary Silicon
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-white rounded border border-gray-100 shadow-sm">
+                            <span class="font-bold text-gray-800">NXP Semiconductors</span>
+                            <span class="text-sm font-mono text-gray-500">i.MX 6, 7, 8 Series</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white rounded border border-gray-100 shadow-sm">
+                            <span class="font-bold text-gray-800">STMicroelectronics</span>
+                            <span class="text-sm font-mono text-gray-500">STM32MP1, STM32 MCU</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white rounded border border-gray-100 shadow-sm">
+                            <span class="font-bold text-gray-800">NVIDIA</span>
+                            <span class="text-sm font-mono text-gray-500">Jetson Nano, Xavier, Orin</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white rounded border border-gray-100 shadow-sm">
+                            <span class="font-bold text-gray-800">Texas Instruments</span>
+                            <span class="text-sm font-mono text-gray-500">Sitara AM335x, AM6x</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operating Systems -->
+                <div class="bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <i class="ph-duotone ph-terminal-window text-zapario-red"></i> Operating Systems
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white rounded border border-gray-100 shadow-sm">
+                            <div class="font-bold text-gray-800 mb-1">Embedded Linux</div>
+                            <p class="text-sm text-gray-500">Custom distributions built via <strong>Yocto Project</strong> and <strong>Buildroot</strong>. Ideal for complex edge gateways and graphic-heavy UIs.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded border border-gray-100 shadow-sm">
+                            <div class="font-bold text-gray-800 mb-1">Real-Time OS (RTOS)</div>
+                            <p class="text-sm text-gray-500">Deterministic execution using <strong>FreeRTOS</strong> or <strong>Zephyr</strong> on highly constrained, low-power microcontrollers.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded border border-gray-100 shadow-sm">
+                            <div class="font-bold text-gray-800 mb-1">Android (AOSP)</div>
+                            <p class="text-sm text-gray-500">Custom Android ROMs with stripped services, locked down for kiosk mode or dedicated hardware appliances.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Capabilities Grid -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">BSP Engineering Capabilities</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-tree-structure"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Device Tree Configuration</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Mapping your specific PCB schematics (pin muxing, clock definitions) into the Linux Device Tree Source (DTS).</p>
+                </div>
+                
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-plugs-connected"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Custom Driver Writing</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Writing kernel-space drivers for custom sensors, displays (MIPI DSI), cameras (CSI), and wireless modems.</p>
+                </div>
+
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-cloud-arrow-down"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">OTA Integration</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Integrating robust Over-The-Air update clients (like Mender or SWUpdate) with dual A/B partition fallback.</p>
+                </div>
+
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-battery-charging"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Power Management</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Tuning PMICs (Power Management ICs) and implementing deep sleep/suspend states to maximize battery life.</p>
+                </div>
+
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-shield-check"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Secure Boot Implementation</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Burning hardware fuses and configuring U-Boot to establish a cryptographic chain of trust on startup.</p>
+                </div>
+
+                <div class="p-6 border border-gray-100 rounded-xl hover:shadow-lg transition-all group">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                        <i class="ph-duotone ph-files"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Filesystem Optimization</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Selecting and tuning root filesystems (e.g., ext4, squashfs, UBIFS) for speed, size, and wear-leveling on flash memory.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario BSP & Embedded Linux Engineering.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- BSP STACK EXPLORER LOGIC ---
+        const bspData = [
+            {
+                title: "Root Filesystem (RootFS)",
+                icon: "ph-folder-open",
+                desc: "The organizational structure holding all the libraries, binaries, and configurations needed by the OS and your application. We use Yocto/Buildroot to generate minimal, secure, and read-only filesystems optimized for flash memory.",
+                tech: "squashfs, UBIFS, ext4, systemd"
+            },
+            {
+                title: "Custom Device Drivers",
+                icon: "ph-plugs-connected",
+                desc: "Generic silicon doesn't know about your custom sensors. We write and compile kernel modules (drivers) that allow the OS to communicate with specific hardware peripherals via I2C, SPI, UART, or PCIe.",
+                tech: "C, Kernel Modules (.ko), I2C/SPI subsystems"
+            },
+            {
+                title: "OS Kernel & Device Tree",
+                icon: "ph-tree-structure",
+                desc: "The core of the OS. We compile specific Linux Kernel versions, applying necessary patches. Crucially, we write the Device Tree Blob (DTB), a hardware description file that tells the Kernel exactly how the custom PCB is wired.",
+                tech: "Linux Kernel, Device Tree Source (.dts), Pin Muxing"
+            },
+            {
+                title: "Bootloader (U-Boot)",
+                icon: "ph-power",
+                desc: "The very first code that runs. It initializes basic RAM and CPU clocks, verifies cryptographic signatures (Secure Boot), and loads the Kernel into memory. We customize U-Boot to strip out unused features for faster startup.",
+                tech: "U-Boot, Barebox, ARM Trusted Firmware (ATF)"
+            }
+        ];
+
+        function setBspLayer(index) {
+            // UI Update
+            for(let i=0; i<4; i++) {
+                const btn = document.getElementById(`bsp-${i}`);
+                if(i === index) {
+                    btn.classList.add('active', 'bg-zapario-red', 'text-white', 'border-zapario-red');
+                    btn.classList.remove('text-gray-600', 'bg-transparent', 'border-gray-200');
+                } else {
+                    btn.classList.remove('active', 'bg-zapario-red', 'text-white', 'border-zapario-red');
+                    btn.classList.add('text-gray-600', 'bg-transparent', 'border-gray-200');
+                }
+            }
+
+            // Content Update
+            const data = bspData[index];
+            const content = document.getElementById('bsp-content');
+            
+            content.style.opacity = 0;
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-red-50 text-zapario-red flex items-center justify-center text-3xl shadow-sm border border-red-100">
+                            <i class="ph-duotone ${data.icon}"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900">${data.title}</h3>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-8">${data.desc}</p>
+                    
+                    <div class="pt-6 border-t border-gray-100">
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-2">Technical Focus</span>
+                        <div class="font-mono text-sm text-zapario-red font-bold bg-red-50 px-3 py-2 rounded inline-block">
+                            ${data.tech}
+                        </div>
+                    </div>
+                `;
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- BOOT OPTIMIZATION CHART LOGIC ---
+        let bootChart;
+        
+        const bootStates = [
+            {
+                level: "Standard Vendor BSP",
+                bl: 4.5, kern: 5.5, user: 8.5, total: "18.5s",
+                tech: [
+                    '<i class="ph-bold ph-x text-zapario-red mt-0.5"></i> Generic U-Boot auto-boot delay (3s)',
+                    '<i class="ph-bold ph-x text-zapario-red mt-0.5"></i> Monolithic bloated Kernel loading',
+                    '<i class="ph-bold ph-x text-zapario-red mt-0.5"></i> Sequential systemd service init'
+                ]
+            },
+            {
+                level: "Basic Optimization",
+                bl: 1.5, kern: 3.5, user: 4.0, total: "9.0s",
+                tech: [
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Set boot delay to 0s',
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Removed unused Kernel networking modules',
+                    '<i class="ph-bold ph-x text-zapario-red mt-0.5"></i> Still using heavy standard RootFS'
+                ]
+            },
+            {
+                level: "Advanced Tuning",
+                bl: 0.8, kern: 1.5, user: 2.2, total: "4.5s",
+                tech: [
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Switched to U-Boot "Falcon Mode"',
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Uncompressed Kernel (XIP)',
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Parallelized init scripts'
+                ]
+            },
+            {
+                level: "Zapario Extreme Optimization",
+                bl: 0.3, kern: 0.6, user: 1.2, total: "2.1s",
+                tech: [
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Barebox or custom minimal bootloader',
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Strictly pruned Kernel (compiled only needed drivers)',
+                    '<i class="ph-bold ph-check text-green-500 mt-0.5"></i> Custom static init program (no systemd)'
+                ]
+            }
+        ];
+
+        function initBootChart() {
+            const ctx = document.getElementById('bootChart').getContext('2d');
+            
+            bootChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Boot Timeline'],
+                    datasets: [
+                        { label: 'Bootloader', data: [bootStates[0].bl], backgroundColor: '#6b7280' },
+                        { label: 'Kernel Extraction & Init', data: [bootStates[0].kern], backgroundColor: '#f59e0b' },
+                        { label: 'User Space (RootFS to App)', data: [bootStates[0].user], backgroundColor: '#D71920' }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { color: '#9ca3af' } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { 
+                            stacked: true, 
+                            title: { display: true, text: 'Time in Seconds', color: '#9ca3af' },
+                            grid: { color: '#374151' },
+                            ticks: { color: '#9ca3af' },
+                            max: 20
+                        },
+                        y: { stacked: true, display: false }
+                    }
+                }
+            });
+
+            document.getElementById('optimizationInput').addEventListener('input', updateBootSim);
+        }
+
+        function updateBootSim() {
+            const val = parseInt(document.getElementById('optimizationInput').value);
+            const data = bootStates[val];
+
+            // UI Update
+            const levelEl = document.getElementById('opt-level-val');
+            levelEl.innerText = data.level;
+            if(val === 3) levelEl.className = "text-green-500 font-bold";
+            else levelEl.className = "text-zapario-red font-bold";
+
+            document.getElementById('total-boot-time').innerText = data.total;
+            
+            const techList = document.getElementById('opt-techniques');
+            techList.innerHTML = data.tech.map(t => `<li class="flex items-start gap-2">${t}</li>`).join('');
+
+            // Chart Update
+            bootChart.data.datasets[0].data = [data.bl];
+            bootChart.data.datasets[1].data = [data.kern];
+            bootChart.data.datasets[2].data = [data.user];
+            
+            // Color shift on extreme optimization
+            if(val === 3) bootChart.data.datasets[2].backgroundColor = '#10b981'; // Green for app ready fast
+            else bootChart.data.datasets[2].backgroundColor = '#D71920';
+            
+            bootChart.update();
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setBspLayer(2); // Start on Kernel layer
+            initBootChart();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
