@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zapario | End-to-End IoT, Electronics & Software Engineering</title>
+    <meta name="description" content="Zapario provides turnkey engineering and manufacturing. From custom PCB design and bare-metal firmware to intelligent cloud architectures and PCBA manufacturing.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #f3f4f6 1px, transparent 1px), linear-gradient(to bottom, #f3f4f6 1px, transparent 1px)"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Global Portal" - Stark whites and deep slate grays to create a premium, corporate technology feel. Zapario Red (#D71920) drives attention to the interactive matrix and calls to action. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: High-impact value proposition with a CSS-animated 3D technology stack (Hardware -> Firmware -> Cloud).
+         2. The Ecosystem Matrix (Interactive Hub): The core of the homepage. A split-view interface where selecting a master category (e.g., "Software") instantly populates the right pane with the specific service links provided in the prompt.
+         3. The Turnkey Advantage: Interactive toggle comparing the chaos of multi-vendor management vs. the Zapario unified approach.
+         4. Global Scale & Manufacturing: Highlighting the jump from prototype to mass production.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Interactive Ecosystem Matrix (DOM/JS):
+            - Goal: Organize 17 distinct service links cleanly without overwhelming the user on load.
+            - Viz: Left-hand navigation menu controls a right-hand CSS Grid of animated service cards.
+            - Interaction: Clicking a category swaps the active dataset and triggers a fade-up animation for the new links.
+         2. Isometric Stack Animation (CSS):
+            - Goal: Visually represent "End-to-End" immediately.
+            - Viz: Skewed, floating divs representing PCB, Code, and Cloud layers bounding up and down in sync.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS transforms). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+        
+        .shadow-hover {
+            box-shadow: 0 20px 40px -5px rgba(215, 25, 32, 0.15);
+        }
+
+        /* Isometric Hero Animation */
+        .iso-container {
+            transform: rotateX(60deg) rotateZ(-45deg);
+            transform-style: preserve-3d;
+        }
+        
+        .iso-layer {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 16px;
+            transition: all 0.5s ease;
+            box-shadow: -20px 20px 30px rgba(0,0,0,0.2);
+        }
+
+        @keyframes floatCloud { 0%, 100% { transform: translateZ(160px); } 50% { transform: translateZ(180px); } }
+        @keyframes floatCode { 0%, 100% { transform: translateZ(80px); } 50% { transform: translateZ(90px); } }
+        @keyframes floatPCB { 0%, 100% { transform: translateZ(0px); } 50% { transform: translateZ(10px); } }
+
+        .layer-cloud { animation: floatCloud 4s ease-in-out infinite; background: rgba(255,255,255,0.9); border: 2px solid #e5e7eb; display:flex; align-items:center; justify-content:center; color: #3b82f6; font-size: 4rem;}
+        .layer-code { animation: floatCode 4s ease-in-out infinite 0.2s; background: rgba(31,41,55,0.9); border: 2px solid #374151; display:flex; align-items:center; justify-content:center; color: #D71920; font-size: 4rem;}
+        .layer-pcb { animation: floatPCB 4s ease-in-out infinite 0.4s; background: rgba(22,163,74,0.9); border: 2px solid #15803d; display:flex; align-items:center; justify-content:center; color: #ffffff; font-size: 4rem;}
+
+        /* Matrix Navigation Styles */
+        .matrix-btn {
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+        .matrix-btn.active {
+            background-color: #fef2f2;
+            border-left: 4px solid #D71920;
+            color: #D71920;
+        }
+        .matrix-btn.active .icon-box {
+            background-color: #D71920;
+            color: white;
+        }
+        .matrix-btn:hover:not(.active) {
+            background-color: #f9fafb;
+            border-left: 4px solid #fca5a5;
+        }
+
+        /* Link Card Animation */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .service-card {
+            animation: slideUpFade 0.4s ease-out forwards;
+            opacity: 0;
+            display: block; /* Treat as block for <a> tag */
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: #fca5a5;
+            box-shadow: 0 10px 25px -5px rgba(215, 25, 32, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('ecosystem')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Our Services</button>
+                    <button onclick="scrollToSection('advantage')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">The Zapario Advantage</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-6 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Contact Engineering
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-grid-pattern bg-[size:40px_40px] opacity-[0.3]"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-gray-900 text-white mb-6">
+                    <span class="w-2 h-2 rounded-full bg-zapario-red mr-2 animate-pulse"></span>
+                    End-to-End Engineering & Manufacturing
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 mb-6 leading-[1.1] tracking-tight">
+                    Engineer Your <br>
+                    <span class="text-zapario-red">Digital Reality.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-10 font-light leading-relaxed max-w-lg">
+                    We bridge the gap between physical assets and digital intelligence. From custom silicon and bare-metal firmware to intelligent cloud architectures and turnkey PCBA manufacturing.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('ecosystem')" class="bg-zapario-red text-white px-8 py-4 rounded-lg font-bold text-lg shadow-hover hover:bg-zapario-dark transition-all flex items-center gap-2">
+                        Explore Our Ecosystem <i class="ph-bold ph-arrow-down"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Isometric Tech Stack Visual -->
+            <div class="relative h-[500px] w-full flex items-center justify-center pointer-events-none">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#fef2f2_0%,transparent_60%)]"></div>
+                
+                <div class="iso-container relative w-[200px] h-[200px]">
+                    <!-- Hardware Layer -->
+                    <div class="iso-layer layer-pcb">
+                        <i class="ph-duotone ph-cpu"></i>
+                    </div>
+                    <!-- Connector Lines -->
+                    <div class="absolute w-px h-20 bg-gray-300 left-1/4 top-1/2" style="transform: translateZ(20px);"></div>
+                    <div class="absolute w-px h-20 bg-gray-300 right-1/4 top-1/2" style="transform: translateZ(20px);"></div>
+                    
+                    <!-- Firmware Layer -->
+                    <div class="iso-layer layer-code">
+                        <i class="ph-duotone ph-terminal-window"></i>
+                    </div>
+                    <!-- Connector Lines -->
+                    <div class="absolute w-px h-20 bg-zapario-red/50 left-1/2 top-1/4" style="transform: translateZ(100px);"></div>
+                    
+                    <!-- Cloud Layer -->
+                    <div class="iso-layer layer-cloud">
+                        <i class="ph-duotone ph-cloud-network"></i>
+                    </div>
+                </div>
+
+                <!-- Floating Labels -->
+                <div class="absolute top-1/4 right-0 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-soft text-xs font-bold text-blue-600">
+                    3. Intelligent Cloud
+                </div>
+                <div class="absolute top-1/2 right-10 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-soft text-xs font-bold text-zapario-red">
+                    2. Embedded Software
+                </div>
+                <div class="absolute bottom-1/4 right-0 bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-soft text-xs font-bold text-green-700">
+                    1. Custom Hardware
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Ecosystem Matrix (Dynamic Service Links) -->
+    <section id="ecosystem" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Our Capabilities</span>
+                <h2 class="text-4xl font-bold text-gray-900 mt-2">The Zapario Ecosystem</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-6"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+                    Select a core engineering pillar below to explore our specialized services and deep technical capabilities.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 bg-white rounded-2xl shadow-soft border border-gray-200 overflow-hidden min-h-[600px]">
+                
+                <!-- Left Nav: Master Categories -->
+                <div class="lg:col-span-4 border-r border-gray-100 bg-gray-50/50 flex flex-col py-4">
+                    <button onclick="loadCategory('hardware')" id="btn-hardware" class="matrix-btn active text-left p-6 flex items-center gap-4">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-zapario-red text-white flex items-center justify-center text-2xl shadow-sm transition-colors"><i class="ph-duotone ph-circuitry"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-lg">Hardware & PCB</div>
+                            <div class="text-sm text-gray-500 mt-1">Electronics Engineering</div>
+                        </div>
+                    </button>
+                    
+                    <button onclick="loadCategory('software')" id="btn-software" class="matrix-btn text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-white border border-gray-200 text-gray-600 flex items-center justify-center text-2xl shadow-sm transition-colors"><i class="ph-duotone ph-terminal-window"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-lg">Embedded Software</div>
+                            <div class="text-sm text-gray-500 mt-1">Firmware, AI, & Security</div>
+                        </div>
+                    </button>
+                    
+                    <button onclick="loadCategory('iot')" id="btn-iot" class="matrix-btn text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-white border border-gray-200 text-gray-600 flex items-center justify-center text-2xl shadow-sm transition-colors"><i class="ph-duotone ph-plugs-connected"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-lg">IoT Solutions</div>
+                            <div class="text-sm text-gray-500 mt-1">Cloud, Edge, & Apps</div>
+                        </div>
+                    </button>
+                    
+                    <button onclick="loadCategory('manufacturing')" id="btn-manufacturing" class="matrix-btn text-left p-6 flex items-center gap-4 border-t border-gray-100">
+                        <div class="icon-box w-12 h-12 rounded-xl bg-white border border-gray-200 text-gray-600 flex items-center justify-center text-2xl shadow-sm transition-colors"><i class="ph-duotone ph-factory"></i></div>
+                        <div>
+                            <div class="font-bold text-gray-900 text-lg">Manufacturing</div>
+                            <div class="text-sm text-gray-500 mt-1">EMS & Supply Chain</div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Right Pane: Dynamic Links -->
+                <div class="lg:col-span-8 p-8 md:p-12 bg-white">
+                    <div id="category-header" class="mb-8 border-b border-gray-100 pb-4">
+                        <h3 class="text-2xl font-bold text-gray-900" id="matrix-title">Hardware & PCB Engineering</h3>
+                        <p class="text-gray-500 mt-2" id="matrix-desc">From initial architecture to high-speed rigid-flex layouts. We design the physical foundation of your product.</p>
+                    </div>
+                    
+                    <!-- Links Grid -->
+                    <div id="links-grid" class="grid sm:grid-cols-2 gap-4">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- The Turnkey Advantage (Interactive Comparison) -->
+    <section id="advantage" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white">The Turnkey Advantage</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">
+                    Building a connected device requires hardware, firmware, cloud infrastructure, and manufacturing. See why integrating these under one roof reduces risk.
+                </p>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-center gap-4 mb-12">
+                <button onclick="setAdvantage('fragmented')" id="adv-frag" class="px-8 py-3 rounded-lg font-bold text-sm bg-gray-800 text-gray-400 border border-gray-700 hover:text-white transition-all">
+                    Traditional: Fragmented Vendors
+                </button>
+                <button onclick="setAdvantage('zapario')" id="adv-zap" class="px-8 py-3 rounded-lg font-bold text-sm bg-zapario-red text-white border border-zapario-red shadow-[0_0_15px_rgba(215,25,32,0.4)] transition-all">
+                    The Zapario End-to-End Model
+                </button>
+            </div>
+
+            <div class="bg-gray-800 rounded-2xl border border-gray-700 p-8 shadow-2xl min-h-[300px] flex items-center justify-center transition-all duration-300" id="adv-content">
+                <!-- Content Injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto mb-6">
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Zapario is a premier engineering and manufacturing firm specializing in end-to-end IoT solutions, custom electronics, and embedded software.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-4">Engineering</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="/electronics-engineering-design/" class="hover:text-zapario-red">Electronics Design</a></li>
+                        <li><a href="/pcb-design-and-schematic-capture/" class="hover:text-zapario-red">PCB Layout</a></li>
+                        <li><a href="/firmware-embedded-software/" class="hover:text-zapario-red">Firmware Engineering</a></li>
+                        <li><a href="/device-security/" class="hover:text-zapario-red">Device Security</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-4">IoT & Cloud</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="/iot/" class="hover:text-zapario-red">IoT Solutions</a></li>
+                        <li><a href="/iot-intelligent-cloud/" class="hover:text-zapario-red">Intelligent Cloud</a></li>
+                        <li><a href="/edge-analytics-ai/" class="hover:text-zapario-red">Edge AI</a></li>
+                        <li><a href="/iot-app-development/" class="hover:text-zapario-red">App Development</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-4">Manufacturing</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="/electronics-manufacturing-services/" class="hover:text-zapario-red">Turnkey EMS</a></li>
+                        <li><a href="/printed-circuit-board-assembly-pcba/" class="hover:text-zapario-red">PCBA Assembly</a></li>
+                        <li><a href="/electronics-supply-chain/" class="hover:text-zapario-red">Supply Chain</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-400 text-sm">© 2024 Zapario. All rights reserved.</p>
+                <div class="flex gap-4 text-gray-400">
+                    <a href="#" class="hover:text-zapario-red text-xl"><i class="ph-fill ph-linkedin-logo"></i></a>
+                    <a href="#" class="hover:text-zapario-red text-xl"><i class="ph-fill ph-twitter-logo"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- ECOSYSTEM MATRIX LOGIC & DATA ---
+        // This is the critical section mapping exactly to the requested URLs
+        const matrixData = {
+            hardware: {
+                title: "Hardware & PCB Engineering",
+                desc: "From initial architecture to high-speed rigid-flex layouts. We design the physical foundation of your product.",
+                links: [
+                    { title: "Electronics Engineering Design", url: "/electronics-engineering-design/", icon: "ph-cpu", desc: "System architecture and component selection." },
+                    { title: "Hardware Design", url: "/electronics-hardware-design/", icon: "ph-motherboard", desc: "Industrial-grade circuit engineering." },
+                    { title: "PCB Design & Schematic", url: "/pcb-design-and-schematic-capture/", icon: "ph-pen-nib", desc: "High-speed layout and rigorous SI/PI routing." }
+                ]
+            },
+            software: {
+                title: "Embedded Software & Security",
+                desc: "We write the code that brings custom silicon to life, prioritizing absolute determinism and zero-trust security.",
+                links: [
+                    { title: "Software Services", url: "/software-services/", icon: "ph-code-block", desc: "Full-stack embedded and cloud engineering." },
+                    { title: "Firmware & Embedded", url: "/firmware-embedded-software/", icon: "ph-terminal-window", desc: "RTOS and complex microcontroller logic." },
+                    { title: "Bare-Metal Firmware", url: "/bare-metal-firmware/", icon: "ph-lightning", desc: "OS-less, ultra-low latency C/C++ execution." },
+                    { title: "BSP Development", url: "/bsp-development/", icon: "ph-tree-structure", desc: "Yocto Linux, Bootloaders, and Custom Drivers." },
+                    { title: "Edge Analytics & AI", url: "/edge-analytics-ai/", icon: "ph-brain", desc: "TinyML and local machine learning models." },
+                    { title: "Device Security", url: "/device-security/", icon: "ph-shield-check", desc: "Secure boot, mTLS, and cryptographic architecture." }
+                ]
+            },
+            iot: {
+                title: "IoT Systems & Connectivity",
+                desc: "End-to-end data pipelines connecting physical assets to intuitive user interfaces and scalable cloud databases.",
+                links: [
+                    { title: "IoT Solutions", url: "/iot/", icon: "ph-plugs-connected", desc: "Comprehensive IoT strategy and execution." },
+                    { title: "IoT Intelligent Cloud", url: "/iot-intelligent-cloud/", icon: "ph-cloud-arrow-up", desc: "Scalable data ingestion and timeseries architecture." },
+                    { title: "IoT Intelligent Edge", url: "/iot-intelligent-edge/", icon: "ph-wifi-high", desc: "Local gateways and protocol translation." },
+                    { title: "IoT App Development", url: "/iot-app-development/", icon: "ph-device-mobile", desc: "Native mobile control and web dashboards." },
+                    { title: "IoT Use Cases for OEMs", url: "/iot-use-case-for-oem/", icon: "ph-factory", desc: "Predictive maintenance and Servitization." }
+                ]
+            },
+            manufacturing: {
+                title: "Manufacturing & Supply Chain",
+                desc: "Transitioning prototypes into mass production with uncompromising quality control and global component sourcing.",
+                links: [
+                    { title: "Electronics Manufacturing (EMS)", url: "/electronics-manufacturing-services/", icon: "ph-package", desc: "Turnkey assembly, box build, and logistics." },
+                    { title: "Contract Manufacturing (ECM)", url: "/electronics-contract-manufacturing/", icon: "ph-conveyor-belt", desc: "NPI, pilot runs, and high-volume scale." },
+                    { title: "PCBA Services", url: "/printed-circuit-board-assembly-pcba/", icon: "ph-circuitry", desc: "Precision SMT, BGA, and rigid-flex assembly." },
+                    { title: "Electronics Supply Chain", url: "/electronics-supply-chain/", icon: "ph-globe-hemisphere-west", desc: "Component sourcing and obsolescence mitigation." }
+                ]
+            }
+        };
+
+        function loadCategory(categoryId) {
+            // UI Button Toggle
+            const categories = ['hardware', 'software', 'iot', 'manufacturing'];
+            categories.forEach(cat => {
+                const btn = document.getElementById(`btn-${cat}`);
+                if (cat === categoryId) {
+                    btn.classList.add('active');
+                    btn.querySelector('.icon-box').classList.add('bg-zapario-red', 'text-white');
+                    btn.querySelector('.icon-box').classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+                } else {
+                    btn.classList.remove('active');
+                    btn.querySelector('.icon-box').classList.remove('bg-zapario-red', 'text-white');
+                    btn.querySelector('.icon-box').classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+                }
+            });
+
+            // Update Content
+            const data = matrixData[categoryId];
+            document.getElementById('matrix-title').innerText = data.title;
+            document.getElementById('matrix-desc').innerText = data.desc;
+
+            const grid = document.getElementById('links-grid');
+            grid.innerHTML = ''; // Clear current
+
+            // Generate Link Cards with staggered animation
+            data.links.forEach((link, index) => {
+                const delay = index * 0.05; // 50ms stagger
+                const cardHtml = `
+                    <a href="${link.url}" class="service-card p-5 rounded-xl border border-gray-200 bg-white group" style="animation-delay: ${delay}s;">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-red-50 text-zapario-red flex items-center justify-center text-xl shrink-0 group-hover:bg-zapario-red group-hover:text-white transition-colors">
+                                <i class="ph-duotone ${link.icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-1 group-hover:text-zapario-red transition-colors">${link.title}</h4>
+                                <p class="text-xs text-gray-500 leading-relaxed">${link.desc}</p>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                grid.innerHTML += cardHtml;
+            });
+        }
+
+        // --- ADVANTAGE TOGGLE LOGIC ---
+        function setAdvantage(type) {
+            const btnFrag = document.getElementById('adv-frag');
+            const btnZap = document.getElementById('adv-zap');
+            const content = document.getElementById('adv-content');
+
+            content.style.opacity = 0;
+
+            setTimeout(() => {
+                if (type === 'fragmented') {
+                    btnFrag.className = "px-8 py-3 rounded-lg font-bold text-sm bg-gray-700 text-white border border-gray-600 shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all";
+                    btnZap.className = "px-8 py-3 rounded-lg font-bold text-sm bg-gray-800 text-gray-400 border border-gray-700 hover:text-white transition-all";
+                    
+                    content.innerHTML = `
+                        <div class="w-full max-w-4xl">
+                            <div class="flex flex-col md:flex-row items-center justify-between gap-4 w-full opacity-60">
+                                <div class="bg-gray-900 border border-gray-700 p-4 rounded text-center w-full md:w-1/4">
+                                    <div class="text-gray-500 text-xs mb-1">Vendor 1</div>
+                                    <div class="font-bold text-white">Design House</div>
+                                </div>
+                                <div class="text-red-500 font-bold"><i class="ph-bold ph-x"></i> Communication Gap</div>
+                                <div class="bg-gray-900 border border-gray-700 p-4 rounded text-center w-full md:w-1/4">
+                                    <div class="text-gray-500 text-xs mb-1">Vendor 2</div>
+                                    <div class="font-bold text-white">Software Agency</div>
+                                </div>
+                                <div class="text-red-500 font-bold"><i class="ph-bold ph-x"></i> Blame Shifting</div>
+                                <div class="bg-gray-900 border border-gray-700 p-4 rounded text-center w-full md:w-1/4">
+                                    <div class="text-gray-500 text-xs mb-1">Vendor 3</div>
+                                    <div class="font-bold text-white">Contract Mfr.</div>
+                                </div>
+                            </div>
+                            <p class="text-center text-gray-400 mt-8 text-sm max-w-xl mx-auto leading-relaxed">
+                                Managing multiple vendors leads to "throw it over the wall" engineering. When the firmware doesn't work with the hardware, the design agency blames the software team, and the manufacturer blames the design. You pay for the delays.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    btnZap.className = "px-8 py-3 rounded-lg font-bold text-sm bg-zapario-red text-white border border-zapario-red shadow-[0_0_15px_rgba(215,25,32,0.4)] transition-all";
+                    btnFrag.className = "px-8 py-3 rounded-lg font-bold text-sm bg-gray-800 text-gray-400 border border-gray-700 hover:text-white transition-all";
+                    
+                    content.innerHTML = `
+                        <div class="w-full max-w-4xl flex flex-col items-center">
+                            <div class="bg-gray-900 border border-zapario-red rounded-xl p-8 w-full shadow-[0_0_30px_rgba(215,25,32,0.15)] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,#D71920_0%,transparent_40%)] opacity-20"></div>
+                                <div class="relative z-10 flex flex-col md:flex-row justify-around items-center gap-6">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-gray-800 text-zapario-red rounded-full flex items-center justify-center text-xl mx-auto mb-2"><i class="ph-bold ph-cpu"></i></div>
+                                        <div class="font-bold text-white">Hardware</div>
+                                    </div>
+                                    <div class="text-zapario-red text-2xl hidden md:block"><i class="ph-bold ph-arrows-left-right"></i></div>
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-gray-800 text-zapario-red rounded-full flex items-center justify-center text-xl mx-auto mb-2"><i class="ph-bold ph-terminal-window"></i></div>
+                                        <div class="font-bold text-white">Software</div>
+                                    </div>
+                                    <div class="text-zapario-red text-2xl hidden md:block"><i class="ph-bold ph-arrows-left-right"></i></div>
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-gray-800 text-zapario-red rounded-full flex items-center justify-center text-xl mx-auto mb-2"><i class="ph-bold ph-factory"></i></div>
+                                        <div class="font-bold text-white">Production</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-center text-gray-300 mt-8 text-sm max-w-2xl mx-auto leading-relaxed">
+                                Single point of accountability. Our hardware engineers sit next to our firmware developers. We design the board with manufacturing constraints (DFM) in mind from day one, resulting in faster time-to-market and zero finger-pointing.
+                            </p>
+                        </div>
+                    `;
+                }
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load initial category to populate the matrix
+            loadCategory('hardware');
+            setAdvantage('zapario');
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
