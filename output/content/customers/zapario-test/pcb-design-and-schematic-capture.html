@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCB Design & Schematic Capture | Zapario</title>
+    <meta name="description" content="Expert PCB layout and schematic capture services. Master high-speed digital, RF, and HDI designs with rigorous signal integrity and DFM checks.">
+    <meta name="keywords" content="PCB Design, Schematic Capture, Altium Designer, Controlled Impedance, High-Speed Routing, HDI, DRC, DFM, PCB Layout">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'pcb-grid': "linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Cleanroom PCB" - Crisp white backgrounds with structured gray gridlines simulating an EDA canvas. Zapario Red (#D71920) is utilized for traces, active states, and errors, providing high contrast and focus. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: Focus on the transition from logic to physical reality.
+         2. Controlled Impedance Lab: Interactive tool where users adjust trace width and dielectric height to hit a 50-ohm target. Educates on the physics of high-speed routing.
+         3. The Design Pipeline: Stepper explaining Library Management -> Schematic -> Layout -> Output.
+         4. DRC (Design Rule Check) Simulator: An interactive block showing common layout errors and how automation catches them.
+         5. Advanced Capabilities: Grid detailing HDI, Rigid-Flex, and RF specs.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Impedance Target Chart (Bar/Gauge via Chart.js):
+            - Goal: Visualize the relationship between physical PCB dimensions and electrical properties.
+            - Viz: Horizontal bar chart with a fixed target line at 50 Ohms.
+            - Interaction: Sliders update trace width/height, instantly recalculating the impedance math and updating the chart color (Red = fail, Green = Pass).
+         2. DRC Simulator (DOM/CSS):
+            - Goal: Show the rigor of design validation.
+            - Viz: A mock PCB layout with hidden errors.
+            - Interaction: Clicking "Run DRC" highlights clearance violations and unconnected nets.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 120px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* PCB Routing Animation */
+        @keyframes drawTrace {
+            0% { width: 0; height: 4px; }
+            30% { width: 100px; height: 4px; }
+            60% { width: 100px; height: 80px; }
+            100% { width: 200px; height: 80px; }
+        }
+
+        /* Pipeline Stepper */
+        .pipeline-btn {
+            transition: all 0.3s ease;
+        }
+        .pipeline-btn.active {
+            background-color: #fef2f2;
+            border-color: #D71920;
+        }
+        .pipeline-btn.active .icon-container {
+            background-color: #D71920;
+            color: white;
+            border-color: #D71920;
+        }
+
+        /* Custom Input Range */
+        input[type=range] {
+            accent-color: #D71920;
+        }
+        
+        /* DRC Simulator Classes */
+        .drc-error {
+            opacity: 0;
+            transition: opacity 0.3s;
+            position: absolute;
+            border: 2px solid #D71920;
+            background-color: rgba(215, 25, 32, 0.2);
+            border-radius: 50%;
+            animation: pulse-error 1.5s infinite;
+        }
+        .show-errors .drc-error {
+            opacity: 1;
+        }
+        @keyframes pulse-error {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(215, 25, 32, 0.4); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(215, 25, 32, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(215, 25, 32, 0); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('impedance-lab')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">The Physics of Routing</button>
+                    <button onclick="scrollToSection('pipeline')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Design Pipeline</button>
+                    <button onclick="scrollToSection('drc-sim')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">DRC Validation</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Start Your Layout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <!-- Blueprint Grid -->
+        <div class="absolute inset-0 bg-pcb-grid bg-[size:40px_40px] opacity-[0.4]"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-pen-nib mr-2"></i>
+                    PCB Design & Schematic Capture
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Architecting the <br>
+                    <span class="text-zapario-red">Physical Foundation.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    Modern printed circuit boards are complex electromagnetic systems. We design precision HDI layouts, impedance-controlled traces, and rigorous schematics that guarantee first-pass manufacturing success.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('impedance-lab')" class="bg-gray-900 text-white px-8 py-3.5 rounded-md font-bold shadow-lg hover:bg-gray-800 transition-all flex items-center gap-2">
+                        Explore High-Speed Design <i class="ph-bold ph-arrow-down"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">DDR5</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">High-Speed Routing</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">HDI</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Blind/Buried Vias</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">Altium</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Native EDA Tools</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Dynamic Routing Abstraction -->
+            <div class="relative h-[400px] w-full bg-white rounded-2xl shadow-soft border border-gray-200 overflow-hidden flex items-center justify-center p-8">
+                <!-- Pads -->
+                <div class="absolute top-1/4 left-1/4 w-8 h-8 rounded-full border-4 border-gray-300 bg-gray-100 flex items-center justify-center"><div class="w-3 h-3 rounded-full bg-gray-800"></div></div>
+                <div class="absolute bottom-1/4 right-1/4 w-8 h-8 rounded-full border-4 border-gray-300 bg-gray-100 flex items-center justify-center"><div class="w-3 h-3 rounded-full bg-gray-800"></div></div>
+                
+                <!-- Animated Trace Container -->
+                <div class="absolute top-1/4 left-1/4 mt-3 ml-3 overflow-hidden" style="width: 250px; height: 250px;">
+                    <!-- The Trace (Simulated via nested borders/resizing) -->
+                    <div class="relative">
+                        <!-- Horizontal 1 -->
+                        <div class="absolute top-0 left-0 h-2 bg-zapario-red animate-[trace1_4s_infinite]"></div>
+                        <!-- Vertical -->
+                        <div class="absolute top-0 left-[100px] w-2 bg-zapario-red animate-[trace2_4s_infinite]"></div>
+                        <!-- Horizontal 2 -->
+                        <div class="absolute top-[160px] left-[100px] h-2 bg-zapario-red animate-[trace3_4s_infinite]"></div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes trace1 {
+                        0%, 10% { width: 0; }
+                        30%, 100% { width: 102px; }
+                    }
+                    @keyframes trace2 {
+                        0%, 30% { height: 0; }
+                        60%, 100% { height: 162px; }
+                    }
+                    @keyframes trace3 {
+                        0%, 60% { width: 0; }
+                        90%, 100% { width: 120px; }
+                    }
+                </style>
+
+                <!-- Floating Data -->
+                <div class="absolute top-8 right-8 bg-gray-900 text-white font-mono text-xs p-3 rounded shadow-lg border border-gray-700">
+                    <div>Net: <span class="text-zapario-red">CLK_P</span></div>
+                    <div>Length: <span class="text-gray-400">45.2mm</span></div>
+                    <div>Impedance: <span class="text-green-400">50.1Ω</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Controlled Impedance Lab -->
+    <section id="impedance-lab" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-16 items-center">
+                
+                <!-- Controls -->
+                <div class="lg:col-span-5 space-y-8 border-b lg:border-b-0 lg:border-r border-gray-700 pb-8 lg:pb-0 lg:pr-8">
+                    <div>
+                        <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">The Physics of Routing</span>
+                        <h2 class="text-3xl font-bold text-white mt-2">Controlled Impedance Lab</h2>
+                        <p class="text-gray-400 mt-4 leading-relaxed text-sm">
+                            High-speed signals (USB, PCIe, DDR) require traces to act as transmission lines. If the impedance doesn't match the target (usually 50Ω single-ended), signals reflect and corrupt data.
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-bold text-gray-300">Trace Width (W)</label>
+                                <span id="trace-w-val" class="font-mono text-zapario-red">6.0 mils</span>
+                            </div>
+                            <input type="range" id="traceWidth" min="3" max="15" step="0.5" value="6" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-bold text-gray-300">Dielectric Height (H)</label>
+                                <span id="trace-h-val" class="font-mono text-blue-400">4.0 mils</span>
+                            </div>
+                            <input type="range" id="traceHeight" min="2" max="10" step="0.5" value="4" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization -->
+                <div class="lg:col-span-7 flex flex-col gap-8">
+                    
+                    <!-- Physical Visualizer -->
+                    <div class="bg-gray-800 rounded-xl border border-gray-700 p-8 flex flex-col items-center justify-center relative overflow-hidden h-48">
+                        <div class="text-xs text-gray-500 uppercase tracking-widest absolute top-4 left-4">PCB Cross-Section</div>
+                        
+                        <!-- Top Copper Trace -->
+                        <div id="vis-trace" class="bg-zapario-red rounded-t-sm transition-all duration-300 relative" style="width: 60px; height: 10px;">
+                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white">W</div>
+                        </div>
+                        
+                        <!-- Dielectric Core -->
+                        <div id="vis-core" class="bg-blue-900/30 border-x border-blue-500/50 w-full transition-all duration-300 relative flex items-center justify-center" style="height: 40px;">
+                            <div class="text-[10px] font-mono text-blue-400 opacity-50">Er = 4.2 (FR4)</div>
+                            <div class="absolute -left-6 top-1/2 -translate-y-1/2 text-[10px] font-mono text-white">H</div>
+                        </div>
+
+                        <!-- Bottom Ground Plane -->
+                        <div class="bg-yellow-600 w-full h-4"></div>
+                    </div>
+
+                    <!-- Chart.js Output -->
+                    <div class="bg-gray-800 rounded-xl border border-gray-700 p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-gray-300 uppercase">Calculated Impedance (Z₀)</h3>
+                            <div id="impedance-result" class="text-2xl font-bold font-mono text-green-500">51.2 Ω</div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="impedanceChart"></canvas>
+                        </div>
+                        <div id="impedance-status" class="mt-4 text-sm font-bold text-green-400 text-center">Target Hit (±10% Tolerance)</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- The Design Pipeline -->
+    <section id="pipeline" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Methodology</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">The Schematic-to-Layout Pipeline</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    A successful board is born long before the first trace is routed. We utilize strict library management and constraint-driven schematic capture to ensure the physical layout matches the logical intent perfectly.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8">
+                <!-- Pipeline Steps -->
+                <div class="lg:col-span-4 flex flex-col gap-3">
+                    <button onclick="setPipeline(0)" id="pipe-btn-0" class="pipeline-btn active text-left p-4 rounded-xl border border-gray-200 flex items-center gap-4 bg-white">
+                        <div class="icon-container w-10 h-10 rounded border border-gray-200 flex items-center justify-center text-gray-600 text-xl shrink-0"><i class="ph-bold ph-books"></i></div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-sm">1. Library Management</h3>
+                            <p class="text-xs text-gray-500">Symbols, Footprints, 3D Models</p>
+                        </div>
+                    </button>
+                    <button onclick="setPipeline(1)" id="pipe-btn-1" class="pipeline-btn text-left p-4 rounded-xl border border-gray-200 flex items-center gap-4 bg-white">
+                        <div class="icon-container w-10 h-10 rounded border border-gray-200 flex items-center justify-center text-gray-600 text-xl shrink-0"><i class="ph-bold ph-tree-structure"></i></div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-sm">2. Schematic Capture</h3>
+                            <p class="text-xs text-gray-500">Logic & Constraint Definition</p>
+                        </div>
+                    </button>
+                    <button onclick="setPipeline(2)" id="pipe-btn-2" class="pipeline-btn text-left p-4 rounded-xl border border-gray-200 flex items-center gap-4 bg-white">
+                        <div class="icon-container w-10 h-10 rounded border border-gray-200 flex items-center justify-center text-gray-600 text-xl shrink-0"><i class="ph-bold ph-squares-four"></i></div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-sm">3. Placement & Thermal</h3>
+                            <p class="text-xs text-gray-500">Floorplanning & Heat Dissipation</p>
+                        </div>
+                    </button>
+                    <button onclick="setPipeline(3)" id="pipe-btn-3" class="pipeline-btn text-left p-4 rounded-xl border border-gray-200 flex items-center gap-4 bg-white">
+                        <div class="icon-container w-10 h-10 rounded border border-gray-200 flex items-center justify-center text-gray-600 text-xl shrink-0"><i class="ph-bold ph-circuitry"></i></div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-sm">4. High-Speed Routing</h3>
+                            <p class="text-xs text-gray-500">Impedance, Length Matching</p>
+                        </div>
+                    </button>
+                    <button onclick="setPipeline(4)" id="pipe-btn-4" class="pipeline-btn text-left p-4 rounded-xl border border-gray-200 flex items-center gap-4 bg-white">
+                        <div class="icon-container w-10 h-10 rounded border border-gray-200 flex items-center justify-center text-gray-600 text-xl shrink-0"><i class="ph-bold ph-export"></i></div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-sm">5. Output Generation</h3>
+                            <p class="text-xs text-gray-500">Gerbers, ODB++, IPC-2581</p>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="lg:col-span-8 bg-white rounded-2xl border border-gray-200 p-8 shadow-soft flex items-center min-h-[400px]">
+                    <div id="pipeline-content" class="w-full transition-opacity duration-300">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DRC Simulator -->
+    <section id="drc-sim" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <div>
+                    <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Automated Quality Control</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mt-2 mb-6">Design Rule Checking (DRC)</h2>
+                    <p class="text-gray-600 leading-relaxed mb-8">
+                        The human eye misses microscopic errors. Before any design leaves our desks, it undergoes thousands of automated checks against the specific capabilities of the target manufacturing facility (DFM).
+                    </p>
+                    
+                    <button onclick="runDrc()" id="drc-btn" class="bg-gray-900 text-white font-bold py-3 px-8 rounded-lg hover:bg-zapario-red transition-colors flex items-center gap-2 shadow-md">
+                        <i class="ph-bold ph-play"></i> Run DRC Validation
+                    </button>
+
+                    <div id="drc-results" class="mt-8 space-y-3 opacity-0 transition-opacity duration-500">
+                        <div class="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-800 flex items-start gap-2">
+                            <i class="ph-bold ph-x-circle text-zapario-red mt-0.5"></i> 
+                            <span><strong>Clearance Violation:</strong> Trace T1 is 3.2mil from Pad P4 (Minimum is 4mil).</span>
+                        </div>
+                        <div class="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-800 flex items-start gap-2">
+                            <i class="ph-bold ph-x-circle text-zapario-red mt-0.5"></i> 
+                            <span><strong>Unrouted Net:</strong> Net 'GND' missing connection on U2.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Abstract Layout View -->
+                <div class="bg-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-800 relative h-[400px] flex items-center justify-center overflow-hidden" id="drc-board">
+                    <!-- Grid -->
+                    <div class="absolute inset-0 bg-pcb-grid bg-[size:20px_20px] opacity-10"></div>
+                    
+                    <!-- Simulated Board -->
+                    <div class="relative w-80 h-64 bg-green-800 border-2 border-green-700 rounded shadow-inner">
+                        
+                        <!-- Component U1 -->
+                        <div class="absolute top-8 left-8 w-20 h-20 border border-gray-400 bg-gray-800 rounded flex items-center justify-center text-gray-500 text-xs font-mono">U1</div>
+                        
+                        <!-- Component U2 -->
+                        <div class="absolute bottom-8 right-8 w-16 h-16 border border-gray-400 bg-gray-800 rounded flex items-center justify-center text-gray-500 text-xs font-mono">U2</div>
+                        
+                        <!-- Good Trace -->
+                        <div class="absolute top-16 left-[112px] h-1 bg-yellow-400 w-32"></div>
+                        <div class="absolute top-16 left-[244px] w-1 bg-yellow-400 h-20"></div>
+
+                        <!-- Error 1: Clearance -->
+                        <div class="absolute top-[140px] left-[60px] h-1 bg-yellow-400 w-40 transform rotate-12"></div>
+                        <div class="absolute top-[150px] left-[150px] w-4 h-4 bg-gray-300 rounded-full"></div>
+                        <!-- DRC Error Marker 1 -->
+                        <div class="drc-error w-8 h-8 absolute top-[135px] left-[140px]"></div>
+
+                        <!-- Error 2: Unrouted -->
+                        <div class="absolute bottom-[40px] right-[110px] w-12 h-px border-t border-dashed border-gray-300"></div>
+                        <!-- DRC Error Marker 2 -->
+                        <div class="drc-error w-6 h-6 absolute bottom-[28px] right-[112px]"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Capabilities -->
+    <section class="py-24 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">Advanced Design Capabilities</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4">
+                        <i class="ph-duotone ph-layers"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">High-Density Interconnect (HDI)</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Routing high pin-count BGAs (0.3mm pitch) using blind, buried, and staggered microvias. Up to 20+ layers.</p>
+                </div>
+                
+                <div class="p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4">
+                        <i class="ph-duotone ph-broadcast"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">RF & Microwave Layout</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Coplanar waveguides, antenna matching circuits, and isolation techniques for Wi-Fi, BLE, and cellular modems.</p>
+                </div>
+
+                <div class="p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="w-12 h-12 bg-red-50 text-zapario-red rounded-lg flex items-center justify-center text-2xl mb-4">
+                        <i class="ph-duotone ph-lightning"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Power Electronics & Thermal</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">High-current trace design, thermal via arrays, and polygon pours to manage heat dissipation in motor drivers and power supplies.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario PCB Design & Schematic Capture.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- IMPEDANCE LAB LOGIC ---
+        let impChart;
+
+        function initImpedanceChart() {
+            const ctx = document.getElementById('impedanceChart').getContext('2d');
+            
+            impChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Impedance (Ohms)'],
+                    datasets: [{
+                        data: [50], // Initial perfect 50
+                        backgroundColor: '#10b981', // Green
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { enabled: false },
+                        annotation: {
+                            // Using a custom plugin below to draw the target line since chartjs-plugin-annotation isn't loaded
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            min: 20, max: 100,
+                            grid: { color: '#374151' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        y: { display: false }
+                    }
+                },
+                plugins: [{
+                    id: 'targetLine',
+                    afterDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const xAxis = chart.scales.x;
+                        const yAxis = chart.scales.y;
+                        const targetX = xAxis.getPixelForValue(50);
+                        
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.moveTo(targetX, yAxis.top);
+                        ctx.lineTo(targetX, yAxis.bottom);
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.setLineDash([5, 5]);
+                        ctx.stroke();
+                        
+                        ctx.fillStyle = '#ffffff';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('Target 50Ω', targetX, yAxis.top - 5);
+                        ctx.restore();
+                    }
+                }]
+            });
+
+            document.getElementById('traceWidth').addEventListener('input', updateImpedance);
+            document.getElementById('traceHeight').addEventListener('input', updateImpedance);
+            updateImpedance(); // Initial calculation
+        }
+
+        function updateImpedance() {
+            const w = parseFloat(document.getElementById('traceWidth').value);
+            const h = parseFloat(document.getElementById('traceHeight').value);
+            
+            // Update labels
+            document.getElementById('trace-w-val').innerText = w.toFixed(1) + " mils";
+            document.getElementById('trace-h-val').innerText = h.toFixed(1) + " mils";
+
+            // Visual Update
+            const traceVis = document.getElementById('vis-trace');
+            const coreVis = document.getElementById('vis-core');
+            traceVis.style.width = (w * 10) + "px"; // Scale factor
+            coreVis.style.height = (h * 10) + "px";
+
+            // Simplified Microstrip Impedance Calculation (approximation for demonstration)
+            // Z0 = (87 / sqrt(Er + 1.41)) * ln(5.98 * H / (0.8 * W + T))
+            // Assuming Er = 4.2, T = 1.4 (1oz copper)
+            const er = 4.2;
+            const t = 1.4;
+            const constant = 87 / Math.sqrt(er + 1.41);
+            const termInsideLn = (5.98 * h) / ((0.8 * w) + t);
+            
+            let z0 = 0;
+            if(termInsideLn > 0) {
+                z0 = constant * Math.log(termInsideLn);
+            }
+            
+            // Prevent negative/NaN display visually
+            if(z0 < 20) z0 = 20;
+            
+            const resultEl = document.getElementById('impedance-result');
+            const statusEl = document.getElementById('impedance-status');
+            
+            resultEl.innerText = z0.toFixed(1) + " Ω";
+            
+            // Update Chart
+            impChart.data.datasets[0].data = [z0];
+            
+            // Tolerance Check (Target 50, ±10% = 45 to 55)
+            if (z0 >= 45 && z0 <= 55) {
+                impChart.data.datasets[0].backgroundColor = '#10b981'; // Green
+                resultEl.className = "text-2xl font-bold font-mono text-green-500";
+                statusEl.innerText = "Target Hit (Within ±10% Tolerance)";
+                statusEl.className = "mt-4 text-sm font-bold text-green-400 text-center";
+            } else {
+                impChart.data.datasets[0].backgroundColor = '#ef4444'; // Red
+                resultEl.className = "text-2xl font-bold font-mono text-zapario-red";
+                if(z0 > 55) {
+                    statusEl.innerText = "Impedance too HIGH. (Increase Width or Decrease Height)";
+                } else {
+                    statusEl.innerText = "Impedance too LOW. (Decrease Width or Increase Height)";
+                }
+                statusEl.className = "mt-4 text-sm font-bold text-zapario-red text-center";
+            }
+            
+            impChart.update();
+        }
+
+        // --- PIPELINE STEPPER LOGIC ---
+        const pipeData = [
+            {
+                title: "Library Management",
+                icon: "ph-books",
+                desc: "Every component begins as a library item. We create strict schematic symbols, verify pin-outs against datasheets, design IPC-compliant footprints for reliable soldering, and assign 3D STEP models for mechanical clearance checking.",
+                tools: "Altium Vault, Concord Pro"
+            },
+            {
+                title: "Schematic Capture",
+                icon: "ph-tree-structure",
+                desc: "The logical blueprint. We don't just connect wires; we establish design rules. We define high-speed differential pairs, assign net classes for power/ground routing, and calculate power budgets.",
+                tools: "Hierarchical Design, Net Classes"
+            },
+            {
+                title: "Placement & Thermal",
+                icon: "ph-squares-four",
+                desc: "Moving to the physical board. We strategically place decoupling capacitors millimeters from MCU power pins, group analog components away from noisy digital signals, and establish thermal relief paths for power ICs.",
+                tools: "Floorplanning, 3D Collision Check"
+            },
+            {
+                title: "High-Speed Routing",
+                icon: "ph-circuitry",
+                desc: "The art of tracing. We route critical signals first. Differential pairs are length-matched to picosecond tolerances, and memory buses (DDR) are tuned to ensure signal arrival synchronization.",
+                tools: "Length Tuning, Impedance Profiles"
+            },
+            {
+                title: "Output Generation",
+                icon: "ph-export",
+                desc: "Packaging the data for the factory. We generate comprehensive manufacturing packages including Gerbers, NC Drill files, Pick & Place coordinates, and intelligent formats like ODB++ or IPC-2581.",
+                tools: "Gerber RS-274X, ODB++, ActiveBOM"
+            }
+        ];
+
+        function setPipeline(index) {
+            for(let i=0; i<5; i++) {
+                const btn = document.getElementById(`pipe-btn-${i}`);
+                if(i === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            }
+
+            const data = pipeData[index];
+            const content = document.getElementById('pipeline-content');
+            
+            content.style.opacity = 0;
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="flex items-start gap-6">
+                        <div class="w-16 h-16 rounded-2xl bg-red-50 text-zapario-red flex items-center justify-center text-4xl shrink-0 shadow-sm border border-red-100">
+                            <i class="ph-duotone ${data.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-4">${data.title}</h3>
+                            <p class="text-gray-600 leading-relaxed mb-6">${data.desc}</p>
+                            <div class="inline-flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200">
+                                <i class="ph-bold ph-wrench text-gray-500"></i>
+                                <span class="text-xs font-bold text-gray-700 uppercase">${data.tools}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- DRC SIMULATOR LOGIC ---
+        function runDrc() {
+            const board = document.getElementById('drc-board');
+            const results = document.getElementById('drc-results');
+            const btn = document.getElementById('drc-btn');
+            
+            btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Analyzing Layout...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                board.classList.add('show-errors');
+                results.style.opacity = 1;
+                
+                btn.innerHTML = '<i class="ph-bold ph-warning-circle"></i> 2 Errors Found';
+                btn.classList.replace('bg-gray-900', 'bg-zapario-red');
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="ph-bold ph-arrow-counter-clockwise"></i> Reset Simulator';
+                    btn.onclick = resetDrc;
+                }, 1000);
+            }, 1500);
+        }
+
+        function resetDrc() {
+            const board = document.getElementById('drc-board');
+            const results = document.getElementById('drc-results');
+            const btn = document.getElementById('drc-btn');
+
+            board.classList.remove('show-errors');
+            results.style.opacity = 0;
+            
+            btn.innerHTML = '<i class="ph-bold ph-play"></i> Run DRC Validation';
+            btn.classList.replace('bg-zapario-red', 'bg-gray-900');
+            btn.onclick = runDrc;
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initImpedanceChart();
+            setPipeline(0);
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

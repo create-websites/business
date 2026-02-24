@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bare-Metal Firmware Engineering | Zapario</title>
+    <meta name="description" content="Expert bare-metal firmware development. Achieve microsecond precision, absolute determinism, and ultra-low power consumption with OS-less embedded C/C++ engineering.">
+    <meta name="keywords" content="Bare-Metal Firmware, Embedded C, Microcontrollers, MCU, ARM Cortex-M, Interrupt Service Routines, Low Power IoT, Deterministic Execution, Hardware Abstraction">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'hex-mesh': "radial-gradient(#e5e7eb 1px, transparent 1px)"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Silicon Layer" - Stark white and slate grays to emphasize a low-level, clinical engineering environment. Zapario Red (#D71920) is used to illustrate "direct execution" and active hardware states. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "Code on the Silicon." Focuses on registers, interrupts, and no overhead.
+         2. Execution Architecture Toggle: An interactive diagram explaining the fundamental difference between an OS-based approach (layers of abstraction) vs. bare-metal (direct register access).
+         3. Determinism & Jitter Simulator (Chart.js): A line chart demonstrating the critical advantage of bare-metal: absolute predictability in microsecond response times.
+         4. Memory Footprint Visualizer: A dynamic bar showing how bare-metal enables the use of cheaper, highly constrained microcontrollers (tiny RAM/Flash footprint).
+         5. Capabilities Grid: Peripheral drivers, low-power optimization, bootloaders.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Determinism Chart (Line Chart):
+            - Goal: Visually explain "Jitter" and why real-time systems need bare-metal.
+            - Viz: Multi-line chart showing interrupt response times. Linux has massive spikes, RTOS has small ripples, Bare-Metal is a flat, predictable line.
+            - Interaction: Auto-animating to simulate real-time oscilloscope capturing interrupt latency.
+         2. Execution Architecture (CSS Diagram):
+            - Goal: Show the removal of abstraction layers.
+            - Viz: Side-by-side stack. Bare-metal goes straight from App to Hardware.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS borders/shapes). NO Mermaid JS used. -->
+    -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* Register Memory Animation */
+        @keyframes flashHex {
+            0%, 100% { color: #9ca3af; }
+            50% { color: #D71920; font-weight: bold; text-shadow: 0 0 8px rgba(215, 25, 32, 0.4); }
+        }
+        .hex-active {
+            animation: flashHex 2s infinite;
+        }
+        .hex-active-alt {
+            animation: flashHex 3s infinite 1s;
+        }
+
+        /* Custom Input Range */
+        input[type=range] {
+            accent-color: #D71920;
+        }
+
+        /* Stack Toggle Styles */
+        .arch-btn {
+            transition: all 0.2s ease;
+        }
+        .arch-btn.active {
+            background-color: #1f2937; /* Gray-800 */
+            color: white;
+            border-color: #1f2937;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-10 w-auto">
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('architecture')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Architecture</button>
+                    <button onclick="scrollToSection('determinism')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Determinism Simulator</button>
+                    <button onclick="scrollToSection('memory')" class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors">Memory Footprint</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Discuss Firmware
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-hex-mesh bg-[size:24px_24px] opacity-30"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-lightning mr-2"></i>
+                    Low-Level Firmware Engineering
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    No OS. No Overhead.<br>
+                    <span class="text-zapario-red">Pure Performance.</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    Write code that executes directly on the silicon. We engineer bare-metal C/C++ firmware for microcontrollers where microsecond precision, ultra-low power, and deterministic execution are non-negotiable.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('architecture')" class="bg-gray-900 text-white px-8 py-3.5 rounded-md font-bold shadow-lg hover:bg-gray-800 transition-all flex items-center gap-2">
+                        Explore the Architecture <i class="ph-bold ph-arrow-down"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">1 µs</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Interrupt Latency</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">nA</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Deep Sleep Currents</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl text-gray-900 font-bold font-mono">&lt; 4 KB</div>
+                        <div class="text-xs text-gray-500 uppercase font-semibold mt-1">Memory Footprint</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Direct Memory Access Abstraction -->
+            <div class="relative h-[400px] w-full bg-gray-900 rounded-2xl shadow-2xl border-4 border-gray-800 overflow-hidden flex flex-col p-6">
+                <!-- MCU Package Frame -->
+                <div class="absolute inset-2 border border-gray-700 rounded-xl pointer-events-none"></div>
+                <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                    <div class="flex items-center gap-3">
+                        <i class="ph-duotone ph-cpu text-3xl text-gray-400"></i>
+                        <div>
+                            <div class="text-white font-bold font-mono text-sm">ARM Cortex-M4</div>
+                            <div class="text-zapario-red font-mono text-xs">Direct Register Access</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-1">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <div class="w-2 h-2 rounded-full bg-zapario-red animate-pulse" style="animation-delay: 0.5s;"></div>
+                    </div>
+                </div>
+                
+                <!-- Code & Memory Map -->
+                <div class="flex-1 font-mono text-xs leading-relaxed overflow-hidden flex flex-col gap-2">
+                    <div class="text-gray-500">// Configure GPIO Pin 5 as Output (Bare-Metal)</div>
+                    <div class="text-gray-300">
+                        <span class="text-blue-400">#define</span> GPIOA_BASE  <span class="text-yellow-400">0x40020000</span><br>
+                        <span class="text-blue-400">#define</span> GPIOA_MODER <span class="text-purple-400">*(volatile uint32_t*)</span>(GPIOA_BASE + 0x00)<br>
+                        <br>
+                        <span class="text-gray-500">// Clear mode bits for pin 5, then set to general purpose output (01)</span><br>
+                        GPIOA_MODER &amp;= ~(<span class="text-yellow-400">0x3</span> &lt;&lt; (<span class="text-yellow-400">5</span> * <span class="text-yellow-400">2</span>));<br>
+                        <span class="hex-active">GPIOA_MODER |=  (<span class="text-yellow-400">0x1</span> &lt;&lt; (<span class="text-yellow-400">5</span> * <span class="text-yellow-400">2</span>));</span>
+                    </div>
+                    
+                    <div class="mt-auto border-t border-gray-700 pt-4">
+                        <div class="text-gray-500 mb-1">// Memory Map Live View</div>
+                        <div class="grid grid-cols-4 gap-2 text-[10px] text-gray-600">
+                            <div>0x40020000 : <span class="text-gray-400">00000000</span></div>
+                            <div>0x40020004 : <span class="text-gray-400">00000000</span></div>
+                            <div class="hex-active-alt">0x40020008 : <span class="text-white">00000400</span></div>
+                            <div>0x4002000C : <span class="text-gray-400">00000000</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Execution Architecture (Interactive Comparison) -->
+    <section id="architecture" class="py-24 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Stripping Abstractions</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Why Bare-Metal?</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Operating Systems provide convenience but introduce scheduling layers, driver overhead, and context switching. Bare-metal removes the middleman.
+                </p>
+            </div>
+
+            <div class="flex justify-center mb-8">
+                <div class="inline-flex bg-white p-1 rounded-lg border border-gray-200 shadow-sm">
+                    <button onclick="setArchitecture('bare')" id="btn-bare" class="arch-btn active px-6 py-2 rounded-md font-bold text-sm">Bare-Metal Firmware</button>
+                    <button onclick="setArchitecture('os')" id="btn-os" class="arch-btn px-6 py-2 rounded-md font-bold text-sm text-gray-600 bg-white hover:bg-gray-50">OS / RTOS Based</button>
+                </div>
+            </div>
+
+            <!-- Visualization Pane -->
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-soft border border-gray-200 p-8 md:p-16 flex justify-center items-center min-h-[450px]">
+                <div id="arch-content" class="w-full transition-opacity duration-300">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Determinism Simulator (Chart.js) -->
+    <section id="determinism" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-16 items-center">
+                
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-800 text-zapario-red border border-gray-700">
+                        Microsecond Precision
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">The Determinism Imperative</h2>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        In motor control, power electronics, and high-frequency sensor reading, executing a task "most of the time" isn't good enough. If an interrupt response varies by even 1 millisecond (Jitter), the hardware can fail catastrophically.
+                    </p>
+                    
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 bg-zapario-red rounded-full shadow-[0_0_8px_#D71920]"></span>
+                            <div>
+                                <div class="text-sm font-bold text-white">Bare-Metal (Interrupt Driven)</div>
+                                <div class="text-xs text-gray-400">Zero Jitter. Immediate execution.</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                            <div>
+                                <div class="text-sm font-bold text-white">RTOS (Preemptive)</div>
+                                <div class="text-xs text-gray-400">Low Jitter. Slight context switch delay.</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 bg-gray-500 rounded-full"></span>
+                            <div>
+                                <div class="text-sm font-bold text-white">Embedded Linux</div>
+                                <div class="text-xs text-gray-400">High Jitter. At the mercy of the scheduler.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-2xl relative">
+                    <div class="absolute top-4 right-4 flex items-center gap-2">
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-[10px] font-mono text-green-400 uppercase tracking-widest">Live Oscilloscope Simulation</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-gray-300 uppercase tracking-widest text-center mb-6">Interrupt Response Latency (Jitter)</h3>
+                    
+                    <div class="chart-container">
+                        <canvas id="jitterChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Memory Footprint Configurator -->
+    <section id="memory" class="py-24 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Extreme Efficiency</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">The Cost of Overhead</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Operating systems require RAM and Flash just to exist. By compiling directly to the metal, we can utilize microcontrollers that cost pennies, drastically reducing your BOM cost at scale.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto bg-gray-50 p-8 rounded-2xl border border-gray-200 shadow-inner">
+                
+                <div class="flex justify-between items-center mb-6">
+                    <label class="font-bold text-gray-900">Select Software Architecture</label>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 mb-12">
+                    <button onclick="updateMemory('linux')" id="mem-btn-linux" class="mem-btn py-3 border border-gray-300 rounded-lg font-bold text-sm bg-white text-gray-600 hover:border-gray-400 transition-colors">Embedded Linux</button>
+                    <button onclick="updateMemory('rtos')" id="mem-btn-rtos" class="mem-btn py-3 border border-gray-300 rounded-lg font-bold text-sm bg-white text-gray-600 hover:border-gray-400 transition-colors">FreeRTOS</button>
+                    <button onclick="updateMemory('bare')" id="mem-btn-bare" class="mem-btn active py-3 border border-zapario-red rounded-lg font-bold text-sm bg-red-50 text-zapario-red shadow-md transition-colors">Bare-Metal</button>
+                </div>
+
+                <!-- Visual Memory Bar -->
+                <div class="space-y-8">
+                    <!-- Flash -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold text-gray-700 mb-2">
+                            <span>Program Flash Requirement</span>
+                            <span id="flash-val" class="font-mono text-zapario-red">16 KB</span>
+                        </div>
+                        <div class="w-full h-8 bg-gray-200 rounded-lg overflow-hidden flex relative border border-gray-300">
+                            <!-- OS Overhead -->
+                            <div id="flash-os" class="h-full bg-gray-500 transition-all duration-500" style="width: 0%;"></div>
+                            <!-- App Code -->
+                            <div id="flash-app" class="h-full bg-zapario-red transition-all duration-500" style="width: 10%;"></div>
+                        </div>
+                        <div class="flex text-xs text-gray-400 mt-2 gap-4">
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-gray-500 rounded-sm"></span> OS Overhead</div>
+                            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-zapario-red rounded-sm"></span> Application Code</div>
+                        </div>
+                    </div>
+
+                    <!-- RAM -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold text-gray-700 mb-2">
+                            <span>Active RAM Requirement</span>
+                            <span id="ram-val" class="font-mono text-zapario-red">2 KB</span>
+                        </div>
+                        <div class="w-full h-8 bg-gray-200 rounded-lg overflow-hidden flex relative border border-gray-300">
+                            <!-- OS Overhead -->
+                            <div id="ram-os" class="h-full bg-gray-500 transition-all duration-500" style="width: 0%;"></div>
+                            <!-- App Code -->
+                            <div id="ram-app" class="h-full bg-zapario-red transition-all duration-500" style="width: 5%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 p-4 bg-white rounded-lg border border-gray-200 shadow-sm flex items-start gap-4">
+                        <i class="ph-duotone ph-microchip text-3xl text-gray-400"></i>
+                        <div>
+                            <div class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Target Silicon Class</div>
+                            <div id="silicon-target" class="font-bold text-gray-900">8-bit / 16-bit MCU (e.g., ATTiny, PIC, STM32G0)</div>
+                            <div id="silicon-cost" class="text-sm text-green-600 font-mono mt-1">Cost: ~$0.50 per unit</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Grid -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">Bare-Metal Capabilities</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-lightning"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Hardware Abstraction Layers (HAL)</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">Developing thin, efficient HALs tailored to specific MCU families (STM32, NXP, Microchip) without vendor bloat.</p>
+                </div>
+                
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-plugs"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Low-Level Protocols</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">Implementing bit-banged or hardware-driven I2C, SPI, UART, and CAN bus protocols for sensor communication.</p>
+                </div>
+
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-battery-warning"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Ultra-Low Power Optimization</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">Managing intricate sleep states, clock gating, and wake-on-interrupt logic to maximize battery life in IoT devices.</p>
+                </div>
+
+                <div class="p-6 border border-gray-100 rounded-xl bg-gray-50 hover:bg-white hover:border-red-200 hover:shadow-md transition-all">
+                    <div class="text-3xl text-zapario-red mb-3"><i class="ph-duotone ph-arrow-circle-up"></i></div>
+                    <h4 class="font-bold text-gray-900 text-sm mb-2">Custom Bootloaders & OTA</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">Writing tiny, secure bootloaders that execute directly from flash to handle firmware updates over UART, BLE, or LoRa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <img src="https://storage.googleapis.com/z-wp-content/zapario-1.png" alt="Zapario Logo" class="h-8 w-auto grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Zapario Bare-Metal Engineering. Close to the Metal.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // --- ARCHITECTURE TOGGLE LOGIC ---
+        function setArchitecture(type) {
+            // UI Toggle
+            document.getElementById('btn-bare').className = "arch-btn px-6 py-2 rounded-md font-bold text-sm text-gray-600 bg-white hover:bg-gray-50";
+            document.getElementById('btn-os').className = "arch-btn px-6 py-2 rounded-md font-bold text-sm text-gray-600 bg-white hover:bg-gray-50";
+            
+            const activeBtn = document.getElementById(`btn-${type}`);
+            activeBtn.className = "arch-btn active px-6 py-2 rounded-md font-bold text-sm";
+
+            // Content
+            const content = document.getElementById('arch-content');
+            content.style.opacity = 0;
+            
+            setTimeout(() => {
+                if(type === 'bare') {
+                    content.innerHTML = `
+                        <div class="flex flex-col items-center w-full max-w-md">
+                            <div class="w-full p-4 bg-zapario-red text-white text-center rounded-lg font-bold shadow-lg relative z-20">
+                                Application Logic & Drivers (C/C++)
+                            </div>
+                            <div class="flex justify-center my-2 text-zapario-red animate-pulse">
+                                <i class="ph-bold ph-arrow-down text-2xl"></i>
+                                <i class="ph-bold ph-arrow-up text-2xl"></i>
+                            </div>
+                            <div class="w-full p-4 bg-gray-900 text-white text-center rounded-lg font-bold font-mono border-2 border-gray-700 shadow-xl relative z-10">
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,#D71920_0%,transparent_50%)] opacity-20"></div>
+                                Physical Silicon (Registers & Memory)
+                            </div>
+                            <div class="mt-8 text-center bg-red-50 border border-red-100 p-4 rounded-xl">
+                                <p class="text-sm text-gray-700 leading-relaxed"><span class="font-bold text-zapario-red">Direct Access:</span> The application reads and writes directly to hardware memory addresses. Interrupts trigger immediate execution of specific functions (ISRs) without waiting in a scheduler queue.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    content.innerHTML = `
+                        <div class="flex flex-col items-center w-full max-w-md">
+                            <div class="w-full p-4 bg-gray-100 text-gray-700 border border-gray-300 text-center rounded-lg font-bold shadow-sm z-40">
+                                Application (User Space)
+                            </div>
+                            <div class="flex justify-center my-1 text-gray-400">
+                                <i class="ph-bold ph-arrow-down"></i>
+                            </div>
+                            <div class="w-full p-4 bg-gray-200 text-gray-700 border border-gray-300 text-center rounded-lg font-bold shadow-sm z-30">
+                                Operating System / RTOS Scheduler
+                            </div>
+                            <div class="flex justify-center my-1 text-gray-400">
+                                <i class="ph-bold ph-arrow-down"></i>
+                            </div>
+                            <div class="w-full p-4 bg-gray-300 text-gray-700 border border-gray-400 text-center rounded-lg font-bold shadow-sm z-20">
+                                Hardware Abstraction Layer (BSP/Drivers)
+                            </div>
+                            <div class="flex justify-center my-1 text-gray-400">
+                                <i class="ph-bold ph-arrow-down"></i>
+                            </div>
+                            <div class="w-full p-4 bg-gray-900 text-white text-center rounded-lg font-bold font-mono border-2 border-gray-700 shadow-xl z-10">
+                                Physical Silicon
+                            </div>
+                            <div class="mt-8 text-center bg-gray-50 border border-gray-200 p-4 rounded-xl">
+                                <p class="text-sm text-gray-600 leading-relaxed"><span class="font-bold text-gray-900">Abstracted Access:</span> The application requests action from the OS. The OS scheduler decides when it gets CPU time, then calls a driver, which finally touches the silicon. This adds inevitable latency and jitter.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                content.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- JITTER CHART LOGIC ---
+        let jitterChart;
+
+        function initJitterChart() {
+            const ctx = document.getElementById('jitterChart').getContext('2d');
+            
+            // Generate data to show determinism
+            const labels = Array.from({length: 50}, (_, i) => i);
+            
+            // Bare metal: Almost perfectly flat response at ~1us
+            const bareData = labels.map(() => 1.0 + (Math.random() * 0.1 - 0.05));
+            
+            // RTOS: Slightly higher base, small ripples due to context switching
+            const rtosData = labels.map(() => 10 + (Math.random() * 2));
+            // Add occasional tiny spike for RTOS interrupt handling
+            for(let i=0; i<5; i++) rtosData[Math.floor(Math.random()*50)] += 5;
+
+            // Linux: High base, massive unpredictable spikes due to complex scheduler
+            const linuxData = labels.map(() => 50 + (Math.random() * 20));
+            // Add massive spikes for Linux
+            for(let i=0; i<8; i++) linuxData[Math.floor(Math.random()*50)] += Math.random() * 100 + 50;
+
+            jitterChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Bare-Metal (Deterministic)',
+                            data: bareData,
+                            borderColor: '#D71920',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'RTOS',
+                            data: rtosData,
+                            borderColor: '#3b82f6', // Blue
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.1,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Embedded Linux',
+                            data: linuxData,
+                            borderColor: '#6b7280', // Gray
+                            borderWidth: 1,
+                            fill: false,
+                            tension: 0.2,
+                            pointRadius: 0,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 0 }, // For manual animation
+                    plugins: { 
+                        legend: { position: 'top', labels: { color: '#d1d5db', boxWidth: 12, font: {family: 'Inter'} } },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        y: {
+                            display: true,
+                            title: { display: true, text: 'Response Latency (Microseconds)', color: '#9ca3af' },
+                            grid: { color: '#374151' },
+                            ticks: { color: '#9ca3af' },
+                            type: 'logarithmic', // Log scale to show the massive difference better
+                            min: 0.5,
+                            max: 300
+                        },
+                        x: { display: false }
+                    }
+                }
+            });
+
+            // Animate it live like an oscilloscope
+            setInterval(() => {
+                const datasets = jitterChart.data.datasets;
+                
+                // Shift data
+                datasets.forEach(ds => {
+                    ds.data.shift();
+                });
+
+                // Push new data points based on logic
+                datasets[0].data.push(1.0 + (Math.random() * 0.1 - 0.05)); // Bare
+                
+                let rtosVal = 10 + (Math.random() * 2);
+                if(Math.random() > 0.9) rtosVal += 5;
+                datasets[1].data.push(rtosVal); // RTOS
+
+                let linVal = 50 + (Math.random() * 20);
+                if(Math.random() > 0.85) linVal += Math.random() * 100 + 50;
+                datasets[2].data.push(linVal); // Linux
+
+                jitterChart.update();
+            }, 200);
+        }
+
+        // --- MEMORY FOOTPRINT LOGIC ---
+        function updateMemory(type) {
+            // UI Toggle
+            document.querySelectorAll('.mem-btn').forEach(btn => {
+                btn.className = "mem-btn py-3 border border-gray-300 rounded-lg font-bold text-sm bg-white text-gray-600 hover:border-gray-400 transition-colors";
+            });
+            const activeBtn = document.getElementById(`mem-btn-${type}`);
+            activeBtn.className = "mem-btn active py-3 border border-zapario-red rounded-lg font-bold text-sm bg-red-50 text-zapario-red shadow-md transition-colors";
+
+            // Visuals
+            const flashOS = document.getElementById('flash-os');
+            const flashApp = document.getElementById('flash-app');
+            const ramOS = document.getElementById('ram-os');
+            const ramApp = document.getElementById('ram-app');
+            
+            const flashVal = document.getElementById('flash-val');
+            const ramVal = document.getElementById('ram-val');
+            
+            const target = document.getElementById('silicon-target');
+            const cost = document.getElementById('silicon-cost');
+
+            if (type === 'linux') {
+                flashOS.style.width = '90%'; flashApp.style.width = '10%';
+                ramOS.style.width = '95%'; ramApp.style.width = '5%';
+                flashVal.innerText = "> 512 MB";
+                ramVal.innerText = "> 256 MB";
+                target.innerText = "High-end Microprocessor (e.g., NXP i.MX8, Broadcom)";
+                cost.innerText = "Cost: $15.00 - $40.00+ per unit";
+                cost.className = "text-sm text-red-600 font-mono mt-1";
+            } else if (type === 'rtos') {
+                flashOS.style.width = '40%'; flashApp.style.width = '20%';
+                ramOS.style.width = '50%'; ramApp.style.width = '15%';
+                flashVal.innerText = "~ 256 KB";
+                ramVal.innerText = "~ 64 KB";
+                target.innerText = "32-bit Microcontroller (e.g., STM32F4, ESP32)";
+                cost.innerText = "Cost: $2.00 - $5.00 per unit";
+                cost.className = "text-sm text-yellow-600 font-mono mt-1";
+            } else if (type === 'bare') {
+                flashOS.style.width = '0%'; flashApp.style.width = '5%';
+                ramOS.style.width = '0%'; ramApp.style.width = '5%';
+                flashVal.innerText = "4 KB - 16 KB";
+                ramVal.innerText = "1 KB - 4 KB";
+                target.innerText = "Ultra-Low Power 8/16/32-bit MCU (e.g., ATTiny, STM32G0)";
+                cost.innerText = "Cost: ~$0.20 - $1.00 per unit";
+                cost.className = "text-sm text-green-600 font-mono mt-1 font-bold";
+            }
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setArchitecture('bare');
+            initJitterChart();
+            updateMemory('bare');
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
