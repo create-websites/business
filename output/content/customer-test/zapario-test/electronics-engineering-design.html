@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Electronics Engineering &amp; PCB Design | Zapario</title>
+    <meta content="Expert electronics engineering services. High-speed PCB design, FPGA development, embedded firmware, and rapid prototyping for industrial and consumer OEMs." name="description"/>
+    <meta content="PCB Design, Electronics Engineering, FPGA, Embedded Firmware, Schematic Capture, Signal Integrity, DFM, Hardware Prototyping" name="keywords"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #f3f4f6 1px, transparent 1px), linear-gradient(to bottom, #f3f4f6 1px, transparent 1px)"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Engineering" - White background for a clean, lab-like aesthetic. Zapario Red (#D71920) is used for active elements, 'traces', and data points, symbolizing power and signal flow. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "Precision at the Nanosecond". Focus on high-speed/complex design.
+         2. The Engineering V-Cycle: Interactive steps showing the rigor of the process (Design -> Verify).
+         3. Design Optimizer (Radar Chart): Shows how we balance constraints (SI, PI, DFM).
+         4. Capability Circuit (Grid): Clickable PCB components revealing expertise (FPGA, RF, Power).
+         5. Project Estimator: Interactive calculator for PCB complexity.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Optimization Radar (Radar Chart):
+            - Goal: Show engineering balance.
+            - Viz: Radar chart comparing "Generic House" vs "Zapario".
+            - Interaction: Tooltips showing metrics like "Signal Integrity Margin".
+         2. Complexity Calc (Logic):
+            - Goal: Qualify leads.
+            - Viz: Input sliders (Layers, Speed).
+            - Interaction: Updates "Estimated Timeline" and "Design Class" (HDI, Standard, etc).
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons/Canvas). NO Mermaid JS used. -->
+    </head><body class="antialiased min-h-screen flex flex-col overflow-x-hidden">--&gt;
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        /* PCB Trace Animation for Hero */
+        @keyframes trace {
+            0% { width: 0; opacity: 1; }
+            100% { width: 100%; opacity: 0; }
+        }
+        .pcb-trace {
+            position: absolute;
+            height: 2px;
+            background: #D71920;
+            animation: trace 2s infinite linear;
+        }
+
+        /* Process Step Styles */
+        .process-step {
+            transition: all 0.3s ease;
+        }
+        .process-step:hover, .process-step.active {
+            border-color: #D71920;
+            background-color: #fef2f2;
+        }
+        .process-step.active .step-icon {
+            background-color: #D71920;
+            color: white;
+            border-color: #D71920;
+        }
+
+        input[type=range] {
+            accent-color: #D71920;
+        }
+    </style>
+
+
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img alt="Zapario Logo" class="h-10 w-auto" src="https://storage.googleapis.com/z-wp-content/zapario-1.png"/>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('process')">Design Lifecycle</button>
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('capabilities')">Capabilities</button>
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('optimizer')">Optimization</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Request Quote
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-grid-pattern bg-[size:30px_30px] opacity-60"></div>
+        
+        <!-- Decorative Traces -->
+        <div class="absolute top-40 left-0 w-1/3 h-px bg-gray-200">
+            <div class="pcb-trace"></div>
+        </div>
+        <div class="absolute bottom-20 right-0 w-1/3 h-px bg-gray-200">
+            <div class="pcb-trace" style="animation-delay: 1s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-gray-100 text-gray-600 border border-gray-200 mb-6">
+                    <i class="ph-bold ph-circuitry mr-2 text-zapario-red"></i>
+                    Electronics Engineering &amp; Design Services
+                </div>
+                <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                    From Concept to <br/>
+                    <span class="text-zapario-red">Circuit Reality</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    We design high-performance electronics. From complex multi-layer PCBs and FPGA logic to robust embedded firmware. Precision engineered for manufacturing at scale.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-zapario-red text-white px-6 py-3 rounded-md font-bold shadow-lg shadow-red-200 hover:shadow-xl hover:bg-zapario-dark transition-all" onclick="scrollToSection('estimator')">
+                        Start Project Estimator
+                    </button>
+                    <div class="flex items-center gap-4 text-gray-600 px-2">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-xl">16+</span>
+                            <span class="text-xs uppercase">Max Layers</span>
+                        </div>
+                        <div class="w-px h-8 bg-gray-300"></div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-xl">High-Speed</span>
+                            <span class="text-xs uppercase">DDR4 / PCIe</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Abstract Visualization -->
+            <div class="relative bg-white rounded-xl shadow-2xl border border-gray-100 p-2 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                <div class="bg-gray-900 rounded-lg p-6 aspect-video flex flex-col justify-center items-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,#D71920_0%,transparent_70%)]"></div>
+                    <!-- Circuit Grid -->
+                    <div class="grid grid-cols-6 grid-rows-4 gap-4 w-full h-full opacity-30">
+                        <!-- Simulated via JS or just CSS grid blocks -->
+                        <div class="col-span-1 row-span-1 border border-gray-600 rounded"></div>
+                        <div class="col-span-2 row-span-2 border border-gray-500 rounded bg-gray-800"></div>
+                        <div class="col-start-5 col-span-1 row-span-1 border border-zapario-red rounded bg-zapario-red/20 animate-pulse"></div>
+                    </div>
+                    <div class="absolute bottom-6 left-6 font-mono text-xs text-zapario-red">
+                        &gt; SYSTEM_READY<br/>
+                        &gt; LOADING_SCHEMATIC... OK<br/>
+                        &gt; CHECKING_DFM... PASS
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Engineering V-Model (Process) -->
+    <section class="py-20 bg-gray-50 border-y border-gray-200" id="process">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">Rigorous Design Lifecycle</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600">We follow a structured V-Model approach to ensure reliability and compliance.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8">
+                <!-- Steps List -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="process-step active cursor-pointer p-4 rounded-lg border border-gray-200 bg-white flex items-center gap-4" onclick="setStep(0)">
+                        <div class="step-icon w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold">1</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Architecture &amp; Specs</h3>
+                            <p class="text-xs text-gray-500">Requirements, Component Selection</p>
+                        </div>
+                    </div>
+                    <div class="process-step cursor-pointer p-4 rounded-lg border border-gray-200 bg-white flex items-center gap-4" onclick="setStep(1)">
+                        <div class="step-icon w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold">2</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Schematic &amp; Simulation</h3>
+                            <p class="text-xs text-gray-500">Circuit Capture, SPICE Analysis</p>
+                        </div>
+                    </div>
+                    <div class="process-step cursor-pointer p-4 rounded-lg border border-gray-200 bg-white flex items-center gap-4" onclick="setStep(2)">
+                        <div class="step-icon w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold">3</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">PCB Layout</h3>
+                            <p class="text-xs text-gray-500">Stackup, Routing, Signal Integrity</p>
+                        </div>
+                    </div>
+                    <div class="process-step cursor-pointer p-4 rounded-lg border border-gray-200 bg-white flex items-center gap-4" onclick="setStep(3)">
+                        <div class="step-icon w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold">4</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Prototyping &amp; Bring-up</h3>
+                            <p class="text-xs text-gray-500">Assembly, Power-on, Debug</p>
+                        </div>
+                    </div>
+                    <div class="process-step cursor-pointer p-4 rounded-lg border border-gray-200 bg-white flex items-center gap-4" onclick="setStep(4)">
+                        <div class="step-icon w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-500 font-bold">5</div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">Validation &amp; Compliance</h3>
+                            <p class="text-xs text-gray-500">EMI/EMC, Thermal, Environmental</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step Detail View -->
+                <div class="lg:col-span-8 bg-white rounded-2xl p-8 border border-gray-200 shadow-soft flex flex-col justify-center relative min-h-[400px]">
+                    <div class="transition-opacity duration-300" id="step-content">
+                        <!-- Content Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Grid -->
+    <section class="py-20 bg-white" id="capabilities">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Core Expertise</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">Technical Capabilities</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group p-6 rounded-xl border border-gray-100 hover:border-red-200 hover:shadow-lg transition-all bg-white">
+                    <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center text-zapario-red mb-4">
+                        <i class="ph-duotone ph-cpu text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">FPGA &amp; Digital Design</h3>
+                    <p class="text-gray-500 text-sm mb-4">Verilog/VHDL for Xilinx and Intel FPGAs. High-speed signal processing and custom IP cores.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded">Zynq MPSoC</span>
+                        <span class="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded">DSP</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group p-6 rounded-xl border border-gray-100 hover:border-red-200 hover:shadow-lg transition-all bg-white">
+                    <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center text-zapario-red mb-4">
+                        <i class="ph-duotone ph-wifi-high text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">RF &amp; Wireless</h3>
+                    <p class="text-gray-500 text-sm mb-4">Antenna matching, RF layout optimization, and certification for BLE, Wi-Fi, LoRaWAN, and Cellular.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded">Impedance Control</span>
+                        <span class="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded">FCC/CE</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group p-6 rounded-xl border border-gray-100 hover:border-red-200 hover:shadow-lg transition-all bg-white">
+                    <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center text-zapario-red mb-4">
+                        <i class="ph-duotone ph-lightning text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Power Electronics</h3>
+                    <p class="text-gray-500 text-sm mb-4">High-efficiency DC/DC converters, battery management systems (BMS), and motor control drivers.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded">Thermal Mgmt</span>
+                        <span class="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded">GaN/SiC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Optimization Radar & Estimator -->
+    <section class="py-20 bg-gray-50 border-t border-gray-200" id="optimizer">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16">
+                
+                <!-- Radar Chart Section -->
+                <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Design Trade-off Optimization</h3>
+                    <p class="text-sm text-gray-500 mb-6">How Zapario balances competing constraints compared to standard design houses.</p>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Estimator Section -->
+                <div class="flex flex-col justify-center" id="estimator">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Project Complexity Estimator</h2>
+                    <p class="text-gray-600 mb-8">Adjust the parameters to see how complexity impacts the estimated timeline and design classification.</p>
+
+                    <div class="space-y-8 bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
+                        <!-- Slider 1 -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-bold text-gray-700">PCB Layers</label>
+                                <span class="text-zapario-red font-mono font-bold" id="layerVal">4 Layers</span>
+                            </div>
+                            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="layerInput" max="16" min="2" step="2" type="range" value="4"/>
+                        </div>
+
+                        <!-- Slider 2 -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-bold text-gray-700">High-Speed Interfaces</label>
+                                <span class="text-zapario-red font-mono font-bold" id="speedVal">None</span>
+                            </div>
+                            <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="speedInput" max="3" min="0" step="1" type="range" value="0"/>
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>None</span>
+                                <span>Complex (DDR/PCIe)</span>
+                            </div>
+                        </div>
+
+                        <!-- Output -->
+                        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">Design Class</div>
+                                <div class="text-xl font-bold text-gray-900" id="classOutput">Standard</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">Est. Timeline</div>
+                                <div class="text-xl font-bold text-zapario-red" id="timeOutput">4-6 Weeks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <!-- Logic -->
+    <script>
+        // --- PROCESS STEPS DATA ---
+        const steps = [
+            {
+                title: "Architecture & Specifications",
+                content: "We begin by defining the block diagram, selecting key components (MCU, Sensors, Power), and establishing the power budget. This sets the foundation for a successful design.",
+                icon: "ph-strategy",
+                deliverables: ["Hardware Spec Document", "Bill of Materials (BOM) Draft", "Power Budget Analysis"]
+            },
+            {
+                title: "Schematic & Simulation",
+                content: "Using Altium Designer or Orcad, we create detailed schematics. We perform SPICE simulations for analog circuits and pre-layout signal integrity checks for high-speed lines.",
+                icon: "ph-file-code",
+                deliverables: ["Schematic Source Files", "Netlist", "Constraint Definitions"]
+            },
+            {
+                title: "PCB Layout",
+                content: "The physical design phase. We route traces focusing on impedance control, length matching for DDR/differential pairs, and thermal dissipation planes. DFM rules are applied continuously.",
+                icon: "ph-circuitry",
+                deliverables: ["Gerber Files", "ODB++", "3D STEP Model"]
+            },
+            {
+                title: "Prototyping & Bring-up",
+                content: "We manage fabrication and assembly. Upon arrival, our engineers perform the 'smoke test', verify power rails, flash firmware, and bring up the system peripherals.",
+                icon: "ph-wrench",
+                deliverables: ["Assembled PCBA", "Bring-up Report", "Initial Firmware BSP"]
+            },
+            {
+                title: "Validation & Compliance",
+                content: "We rigorously test against requirements. This includes thermal chamber testing, EMC pre-scan for FCC/CE compliance, and highly accelerated life testing (HALT).",
+                icon: "ph-seal-check",
+                deliverables: ["Validation Test Report", "Compliance Certifications", "Manufacturing Files"]
+            }
+        ];
+
+        function setStep(index) {
+            // UI Styling
+            document.querySelectorAll('.process-step').forEach((el, i) => {
+                if(i === index) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+
+            // Content Injection
+            const data = steps[index];
+            const container = document.getElementById('step-content');
+            
+            container.style.opacity = '0';
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="p-3 bg-red-50 text-zapario-red rounded-xl border border-red-100">
+                            <i class="ph-duotone ${data.icon} text-4xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-gray-900">${data.title}</h3>
+                    </div>
+                    <p class="text-lg text-gray-500 leading-relaxed mb-8">${data.content}</p>
+                    
+                    <div class="bg-gray-50 rounded-xl p-6 border border-gray-100">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Key Deliverables</h4>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            ${data.deliverables.map(d => `
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-fill ph-check-circle text-zapario-red"></i>
+                                    <span class="text-sm font-medium text-gray-700">${d}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.style.opacity = '1';
+            }, 300);
+        }
+
+        // --- RADAR CHART ---
+        function initRadar() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Signal Integrity', 'Manufacturability (DFM)', 'Thermal Mgmt', 'Cost Optimization', 'Time-to-Market'],
+                    datasets: [{
+                        label: 'Zapario Design',
+                        data: [95, 90, 85, 88, 92],
+                        fill: true,
+                        backgroundColor: 'rgba(215, 25, 32, 0.2)',
+                        borderColor: '#D71920',
+                        pointBackgroundColor: '#D71920',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#D71920'
+                    }, {
+                        label: 'Standard Design House',
+                        data: [70, 60, 65, 80, 75],
+                        fill: true,
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: '#9ca3af',
+                        pointBackgroundColor: '#9ca3af',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#9ca3af'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.05)' },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            pointLabels: {
+                                font: { size: 12, family: 'Inter' },
+                                color: '#4b5563'
+                            },
+                            ticks: { display: false, max: 100 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // --- ESTIMATOR LOGIC ---
+        function updateEstimator() {
+            const layers = parseInt(document.getElementById('layerInput').value);
+            const speedLevel = parseInt(document.getElementById('speedInput').value);
+            
+            // Labels
+            document.getElementById('layerVal').innerText = layers + " Layers";
+            const speedLabels = ["Low Speed (I2C/SPI)", "Medium (USB/Ethernet)", "High (DDR3/MIPI)", "Ultra (DDR4/PCIe)"];
+            document.getElementById('speedVal').innerText = speedLabels[speedLevel];
+
+            // Logic
+            let baseWeeks = 4;
+            let classification = "Standard";
+            
+            if (layers >= 6) baseWeeks += 2;
+            if (layers >= 10) baseWeeks += 2;
+            if (layers >= 14) { baseWeeks += 2; classification = "HDI (Complex)"; }
+
+            if (speedLevel >= 2) { baseWeeks += 2; if(classification === "Standard") classification = "High-Speed"; }
+            if (speedLevel === 3) { baseWeeks += 2; classification = "Advanced High-Speed"; }
+
+            // Update UI
+            document.getElementById('classOutput').innerText = classification;
+            document.getElementById('timeOutput').innerText = `${baseWeeks}-${baseWeeks+2} Weeks`;
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setStep(0);
+            initRadar();
+            
+            // Estimator Listeners
+            document.getElementById('layerInput').addEventListener('input', updateEstimator);
+            document.getElementById('speedInput').addEventListener('input', updateEstimator);
+            updateEstimator(); // Init state
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body></html>

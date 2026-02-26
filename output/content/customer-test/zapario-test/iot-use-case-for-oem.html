@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>IoT Transformation for OEMs | Interactive Report</title>
+    <meta content="Interactive dashboard exploring the transformation of OEMs through IoT. Discover use cases like Predictive Maintenance and Equipment-as-a-Service, simulate ROI, and view the implementation roadmap." name="description"/>
+    <meta content="OEM, Industrial IoT, Predictive Maintenance, Equipment as a Service, Digital Twin, Remote Monitoring, Industry 4.0, Manufacturing Strategy, Servicization" name="keywords"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons (for clean, professional UI icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Industrial Clarity" - A base of warm slate and off-white (bg-slate-50) representing clean manufacturing, accented with deep Indigo (trust/tech) and Teal (efficiency/growth). This palette is minimalistic, reducing cognitive load while highlighting data. -->
+    
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the context of the shift from Hardware to Service.
+         2. "The Core Ecosystem" (Interactive Grid): Users click Use Case cards (e.g., Predictive Maintenance) to reveal specific details, benefits, and data points in a focused details pane. This prevents information overload.
+         3. "Value Simulator" (Dynamic Chart): A 'Wow' factor interaction. Users slide an 'IoT Integration' handle to see real-time changes in a line chart comparing Traditional vs. Smart OEM costs/revenue over time.
+         4. "Strategic Shift" (Comparison): A toggle-based view to contrast old business models with new ones directly.
+         5. "Roadmap": A linear guide to implementation.
+         Why? This structure moves from 'What' (Hero) to 'How' (Ecosystem) to 'Why' (Simulator) to 'When' (Roadmap), mirroring a decision-maker's thought process. -->
+
+    <!-- Visualization & Content Choices:
+         1. Ecosystem Grid: 
+            - Goal: Organize diverse use cases. 
+            - Viz: Grid of clickable cards with icon indicators. 
+            - Interaction: Selection updates a detail view.
+            - Justification: Allows non-linear exploration of topics like 'Digital Twins' without scrolling miles of text.
+         2. Value Simulator Chart: 
+            - Goal: Demonstrate financial impact (Change). 
+            - Viz: Chart.js Line Chart. 
+            - Interaction: Slider updates dataset values. 
+            - Justification: Static text saying "saves money" is weak; showing the curve flatten dynamically is powerful.
+         3. Capability Radar:
+            - Goal: Show multi-dimensional improvements.
+            - Viz: Chart.js Radar Chart.
+            - Interaction: Hover for exact metrics.
+            - Justification: visualizes how IoT balances speed, quality, and cost simultaneously.
+         4. Content: Synthesized from general OEM IoT knowledge (Zapario context) focusing on the shift to 'Equipment as a Service'. -->
+
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons via script/CSS and Canvas). NO Mermaid JS used. -->
+    </head><body class="antialiased min-h-screen flex flex-col">--&gt;
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate 50 */
+            color: #1e293b; /* Slate 800 */
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Chart Container Styling - Strictly following prompt requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max width to prevent excessive stretching */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        
+        .card-hoverable {
+            transition: all 0.3s ease;
+        }
+        .card-hoverable:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .active-tab {
+            background-color: #4f46e5; /* Indigo 600 */
+            color: white;
+            border-color: #4f46e5;
+        }
+        
+        .inactive-tab {
+            background-color: white;
+            color: #475569;
+            border-color: #e2e8f0;
+        }
+        .inactive-tab:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="ph-fill ph-circuitry text-indigo-600 text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight text-slate-900">Connected<span class="text-indigo-600">OEM</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors" onclick="scrollToSection('hero')">Vision</button>
+                    <button class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors" onclick="scrollToSection('ecosystem')">Use Cases</button>
+                    <button class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors" onclick="scrollToSection('simulator')">ROI Simulator</button>
+                    <button class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors" onclick="scrollToSection('roadmap')">Roadmap</button>
+                </div>
+                <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-md" onclick="scrollToSection('ecosystem')">
+                    Explore Strategy
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+
+        <!-- Hero Section -->
+        <section class="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="hero">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 mr-2 animate-pulse"></span>
+                        Industry 4.0 Report Source
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
+                        From Hardware Vendor to <span class="text-indigo-600">Service Partner</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 leading-relaxed max-w-xl">
+                        The modern OEM landscape is shifting. It is no longer enough to manufacture excellent machinery. The future lies in <strong>connectivity, data, and outcomes</strong>. Explore how IoT empowers OEMs to predict failures, optimize assets, and unlock "Equipment-as-a-Service" revenue streams.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <div class="flex items-center gap-2 text-slate-700 bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
+                            <i class="ph-duotone ph-chart-line-up text-indigo-500 text-xl"></i>
+                            <span class="text-sm font-medium">New Revenue Streams</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-700 bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
+                            <i class="ph-duotone ph-wrench text-teal-500 text-xl"></i>
+                            <span class="text-sm font-medium">Reduced Warranty Costs</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-700 bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
+                            <i class="ph-duotone ph-users text-blue-500 text-xl"></i>
+                            <span class="text-sm font-medium">Customer Retention</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hero Visual: Radar Chart -->
+                <div class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100 flex flex-col items-center justify-center">
+                    <div class="text-center mb-4">
+                        <h3 class="text-lg font-semibold text-slate-800">The Connected Advantage</h3>
+                        <p class="text-xs text-slate-500">Traditional vs. Smart OEM Capabilities</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="heroRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Case Ecosystem (Core Interaction) -->
+        <section class="py-16 bg-white border-y border-slate-200" id="ecosystem">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 max-w-3xl">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">The OEM IoT Ecosystem</h2>
+                    <p class="text-slate-600">
+                        IoT is not a single technology but a suite of applications. Click on the strategic pillars below to explore how each use case drives value, changes operations, and impacts the bottom line. This section breaks down the "What" and "How" of the source report.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-8">
+                    <!-- Selection Grid -->
+                    <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                        <!-- Generated by JS -->
+                        <div class="space-y-3" id="use-case-buttons"></div>
+                    </div>
+
+                    <!-- Detail View -->
+                    <div class="lg:col-span-8">
+                        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-8 h-full shadow-inner flex flex-col justify-between transition-all duration-300" id="use-case-detail">
+                            <!-- Content injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Simulator -->
+        <section class="py-16 bg-slate-900 text-white overflow-hidden relative" id="simulator">
+            <!-- decorative bg elements -->
+            <div class="absolute top-0 left-0 w-64 h-64 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div class="absolute top-0 right-0 w-64 h-64 bg-teal-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    
+                    <div class="space-y-6">
+                        <h2 class="text-3xl font-bold text-white mb-2">Impact Simulator</h2>
+                        <p class="text-slate-300">
+                            Visualize the financial impact of shifting to a "Smart OEM" model. Adjust the <span class="text-indigo-400 font-semibold">IoT Adoption Level</span> to see how predictive maintenance and service efficiencies reduce operational costs over a 5-year period compared to traditional reactive models.
+                        </p>
+                        
+                        <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 backdrop-blur-sm">
+                            <label class="block text-sm font-medium text-slate-300 mb-4 flex justify-between" for="adoptionSlider">
+                                <span>IoT Adoption Level</span>
+                                <span class="text-indigo-400 font-bold" id="adoptionValue">50%</span>
+                            </label>
+                            <input class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500" id="adoptionSlider" max="100" min="0" type="range" value="50"/>
+                            <div class="flex justify-between text-xs text-slate-500 mt-2">
+                                <span>Purely Reactive</span>
+                                <span>Fully Predictive</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-indigo-500">
+                                <p class="text-xs text-slate-400 uppercase tracking-wide">Proj. Cost Reduction</p>
+                                <p class="text-2xl font-bold text-white mt-1" id="costReductionDisplay">15%</p>
+                            </div>
+                            <div class="bg-slate-800 p-4 rounded-lg border-l-4 border-teal-500">
+                                <p class="text-xs text-slate-400 uppercase tracking-wide">Uptime Gain</p>
+                                <p class="text-2xl font-bold text-white mt-1" id="uptimeGainDisplay">12%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-4 shadow-2xl">
+                        <h4 class="text-slate-800 text-sm font-semibold mb-4 text-center">Cumulative Operational Cost (5 Years)</h4>
+                        <div class="chart-container">
+                            <canvas id="impactChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison: Old vs New -->
+        <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900">The Strategic Shift</h2>
+                <p class="text-slate-600 mt-2">Comparing the traditional transactional model with the relationship-based future.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Traditional -->
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                        <div class="bg-slate-100 p-2 rounded-lg">
+                            <i class="ph-duotone ph-factory text-slate-500 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-700">Traditional OEM</h3>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-bold ph-x-circle text-red-400 mt-1"></i>
+                            <div>
+                                <strong class="block text-slate-800 text-sm">Revenue Model</strong>
+                                <span class="text-slate-500 text-sm">One-time hardware sales. Volatile cash flow.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-bold ph-x-circle text-red-400 mt-1"></i>
+                            <div>
+                                <strong class="block text-slate-800 text-sm">Service Approach</strong>
+                                <span class="text-slate-500 text-sm">Reactive. Break-fix. High unplanned downtime.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-bold ph-x-circle text-red-400 mt-1"></i>
+                            <div>
+                                <strong class="block text-slate-800 text-sm">Customer Relationship</strong>
+                                <span class="text-slate-500 text-sm">Transactional. Ends at point of sale.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Smart -->
+                <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-6 shadow-md relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">THE GOAL</div>
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-indigo-200">
+                        <div class="bg-white p-2 rounded-lg shadow-sm">
+                            <i class="ph-duotone ph-wifi-high text-indigo-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-indigo-900">Smart OEM</h3>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-teal-500 mt-1"></i>
+                            <div>
+                                <strong class="block text-indigo-900 text-sm">Revenue Model</strong>
+                                <span class="text-indigo-700 text-sm">Recurring services (SaaS/LaaS). Predictable revenue.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-teal-500 mt-1"></i>
+                            <div>
+                                <strong class="block text-indigo-900 text-sm">Service Approach</strong>
+                                <span class="text-indigo-700 text-sm">Predictive. Zero unplanned downtime. Continuous monitoring.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-teal-500 mt-1"></i>
+                            <div>
+                                <strong class="block text-indigo-900 text-sm">Customer Relationship</strong>
+                                <span class="text-indigo-700 text-sm">Partnership. Continuous value delivery &amp; updates.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section class="py-16 bg-white border-t border-slate-200" id="roadmap">
+            <div class="max-w-4xl mx-auto px-4">
+                <h2 class="text-3xl font-bold text-slate-900 text-center mb-12">Implementation Roadmap</h2>
+                <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                    
+                    <!-- Step 1 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-indigo-600 text-slate-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <i class="ph-bold ph-strategy"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="font-bold text-slate-900 mb-1">1. Strategy &amp; Assessment</div>
+                            <div class="text-slate-600 text-sm">Identify high-value assets for connectivity. Define ROI goals (e.g., reducing warranty claims vs. selling new services).</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-teal-500 text-slate-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <i class="ph-bold ph-plugs-connected"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="font-bold text-slate-900 mb-1">2. Connectivity Pilot</div>
+                            <div class="text-slate-600 text-sm">Retrofit sensors on a small fleet or launch a "Smart" product line. Focus on gathering baseline data (temperature, vibration, usage).</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-200 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <i class="ph-bold ph-chart-bar"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm opacity-75">
+                            <div class="font-bold text-slate-900 mb-1">3. Data Analytics &amp; Insights</div>
+                            <div class="text-slate-600 text-sm">Implement dashboarding for customers. Shift internal support teams from reactive calls to proactive alerts.</div>
+                        </div>
+                    </div>
+
+                     <!-- Step 4 -->
+                     <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-200 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <i class="ph-bold ph-currency-dollar"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm opacity-75">
+                            <div class="font-bold text-slate-900 mb-1">4. Monetization (LaaS)</div>
+                            <div class="text-slate-600 text-sm">Introduce subscription models. Sell "Uptime" instead of just parts. Fully integrate data into R&amp;D for Digital Twins.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <!-- Application Logic -->
+    <script>
+        // --- DATA & STATE ---
+        const appState = {
+            currentUseCase: 0,
+            adoptionLevel: 50
+        };
+
+        const useCases = [
+            {
+                id: 'predictive',
+                title: 'Predictive Maintenance',
+                icon: 'ph-wrench',
+                color: 'text-amber-500',
+                bg: 'bg-amber-50',
+                summary: 'The most common entry point for OEMs. Instead of waiting for a machine to fail, sensors analyze vibration, temperature, and acoustics to predict failures.',
+                kpi: '30-50% Reduction',
+                kpiLabel: 'in Machine Downtime',
+                details: [
+                    'Eliminates unnecessary "scheduled" maintenance.',
+                    'Prevents catastrophic failures via early warnings.',
+                    'Allows auto-ordering of spare parts.'
+                ],
+                chartType: 'bar',
+                chartData: [100, 45], // Reactive vs Predictive Cost
+                chartLabels: ['Reactive Cost', 'Predictive Cost']
+            },
+            {
+                id: 'monitoring',
+                title: 'Remote Monitoring',
+                icon: 'ph-desktop-tower',
+                color: 'text-blue-500',
+                bg: 'bg-blue-50',
+                summary: 'Real-time visibility into asset performance anywhere in the world. Allows OEMs to offer 24/7 support without deploying field technicians immediately.',
+                kpi: '70% Faster',
+                kpiLabel: 'Issue Resolution Time',
+                details: [
+                    'Remote diagnostics reduce truck rolls.',
+                    'Firmware updates pushed over-the-air (OTA).',
+                    'Usage tracking for billing validation.'
+                ],
+                chartType: 'doughnut',
+                chartData: [70, 30], // Remote Fix vs On-site
+                chartLabels: ['Remote Fix', 'Technician Dispatch']
+            },
+            {
+                id: 'tracking',
+                title: 'Asset Tracking',
+                icon: 'ph-globe-stand',
+                color: 'text-emerald-500',
+                bg: 'bg-emerald-50',
+                summary: 'Knowing exactly where equipment is, its status, and its history. Crucial for supply chain transparency and theft prevention.',
+                kpi: '99% Accuracy',
+                kpiLabel: 'in Inventory Visibility',
+                details: [
+                    'Geofencing alerts for unauthorized movement.',
+                    'Utilization heatmaps (is the asset being used?).',
+                    'Supply chain optimization.'
+                ],
+                chartType: 'bar',
+                chartData: [85, 99], // Old vs New accuracy
+                chartLabels: ['Manual Log', 'IoT Tracking']
+            },
+            {
+                id: 'digitaltwin',
+                title: 'Digital Twins',
+                icon: 'ph-copy',
+                color: 'text-purple-500',
+                bg: 'bg-purple-50',
+                summary: 'A virtual replica of the physical machine fueled by real-world data. It closes the feedback loop to R&D for better future product designs.',
+                kpi: '20% Faster',
+                kpiLabel: 'Time-to-Market for Upgrades',
+                details: [
+                    'Simulate stress tests without physical prototypes.',
+                    'Analyze real-world usage vs. design assumptions.',
+                    'Continuous product improvement loop.'
+                ],
+                chartType: 'line',
+                chartData: [10, 25, 45, 60, 80], // Improvement curve
+                chartLabels: ['Y1', 'Y2', 'Y3', 'Y4', 'Y5']
+            },
+            {
+                id: 'laas',
+                title: 'Equipment as a Service',
+                icon: 'ph-currency-circle-dollar',
+                color: 'text-indigo-500',
+                bg: 'bg-indigo-50',
+                summary: 'The ultimate business model shift. Moving from selling an asset (CapEx) to selling the outcome/usage of the asset (OpEx).',
+                kpi: '2x LTV',
+                kpiLabel: 'Lifetime Value per Customer',
+                details: [
+                    'Recurring revenue stream (subscription).',
+                    'High barrier to entry for competitors.',
+                    'Aligns OEM incentives with Customer success.'
+                ],
+                chartType: 'doughnut',
+                chartData: [40, 60], // Hardware vs Service Revenue
+                chartLabels: ['Hardware Sales', 'Service Revenue']
+            }
+        ];
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initRadarChart();
+            renderUseCaseButtons();
+            renderUseCaseDetails(0);
+            initImpactChart();
+            
+            // Slider Listener
+            const slider = document.getElementById('adoptionSlider');
+            slider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value);
+                document.getElementById('adoptionValue').innerText = val + '%';
+                updateImpactChart(val);
+                updateImpactMetrics(val);
+            });
+        });
+
+        // --- NAVIGATION ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // --- HERO RADAR CHART ---
+        function initRadarChart() {
+            const ctx = document.getElementById('heroRadarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Service Rev.', 'Uptime', 'Cust. Loyalty', 'Data Insight', 'Prod. Lifespan'],
+                    datasets: [{
+                        label: 'Traditional OEM',
+                        data: [20, 50, 40, 10, 60],
+                        fill: true,
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)', // Slate
+                        borderColor: 'rgb(148, 163, 184)',
+                        pointBackgroundColor: 'rgb(148, 163, 184)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(148, 163, 184)'
+                    }, {
+                        label: 'Smart OEM',
+                        data: [85, 95, 90, 95, 85],
+                        fill: true,
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)', // Indigo
+                        borderColor: 'rgb(79, 70, 229)',
+                        pointBackgroundColor: 'rgb(79, 70, 229)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(79, 70, 229)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.05)' },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            pointLabels: { font: { size: 11 } },
+                            ticks: { display: false, max: 100 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- USE CASE INTERACTION ---
+        function renderUseCaseButtons() {
+            const container = document.getElementById('use-case-buttons');
+            container.innerHTML = useCases.map((uc, index) => `
+                <button onclick="renderUseCaseDetails(${index})" 
+                    class="w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center gap-3 group
+                    ${index === appState.currentUseCase 
+                        ? 'bg-white border-indigo-500 shadow-md ring-1 ring-indigo-500' 
+                        : 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-indigo-50'}"
+                >
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center ${uc.bg} ${uc.color} shrink-0">
+                        <i class="ph-fill ${uc.icon} text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="block font-semibold text-slate-800 group-hover:text-indigo-700 text-sm md:text-base">${uc.title}</span>
+                    </div>
+                    <i class="ph-bold ph-caret-right ml-auto text-slate-300 group-hover:text-indigo-400"></i>
+                </button>
+            `).join('');
+        }
+
+        let currentDetailChart = null;
+
+        function renderUseCaseDetails(index) {
+            appState.currentUseCase = index;
+            renderUseCaseButtons(); // Re-render to update active state
+            
+            const uc = useCases[index];
+            const container = document.getElementById('use-case-detail');
+            
+            // Animation reset
+            container.classList.remove('fade-in');
+            void container.offsetWidth; // trigger reflow
+            container.classList.add('fade-in');
+
+            container.innerHTML = `
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-3 rounded-xl ${uc.bg} ${uc.color}">
+                            <i class="ph-duotone ${uc.icon} text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">${uc.title}</h3>
+                    </div>
+                    
+                    <p class="text-slate-600 text-lg mb-8 leading-relaxed">${uc.summary}</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Key Benefits</h4>
+                            <ul class="space-y-3">
+                                ${uc.details.map(d => `
+                                    <li class="flex items-start gap-3">
+                                        <i class="ph-bold ph-check text-teal-500 mt-1"></i>
+                                        <span class="text-slate-700 font-medium">${d}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm flex flex-col items-center justify-center">
+                            <div class="text-center mb-2">
+                                <span class="block text-3xl font-bold ${uc.color}">${uc.kpi}</span>
+                                <span class="text-xs text-slate-500 font-medium uppercase">${uc.kpiLabel}</span>
+                            </div>
+                            <div class="w-full h-32 relative">
+                                <canvas id="detailChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-slate-200 flex justify-between items-center text-sm text-slate-400">
+                    <span>Source: Industry Analysis</span>
+                    <button class="text-indigo-600 font-medium hover:underline flex items-center gap-1">
+                        Deep Dive <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+
+            // Mini Chart Logic
+            if (currentDetailChart) currentDetailChart.destroy();
+            const ctx = document.getElementById('detailChart').getContext('2d');
+            
+            currentDetailChart = new Chart(ctx, {
+                type: uc.chartType,
+                data: {
+                    labels: uc.chartLabels,
+                    datasets: [{
+                        label: 'Value',
+                        data: uc.chartData,
+                        backgroundColor: [
+                            'rgba(148, 163, 184, 0.5)', // Slate
+                            'rgba(79, 70, 229, 0.8)'    // Indigo
+                        ],
+                        borderColor: ['#94a3b8', '#4f46e5'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: uc.chartType === 'bar' || uc.chartType === 'line', beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // --- SIMULATOR CHART ---
+        let impactChart = null;
+
+        function initImpactChart() {
+            const ctx = document.getElementById('impactChart').getContext('2d');
+            const years = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+            
+            // Base Data (Traditional)
+            const traditionalCost = [100, 105, 110, 115, 120]; // Rising costs due to aging machines
+
+            // Initial IoT Data (50% adoption)
+            const smartCost = calculateSmartCost(50, traditionalCost);
+
+            impactChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: 'Traditional (Reactive)',
+                            data: traditionalCost,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Smart OEM (Predictive)',
+                            data: smartCost,
+                            borderColor: '#2dd4bf', // Teal 400
+                            backgroundColor: 'rgba(45, 212, 191, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#cbd5e1' } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Operational Cost Index', color: '#94a3b8' },
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateSmartCost(adoption, baseData) {
+            // Logic: Adoption % reduces the cost growth factor and lowers the baseline
+            const impactFactor = adoption / 100; 
+            return baseData.map((val, i) => {
+                // Higher adoption = more savings over time
+                const reduction = val * (impactFactor * 0.4); // Max 40% reduction
+                // Also adding a compound benefit over years
+                const compound = i * (impactFactor * 5); 
+                return Math.floor(val - reduction - compound);
+            });
+        }
+
+        function updateImpactChart(adoption) {
+            const traditionalCost = [100, 105, 110, 115, 120];
+            const newSmartData = calculateSmartCost(adoption, traditionalCost);
+            
+            impactChart.data.datasets[1].data = newSmartData;
+            impactChart.update();
+        }
+
+        function updateImpactMetrics(adoption) {
+            // Simple visual calculation for text display
+            const costRed = Math.floor(adoption * 0.3); // Max 30% display
+            const uptime = Math.floor(adoption * 0.25); // Max 25% display
+            
+            // Animate numbers lightly by just setting text (could add counter anim if needed)
+            document.getElementById('costReductionDisplay').innerText = costRed + "%";
+            document.getElementById('uptimeGainDisplay').innerText = uptime + "%";
+        }
+
+    </script>
+
+</body></html>

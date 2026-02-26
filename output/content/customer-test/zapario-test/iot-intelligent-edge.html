@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>IoT Intelligent Edge | Zapario Solutions</title>
+    <meta content="Bring AI and analytics to the source of data. Zapario Intelligent Edge solutions reduce latency, optimize bandwidth, and ensure offline continuity." name="description"/>
+    <meta content="Edge Computing, Edge AI, IoT, Low Latency, Bandwidth Optimization, TinyML, Kubernetes Edge, 5G MEC" name="keywords"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Zapario Red & Tech White" - Consistent with the corporate brand. White backgrounds for clarity, Zapario Red (#D71920) for primary actions and data highlights. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero: "Intelligence at the Source".
+         2. The Edge Advantage (Latency Sim): Interactive chart showing the speed difference between Edge vs Cloud.
+         3. Bandwidth Calculator: A practical tool showing cost savings of Edge processing (Video stream vs Events).
+         4. Tech Stack Layering: Clickable component to explain the hardware/software mix (NPU, Docker, K3s).
+         5. Use Case Cards: Automotive, Retail, Mfg.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Latency Chart (Bar):
+            - Goal: Prove speed.
+            - Viz: Horizontal Bar chart.
+            - Interaction: "Distance" slider to increase cloud latency while Edge stays constant.
+         2. Data Savings (Donut/Pie):
+            - Goal: Show efficiency.
+            - Viz: Donut chart comparing "Raw Data" vs "Edge Insight" volume.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS). NO Mermaid JS used. -->
+    </head><body class="antialiased min-h-screen flex flex-col overflow-x-hidden">--&gt;
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        .tech-layer {
+            transition: all 0.3s ease;
+        }
+        .tech-layer:hover, .tech-layer.active {
+            border-color: #D71920;
+            background-color: #fef2f2;
+            transform: translateX(10px);
+        }
+
+        input[type=range] {
+            accent-color: #D71920;
+        }
+    </style>
+
+
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img alt="Zapario Logo" class="h-10 w-auto" src="https://storage.googleapis.com/z-wp-content/zapario-1.png"/>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('latency')">Speed &amp; Latency</button>
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('bandwidth')">Bandwidth Saver</button>
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('stack')">Edge Stack</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Schedule Demo
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#f3f4f6_1px,transparent_1px),linear-gradient(to_bottom,#f3f4f6_1px,transparent_1px)] bg-[size:24px_24px] opacity-40"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-cpu mr-2"></i>
+                    Intelligent Edge Computing
+                </div>
+                <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                    Bring Intelligence to the <span class="text-zapario-red">Point of Action</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    Don't wait for the cloud. Process data where it’s created. Achieve milliseconds latency, reduce bandwidth costs by 90%, and ensure mission-critical reliability.
+                </p>
+                <div class="flex gap-4">
+                    <button class="bg-gray-900 text-white px-6 py-3 rounded-md font-semibold hover:bg-gray-800 transition-colors" onclick="scrollToSection('latency')">
+                        Explore Performance
+                    </button>
+                    <div class="flex items-center gap-2 px-4 py-3 text-gray-600">
+                        <i class="ph-fill ph-check-circle text-zapario-red"></i>
+                        <span>Offline Capable</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Abstract Visualization of Edge Node -->
+            <div class="relative bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-soft">
+                <div class="flex flex-col gap-4">
+                    <!-- Cloud Node -->
+                    <div class="flex items-center gap-4 opacity-50">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                            <i class="ph-duotone ph-cloud text-2xl text-gray-500"></i>
+                        </div>
+                        <div class="h-0.5 flex-1 bg-dashed border-t-2 border-gray-300 border-dashed"></div>
+                        <div class="text-xs text-gray-400 font-mono">HIGH LATENCY (&gt;200ms)</div>
+                    </div>
+
+                    <!-- Edge Node (Active) -->
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-zapario-red rounded-xl flex items-center justify-center shadow-lg shadow-red-200 animate-pulse">
+                            <i class="ph-duotone ph-microchip text-3xl text-white"></i>
+                        </div>
+                        <div class="flex-1 bg-white p-4 rounded-lg border border-red-100 shadow-sm relative">
+                            <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-2 h-2 bg-white border-l border-b border-red-100 rotate-45"></div>
+                            <div class="text-xs font-bold text-zapario-red uppercase mb-1">Local Processing</div>
+                            <div class="text-sm font-semibold text-gray-800">Anomaly Detected: Pressure Spike</div>
+                            <div class="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                                <i class="ph-bold ph-lightning text-yellow-500"></i>
+                                <span>Response: 4ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Latency Simulator -->
+    <section class="py-20 bg-gray-50 border-y border-gray-200" id="latency">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">The Latency Gap</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-600">See why milliseconds matter. Compare Edge execution vs. Cloud round-trips.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-4 space-y-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Network Distance (Miles)</label>
+                        <input class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="distanceRange" max="5000" min="100" step="100" type="range" value="2000"/>
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span>Local Metro</span>
+                            <span class="font-bold text-zapario-red" id="distanceVal">2000 mi</span>
+                            <span>Cross Country</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 italic">
+                            Simulation includes physics of light limits + network switching overhead + cloud processing time.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-gray-400">
+                            <div class="text-xs text-gray-500 uppercase">Cloud Response</div>
+                            <div class="text-2xl font-bold text-gray-800" id="cloudTime">185 ms</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-zapario-red">
+                            <div class="text-xs text-gray-500 uppercase">Edge Response</div>
+                            <div class="text-2xl font-bold text-zapario-red">5 ms</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-xl shadow-soft border border-gray-200">
+                    <div class="chart-container">
+                        <canvas id="latencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bandwidth Optimizer -->
+    <section class="py-20 bg-white" id="bandwidth">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-zapario-red font-bold mb-2">
+                        <i class="ph-fill ph-chart-pie-slice"></i>
+                        <span>Smart Data Filtering</span>
+                    </div>
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">Stop Paying to Move Noise</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Streaming raw video or vibration data to the cloud is expensive and inefficient. 
+                        With <span class="text-zapario-red font-semibold">Intelligent Edge</span>, you filter noise locally and only transmit insights.
+                    </p>
+                    
+                    <div class="space-y-6 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <div>
+                            <label class="flex justify-between text-sm font-bold text-gray-700 mb-2">
+                                <span>Number of HD Cameras</span>
+                                <span class="text-zapario-red" id="camCountVal">10</span>
+                            </label>
+                            <input class="w-full" id="camInput" max="50" min="1" type="range" value="10"/>
+                        </div>
+                        
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                            <div>
+                                <div class="text-sm text-gray-500">Cloud Data Cost (Est.)</div>
+                                <div class="text-xs text-gray-400">Raw Stream vs. Events Only</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm line-through text-gray-400" id="rawCost">$3,500/mo</div>
+                                <div class="text-2xl font-bold text-zapario-red" id="edgeCost">$35/mo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="chart-container">
+                        <canvas id="bandwidthChart"></canvas>
+                    </div>
+                    <!-- Central overlay text for donut -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-gray-800" id="savingsPct">99%</div>
+                            <div class="text-xs text-gray-500 uppercase">Savings</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Explorer -->
+    <section class="py-20 bg-gray-900 text-white" id="stack">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white">The Modern Edge Stack</h2>
+                <div class="h-1 w-20 bg-zapario-red mx-auto my-4"></div>
+                <p class="text-gray-400">We orchestrate the complexity of distributed computing.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Stack Layers (Interactive) -->
+                <div class="space-y-4">
+                    <div class="tech-layer active cursor-pointer p-6 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-800 flex items-center gap-4" onclick="updateStack(0)">
+                        <div class="bg-gray-700 p-3 rounded-lg"><i class="ph-duotone ph-app-window text-2xl text-zapario-red"></i></div>
+                        <div>
+                            <h3 class="font-bold text-lg">Application Layer</h3>
+                            <p class="text-sm text-gray-400">Custom Logic, Dashboards, Digital Twins</p>
+                        </div>
+                    </div>
+
+                    <div class="tech-layer cursor-pointer p-6 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-800 flex items-center gap-4" onclick="updateStack(1)">
+                        <div class="bg-gray-700 p-3 rounded-lg"><i class="ph-duotone ph-brain text-2xl text-blue-400"></i></div>
+                        <div>
+                            <h3 class="font-bold text-lg">AI &amp; Runtime</h3>
+                            <p class="text-sm text-gray-400">TensorFlow Lite, ONNX, Python, Node.js</p>
+                        </div>
+                    </div>
+
+                    <div class="tech-layer cursor-pointer p-6 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-800 flex items-center gap-4" onclick="updateStack(2)">
+                        <div class="bg-gray-700 p-3 rounded-lg"><i class="ph-duotone ph-shipping-container text-2xl text-green-400"></i></div>
+                        <div>
+                            <h3 class="font-bold text-lg">Orchestration</h3>
+                            <p class="text-sm text-gray-400">Kubernetes (K3s), Docker, Azure IoT Edge</p>
+                        </div>
+                    </div>
+
+                    <div class="tech-layer cursor-pointer p-6 rounded-lg border border-gray-700 bg-gray-800/50 hover:bg-gray-800 flex items-center gap-4" onclick="updateStack(3)">
+                        <div class="bg-gray-700 p-3 rounded-lg"><i class="ph-duotone ph-cpu text-2xl text-orange-400"></i></div>
+                        <div>
+                            <h3 class="font-bold text-lg">Hardware</h3>
+                            <p class="text-sm text-gray-400">ARM Cortex, NVIDIA Jetson, Coral TPU, Gateways</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail View -->
+                <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 flex flex-col justify-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-32 bg-zapario-red/10 rounded-full blur-3xl"></div>
+                    
+                    <div class="relative z-10 transition-opacity duration-300" id="stackDetail">
+                        <!-- Content Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <!-- Logic -->
+    <script>
+        // --- LATENCY CHART ---
+        let latencyChart;
+        
+        function initLatencyChart() {
+            const ctx = document.getElementById('latencyChart').getContext('2d');
+            latencyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Edge Processing', 'Cloud Round-Trip'],
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: [5, 185],
+                        backgroundColor: ['#D71920', '#9ca3af'],
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: 'Milliseconds (Lower is Better)' },
+                            grid: { color: '#f3f4f6' }
+                        },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Slider Listener
+            document.getElementById('distanceRange').addEventListener('input', (e) => {
+                const dist = parseInt(e.target.value);
+                document.getElementById('distanceVal').innerText = dist + " mi";
+                
+                // Physics + Switching Overhead simulation
+                // Light in fiber ~ 0.005ms/mile (round trip) + 20-50ms switching/processing
+                const cloudTime = Math.floor((dist * 0.01) + 40 + (Math.random()*10));
+                
+                document.getElementById('cloudTime').innerText = cloudTime + " ms";
+                
+                latencyChart.data.datasets[0].data[1] = cloudTime;
+                latencyChart.update('none'); // Update without full re-render
+            });
+        }
+
+        // --- BANDWIDTH CHART ---
+        let bwChart;
+
+        function initBWChart() {
+            const ctx = document.getElementById('bandwidthChart').getContext('2d');
+            bwChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Data Saved (Edge Filtered)', 'Data Sent (Events)'],
+                    datasets: [{
+                        data: [99, 1],
+                        backgroundColor: ['#e5e7eb', '#D71920'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Camera Input Listener
+            document.getElementById('camInput').addEventListener('input', (e) => {
+                const cams = parseInt(e.target.value);
+                document.getElementById('camCountVal').innerText = cams;
+
+                // Assumptions: 1 HD cam = 2 Mbps = ~600GB/mo
+                const rawGB = cams * 600; 
+                // Edge: Only sends anomalies/metadata = ~1GB/mo
+                const edgeGB = cams * 1; 
+                
+                const cloudCost = rawGB * 0.08; // $0.08 per GB egress estimate
+                const edgeCost = edgeGB * 0.08 + (cams * 2); // Small egress + device overhead amortized
+
+                // Update Text
+                document.getElementById('rawCost').innerText = '$' + Math.floor(cloudCost).toLocaleString() + '/mo';
+                document.getElementById('edgeCost').innerText = '$' + Math.floor(edgeCost).toLocaleString() + '/mo';
+            });
+        }
+
+        // --- TECH STACK LOGIC ---
+        const stackData = [
+            {
+                title: "Application Layer",
+                icon: "ph-app-window",
+                color: "text-zapario-red",
+                content: "This is where value is generated. Custom dashboards, predictive maintenance logic, and business rules run locally.",
+                tags: ["Node-RED", "Grafana", "Custom Python Apps"]
+            },
+            {
+                title: "AI & Runtime",
+                icon: "ph-brain",
+                color: "text-blue-400",
+                content: "Optimized inference engines that run complex models on constrained devices. We convert cloud models to run at the edge.",
+                tags: ["TensorFlow Lite", "OpenVINO", "Azure ML", "ONNX"]
+            },
+            {
+                title: "Orchestration",
+                icon: "ph-shipping-container",
+                color: "text-green-400",
+                content: "Containerization allows us to deploy, update, and manage software across thousands of devices over-the-air (OTA).",
+                tags: ["K3s (Kubernetes)", "Docker", "Portainer", "Balena"]
+            },
+            {
+                title: "Hardware",
+                icon: "ph-cpu",
+                color: "text-orange-400",
+                content: "From Raspberry Pis to industrial gateways with specialized NPUs/TPUs for hardware-accelerated machine learning.",
+                tags: ["NVIDIA Jetson", "Google Coral", "Intel NUC", "Industrial Gateways"]
+            }
+        ];
+
+        function updateStack(index) {
+            // Visual Active State
+            document.querySelectorAll('.tech-layer').forEach((el, i) => {
+                if (i === index) el.classList.add('active', 'border-zapario-red', 'bg-gray-800');
+                else el.classList.remove('active', 'border-zapario-red', 'bg-gray-800');
+            });
+
+            const data = stackData[index];
+            const container = document.getElementById('stackDetail');
+            
+            container.style.opacity = '0';
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="mb-6">
+                        <i class="ph-duotone ${data.icon} text-5xl ${data.color} mb-4"></i>
+                        <h3 class="text-3xl font-bold text-white mb-2">${data.title}</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed">${data.content}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Key Technologies</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${data.tags.map(tag => `<span class="px-3 py-1 bg-gray-700 rounded-full text-sm text-white border border-gray-600">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                container.style.opacity = '1';
+            }, 200);
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initLatencyChart();
+            initBWChart();
+            updateStack(0);
+        });
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body></html>

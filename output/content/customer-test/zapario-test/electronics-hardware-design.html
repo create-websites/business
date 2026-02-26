@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Custom Hardware &amp; PCB Design | Zapario</title>
+    <meta content="Industrial-grade hardware design services. Custom PCBs, HDI stackups, FPGA integration, and ruggedized electronics for harsh environments." name="description"/>
+    <meta content="Hardware Design, PCB Layout, HDI, Signal Integrity, FPGA, Embedded Systems, Industrial Electronics, Ruggedized Hardware" name="keywords"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zapario: {
+                            red: '#D71920',
+                            dark: '#991116',
+                            light: '#fef2f2',
+                            gray: '#f3f4f6'
+                        }
+                    },
+                    boxShadow: {
+                        'layer': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        /* PCB Layer Base Styles */
+        .pcb-layer {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        .pcb-layer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 8px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+            pointer-events: none;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            accent-color: #D71920;
+        }
+
+        /* Architect Option Selection */
+        .arch-option.selected {
+            background-color: #fef2f2;
+            border-color: #D71920;
+            color: #991116;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <img alt="Zapario Logo" class="h-10 w-auto" src="https://storage.googleapis.com/z-wp-content/zapario-1.png"/>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('stackup')">PCB Technology</button>
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('architect')">System Architect</button>
+                    <button class="text-sm font-semibold text-gray-600 hover:text-zapario-red transition-colors" onclick="scrollToSection('reliability')">Reliability Lab</button>
+                </div>
+                <button class="bg-zapario-red hover:bg-zapario-dark text-white px-5 py-2.5 rounded-md text-sm font-bold transition-all shadow-md">
+                    Discuss Hardware
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <!-- Abstract Circuit Background -->
+        <div class="absolute right-0 top-0 h-full w-1/2 opacity-5 pointer-events-none overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-full h-1 bg-black rotate-45"></div>
+            <div class="absolute top-1/2 left-0 w-full h-1 bg-black -rotate-12"></div>
+            <div class="absolute bottom-1/4 right-0 w-full h-1 bg-black rotate-12"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-red-50 text-zapario-red border border-red-100 mb-6">
+                    <i class="ph-bold ph-microchip mr-2"></i>
+                    Custom Hardware Development
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Hardware Built for <br/>
+                    <span class="text-zapario-red">The Real World</span>
+                </h1>
+                <p class="text-xl text-gray-500 mb-8 font-light leading-relaxed">
+                    We engineer high-density, industrial-grade electronics. From multi-layer HDI boards with FPGA integration to ruggedized systems designed to survive extreme environments.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button class="bg-gray-900 text-white px-8 py-3.5 rounded-md font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center justify-center gap-2" onclick="scrollToSection('architect')">
+                        Configure Your System <i class="ph-bold ph-sliders-horizontal"></i>
+                    </button>
+                </div>
+                
+                <div class="mt-10 grid grid-cols-3 gap-6 border-t border-gray-100 pt-6">
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900">14+</div>
+                        <div class="text-xs text-gray-500 uppercase">Layer HDI Capability</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900">IP67</div>
+                        <div class="text-xs text-gray-500 uppercase">Rugged Design</div>
+                    </div>
+                    <div>
+                        <div class="font-bold text-2xl text-gray-900">5+</div>
+                        <div class="text-xs text-gray-500 uppercase">Year Lifecycle</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Visual: Abstract Hardware -->
+            <div class="relative flex justify-center items-center">
+                <!-- Outer Ring -->
+                <div class="absolute w-96 h-96 border border-gray-200 rounded-full animate-[spin_20s_linear_infinite]"></div>
+                <div class="absolute w-80 h-80 border border-dashed border-gray-300 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                
+                <!-- Central Processor Graphic -->
+                <div class="relative bg-gray-900 w-48 h-48 rounded-xl shadow-2xl flex items-center justify-center border-2 border-gray-800 z-10">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,#D71920_0%,transparent_60%)] opacity-30"></div>
+                    <div class="text-center">
+                        <i class="ph-duotone ph-cpu text-6xl text-white mb-2"></i>
+                        <div class="text-[10px] font-mono text-gray-400">ZAPARIO<br/>CORE_ARCH_V2</div>
+                    </div>
+                    <!-- Pins -->
+                    <div class="absolute -left-2 top-4 bottom-4 w-1 bg-gray-700"></div>
+                    <div class="absolute -right-2 top-4 bottom-4 w-1 bg-gray-700"></div>
+                    <div class="absolute -top-2 left-4 right-4 h-1 bg-gray-700"></div>
+                    <div class="absolute -bottom-2 left-4 right-4 h-1 bg-gray-700"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Stackup Explorer (FIXED) -->
+    <section class="py-24 bg-gray-50 border-y border-gray-200 overflow-hidden" id="stackup">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Explanation -->
+                <div class="order-2 lg:order-1">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Inside High-Density Interconnect (HDI)</h2>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Modern IoT and Edge devices require squeezing workstation performance into handheld form factors. We utilize advanced stackups to manage Signal Integrity (SI) and Power Integrity (PI).
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-zapario-red text-2xl shadow-sm"><i class="ph-bold ph-wave-sine"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Controlled Impedance</h4>
+                                <p class="text-sm text-gray-500">Strict 50Ω/90Ω matching for DDR and RF lines.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-zapario-red text-2xl shadow-sm"><i class="ph-bold ph-fire"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Thermal Vias</h4>
+                                <p class="text-sm text-gray-500">Efficient heat dissipation from hot processors to internal planes.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-zapario-red text-2xl shadow-sm"><i class="ph-bold ph-shield-check"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">EMI Shielding</h4>
+                                <p class="text-sm text-gray-500">Ground stitching to minimize radiated emissions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Explorer (Updated) -->
+                <!-- Added overflow-hidden on parent column (via section), increased padding, reduced transform distance -->
+                <div class="order-1 lg:order-2 min-h-[600px] py-20 flex items-center justify-center perspective-[1000px] group cursor-pointer relative" id="stackup-visual">
+                    <div class="relative w-64 h-64 transition-transform duration-500 transform group-hover:rotate-x-12">
+                        <div class="absolute -bottom-16 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">Hover to Explode</div>
+                        
+                        <!-- Reduced Vertical Spacing (Compact Expansion) -->
+                        
+                        <!-- Layer 1: Top Signal (Green) -->
+                        <div class="pcb-layer w-full h-48 bg-emerald-600 absolute top-0 rounded-lg border-2 border-emerald-500 shadow-layer flex items-center justify-center z-50 group-hover:-translate-y-20">
+                            <span class="text-white font-mono text-xs font-bold opacity-0 group-hover:opacity-100 text-center px-4">L1: TOP SIGNAL</span>
+                            <div class="absolute inset-2 border border-dashed border-emerald-300 opacity-30"></div>
+                        </div>
+
+                        <!-- Layer 2: Ground (Yellow) -->
+                        <div class="pcb-layer w-full h-48 bg-amber-500 absolute top-2 rounded-lg border-2 border-amber-400 shadow-layer flex items-center justify-center z-40 group-hover:-translate-y-10 transition-delay-[50ms]">
+                            <span class="text-white font-mono text-xs font-bold opacity-0 group-hover:opacity-100">L2: GROUND</span>
+                        </div>
+
+                        <!-- Layer 3: Power (Orange) -->
+                        <div class="pcb-layer w-full h-48 bg-orange-600 absolute top-4 rounded-lg border-2 border-orange-500 shadow-layer flex items-center justify-center z-30 group-hover:translate-y-0 transition-delay-[100ms]">
+                            <span class="text-white font-mono text-xs font-bold opacity-0 group-hover:opacity-100">L3: POWER</span>
+                        </div>
+
+                        <!-- Layer 4: Signal (Green) -->
+                        <div class="pcb-layer w-full h-48 bg-emerald-700 absolute top-6 rounded-lg border-2 border-emerald-600 shadow-layer flex items-center justify-center z-20 group-hover:translate-y-10 transition-delay-[150ms]">
+                            <span class="text-white font-mono text-xs font-bold opacity-0 group-hover:opacity-100">L4: SIGNAL</span>
+                        </div>
+
+                        <!-- Layer 5: Ground (Yellow) -->
+                         <div class="pcb-layer w-full h-48 bg-amber-500 absolute top-8 rounded-lg border-2 border-amber-400 shadow-layer flex items-center justify-center z-10 group-hover:translate-y-20 transition-delay-[200ms]">
+                            <span class="text-white font-mono text-xs font-bold opacity-0 group-hover:opacity-100">L5: GROUND</span>
+                        </div>
+
+                        <!-- Layer 6: Bottom (Green) -->
+                        <div class="pcb-layer w-full h-48 bg-emerald-600 absolute top-10 rounded-lg border-2 border-emerald-500 shadow-layer flex items-center justify-center z-0 group-hover:translate-y-30 transition-delay-[250ms]">
+                            <span class="text-white font-mono text-xs font-bold opacity-0 group-hover:opacity-100">L6: BOTTOM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Architect Configurator -->
+    <section class="py-24 bg-white" id="architect">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-zapario-red font-bold uppercase tracking-widest text-sm">Interactive Tool</span>
+                <h2 class="text-3xl font-bold text-gray-900 mt-2">System Architect</h2>
+                <p class="text-gray-500 mt-4">Define your constraints to generate a recommended hardware architecture.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
+                <div class="p-8 grid md:grid-cols-2 gap-8 border-b border-gray-100">
+                    <!-- Inputs -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-3">Primary Workload</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="arch-option workload selected px-4 py-3 rounded-lg border border-gray-200 text-sm font-medium hover:border-red-200 text-left transition-colors" onclick="selectOption('workload', 'iot')">Low Power IoT</button>
+                                <button class="arch-option workload px-4 py-3 rounded-lg border border-gray-200 text-sm font-medium hover:border-red-200 text-left transition-colors" onclick="selectOption('workload', 'edge')">Edge AI / Vision</button>
+                                <button class="arch-option workload px-4 py-3 rounded-lg border border-gray-200 text-sm font-medium hover:border-red-200 text-left transition-colors" onclick="selectOption('workload', 'control')">Real-time Control</button>
+                                <button class="arch-option workload px-4 py-3 rounded-lg border border-gray-200 text-sm font-medium hover:border-red-200 text-left transition-colors" onclick="selectOption('workload', 'gateway')">Comms Gateway</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-3">Environment</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button class="arch-option env selected px-3 py-2 rounded-lg border border-gray-200 text-sm text-center hover:border-red-200" onclick="selectOption('env', 'indoor')">Indoor</button>
+                                <button class="arch-option env px-3 py-2 rounded-lg border border-gray-200 text-sm text-center hover:border-red-200" onclick="selectOption('env', 'outdoor')">Outdoor</button>
+                                <button class="arch-option env px-3 py-2 rounded-lg border border-gray-200 text-sm text-center hover:border-red-200" onclick="selectOption('env', 'harsh')">Industrial</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Output Preview -->
+                    <div class="bg-gray-50 rounded-xl p-6 flex flex-col justify-center">
+                        <div class="mb-4">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Recommended Architecture</span>
+                            <div class="text-2xl font-bold text-zapario-red mt-1" id="arch-title">Smart Sensor Node</div>
+                        </div>
+                        
+                        <ul class="space-y-3 text-sm text-gray-600 mb-6">
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-cpu mt-0.5 text-gray-400"></i>
+                                <span id="spec-cpu">ARM Cortex-M4 (STM32/Nordic)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-wifi-high mt-0.5 text-gray-400"></i>
+                                <span id="spec-comms">BLE 5.2 / Zigbee</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-battery-charging mt-0.5 text-gray-400"></i>
+                                <span id="spec-power">Battery Coin Cell / Energy Harvest</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-shield mt-0.5 text-gray-400"></i>
+                                <span id="spec-protection">Standard Enclosure</span>
+                            </li>
+                        </ul>
+
+                        <button class="w-full bg-white border border-gray-300 text-gray-700 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                            Request This Spec
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reliability Lab -->
+    <section class="py-24 bg-gray-900 text-white" id="reliability">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="ph-duotone ph-thermometer-hot text-zapario-red text-3xl"></i>
+                        <h2 class="text-3xl font-bold text-white">The Reliability Lab</h2>
+                    </div>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        Hardware failure in the field is costly. We simulate years of stress in weeks using HALT (Highly Accelerated Life Testing) to push components to their limits.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                            <div class="text-2xl font-bold text-white">-40°C to 85°C</div>
+                            <div class="text-xs text-gray-500 uppercase mt-1">Thermal Cycling</div>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                            <div class="text-2xl font-bold text-white">4kV / 8kV</div>
+                            <div class="text-xs text-gray-500 uppercase mt-1">ESD Protection</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-2xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-gray-300 uppercase">The "Bathtub" Failure Curve</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-zapario-red"></span>
+                            <span class="text-xs text-gray-400">Zapario Mitigation</span>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="reliabilityChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <!-- Logic -->
+    <script>
+        // --- CONFIGURATOR LOGIC ---
+        let currentConfig = { workload: 'iot', env: 'indoor' };
+
+        const specs = {
+            iot: {
+                title: "Smart Sensor Node",
+                cpu: "ARM Cortex-M4 (STM32/Nordic)",
+                comms: "BLE 5.2 / Zigbee / LoRaWAN",
+                power: "Battery Coin Cell / Energy Harvest"
+            },
+            edge: {
+                title: "Edge AI Processor",
+                cpu: "NVIDIA Jetson / NXP i.MX8",
+                comms: "Wi-Fi 6 / Gigabit Ethernet",
+                power: "12-24V DC Input"
+            },
+            control: {
+                title: "Real-time Controller",
+                cpu: "ARM Cortex-R / TI Sitara",
+                comms: "EtherCAT / CAN Bus / RS-485",
+                power: "24V Industrial Rail"
+            },
+            gateway: {
+                title: "Industrial Gateway",
+                cpu: "Quad-Core ARM Cortex-A53",
+                comms: "4G LTE / 5G / Dual Ethernet",
+                power: "PoE (Power over Ethernet)"
+            }
+        };
+
+        const envSpecs = {
+            indoor: "Standard ABS Enclosure",
+            outdoor: "IP65 Weatherproof + Conformal Coating",
+            harsh: "IP67 Rugged + Metal Chassis + Wide Temp Components"
+        };
+
+        function selectOption(category, value) {
+            currentConfig[category] = value;
+            
+            // UI Update
+            const buttons = document.querySelectorAll(`.arch-option.${category}`);
+            buttons.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(`'${value}'`)) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+
+            updateArchitectOutput();
+        }
+
+        function updateArchitectOutput() {
+            const baseSpec = specs[currentConfig.workload];
+            const envSpecString = envSpecs[currentConfig.env];
+
+            // Animate Text Change
+            const container = document.getElementById('arch-title').parentElement.parentElement;
+            container.style.opacity = 0.5;
+
+            setTimeout(() => {
+                document.getElementById('arch-title').innerText = baseSpec.title;
+                document.getElementById('spec-cpu').innerText = baseSpec.cpu;
+                document.getElementById('spec-comms').innerText = baseSpec.comms;
+                document.getElementById('spec-power').innerText = baseSpec.power;
+                document.getElementById('spec-protection').innerText = envSpecString;
+                container.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- RELIABILITY CHART ---
+        function initChart() {
+            const ctx = document.getElementById('reliabilityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Burn-in', 'Early Life', 'Useful Life', 'Wear Out'],
+                    datasets: [{
+                        label: 'Standard Failure Rate',
+                        data: [10, 2, 1, 8],
+                        borderColor: '#4b5563',
+                        borderDash: [5, 5],
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }, {
+                        label: 'Zapario (Post-DVT)',
+                        data: [0.5, 0.2, 0.1, 8], // Flat early curve due to testing
+                        borderColor: '#D71920',
+                        backgroundColor: 'rgba(215, 25, 32, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { color: '#9ca3af' } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.datasetIndex === 1) return "Zapario: Low Risk";
+                                    return "Standard: Infant Mortality Risk";
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            display: true,
+                            title: { display: true, text: 'Failure Rate', color: '#6b7280' },
+                            grid: { color: '#374151' },
+                            ticks: { display: false }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body></html>

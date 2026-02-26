@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>IoT Intelligent Cloud | Enterprise Data Platform</title>
+    <meta content="Next-generation IoT Cloud Platform. Securely connect, manage, and analyze millions of devices with real-time stream processing and AI-driven insights." name="description"/>
+    <meta content="IoT Cloud, Data Ingestion, Stream Analytics, Edge Computing, MQTT, IoT Security, Scalable IoT, Digital Transformation" name="keywords"/>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: "Deep Sky Nexus" - A sophisticated tech palette. Primary background is deep slate/navy (representing the depth of the cloud/backend), accented with electric blue (Cyan-400) for data flow and vibrant purple (Violet-500) for AI/Intelligence. Light sections provide contrast for readability. -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Section: "The Neural Network." Immediate visual impact emphasizing scale and connectivity.
+         2. Interactive Architecture Flow: The core educational component. Instead of static text, users click through the stages of data processing (Edge -> Ingest -> Analyze -> Store). This simplifies complex cloud topology.
+         3. Live Intelligence Dashboard: A simulated real-time monitor using Chart.js to demonstrate the platform's ability to handle high-velocity data and detect anomalies (AI aspect).
+         4. Scale Calculator: A functional tool for decision-makers to understand the relationship between device count, message frequency, and total data volume/cost tier.
+         5. Security & Compliance: Essential trust indicators presented as a grid.
+         Why? This structure demystifies the "Cloud" by breaking it into visible processes (Flow), proving performance (Dashboard), and helping with planning (Calculator). -->
+
+    <!-- Visualization & Content Choices:
+         1. Architecture Flow:
+            - Goal: Explain the Tech Stack.
+            - Viz: Horizontal Step Process (CSS Grid/Flex).
+            - Interaction: Click step to reveal technical details (Protocols, DB types) in a side panel.
+            - Justification: Diagrams are better than paragraphs for architecture.
+         2. Live Throughput Chart:
+            - Goal: Show "Real-time" capability.
+            - Viz: Chart.js Streaming Line Chart.
+            - Interaction: Auto-updates every second.
+            - Justification: Static charts don't convey "streaming data" effectively.
+         3. Data Volume Estimator:
+            - Goal: Assist in capacity planning.
+            - Viz: Reactive text/progress bars.
+            - Interaction: Input sliders.
+            - Justification: Makes abstract numbers (terabytes) tangible.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used (relying on Phosphor Icons and CSS). NO Mermaid JS used. -->
+    </head><body class="antialiased min-h-screen flex flex-col overflow-x-hidden">--&gt;
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #e2e8f0; /* Slate 200 */
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Glow Effects */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+        }
+        
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes flow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        .animate-flow {
+            background: linear-gradient(90deg, #0f172a, #38bdf8, #0f172a);
+            background-size: 200% 100%;
+            animation: flow 2s linear infinite;
+        }
+
+        .step-active {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+
+
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <i class="ph-fill ph-cloud-check text-cyan-400 text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight text-white">Intelligent<span class="text-cyan-400">Cloud</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors" onclick="scrollToSection('architecture')">Architecture</button>
+                    <button class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors" onclick="scrollToSection('live-data')">Live Monitor</button>
+                    <button class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors" onclick="scrollToSection('calculator')">Scale Estimator</button>
+                </div>
+                <button class="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                    Get Access
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Abstract BG -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-cyan-500/10 rounded-full blur-[100px] -z-10"></div>
+        <div class="absolute bottom-0 right-0 w-[800px] h-[400px] bg-violet-600/10 rounded-full blur-[120px] -z-10"></div>
+
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-medium bg-cyan-950 text-cyan-400 border border-cyan-800 mb-6">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 mr-2 animate-pulse"></span>
+                v2.0 Platform Live
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+                From Chaos to <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-400 glow-text">Intelligence</span>
+            </h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                A unified, serverless IoT platform designed to ingest millions of events, detect anomalies in real-time, and scale effortlessly.
+            </p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto border-t border-slate-800 pt-8">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white">99.99%</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">SLA Uptime</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white">&lt;50ms</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Latency</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white">TLS 1.3</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Encryption</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white">∞</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Scalability</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Architecture Flow -->
+    <section class="py-20 bg-slate-900 border-y border-slate-800 relative" id="architecture">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">The Data Journey</h2>
+                <p class="text-slate-400">Click on any stage of the pipeline to uncover the underlying technology stack.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8">
+                <!-- Visual Pipeline -->
+                <div class="lg:col-span-8 space-y-4">
+                    <!-- Steps -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button class="group relative p-6 rounded-xl border border-slate-700 bg-slate-800/50 text-left hover:border-cyan-500 transition-all step-active" id="step-0" onclick="updateArch(0)">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-cyan-400 font-mono text-xs">01</span>
+                                <i class="ph-duotone ph-devices text-2xl text-slate-400 group-hover:text-cyan-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">The Edge</h3>
+                            <p class="text-sm text-slate-400 mt-1">Device connectivity &amp; local logic.</p>
+                            <!-- Connector Line (Visual) -->
+                            <div class="hidden sm:block absolute top-1/2 -right-6 w-6 h-0.5 bg-slate-700"></div>
+                        </button>
+
+                        <button class="group relative p-6 rounded-xl border border-slate-700 bg-slate-800/50 text-left hover:border-cyan-500 transition-all" id="step-1" onclick="updateArch(1)">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-cyan-400 font-mono text-xs">02</span>
+                                <i class="ph-duotone ph-arrows-split text-2xl text-slate-400 group-hover:text-cyan-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">Ingestion</h3>
+                            <p class="text-sm text-slate-400 mt-1">High-throughput message brokers.</p>
+                             <!-- Connector Line (Visual) -->
+                             <div class="hidden sm:block absolute top-1/2 -left-6 w-6 h-0.5 bg-slate-700"></div>
+                        </button>
+
+                        <button class="group relative p-6 rounded-xl border border-slate-700 bg-slate-800/50 text-left hover:border-cyan-500 transition-all" id="step-2" onclick="updateArch(2)">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-cyan-400 font-mono text-xs">03</span>
+                                <i class="ph-duotone ph-brain text-2xl text-slate-400 group-hover:text-cyan-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">Stream Processing</h3>
+                            <p class="text-sm text-slate-400 mt-1">Real-time ETL &amp; Anomaly Detection.</p>
+                             <!-- Connector Line (Visual) -->
+                             <div class="hidden sm:block absolute top-1/2 -right-6 w-6 h-0.5 bg-slate-700"></div>
+                        </button>
+
+                        <button class="group relative p-6 rounded-xl border border-slate-700 bg-slate-800/50 text-left hover:border-cyan-500 transition-all" id="step-3" onclick="updateArch(3)">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-cyan-400 font-mono text-xs">04</span>
+                                <i class="ph-duotone ph-database text-2xl text-slate-400 group-hover:text-cyan-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">Storage &amp; Action</h3>
+                            <p class="text-sm text-slate-400 mt-1">Data Lakes, APIs, and Dashboards.</p>
+                             <!-- Connector Line (Visual) -->
+                             <div class="hidden sm:block absolute top-1/2 -left-6 w-6 h-0.5 bg-slate-700"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="lg:col-span-4">
+                    <div class="h-full glass-panel rounded-xl p-8 border border-cyan-900/50 flex flex-col justify-center transition-all duration-300" id="arch-detail">
+                        <!-- Content Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Data Dashboard -->
+    <section class="py-20 bg-slate-950" id="live-data">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2">Live Cloud Telemetry</h2>
+                    <p class="text-slate-400 text-sm">Real-time simulation of message throughput and anomaly scoring.</p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-950/30 px-3 py-1 rounded border border-emerald-900">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    SYSTEM HEALTHY
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Main Traffic Chart -->
+                <div class="lg:col-span-2 glass-panel rounded-xl p-6 border border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-300 mb-4 flex justify-between">
+                        <span>Message Ingestion Rate (msg/sec)</span>
+                        <span class="font-mono text-cyan-400" id="live-rate">Loading...</span>
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="liveChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="space-y-6">
+                    <div class="glass-panel rounded-xl p-6 border border-slate-800">
+                        <h3 class="text-xs text-slate-500 uppercase font-bold mb-4">Storage Distribution</h3>
+                        <div class="chart-container" style="height: 180px;">
+                            <canvas id="storageChart"></canvas>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-center">
+                            <div>
+                                <div class="font-bold text-white">Hot Path</div>
+                                <div class="text-slate-500">Redis/Cosmos</div>
+                            </div>
+                            <div>
+                                <div class="font-bold text-white">Cold Path</div>
+                                <div class="text-slate-500">Data Lake</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel rounded-xl p-6 border border-slate-800 flex flex-col justify-center">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm text-slate-400">Active Sessions</span>
+                            <i class="ph-fill ph-plugs-connected text-cyan-500"></i>
+                        </div>
+                        <div class="text-3xl font-mono font-bold text-white" id="session-counter">14,205</div>
+                        <div class="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
+                            <div class="bg-cyan-500 h-full animate-flow" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scale Calculator -->
+    <section class="py-20 bg-slate-900 border-t border-slate-800" id="calculator">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">Capacity Planner</h2>
+                <p class="text-slate-400 mt-2">Estimate your cloud requirements based on fleet size.</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-8 border border-slate-700 shadow-2xl">
+                <div class="grid md:grid-cols-2 gap-12">
+                    
+                    <!-- Inputs -->
+                    <div class="space-y-8">
+                        <div>
+                            <label class="flex justify-between text-sm font-medium text-slate-300 mb-2">
+                                <span>Connected Devices</span>
+                                <span class="text-cyan-400 font-mono" id="device-val">5,000</span>
+                            </label>
+                            <input class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500" id="device-input" max="100000" min="100" step="100" type="range" value="5000"/>
+                            <div class="flex justify-between text-xs text-slate-600 mt-1">
+                                <span>100</span>
+                                <span>100k+</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="flex justify-between text-sm font-medium text-slate-300 mb-2">
+                                <span>Messages per Minute (per Device)</span>
+                                <span class="text-cyan-400 font-mono" id="freq-val">10</span>
+                            </label>
+                            <input class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500" id="freq-input" max="60" min="1" type="range" value="10"/>
+                            <div class="flex justify-between text-xs text-slate-600 mt-1">
+                                <span>1/min</span>
+                                <span>60/min</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="flex justify-between text-sm font-medium text-slate-300 mb-2">
+                                <span>Payload Size (KB)</span>
+                                <span class="text-cyan-400 font-mono" id="size-val">2 KB</span>
+                            </label>
+                            <input class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500" id="size-input" max="10" min="0.5" step="0.5" type="range" value="2"/>
+                        </div>
+                    </div>
+
+                    <!-- Outputs -->
+                    <div class="bg-slate-950 rounded-xl p-6 border border-slate-800 flex flex-col justify-center space-y-6">
+                        <div>
+                            <div class="text-xs text-slate-500 uppercase tracking-widest mb-1">Total Monthly Ingestion</div>
+                            <div class="text-4xl font-bold text-white font-mono" id="total-msgs">216 M</div>
+                            <div class="text-sm text-slate-400">Messages / Month</div>
+                        </div>
+
+                        <div>
+                            <div class="text-xs text-slate-500 uppercase tracking-widest mb-1">Estimated Storage</div>
+                            <div class="text-4xl font-bold text-white font-mono" id="total-storage">432 GB</div>
+                            <div class="text-sm text-slate-400">Data Accumulated / Month</div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-400">Recommended Tier:</span>
+                                <span class="px-3 py-1 rounded bg-violet-900/50 text-violet-300 border border-violet-700 text-sm font-bold" id="tier-badge">PROFESSIONAL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <!-- Logic -->
+    <script>
+        // --- ARCHITECTURE DATA & LOGIC ---
+        const archData = [
+            {
+                title: "The Edge Layer",
+                icon: "ph-devices",
+                desc: "Where the physical world meets the digital. We support lightweight agents capable of buffering data and running ML models locally.",
+                features: ["Protocol Translation (Modbus -> MQTT)", "Offline Buffering", "Edge ML Inference"],
+                tech: ["Greengrass", "Azure IoT Edge", "Docker"]
+            },
+            {
+                title: "Ingestion Layer",
+                icon: "ph-arrows-split",
+                desc: "The front door of the cloud. A massively scalable message broker handling millions of concurrent connections securely.",
+                features: ["X.509 Certificate Auth", "Load Balancing", "DDoS Protection"],
+                tech: ["MQTT Broker", "Kafka", "Event Hubs"]
+            },
+            {
+                title: "Stream Processing",
+                icon: "ph-brain",
+                desc: "Data in motion. We filter, aggregate, and analyze telemetry streams in real-time before they even hit the database.",
+                features: ["Complex Event Processing (CEP)", "Windowing functions", "Real-time Alerts"],
+                tech: ["Apache Flink", "Spark Streaming", "Lambda"]
+            },
+            {
+                title: "Storage & Action",
+                icon: "ph-database",
+                desc: "Hot path for instant dashboards, Cold path for historical auditing and machine learning model training.",
+                features: ["Time-Series Optimization", "Data Lake Archiving", "REST API Access"],
+                tech: ["InfluxDB", "Snowflake", "S3/Blob Storage"]
+            }
+        ];
+
+        function updateArch(index) {
+            // Update active styling
+            document.querySelectorAll('[id^="step-"]').forEach((el, i) => {
+                if (i === index) {
+                    el.classList.add('step-active');
+                    el.classList.remove('border-slate-700');
+                    el.classList.add('border-cyan-500');
+                } else {
+                    el.classList.remove('step-active');
+                    el.classList.add('border-slate-700');
+                    el.classList.remove('border-cyan-500');
+                }
+            });
+
+            // Update Content
+            const data = archData[index];
+            const detailPanel = document.getElementById('arch-detail');
+            
+            // Fade out
+            detailPanel.style.opacity = '0';
+            
+            setTimeout(() => {
+                detailPanel.innerHTML = `
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-3 bg-cyan-500/10 rounded-lg text-cyan-400 border border-cyan-500/20">
+                            <i class="ph-duotone ${data.icon} text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">${data.title}</h3>
+                    </div>
+                    <p class="text-slate-300 mb-6 leading-relaxed">${data.desc}</p>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Capabilities</h4>
+                        <ul class="space-y-2">
+                            ${data.features.map(f => `<li class="flex items-center gap-2 text-sm text-slate-200"><i class="ph-fill ph-check-circle text-cyan-500"></i> ${f}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Tech Stack Support</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${data.tech.map(t => `<span class="px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs text-slate-400">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                detailPanel.style.opacity = '1';
+            }, 200);
+        }
+
+        // --- CHARTS & LIVE DATA ---
+        let liveChart;
+        let storageChart;
+
+        function initCharts() {
+            // Live Chart
+            const ctxLive = document.getElementById('liveChart').getContext('2d');
+            const initialData = Array(20).fill(0).map(() => Math.random() * 50 + 50);
+            
+            liveChart = new Chart(ctxLive, {
+                type: 'line',
+                data: {
+                    labels: Array(20).fill(''),
+                    datasets: [{
+                        label: 'Ingestion Rate',
+                        data: initialData,
+                        borderColor: '#38bdf8', // Cyan 400
+                        backgroundColor: (context) => {
+                            const ctx = context.chart.ctx;
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                            gradient.addColorStop(0, 'rgba(56, 189, 248, 0.4)');
+                            gradient.addColorStop(1, 'rgba(56, 189, 248, 0)');
+                            return gradient;
+                        },
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { display: false },
+                        y: { 
+                            display: true, 
+                            grid: { color: '#1e293b' },
+                            ticks: { color: '#64748b' },
+                            min: 0,
+                            max: 150
+                        }
+                    }
+                }
+            });
+
+            // Storage Chart
+            const ctxStorage = document.getElementById('storageChart').getContext('2d');
+            storageChart = new Chart(ctxStorage, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Hot (Live)', 'Cold (Archive)'],
+                    datasets: [{
+                        data: [15, 85],
+                        backgroundColor: ['#38bdf8', '#475569'],
+                        borderColor: '#0f172a',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function simulateLiveData() {
+            setInterval(() => {
+                // Randomize data
+                const newVal = Math.floor(Math.random() * 40 + 60 + (Math.random() > 0.9 ? 30 : 0)); // Occasional spike
+                
+                // Update Chart
+                const data = liveChart.data.datasets[0].data;
+                data.shift();
+                data.push(newVal);
+                liveChart.update('none'); // Update without full animation for performance
+
+                // Update Text
+                document.getElementById('live-rate').innerText = (newVal * 124).toLocaleString(); // fake multiplier
+                
+                // Randomly update session counter slightly
+                const currentSessions = parseInt(document.getElementById('session-counter').innerText.replace(',', ''));
+                const diff = Math.floor(Math.random() * 10) - 4;
+                document.getElementById('session-counter').innerText = (currentSessions + diff).toLocaleString();
+
+            }, 1000);
+        }
+
+        // --- CALCULATOR LOGIC ---
+        function updateCalculator() {
+            const devices = parseInt(document.getElementById('device-input').value);
+            const freq = parseInt(document.getElementById('freq-input').value); // msgs per min
+            const size = parseFloat(document.getElementById('size-input').value); // KB
+
+            // Update UI Labels
+            document.getElementById('device-val').innerText = devices.toLocaleString();
+            document.getElementById('freq-val').innerText = freq + " / min";
+            document.getElementById('size-val').innerText = size + " KB";
+
+            // Calculate Totals
+            // Devices * Freq * 60 min * 24 hr * 30 days
+            const msgsPerMonth = devices * freq * 60 * 24 * 30;
+            const sizePerMonthKB = msgsPerMonth * size;
+            const sizePerMonthGB = sizePerMonthKB / 1024 / 1024;
+
+            // Format Outputs
+            document.getElementById('total-msgs').innerText = formatNumber(msgsPerMonth);
+            document.getElementById('total-storage').innerText = formatBytes(sizePerMonthGB);
+
+            // Determine Tier
+            const tierBadge = document.getElementById('tier-badge');
+            if (msgsPerMonth < 5000000) {
+                tierBadge.innerText = "STARTER";
+                tierBadge.className = "px-3 py-1 rounded bg-slate-800 text-slate-300 border border-slate-600 text-sm font-bold";
+            } else if (msgsPerMonth < 100000000) {
+                tierBadge.innerText = "PROFESSIONAL";
+                tierBadge.className = "px-3 py-1 rounded bg-cyan-900/50 text-cyan-300 border border-cyan-700 text-sm font-bold";
+            } else {
+                tierBadge.innerText = "ENTERPRISE";
+                tierBadge.className = "px-3 py-1 rounded bg-violet-900/50 text-violet-300 border border-violet-700 text-sm font-bold";
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1) + ' B';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + ' M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + ' K';
+            return num;
+        }
+
+        function formatBytes(gb) {
+            if (gb >= 1000) return (gb / 1024).toFixed(1) + ' TB';
+            return gb.toFixed(1) + ' GB';
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            simulateLiveData();
+            updateArch(0); // Load initial tab
+            updateCalculator(); // Load initial calc state
+
+            // Attach listeners to inputs
+            ['device-input', 'freq-input', 'size-input'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateCalculator);
+            });
+        });
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body></html>
