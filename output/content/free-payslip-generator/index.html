@@ -1,13 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <title>Payslip Generator</title>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
+<script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root{
       --border:#d7dbe0;
@@ -216,12 +215,12 @@
     <div class="grid">
       <div class="field full">
         <label>Company Name</label>
-        <input id="companyName" value="Dataknobs" />
+        <input id="companyName" value="Dataknobs"/>
       </div>
 
       <div class="field full">
         <label>Company Logo (PNG/JPG)</label>
-        <input id="companyLogo" type="file" accept="image/*" />
+        <input accept="image/*" id="companyLogo" type="file"/>
       </div>
 
       <div class="actions" style="margin-top:0;">
@@ -236,12 +235,12 @@ Faridabad India</textarea>
 
       <div class="field">
         <label>Pay Period</label>
-        <input id="payPeriod" value="February 2026" placeholder="e.g., February 2026" />
+        <input id="payPeriod" placeholder="e.g., February 2026" value="February 2026"/>
       </div>
 
       <div class="field">
         <label>Pay Date</label>
-        <input id="payDate" type="text" value="07/10/2025" placeholder="DD/MM/YYYY" inputmode="numeric" />
+        <input id="payDate" inputmode="numeric" placeholder="DD/MM/YYYY" type="text" value="07/10/2025"/>
       </div>
     </div>
 
@@ -249,11 +248,11 @@ Faridabad India</textarea>
     <div class="grid">
       <div class="field">
         <label>Employee Name</label>
-        <input id="employeeName" value="Vinayak Gaikar" />
+        <input id="employeeName" value="Vinayak Gaikar"/>
       </div>
       <div class="field">
         <label>Employee ID</label>
-        <input id="employeeId" value="14" />
+        <input id="employeeId" value="14"/>
       </div>
 
     </div>
@@ -262,15 +261,15 @@ Faridabad India</textarea>
     <div class="grid">
       <div class="field">
         <label>Basic (₹)</label>
-        <input id="basic" type="number" value="25000" min="0" step="0.01" />
+        <input id="basic" min="0" step="0.01" type="number" value="25000"/>
       </div>
       <div class="field">
         <label>House Rent Allowance (₹)</label>
-        <input id="hra" type="number" value="0" min="0" step="0.01" />
+        <input id="hra" min="0" step="0.01" type="number" value="0"/>
       </div>
       <div class="field full">
         <label>Other Earnings (₹)</label>
-        <input id="otherEarnings" type="number" value="0" min="0" step="0.01" />
+        <input id="otherEarnings" min="0" step="0.01" type="number" value="0"/>
       </div>
     </div>
 
@@ -278,15 +277,15 @@ Faridabad India</textarea>
     <div class="grid">
       <div class="field">
         <label>Income Tax (₹)</label>
-        <input id="incomeTax" type="number" value="0" min="0" step="0.01" />
+        <input id="incomeTax" min="0" step="0.01" type="number" value="0"/>
       </div>
       <div class="field">
         <label>Provident Fund (₹)</label>
-        <input id="pf" type="number" value="0" min="0" step="0.01" />
+        <input id="pf" min="0" step="0.01" type="number" value="0"/>
       </div>
       <div class="field full">
         <label>Other Deductions (₹)</label>
-        <input id="otherDeductions" type="number" value="0" min="0" step="0.01" />
+        <input id="otherDeductions" min="0" step="0.01" type="number" value="0"/>
       </div>
     </div>
 
@@ -296,20 +295,21 @@ Faridabad India</textarea>
     </div>
   </section>
 
-  <section class="panel sheet-wrap" aria-label="Payslip preview">
-    <div id="payslip" class="sheet">
+  <section aria-label="Payslip preview" class="panel sheet-wrap">
+    <div class="sheet" id="payslip">
       <div class="tiny-top">Simplify payroll and compliance - Dataknobs</div>
 
       <div class="brand">
         <div style="display:flex; gap:14px; align-items:flex-start;">
           <div class="logoBox">
-            <img id="vCompanyLogo" alt="Company logo" />
-            <div id="vLogoPlaceholder" class="logoPlaceholder">No Logo</div>
+            <img alt="Company logo" id="vCompanyLogo"/>
+            <div class="logoPlaceholder" id="vLogoPlaceholder">No Logo</div>
           </div>
 
           <div>
             <p class="company" id="vCompanyName">Dataknobs</p>
-            <p class="addr" id="vCompanyAddress">RPS Auria, Flat No-102, Tower - T2, First floor&#10;Faridabad India</p>
+            <p class="addr" id="vCompanyAddress">RPS Auria, Flat No-102, Tower - T2, First floor
+Faridabad India</p>
           </div>
         </div>
 
@@ -375,7 +375,58 @@ Faridabad India</textarea>
       <div class="foot">-- This is a system-generated document. --</div>
     </div>
   </section>
-</main>
+<footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatebots-for-cpa.html">For CPAs</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+					websites-for-business
+					     <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/websites-for-business.html">Website for Business Search Dominance</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer></main>
 
 <script>
   // ---------- Helpers ----------
@@ -649,5 +700,6 @@ Faridabad India</textarea>
 
   updatePreview();
 </script>
-</body>
-</html>
+
+
+</body></html>
