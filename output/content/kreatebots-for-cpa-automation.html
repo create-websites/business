@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Kreatebots for CPA Firms | AI Assistants for Accounting Teams</title>
+  <meta content="Automate client communication, document collection, and repetitive workflows for your CPA firm with AI assistants from Kreatebots. Responsive, polished, and conversion-focused homepage." name="description"/>
+  <style>
+    :root {
+      --blue-900: #17379f;
+      --blue-700: #1d4ed8;
+      --blue-600: #2563eb;
+      --blue-500: #3b82f6;
+      --green-500: #22c55e;
+      --green-600: #16a34a;
+      --amber-400: #fbbf24;
+      --slate-950: #0f172a;
+      --slate-900: #172033;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --white: #ffffff;
+      --shadow-xl: 0 28px 70px rgba(15, 23, 42, 0.12);
+      --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.06);
+      --radius-2xl: 32px;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --max-width: 1200px;
+      --transition: 220ms ease;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--slate-950);
+      background: var(--white);
+      line-height: 1.5;
+    }
+
+    body.menu-open { overflow: hidden; }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .section { padding: 92px 0; }
+    .section-alt { background: linear-gradient(180deg, #fbfdff 0%, #f8fafc 100%); }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid rgba(37, 99, 235, 0.16);
+      background: rgba(37, 99, 235, 0.06);
+      color: var(--blue-700);
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3, h4, p { margin: 0; }
+    h1 {
+      font-size: clamp(2.75rem, 5vw, 4.25rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 3.8vw, 2.9rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
+
+    h3 {
+      font-size: 1.35rem;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .lead {
+      font-size: 1.125rem;
+      color: var(--slate-600);
+      max-width: 680px;
+    }
+
+    .muted { color: var(--slate-600); }
+    .text-white { color: var(--white); }
+
+    .btn-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 0 22px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 15px;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition), border-color var(--transition), opacity var(--transition);
+      cursor: pointer;
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.18) 50%, transparent 80%);
+      transform: translateX(-120%);
+      transition: transform 600ms ease;
+    }
+
+    .btn:hover::after { transform: translateX(120%); }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green-500), var(--green-600));
+      color: var(--white);
+      box-shadow: 0 14px 30px rgba(34, 197, 94, 0.24);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.94);
+      color: var(--slate-950);
+      border-color: var(--slate-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-dark {
+      background: rgba(15,23,42,0.08);
+      color: var(--white);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .btn-secondary:hover { border-color: var(--blue-600); color: var(--blue-700); }
+    .btn-primary:hover { box-shadow: 0 18px 36px rgba(34, 197, 94, 0.3); }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(255,255,255,0.84);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.82);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.25);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: var(--slate-700);
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .nav-links a { position: relative; }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 100%;
+      height: 2px;
+      background: var(--blue-600);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 200ms ease;
+    }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .menu-toggle {
+      display: none;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      cursor: pointer;
+      padding: 0;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .menu-toggle span,
+    .menu-toggle::before,
+    .menu-toggle::after {
+      content: "";
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--slate-900);
+      border-radius: 999px;
+      transition: transform 220ms ease, opacity 220ms ease;
+      position: absolute;
+    }
+    .menu-toggle span { position: absolute; }
+    .menu-toggle::before { transform: translateY(-6px); }
+    .menu-toggle::after { transform: translateY(6px); }
+    .menu-toggle.active span { opacity: 0; }
+    .menu-toggle.active::before { transform: rotate(45deg); }
+    .menu-toggle.active::after { transform: rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 78px 0 auto 0;
+      background: rgba(255,255,255,0.98);
+      border-bottom: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-lg);
+      padding: 18px 20px 24px;
+      z-index: 55;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 14px 4px;
+      font-weight: 700;
+      color: var(--slate-800);
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu.open { display: block; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 52px 0 96px;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(34,197,94,0.12), transparent 24%),
+        radial-gradient(circle at 92% 10%, rgba(37, 99, 235, 0.14), transparent 28%),
+        linear-gradient(180deg, #ffffff 0%, #f6fbff 100%);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(8px);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 220px;
+      height: 220px;
+      background: rgba(37,99,235,0.08);
+      top: 40px;
+      right: -60px;
+    }
+
+    .hero::after {
+      width: 180px;
+      height: 180px;
+      background: rgba(34,197,94,0.08);
+      bottom: 30px;
+      left: -50px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 42px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy .sub-points {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .sub-point {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(226,232,240,0.9);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .check {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.14);
+      color: var(--green-600);
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      flex: 0 0 auto;
+      margin-top: 2px;
+      font-weight: 900;
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: var(--shadow-xl);
+      border-radius: var(--radius-2xl);
+      padding: 24px;
+      position: relative;
+    }
+
+    .floating-badge {
+      position: absolute;
+      top: -16px;
+      right: 20px;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .chat-shell {
+      background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid #dbeafe;
+    }
+
+    .chat-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid #dbeafe;
+      background: rgba(255,255,255,0.75);
+    }
+
+    .chat-title {
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--green-500);
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12);
+    }
+
+    .chat-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      min-height: 350px;
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      font-size: 15px;
+      box-shadow: var(--shadow-sm);
+      animation: floatIn 500ms ease both;
+    }
+
+    .bubble.ai {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      justify-self: start;
+      border-bottom-left-radius: 6px;
+    }
+
+    .bubble.user {
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+      color: var(--white);
+      justify-self: end;
+      border-bottom-right-radius: 6px;
+    }
+
+    .mini-panel {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .mini-stat {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--slate-200);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      text-align: center;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 4px;
+      color: var(--blue-700);
+    }
+
+    .trust-bar {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+      align-items: center;
+      padding: 20px 22px;
+      border: 1px solid var(--slate-200);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.94);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .trust-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .logo-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--slate-200);
+      background: var(--white);
+      color: var(--slate-700);
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .cards-grid { display: grid; gap: 22px; }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .card {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border: 1px solid var(--slate-200);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(37, 99, 235, 0.22);
+    }
+
+    .icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--blue-700);
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--slate-200);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .workflow {
+      background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+      border: 1px solid #dbeafe;
+      padding: 26px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .workflow::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(37,99,235,0.18), transparent 65%);
+      border-radius: 999px;
+    }
+
+    .workflow-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.65);
+      position: relative;
+      z-index: 1;
+    }
+
+    .workflow-step:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+      color: var(--white);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      flex: 0 0 auto;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.22);
+    }
+
+    .demo-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .video-frame {
+      margin-top: 28px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(37, 99, 235, 0.18);
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      min-height: 480px;
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow-xl);
+      position: relative;
+      isolation: isolate;
+    }
+
+    .video-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(37,99,235,0.3), transparent 30%),
+        linear-gradient(180deg, rgba(15,23,42,0.1), rgba(15,23,42,0.35));
+      z-index: -1;
+    }
+
+    .video-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at center, black, transparent 70%);
+      opacity: 0.45;
+    }
+
+    .play-button {
+      position: relative;
+      z-index: 1;
+      width: 96px;
+      height: 96px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: var(--white);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+      font-size: 34px;
+      color: var(--blue-700);
+      cursor: pointer;
+      transition: transform 220ms ease;
+    }
+
+    .play-button:hover { transform: scale(1.06); }
+
+    .video-caption {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      text-align: left;
+      color: rgba(255,255,255,0.92);
+      max-width: 420px;
+      z-index: 1;
+    }
+
+    .demo-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .testimonial {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .testimonial::before {
+      content: "“";
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      font-size: 90px;
+      line-height: 1;
+      color: rgba(255,255,255,0.08);
+      font-weight: 900;
+    }
+
+    .stars {
+      color: var(--amber-400);
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1;
+      margin-bottom: 12px;
+      color: var(--blue-700);
+    }
+
+    .comparison {
+      overflow-x: auto;
+      border: 1px solid var(--slate-200);
+      border-radius: 24px;
+      box-shadow: var(--shadow-sm);
+      background: var(--white);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th, td {
+      padding: 18px 22px;
+      text-align: left;
+      border-bottom: 1px solid var(--slate-200);
+      font-size: 15px;
+    }
+
+    th {
+      background: var(--slate-50);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--slate-700);
+    }
+
+    tbody tr:nth-child(even) td { background: rgba(248,250,252,0.65); }
+    td.center { text-align: center; font-weight: 700; }
+    .yes { color: var(--green-600); }
+    .no { color: #dc2626; }
+
+    .faq-list {
+      display: grid;
+      gap: 14px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    details {
+      border: 1px solid var(--slate-200);
+      border-radius: 18px;
+      padding: 0 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      box-shadow: var(--shadow-sm);
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      font-weight: 800;
+      padding: 20px 0;
+      position: relative;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: "+";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      color: var(--blue-700);
+    }
+
+    details[open] summary::after { content: "−"; }
+    details p { padding: 0 0 20px; color: var(--slate-600); }
+
+    .form-shell {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 0;
+      align-items: stretch;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 30px;
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+
+    .form-copy {
+      padding: 40px;
+      background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+      position: relative;
+    }
+
+    .form-copy::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(37,99,235,0.16), transparent 65%);
+    }
+
+    .form-copy ul {
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-copy li {
+      display: flex;
+      gap: 12px;
+      color: var(--slate-700);
+      font-weight: 600;
+    }
+
+    .form-card { padding: 40px; }
+
+    form { display: grid; gap: 16px; }
+
+    label {
+      display: grid;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-700);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--slate-300);
+      padding: 0 14px;
+      font: inherit;
+      color: var(--slate-950);
+      background: var(--white);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    }
+
+    textarea {
+      min-height: 128px;
+      padding-top: 14px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .form-success {
+      display: none;
+      margin-top: 10px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      color: var(--green-600);
+      font-weight: 700;
+    }
+
+    .fine-print {
+      font-size: 13px;
+      color: var(--slate-600);
+    }
+
+    .final-cta {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-600));
+      color: var(--white);
+      border-radius: 30px;
+      padding: 46px;
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-cta::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 65%);
+    }
+
+    .final-cta .lead,
+    .final-cta .muted {
+      color: rgba(255,255,255,0.82);
+    }
+
+    .site-footer {
+      padding: 28px 0 42px;
+      color: var(--slate-600);
+      font-size: 14px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--slate-200);
+      padding-top: 24px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .split,
+      .form-shell,
+      .trust-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .trust-logos { justify-content: flex-start; }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3, .demo-points, .mini-panel { grid-template-columns: 1fr; }
+      .hero-copy .sub-points { grid-template-columns: 1fr; }
+      .final-cta { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 760px) {
+      .section { padding: 72px 0; }
+      .container { width: min(calc(100% - 24px), var(--max-width)); }
+      .nav { min-height: 72px; }
+      .nav-links, .nav > .btn { display: none; }
+      .menu-toggle { display: inline-flex; position: relative; }
+      .grid-4, .grid-2 { grid-template-columns: 1fr; }
+      .hero { padding: 28px 0 68px; }
+      .hero-card, .form-copy, .form-card, .final-cta { padding: 24px; }
+      .video-frame { min-height: 320px; }
+      .btn, .btn-row a, .btn-row button { width: 100%; }
+      .btn-row { flex-direction: column; }
+      .mini-panel { margin-top: 12px; }
+      .video-caption { left: 18px; right: 18px; bottom: 18px; }
+      .play-button { width: 78px; height: 78px; font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a aria-label="Kreatebots home" class="brand" href="#top">
+        <span class="brand-mark">K</span>
+        <span>Kreatebots</span>
+      </a>
+      <nav aria-label="Primary navigation" class="nav-links">
+        <a href="#use-cases">Use Cases</a>
+        <a href="#demo">Demo</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn btn-primary" href="#audit">Get Free Audit</a>
+      <button aria-controls="mobile-menu" aria-expanded="false" aria-label="Open menu" class="menu-toggle" type="button"><span></span></button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="container">
+      <a href="#use-cases">Use Cases</a>
+      <a href="#demo">Demo</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#audit">Get Free Audit</a>
+    </div>
+  </div>
+
+  <main id="top">
+    <section class="hero reveal">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Built for CPA firms and accounting teams</div>
+          <h1>Automate 70% of Your CPA Firm’s Client Work with AI Assistants</h1>
+          <p class="lead" style="margin-top: 18px;">
+            Kreatebots helps CPA firms answer client questions, collect W-2s and 1099s, follow up on missing documents, and qualify new leads—without adding headcount.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#audit">Get Your Free CPA Audit</a>
+            <a class="btn btn-secondary" href="#demo">Watch Demo</a>
+          </div>
+          <div class="hero-copy sub-points">
+            <div class="sub-point">
+              <span class="check">✓</span>
+              <div>
+                <strong>Faster client response times</strong>
+                <p class="muted">Handle repetitive questions instantly, 24/7.</p>
+              </div>
+            </div>
+            <div class="sub-point">
+              <span class="check">✓</span>
+              <div>
+                <strong>Less admin during tax season</strong>
+                <p class="muted">Automate reminders, follow-ups, and document chasing.</p>
+              </div>
+            </div>
+            <div class="sub-point">
+              <span class="check">✓</span>
+              <div>
+                <strong>Done-for-you implementation</strong>
+                <p class="muted">We tailor the assistant around your firm’s workflow.</p>
+              </div>
+            </div>
+            <div class="sub-point">
+              <span class="check">✓</span>
+              <div>
+                <strong>No technical team required</strong>
+                <p class="muted">Your staff can use it without code or complex setup.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="hero-card">
+            <div class="floating-badge">Tax season ready in days</div>
+            <div class="chat-shell">
+              <div class="chat-topbar">
+                <div class="chat-title"><span class="dot"></span> CPA Client Assistant</div>
+                <span class="muted">Live now</span>
+              </div>
+              <div class="chat-body">
+                <div class="bubble ai">Hi Sarah — I’m helping your CPA team finalize your tax documents. I still need your W-2 and one 1099.</div>
+                <div class="bubble user">Can you remind me what forms I still need to upload?</div>
+                <div class="bubble ai">You still need: 1) W-2 from Acme Inc. 2) 1099-INT from your bank. I can send you a secure upload link right now.</div>
+                <div class="bubble user">Yes, send the link and remind me tomorrow if I forget.</div>
+                <div class="bubble ai">Done. I’ve sent the upload link and scheduled a reminder for tomorrow at 10:00 AM.</div>
+              </div>
+            </div>
+            <div class="mini-panel">
+              <div class="mini-stat">
+                <strong>24/7</strong>
+                <span class="muted">client replies</span>
+              </div>
+              <div class="mini-stat">
+                <strong>50–70%</strong>
+                <span class="muted">less repetitive work</span>
+              </div>
+              <div class="mini-stat">
+                <strong>Days</strong>
+                <span class="muted">to launch</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="trust-bar">
+          <div>
+            <strong>Used by service businesses that need fast, accurate client automation</strong>
+            <p class="muted" style="margin-top: 8px;">Ideal for tax prep, bookkeeping, client onboarding, and recurring document collection.</p>
+          </div>
+          <div aria-label="Example customer categories" class="trust-logos">
+            <span class="logo-pill">CPA Firms</span>
+            <span class="logo-pill">Bookkeeping Teams</span>
+            <span class="logo-pill">Tax Advisors</span>
+            <span class="logo-pill">Accounting Ops</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt reveal">
+      <div class="container">
+        <div style="max-width: 760px; margin-bottom: 28px;">
+          <div class="eyebrow">The problem</div>
+          <h2>Your Team Is Drowning in Repetitive Client Work</h2>
+          <p class="lead">Your staff should be focused on advisory and high-value accounting work—not chasing documents and answering the same client questions every day.</p>
+        </div>
+        <div class="cards-grid grid-4">
+          <article class="card">
+            <div class="icon-box">📄</div>
+            <h3>Chasing documents</h3>
+            <p class="muted">Teams spend hours requesting W-2s, 1099s, receipts, and missing information.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">💬</div>
+            <h3>Repeating answers</h3>
+            <p class="muted">Clients ask the same deadline, filing, and process questions over and over.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">⏰</div>
+            <h3>Seasonal overload</h3>
+            <p class="muted">Tax season spikes create response delays, bottlenecks, and staff burnout.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">📬</div>
+            <h3>Manual follow-ups</h3>
+            <p class="muted">Email reminders and onboarding steps slip through the cracks when volume climbs.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="container split">
+        <div>
+          <div class="eyebrow">The solution</div>
+          <h2>Meet Your AI Assistant for CPA Workflows</h2>
+          <p class="lead">Kreatebots gives your firm a production-ready AI assistant that handles the repetitive work around client communication and intake.</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <div>
+                <strong>Answer common tax and accounting questions instantly</strong>
+                <p class="muted">Reduce interruptions while keeping clients informed.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <div>
+                <strong>Automatically request and track missing documents</strong>
+                <p class="muted">Stay ahead of incomplete submissions without manual chasing.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <div>
+                <strong>Qualify inbound leads and route the best-fit prospects</strong>
+                <p class="muted">Turn website traffic into booked consultations.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="check">✓</span>
+              <div>
+                <strong>Go live fast with done-for-you setup</strong>
+                <p class="muted">We tailor the assistant to your firm’s workflow, FAQs, and service model.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div aria-label="Workflow overview" class="workflow">
+          <h3 style="margin-bottom: 10px;">How it works</h3>
+          <p class="muted" style="margin-bottom: 8px;">A simple implementation flow your team can start using in days.</p>
+          <div class="workflow-step">
+            <div class="step-num">1</div>
+            <div>
+              <strong>Map your workflows</strong>
+              <p class="muted">We identify where your firm loses time across onboarding, document collection, and client FAQs.</p>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">2</div>
+            <div>
+              <strong>Train your assistant</strong>
+              <p class="muted">We configure the assistant using your services, process steps, and standard responses.</p>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">3</div>
+            <div>
+              <strong>Launch and automate</strong>
+              <p class="muted">Your assistant starts handling repetitive work while your team focuses on clients and revenue.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="demo">
+      <div class="container demo-wrap">
+        <div class="eyebrow">Product demo</div>
+        <h2>See How CPA Firms Automate Client Work</h2>
+        <p class="lead" style="margin: 0 auto;">Show prospects exactly how the assistant collects forms, answers questions, and sends reminders before tax season gets overwhelming.</p>
+        <div aria-label="Demo video placeholder" class="video-frame">
+          <div class="video-grid"></div>
+          <button aria-label="Play demo video" class="play-button" type="button">▶</button>
+          <div class="video-caption">
+            <strong style="display:block; font-size:1.1rem; margin-bottom:8px;">2-minute product walkthrough</strong>
+            <span>Show prospects how Kreatebots collects tax documents, answers common questions, and follows up automatically.</span>
+          </div>
+        </div>
+        <div class="demo-points">
+          <div class="card">
+            <h3>Collect W-2s and 1099s</h3>
+            <p class="muted">Automatically request missing documents and guide clients to the next step.</p>
+          </div>
+          <div class="card">
+            <h3>Answer tax workflow questions</h3>
+            <p class="muted">Reduce repetitive client emails with instant, consistent responses.</p>
+          </div>
+          <div class="card">
+            <h3>Follow up without your staff</h3>
+            <p class="muted">Trigger reminders and keep clients moving toward completion.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="use-cases">
+      <div class="container">
+        <div style="max-width: 720px; margin-bottom: 28px;">
+          <div class="eyebrow">Use cases</div>
+          <h2>Built for Real CPA Workflows</h2>
+          <p class="lead">From tax prep to onboarding, the assistant handles the repetitive touchpoints that slow your firm down.</p>
+        </div>
+        <div class="cards-grid grid-2">
+          <article class="card">
+            <div class="icon-box">📂</div>
+            <h3>Document collection</h3>
+            <p class="muted">Request W-2s, 1099s, receipts, and other required documents automatically.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">📞</div>
+            <h3>Client communication</h3>
+            <p class="muted">Answer FAQs around deadlines, next steps, and filing requirements instantly.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">🧲</div>
+            <h3>Lead qualification</h3>
+            <p class="muted">Capture and qualify inbound leads before routing them to your team.</p>
+          </article>
+          <article class="card">
+            <div class="icon-box">📅</div>
+            <h3>Scheduling and onboarding</h3>
+            <p class="muted">Automate consultation booking, intake, and first-touch onboarding steps.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt reveal">
+      <div class="container">
+        <div style="max-width: 720px; margin-bottom: 28px;">
+          <div class="eyebrow">Results</div>
+          <h2>CPA Firms Are Already Saving Hours Every Week</h2>
+          <p class="lead">Frame results around operational efficiency, response speed, and more time for advisory work.</p>
+        </div>
+        <div class="cards-grid grid-3">
+          <article class="card testimonial">
+            <div class="stars">★★★★★</div>
+            <p style="font-size:1.05rem; line-height:1.7; margin-bottom:18px; max-width: 30ch;">Kreatebots helps us stay ahead of client follow-ups and document collection without adding admin overhead during busy periods.</p>
+            <strong style="display:block;">Managing Partner</strong>
+            <span style="color:rgba(255,255,255,0.72);">Mid-sized tax and advisory firm</span>
+          </article>
+          <article class="card stat-card">
+            <strong>50–70%</strong>
+            <p class="muted">reduction in repetitive communication and admin work</p>
+          </article>
+          <article class="card stat-card">
+            <strong>24/7</strong>
+            <p class="muted">response coverage for client questions and reminders</p>
+          </article>
+          <article class="card stat-card">
+            <strong>Days</strong>
+            <p class="muted">to launch a tailored assistant for your firm</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="container">
+        <div style="max-width: 760px; margin-bottom: 28px;">
+          <div class="eyebrow">Why Kreatebots</div>
+          <h2>Why Not Just Use ChatGPT or Zapier?</h2>
+          <p class="lead">Generic tools still require your team to stitch everything together. Kreatebots is focused on deployment, workflow fit, and real business outcomes.</p>
+        </div>
+        <div class="comparison">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Kreatebots</th>
+                <th>Generic AI tools</th>
+                <th>DIY automation stacks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Done-for-you setup</td>
+                <td class="center yes">✓</td>
+                <td class="center no">✕</td>
+                <td class="center no">✕</td>
+              </tr>
+              <tr>
+                <td>CPA workflow customization</td>
+                <td class="center yes">✓</td>
+                <td class="center no">✕</td>
+                <td class="center yes">Partial</td>
+              </tr>
+              <tr>
+                <td>Production-ready assistant</td>
+                <td class="center yes">✓</td>
+                <td class="center no">✕</td>
+                <td class="center no">Depends on implementation</td>
+              </tr>
+              <tr>
+                <td>Non-technical team friendly</td>
+                <td class="center yes">✓</td>
+                <td class="center yes">Partial</td>
+                <td class="center no">✕</td>
+              </tr>
+              <tr>
+                <td>Lead capture + client communication</td>
+                <td class="center yes">✓</td>
+                <td class="center yes">Partial</td>
+                <td class="center yes">Partial</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="pricing">
+      <div class="container">
+        <div style="max-width: 760px; margin-bottom: 28px;">
+          <div class="eyebrow">Pricing</div>
+          <h2>Simple Plans for Firms at Every Stage</h2>
+          <p class="lead">Start small, launch with a done-for-you package, or scale across multiple workflows.</p>
+        </div>
+        <div class="cards-grid grid-3">
+          <article class="card">
+            <div class="icon-box">🚀</div>
+            <h3>Starter</h3>
+            <p class="muted" style="margin-bottom: 14px;">For small firms testing automation.</p>
+            <p><strong>$49–$199/mo</strong></p>
+          </article>
+          <article class="card" style="border-color: rgba(34,197,94,0.35); box-shadow: var(--shadow-md);">
+            <div class="icon-box" style="background: rgba(34,197,94,0.12); color: var(--green-600);">⭐</div>
+            <h3>Growth</h3>
+            <p class="muted" style="margin-bottom: 14px;">Done-for-you setup for your firm’s workflow.</p>
+            <p><strong>$2K–$5K setup + SaaS</strong></p>
+          </article>
+          <article class="card">
+            <div class="icon-box">🏢</div>
+            <h3>Enterprise</h3>
+            <p class="muted" style="margin-bottom: 14px;">Custom multi-assistant deployments.</p>
+            <p><strong>Custom pricing</strong></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div style="max-width: 760px; margin: 0 auto 28px; text-align: center;">
+          <div class="eyebrow">FAQ</div>
+          <h2>Common Questions from CPA Firms</h2>
+          <p class="lead" style="margin: 0 auto;">Address the key objections before your prospect leaves the page.</p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Will this replace my team?</summary>
+            <p>No. Kreatebots handles repetitive tasks so your team can spend more time on advisory, client relationships, and higher-value work.</p>
+          </details>
+          <details>
+            <summary>Is this secure for financial data?</summary>
+            <p>The platform is designed around secure business workflows. You can adapt this section to match your exact compliance and security posture before launch.</p>
+          </details>
+          <details>
+            <summary>How long does implementation take?</summary>
+            <p>Most assistants can be launched within days once your workflow, FAQs, and document flow are mapped.</p>
+          </details>
+          <details>
+            <summary>Can it integrate with my current tools?</summary>
+            <p>Yes. This section can be updated with your exact CRM, scheduling, or document-management integrations.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="audit">
+      <div class="container">
+        <div class="form-shell">
+          <div class="form-copy">
+            <div class="eyebrow">Free offer</div>
+            <h2>Get Your Free CPA Workflow Audit</h2>
+            <p class="lead">We’ll review your current workflow and show exactly where AI can save your team time.</p>
+            <ul>
+              <li><span class="check">✓</span><span>Identify which client interactions can be automated first</span></li>
+              <li><span class="check">✓</span><span>Estimate time savings per week for your team</span></li>
+              <li><span class="check">✓</span><span>Show a live demo tailored to your firm’s workflow</span></li>
+            </ul>
+          </div>
+          <div class="form-card">
+            <form>
+              <label>
+                Full name
+                <input name="name" placeholder="Jane Smith" type="text"/>
+              </label>
+              <label>
+                Work email
+                <input name="email" placeholder="jane@firm.com" type="email"/>
+              </label>
+              <label>
+                Firm size
+                <select name="firm-size">
+                  <option value="">Select firm size</option>
+                  <option>1–5 employees</option>
+                  <option>6–20 employees</option>
+                  <option>21–50 employees</option>
+                  <option>50+ employees</option>
+                </select>
+              </label>
+              <label>
+                Biggest bottleneck
+                <textarea name="bottleneck" placeholder="Example: We spend too much time collecting tax documents and replying to repetitive client emails."></textarea>
+              </label>
+              <button class="btn btn-primary" type="submit">Book Free Audit</button>
+              <div class="form-success" id="form-success">Thanks — your audit request is ready. Connect this form to your CRM or scheduling tool.</div>
+              <p class="fine-print">No commitment required. We’ll show you what can be automated and where to start.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="container">
+        <div class="final-cta">
+          <div>
+            <h2 style="margin-bottom: 12px;">Stop Chasing Clients. Start Automating.</h2>
+            <p class="lead">Deploy an AI assistant that helps your CPA firm respond faster, collect documents, and reduce admin overhead.</p>
+          </div>
+          <div class="btn-row" style="margin-top: 0;">
+            <a class="btn btn-primary" href="#audit">Get Free Audit</a>
+            <a class="btn btn-secondary" href="#demo">Watch Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatebots-for-cpa.html">For CPAs</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+					websites-for-business
+					     <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/websites-for-business.html">Website for Business Search Dominance</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
+
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('open');
+        menuToggle.classList.toggle('active', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        document.body.classList.toggle('menu-open', isOpen);
+      });
+
+      mobileLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('open');
+          menuToggle.classList.remove('active');
+          menuToggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('menu-open');
+        });
+      });
+    }
+
+    const revealItems = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealItems.forEach((item) => observer.observe(item));
+
+    const form = document.querySelector('form');
+    const successMessage = document.getElementById('form-success');
+    if (form && successMessage) {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        successMessage.style.display = 'block';
+        form.reset();
+      });
+    }
+  </script>
+
+
+</body></html>

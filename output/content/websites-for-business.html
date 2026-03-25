@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>KreateWebsites | AI Websites That Rank on Google</title>
+  <meta content="KreateWebsites builds, runs, and continuously optimizes your website with AI so it ranks higher on Google and brings you more customers." name="description"/>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121933;
+      --card: #ffffff;
+      --text: #101828;
+      --muted: #475467;
+      --white: #ffffff;
+      --line: #e4e7ec;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #eff6ff;
+      --success: #12b76a;
+      --shadow: 0 20px 45px rgba(16, 24, 40, 0.12);
+      --radius: 18px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #f8fafc;
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .btn-light {
+      background: var(--white);
+      color: var(--primary);
+      border-color: var(--line);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    header.hero {
+      background: radial-gradient(circle at top right, rgba(37,99,235,0.35), transparent 32%), linear-gradient(135deg, var(--bg) 0%, #111827 55%, #0f172a 100%);
+      color: var(--white);
+      padding: 28px 0 82px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 8px 0 26px;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      color: rgba(255,255,255,0.86);
+      font-weight: 500;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4.3rem);
+      line-height: 1.05;
+      margin: 18px 0 18px;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .hero p.lead {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.84);
+      max-width: 60ch;
+      margin-bottom: 28px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .hero-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .proof-card, .panel, .feature, .metric, .testimonial, .price-card, .segment, .step, .compare-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero .proof-card {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: none;
+      padding: 16px;
+    }
+
+    .proof-card strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .hero-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.08));
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.22);
+    }
+
+    .mini-chart {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: end;
+      gap: 8px;
+      height: 180px;
+      margin: 22px 0;
+    }
+
+    .mini-chart span {
+      display: block;
+      border-radius: 12px 12px 4px 4px;
+      background: linear-gradient(180deg, #93c5fd, #2563eb);
+    }
+
+    section {
+      padding: 76px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 42px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 3.8vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 0 0 12px;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .feature, .metric, .testimonial, .segment, .step, .compare-card, .price-card {
+      padding: 28px;
+    }
+
+    .feature h3, .segment h3, .step h3, .compare-card h3, .price-card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.25rem;
+    }
+
+    .feature ul, .price-card ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .highlight {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .band {
+      background: #ffffff;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logos {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: center;
+    }
+
+    .logo-item {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      color: #667085;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .steps {
+      counter-reset: step;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--primary);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .compare-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .compare-card li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .compare-card li:last-child { border-bottom: 0; }
+
+    .compare-bad { border-top: 6px solid #f04438; }
+    .compare-good { border-top: 6px solid var(--success); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .price-card.featured {
+      border-color: #bfdbfe;
+      transform: translateY(-6px);
+      box-shadow: 0 30px 60px rgba(37, 99, 235, 0.14);
+    }
+
+    .price {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 14px 0 8px;
+    }
+
+    .price small {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .testimonial blockquote {
+      margin: 0 0 18px;
+      font-size: 1.06rem;
+      color: #101828;
+    }
+
+    .testimonial .author {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .cta-band {
+      background: linear-gradient(135deg, #1d4ed8, #0f172a);
+      color: var(--white);
+      border-radius: 28px;
+      padding: 44px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    footer {
+      padding: 34px 0 60px;
+      color: #667085;
+      font-size: 14px;
+    }
+
+    .floating-banner {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #111827;
+      color: var(--white);
+      text-align: center;
+      padding: 12px 16px;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .floating-banner a { color: #93c5fd; }
+
+    @media (max-width: 960px) {
+      .hero-grid,
+      .grid-3,
+      .grid-2,
+      .comparison,
+      .pricing-grid,
+      .cta-band,
+      .logos {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-proof {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links { display: none; }
+      .price-card.featured { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-banner">
+    🔥 See how KreateWebsites helps sites rank in 7–14 days. <a href="#demo">Book a live demo</a>
+  </div>
+
+  <header class="hero">
+    <div class="container">
+      <nav>
+        <div class="brand">KreateWebsites</div>
+        <div class="nav-links">
+          <a href="#how-it-works">How it Works</a>
+          <a href="#results">Results</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#demo">Demo</a>
+        </div>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="pill">AI websites that rank, update, and grow automatically</div>
+          <h1>Your Website That Ranks on Google and Brings You Customers</h1>
+          <p class="lead">
+            KreateWebsites does not just build your website. It continuously updates, optimizes, and improves it with AI so your business ranks higher on Google and generates more leads.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#demo">See Live Demo</a>
+            <a class="btn btn-secondary" href="#pricing">Start Free Trial</a>
+          </div>
+          <div class="hero-proof">
+            <div class="proof-card">
+              <strong>Top 3</strong>
+              <span>Google ranking proof for real business sites</span>
+            </div>
+            <div class="proof-card">
+              <strong>24/7</strong>
+              <span>AI keeps your site updated and optimized</span>
+            </div>
+            <div class="proof-card">
+              <strong>$49/mo</strong>
+              <span>Start simple and scale with managed help</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+            <div>
+              <div style="font-size:14px;opacity:.8;">Live ranking snapshot</div>
+              <div style="font-size:24px;font-weight:800;">CPA Firm in Austin</div>
+            </div>
+            <div style="padding:8px 12px;border-radius:999px;background:rgba(18,183,106,.16);color:#bbf7d0;font-weight:700;">↑ Growing</div>
+          </div>
+          <div aria-hidden="true" class="mini-chart">
+            <span style="height: 24%;"></span>
+            <span style="height: 38%;"></span>
+            <span style="height: 51%;"></span>
+            <span style="height: 64%;"></span>
+            <span style="height: 76%;"></span>
+            <span style="height: 88%;"></span>
+            <span style="height: 100%;"></span>
+          </div>
+          <div class="grid-2">
+            <div style="background:rgba(255,255,255,.08);border-radius:18px;padding:18px;">
+              <div style="font-size:14px;opacity:.8;">Keyword Position</div>
+              <div style="font-size:34px;font-weight:800;">#3</div>
+              <div style="opacity:.8;">tax consultant austin</div>
+            </div>
+            <div style="background:rgba(255,255,255,.08);border-radius:18px;padding:18px;">
+              <div style="font-size:14px;opacity:.8;">Lead Growth</div>
+              <div style="font-size:34px;font-weight:800;">5x</div>
+              <div style="opacity:.8;">monthly inbound increase</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="band">
+    <div class="container">
+      <div class="logos">
+        <div class="logo-item">CPA Firms</div>
+        <div class="logo-item">Consultants</div>
+        <div class="logo-item">Agencies</div>
+        <div class="logo-item">Local Services</div>
+        <div class="logo-item">Startups</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2>Most Websites Exist. Very Few Generate Customers.</h2>
+        <p>Your business website should be your best salesperson, not a static brochure that nobody finds on Google.</p>
+      </div>
+      <div class="grid-3">
+        <div class="feature">
+          <h3>No traffic from Google</h3>
+          <p>Many business websites never rank for high-intent keywords, so they produce little or no inbound demand.</p>
+        </div>
+        <div class="feature">
+          <h3>SEO is slow and expensive</h3>
+          <p>Owners often depend on agencies, freelancers, and redesign cycles just to keep the site useful and updated.</p>
+        </div>
+        <div class="feature">
+          <h3>Static sites lose momentum</h3>
+          <p>Once launched, most sites go stale. They stop evolving, lose performance, and miss ranking opportunities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" style="background:#fff;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Meet the AI That Runs Your Website for Growth</h2>
+        <p>KreateWebsites combines website creation, continuous optimization, and AI-powered updates so your site keeps improving after launch.</p>
+      </div>
+      <div class="grid-3 steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Create your site in minutes</h3>
+          <p>Answer a few questions and generate a polished, business-ready website with the right pages, structure, and messaging.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>AI optimizes continuously</h3>
+          <p>Content, site speed, page structure, and SEO signals are continuously refined to improve visibility and performance.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Start ranking and converting</h3>
+          <p>Your website becomes a live growth engine that attracts high-intent search traffic and turns visitors into leads.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="container">
+      <div class="section-head">
+        <h2>See Results, Not Just Features</h2>
+        <p>Customers buy when they see websites ranking at the top of Google and watch strong designs go live quickly. Proof builds trust fast.</p>
+      </div>
+      <div class="grid-3">
+        <div class="metric">
+          <div class="pill" style="background:#eff6ff;color:#1d4ed8;border-color:#dbeafe;">Case study</div>
+          <h3>CPA Firm Ranking Top 3</h3>
+          <p>A professional services site climbs into the top search positions and starts generating qualified inbound interest.</p>
+        </div>
+        <div class="metric">
+          <div class="pill" style="background:#eff6ff;color:#1d4ed8;border-color:#dbeafe;">Lead generation</div>
+          <h3>5x Traffic Growth</h3>
+          <p>Continuous updates create compounding SEO improvements instead of a single launch-and-forget outcome.</p>
+        </div>
+        <div class="metric">
+          <div class="pill" style="background:#eff6ff;color:#1d4ed8;border-color:#dbeafe;">Speed to value</div>
+          <h3>Built Fast, Improved Daily</h3>
+          <p>Prospects can see a live site take shape fast, which shortens the path from demo to decision.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#fff;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Built for Businesses That Need Leads, Not Just a Website</h2>
+        <p>KreateWebsites works across industries, with especially strong fit for businesses where Google visibility directly drives revenue.</p>
+      </div>
+      <div class="grid-2">
+        <div class="segment">
+          <h3>Primary fit</h3>
+          <p><span class="highlight">Small businesses, CPAs, consultants, and finance firms</span> that need a steady stream of inbound leads without hiring a full SEO team.</p>
+        </div>
+        <div class="segment">
+          <h3>Growth fit</h3>
+          <p><span class="highlight">Agencies and multi-site operators</span> that want to launch faster, show measurable SEO impact, and manage more websites efficiently.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2>Not Just Another Website Builder</h2>
+        <p>Traditional platforms help you create pages. KreateWebsites helps you create demand.</p>
+      </div>
+      <div class="comparison">
+        <div class="compare-card compare-bad">
+          <h3>Typical Website Builders</h3>
+          <ul>
+            <li>Help you launch a site</li>
+            <li>SEO work stays manual</li>
+            <li>Sites become static quickly</li>
+            <li>Owners depend on agencies for updates</li>
+            <li>Migration and ongoing changes can be painful</li>
+          </ul>
+        </div>
+        <div class="compare-card compare-good">
+          <h3>KreateWebsites</h3>
+          <ul>
+            <li>Builds, runs, and improves your site with AI</li>
+            <li>SEO is part of the product, not an add-on</li>
+            <li>Continuous updates keep pages fresh</li>
+            <li>Designed to increase search visibility over time</li>
+            <li>Created to be fast, flexible, and business-focused</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" style="background:#fff;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Simple Pricing That Can Pay for Itself</h2>
+        <p>Start with an affordable monthly plan, then expand into advanced optimization, multi-site workflows, or custom work.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Starter</h3>
+          <div class="price">$49 <small>/ month</small></div>
+          <p>For small businesses ready to launch and start improving rankings.</p>
+          <ul>
+            <li>AI website builder</li>
+            <li>Continuous site updates</li>
+            <li>Core SEO optimization</li>
+            <li>Self-serve onboarding</li>
+          </ul>
+          <div style="margin-top:24px;"><a class="btn btn-light" href="#demo">Start Free Trial</a></div>
+        </div>
+        <div class="price-card featured">
+          <div class="pill" style="background:#eff6ff;color:#1d4ed8;border-color:#dbeafe;">Most Popular</div>
+          <h3>Growth</h3>
+          <div class="price">$99 <small>/ month</small></div>
+          <p>For companies that want faster SEO gains and clearer performance visibility.</p>
+          <ul>
+            <li>Everything in Starter</li>
+            <li>Advanced SEO automation</li>
+            <li>Analytics and insights</li>
+            <li>Priority optimization</li>
+          </ul>
+          <div style="margin-top:24px;"><a class="btn btn-primary" href="#demo">Book Demo</a></div>
+        </div>
+        <div class="price-card">
+          <h3>Pro</h3>
+          <div class="price">$199 <small>/ month</small></div>
+          <p>For agencies and multi-site operators managing several brands or clients.</p>
+          <ul>
+            <li>Multi-site management</li>
+            <li>Agency workflows</li>
+            <li>Scalable optimization</li>
+            <li>Optional custom work</li>
+          </ul>
+          <div style="margin-top:24px;"><a class="btn btn-light" href="#demo">Talk to Sales</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2>Testimonials</h2>
+        <p>Real stories. Real results.</p>
+      </div>
+      <div class="grid-3">
+        <div class="testimonial">
+          <blockquote>“I finally saw a website platform that does not stop at launch. It keeps improving after day one.”</blockquote>
+          <div class="author">Professional services buyer persona</div>
+        </div>
+        <div class="testimonial">
+          <blockquote>“The live ranking proof made the difference. It felt like growth software, not just another design tool.”</blockquote>
+          <div class="author">Small business owner</div>
+        </div>
+        <div class="testimonial">
+          <blockquote>“For agencies, the speed plus SEO angle is powerful. It helps us sell outcomes, not just websites.”</blockquote>
+          <div class="author">Agency operator</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="demo">
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <div class="pill">Book a live walkthrough</div>
+          <h2 style="font-size:clamp(2rem,3.8vw,3rem);line-height:1.1;letter-spacing:-0.03em;margin:18px 0 14px;">See How KreateWebsites Can Rank Your Business</h2>
+          <p style="margin:0;color:rgba(255,255,255,0.86);font-size:1.05rem;max-width:60ch;">
+            We will show you live ranking examples, how quickly your website can be created, and where your business can win on Google.
+          </p>
+        </div>
+        <div style="display:grid;gap:14px;">
+          <a class="btn btn-primary" href="mailto:sales@kreatewebsites.com?subject=Book%20a%20KreateWebsites%20Demo">Book a Live Demo</a>
+          <a class="btn btn-light" href="mailto:sales@kreatewebsites.com?subject=Start%20KreateWebsites%20Free%20Trial">Start Free Trial</a>
+          <div style="font-size:14px;color:rgba(255,255,255,0.72);">No commitment. Just real proof for your business.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatebots-for-cpa.html">For CPAs</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+					websites-for-business
+					     <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/websites-for-business.html">Website for Business Search Dominance</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+
+</body></html>

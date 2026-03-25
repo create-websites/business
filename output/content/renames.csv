@@ -1,12 +1,16 @@
 original_path,output_path,articleurl,status
 ai-agent-webmaster.html,ai-agent-webmaster.html,yes,merged
+ai-collapsed-the-web-stack.html,ai-collapsed-the-web-stack.html,no,merged
 ai-crawler-visibility.html,geo-for-chatgpt-gemini-ai-crawler.html,yes,merged
 ai-data-product.html,ai-data-product.html,yes,merged
 business.kreatewebsite-landing-emoji-org.html,business-kreatewebsite-landing-emoji-org.html,yes,merged
 business.kreatewebsites.html,example-business-websites-ai-assistants.html,yes,merged
+generative-engine-optimzation-guide.html,generative-engine-optimzation-guide.html,no,merged
 generative-engne-optimization.html,generative-engine-optimization-kreatewebsites.html,yes,merged
 geo-page.html,geo-overview.html,yes,merged
 kreate-agency-slides.html,index.html,yes,merged
+kreatebots-for-cpa-automation.html,kreatebots-for-cpa-automation.html,no,merged
+kreatebots-for-cpa.html,kreatebots-for-cpa.html,no,merged
 kreatewebsites-advantages.html,kreatewebsites-advantages.html,yes,merged
 kreatewebsites-as-data-product.html,datacentric-websites.html,yes,merged
 kreatewebsites-automated-seo-geo-white.html,automated-seo-geo.html,yes,merged
@@ -18,6 +22,7 @@ kreatewebsites-for-local-business.html,kreatewebsites-for-local-business.html,ye
 kreatewebsites-web-stack.html,kreatewebsites-web-stack.html,no,merged
 modern-versatile-websites.html,fast-and-effective-websites.html,yes,merged
 privacypolicy.html,privacypolicy.html,yes,merged
+websites-for-business.html,websites-for-business.html,no,merged
 ab-testing\ab-test-overview-of-test.html,ab-testing\index.html,yes,merged
 ab-testing\ab-test-sample-size-calculator.html,ab-testing\ab-test-sample-size-calculator.html,yes,merged
 ab-testing\ab-testing-for-ai.html,ab-testing\ab-testing-for-ai.html,yes,merged
@@ -72,6 +77,8 @@ feature-vendor-comparison-websites\ai-assistant-vs-digtial-human.html,feature-ve
 feature-vendor-comparison-websites\big-query-vs-redshift-vs-snowflake-vs-databricks.html,feature-vendor-comparison-websites\big-query-vs-redshift-vs-snowflake-vs-databricks.html,yes,merged
 feature-vendor-comparison-websites\choosing-llm-model.html,feature-vendor-comparison-websites\choosing-llm-model.html,yes,merged
 feature-vendor-comparison-websites\image-recgonition-provider.html,feature-vendor-comparison-websites\index.html,yes,merged
+features\abexperiment-features.html,features\abexperiment-features.html,no,merged
+features\data-site-2.html,features\data-site-2.html,no,merged
 framework-webpage-style\agentic-system-decision-guide.html,framework-webpage-style\agentic-system-decision-guide.html,yes,merged
 framework-webpage-style\anti-pattern-vector-db.html,framework-webpage-style\anti-pattern-vector-db.html,yes,merged
 framework-webpage-style\architecting-document-intelligence.html,framework-webpage-style\architecting-document-intelligence.html,yes,merged
