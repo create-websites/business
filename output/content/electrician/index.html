@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Electrician Services | King County, WA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
+                        url('https://storage.googleapis.com/imagesu/electrician/electrician1.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Top Bar -->
+    <div class="bg-blue-900 text-white py-2 px-4 hidden md:block">
+        <div class="max-w-7xl mx-auto flex justify-between items-center text-sm">
+            <div class="flex space-x-6">
+                <span><i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>Serving King County, WA</span>
+                <span><i class="fas fa-envelope text-yellow-400 mr-2"></i>contact@kreate.com</span>
+            </div>
+            <div class="font-semibold text-lg">
+                <i class="fas fa-phone-alt text-yellow-400 mr-2"></i>425-341-1222
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky-nav border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-900 flex items-center">
+                        <i class="fas fa-bolt text-yellow-500 mr-2"></i>KING COUNTY ELECTRIC
+                    </span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#services" class="text-slate-600 hover:text-blue-900 font-medium">Services</a>
+                    <a href="#projects" class="text-slate-600 hover:text-blue-900 font-medium">Projects</a>
+                    <a href="#areas" class="text-slate-600 hover:text-blue-900 font-medium">Areas Served</a>
+                    <a href="tel:4253411222" class="bg-blue-900 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-800 transition">
+                        425-341-1222
+                    </a>
+                </div>
+                <!-- Mobile Call Icon -->
+                <a href="tel:4253411222" class="md:hidden text-blue-900 text-2xl">
+                    <i class="fas fa-phone-square-alt"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-gradient text-white py-24 px-4">
+        <div class="max-w-7xl mx-auto text-center md:text-left grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                    Reliable Electrical Services for Your <span class="text-yellow-400">Home & Business</span>
+                </h1>
+                <p class="text-xl text-slate-300 mb-10 max-w-lg">
+                    Certified electricians providing safe, high-quality electrical solutions across King County. From emergency repairs to full panel upgrades.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <button onclick="document.getElementById('estimate').scrollIntoView()" class="bg-yellow-500 text-blue-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-400 transition transform hover:scale-105 shadow-xl">
+                        Get a Free Estimate
+                    </button>
+                    <a href="tel:4253411222" class="bg-white/10 backdrop-blur-md border-2 border-white/30 px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition text-white text-center">
+                        425-341-1222
+                    </a>
+                </div>
+            </div>
+            <div class="hidden md:block relative">
+                <img src="https://storage.googleapis.com/imagesu/electrician/electrician2.jpg" alt="Electrician at work" class="rounded-2xl shadow-2xl border-4 border-white/10">
+                <div class="absolute -bottom-6 -left-6 bg-yellow-500 text-blue-900 p-6 rounded-xl shadow-lg">
+                    <p class="text-3xl font-bold">15+ Years</p>
+                    <p class="font-medium">Local Experience</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Services Overview -->
+    <section id="services" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-blue-900 mb-4">Our Professional Services</h2>
+                <div class="w-20 h-1.5 bg-yellow-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="service-card p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-home text-blue-900 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Residential Wiring</h3>
+                    <p class="text-slate-600">Full house wiring, outlet installation, and lighting design to keep your home safe and modern.</p>
+                </div>
+                <div class="service-card p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-bolt text-blue-900 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Panel Upgrades</h3>
+                    <p class="text-slate-600">Upgrade your old electrical panel to handle modern appliances and ensure fire safety.</p>
+                </div>
+                <div class="service-card p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-car-battery text-blue-900 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">EV Charger Install</h3>
+                    <p class="text-slate-600">Level 2 charging station installations for Tesla and all major electric vehicle brands.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Projects Section -->
+    <section id="projects" class="py-20 px-4 bg-slate-900 text-white overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Recent Projects</h2>
+                    <p class="text-slate-400">Quality workmanship across the Greater Seattle Area</p>
+                </div>
+                <div class="hidden md:flex space-x-2 mt-6 md:mt-0">
+                    <button class="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center hover:bg-yellow-500 hover:text-blue-900 transition"><i class="fas fa-arrow-left"></i></button>
+                    <button class="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center hover:bg-yellow-500 hover:text-blue-900 transition"><i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="group relative overflow-hidden rounded-xl h-64">
+                    <img src="https://storage.googleapis.com/imagesu/electrician/electrician3.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Project 1">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                        <p class="font-bold">Panel Replacement - Redmond</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-xl h-64">
+                    <img src="https://storage.googleapis.com/imagesu/electrician/electrician4.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Project 2">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                        <p class="font-bold">Smart Lighting - Bellevue</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-xl h-64">
+                    <img src="https://storage.googleapis.com/imagesu/electrician/electrician5.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Project 3">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                        <p class="font-bold">Commercial Re-wiring - Kirkland</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-xl h-64">
+                    <img src="https://storage.googleapis.com/imagesu/electrician/electrician6.jpg" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Project 4">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                        <p class="font-bold">EV Charger - Sammamish</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 px-4 bg-white">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-16 text-blue-900">What Our Clients Say</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="bg-slate-50 p-8 rounded-2xl relative shadow-sm italic">
+                    <i class="fas fa-quote-left text-blue-200 text-5xl absolute top-4 left-4"></i>
+                    <p class="relative z-10 text-slate-700 mb-6 mt-4">
+                        "Professional, on-time, and very knowledgeable. They fixed a complex wiring issue in our Shoreline home that two other companies couldn't figure out. Highly recommended!"
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center text-white font-bold">SM</div>
+                        <div class="ml-4">
+                            <p class="font-bold text-slate-900">Sarah Miller</p>
+                            <p class="text-sm text-slate-500">Shoreline Resident</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-8 rounded-2xl relative shadow-sm italic">
+                    <i class="fas fa-quote-left text-blue-200 text-5xl absolute top-4 left-4"></i>
+                    <p class="relative z-10 text-slate-700 mb-6 mt-4">
+                        "Fast response for an emergency panel issue in Renton. The electrician was courteous and explained everything clearly. Great value for the expertise provided."
+                    </p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center text-white font-bold">JD</div>
+                        <div class="ml-4">
+                            <p class="font-bold text-slate-900">James Davis</p>
+                            <p class="text-sm text-slate-500">Renton Homeowner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Areas We Serve -->
+    <section id="areas" class="py-20 px-4 bg-blue-50">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl font-bold text-blue-900 mb-6">Areas We Serve in King County</h2>
+            <p class="text-slate-600 mb-12">We are proud to provide electrical excellence to the following communities:</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Redmond</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Kirkland</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Sammamish</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Bellevue</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Renton</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Snohomish</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Kenmore</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Mercer Island</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Bothell</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Shoreline</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Woodinville</span>
+                <span class="bg-white px-6 py-3 rounded-full shadow-sm border border-blue-100 font-medium hover:bg-yellow-50 hover:border-yellow-200 transition">Issaquah</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estimate Form -->
+    <section id="estimate" class="py-24 px-4 bg-white">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-4xl font-bold text-blue-900 mb-6">Ready to Start Your Project?</h2>
+                <p class="text-lg text-slate-600 mb-8">
+                    Fill out the form for a fast, free estimate on your electrical needs. Or give us a call for immediate assistance!
+                </p>
+                <div class="space-y-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">Call Us Anytime</p>
+                            <p class="text-xl font-bold">425-341-1222</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">Available Hours</p>
+                            <p class="text-xl font-bold">Mon - Sat: 7am - 8pm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-xl">
+                <form onsubmit="event.preventDefault(); document.getElementById('success-msg').classList.remove('hidden'); this.classList.add('hidden');">
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Name</label>
+                            <input type="text" placeholder="Your Name" class="w-full px-4 py-3 rounded-lg border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Phone</label>
+                            <input type="tel" placeholder="Your Phone" class="w-full px-4 py-3 rounded-lg border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1">Service Needed</label>
+                        <select class="w-full px-4 py-3 rounded-lg border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
+                            <option>Residential Repair</option>
+                            <option>Panel Upgrade</option>
+                            <option>Commercial Lighting</option>
+                            <option>EV Charger Installation</option>
+                            <option>Emergency Service</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold mb-1">Message</label>
+                        <textarea rows="4" placeholder="Briefly describe your project..." class="w-full px-4 py-3 rounded-lg border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-900 text-white py-4 rounded-lg font-bold text-lg hover:bg-blue-800 transition shadow-lg">
+                        Send Request
+                    </button>
+                </form>
+                <!-- Success Message -->
+                <div id="success-msg" class="hidden text-center py-12">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Request Received!</h3>
+                    <p class="text-slate-600">Our expert team will contact you within 24 hours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Preview -->
+    <section class="py-10 bg-slate-100 overflow-hidden">
+        <div class="flex space-x-4 animate-scroll">
+            <!-- Simulated ticker of images -->
+            <img src="https://storage.googleapis.com/imagesu/electrician/electrician-9.jpg" class="h-40 rounded-lg shadow-md" alt="work1">
+            <img src="https://storage.googleapis.com/imagesu/electrician/electrician-10.jpg" class="h-40 rounded-lg shadow-md" alt="work2">
+            <img src="https://storage.googleapis.com/imagesu/electrician/electrician-11.jpg" class="h-40 rounded-lg shadow-md" alt="work3">
+            <img src="https://storage.googleapis.com/imagesu/electrician/electrician-12.jpg" class="h-40 rounded-lg shadow-md" alt="work4">
+            <img src="https://storage.googleapis.com/imagesu/electrician/electrician-13.jpg" class="h-40 rounded-lg shadow-md" alt="work5">
+            <img src="https://storage.googleapis.com/imagesu/electrician/electrician-14.jpg" class="h-40 rounded-lg shadow-md" alt="work6">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-950 text-white py-16 px-4">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
+            <div class="col-span-1 md:col-span-2">
+                <span class="text-2xl font-bold text-white flex items-center mb-6">
+                    <i class="fas fa-bolt text-yellow-500 mr-2"></i>KING COUNTY ELECTRIC
+                </span>
+                <p class="text-slate-400 mb-8 max-w-md">
+                    Providing top-tier electrical solutions with safety and reliability as our core values. Licensed, bonded, and insured for your peace of mind.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-yellow-500 hover:text-blue-900 transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-yellow-500 hover:text-blue-900 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-yellow-500 hover:text-blue-900 transition"><i class="fab fa-yelp"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-yellow-400">Quick Links</h4>
+                <ul class="space-y-4 text-slate-400">
+                    <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="#services" class="hover:text-white transition">Services</a></li>
+                    <li><a href="#projects" class="hover:text-white transition">Gallery</a></li>
+                    <li><a href="#estimate" class="hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-yellow-400">Contact Info</h4>
+                <ul class="space-y-4 text-slate-400">
+                    <li class="flex items-start">
+                        <i class="fas fa-phone-alt mt-1 mr-3 text-yellow-500"></i>
+                        <span>425-341-1222</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-envelope mt-1 mr-3 text-yellow-500"></i>
+                        <span>contact@kreate.com</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-globe mt-1 mr-3 text-yellow-500"></i>
+                        <span>business.kreate.com/electrician</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto border-t border-white/10 mt-16 pt-8 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 King County Electric Services. All rights reserved. Licensed #WA-ELEC-12345</p>
+        </div>
+    </footer>
+
+</body>
+</html>
