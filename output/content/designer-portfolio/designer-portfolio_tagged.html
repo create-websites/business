@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" data-ai-id="1" data-ai-tag="container" lang="en"><head data-ai-id="2" data-ai-tag="container">
+<meta charset="utf-8" data-ai-id="3" data-ai-tag="container"/>
+<meta content="{{seo.meta.viewport}}" data-ai-id="4" data-ai-tag="container" name="viewport"/>
+<title data-ai-id="5" data-ai-tag="container">{{seo.title}}</title>
+<!-- Tailwind CSS -->
+<script data-ai-id="6" data-ai-tag="script" src="https://cdn.tailwindcss.com"></script>
+<!-- Lucide Icons -->
+<script data-ai-id="7" data-ai-tag="script" src="https://unpkg.com/lucide@latest"></script>
+<!-- Google Fonts -->
+<link data-ai-id="8" data-ai-tag="container" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style data-ai-id="9" data-ai-tag="container">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom Animation for Hero Text */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 40px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        /* Navbar Transition */
+        .nav-scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+
+        .nav-scrolled .nav-text {
+            color: #111827 !important; /* gray-900 */
+        }
+        
+        .nav-transparent {
+            background-color: transparent;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-900 bg-white antialiased" data-ai-id="10" data-ai-tag="container">
+<!-- Navigation -->
+<nav class="fixed w-full z-50 transition-all duration-300 nav-transparent" data-ai-id="11" data-ai-tag="navigation" id="navbar">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-ai-id="12" data-ai-tag="container">
+<div class="flex justify-between items-center" data-ai-id="13" data-ai-tag="container">
+<div class="flex items-center" data-ai-id="14" data-ai-tag="container">
+<span class="text-2xl font-bold tracking-tighter text-gray-900 md:text-white transition-colors duration-300" data-ai-id="15" data-ai-tag="container" id="brand-logo"><span class="text-orange-500" data-ai-id="16" data-ai-tag="container">{{text_blocks.1}}</span>{{text_blocks.0}}</span>
+</div>
+<!-- Desktop Menu -->
+<div class="hidden md:flex space-x-8" data-ai-id="17" data-ai-tag="container">
+<a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" data-ai-id="18" data-ai-tag="link" href="{{links.0.href}}">{{links.0.text}}</a>
+<a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" data-ai-id="19" data-ai-tag="link" href="{{links.1.href}}">{{links.1.text}}</a>
+<a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" data-ai-id="20" data-ai-tag="link" href="{{links.2.href}}">{{links.2.text}}</a>
+<a class="nav-link text-sm font-medium text-gray-200 hover:text-orange-500 transition-colors" data-ai-id="21" data-ai-tag="link" href="{{links.3.href}}">{{links.3.text}}</a>
+</div>
+<!-- Mobile Menu Button -->
+<div class="md:hidden flex items-center" data-ai-id="22" data-ai-tag="container">
+<button class="p-2 rounded-md text-white transition-colors" data-ai-id="23" data-ai-tag="button" id="mobile-menu-btn"><i class="w-6 h-6" data-ai-id="24" data-ai-tag="container" data-lucide="menu"></i>{{buttons.0.text}}</button>
+</div>
+</div>
+</div>
+<!-- Mobile Menu Dropdown -->
+<div class="hidden md:hidden bg-white absolute top-full left-0 w-full shadow-lg py-4 px-4 flex flex-col space-y-4" data-ai-id="25" data-ai-tag="container" id="mobile-menu">
+<a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" data-ai-id="26" data-ai-tag="link" href="{{links.4.href}}">{{links.4.text}}</a>
+<a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" data-ai-id="27" data-ai-tag="link" href="{{links.5.href}}">{{links.5.text}}</a>
+<a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" data-ai-id="28" data-ai-tag="link" href="{{links.6.href}}">{{links.6.text}}</a>
+<a class="mobile-link text-left text-gray-800 font-medium py-2 border-b border-gray-100" data-ai-id="29" data-ai-tag="link" href="{{links.7.href}}">{{links.7.text}}</a>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative h-screen flex items-center justify-center overflow-hidden" data-ai-id="30" data-ai-tag="section" id="home">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 z-0" data-ai-id="31" data-ai-tag="container">
+<img alt="{{images.0.alt}}" class="w-full h-full object-cover" data-ai-id="32" data-ai-tag="image" onerror="this.src='https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80'" src="{{images.0.src}}"/>
+<div class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40" data-ai-id="33" data-ai-tag="container"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left w-full" data-ai-id="34" data-ai-tag="container">
+<div class="md:w-2/3" data-ai-id="35" data-ai-tag="container">
+<h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 animate-fade-in-up" data-ai-id="36" data-ai-tag="heading"><br data-ai-id="37" data-ai-tag="container"/><span class="text-orange-500" data-ai-id="38" data-ai-tag="container">{{text_blocks.2}}</span>{{headings.0.text}}</h1>
+<p class="text-lg md:text-xl text-gray-300 mb-8 max-w-lg leading-relaxed" data-ai-id="39" data-ai-tag="container">{{hero.description}}</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start" data-ai-id="40" data-ai-tag="container">
+<a class="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition-all transform hover:scale-105 shadow-lg shadow-orange-500/30 inline-block text-center" data-ai-id="41" data-ai-tag="link" href="{{links.8.href}}">{{links.8.text}}</a>
+<a class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-bold rounded-full transition-all inline-block text-center" data-ai-id="42" data-ai-tag="link" href="{{links.9.href}}">{{links.9.text}}</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section -->
+<section class="py-24 bg-gray-50" data-ai-id="43" data-ai-tag="section" id="services">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-ai-id="44" data-ai-tag="container">
+<div class="text-center mb-16" data-ai-id="45" data-ai-tag="container">
+<h2 class="text-orange-500 font-semibold tracking-wide uppercase text-sm mb-2" data-ai-id="46" data-ai-tag="heading">{{headings.1.text}}</h2>
+<h3 class="text-3xl md:text-4xl font-bold text-gray-900" data-ai-id="47" data-ai-tag="heading">{{headings.2.text}}</h3>
+<div class="w-20 h-1 bg-orange-500 mx-auto mt-4 rounded-full" data-ai-id="48" data-ai-tag="container"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-ai-id="49" data-ai-tag="container"><div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group" data-ai-id="50" data-ai-tag="container">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300" data-ai-id="51" data-ai-tag="container">
+<i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-ai-id="52" data-ai-tag="container" data-lucide="globe"></i>
+</div>
+<h4 class="text-xl font-bold text-gray-900 mb-3" data-ai-id="53" data-ai-tag="heading">{{headings.3.text}}</h4>
+<p class="text-gray-600 leading-relaxed" data-ai-id="54" data-ai-tag="container">{{text_blocks.4}}</p>
+</div><div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group" data-ai-id="55" data-ai-tag="container">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300" data-ai-id="56" data-ai-tag="container">
+<i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-ai-id="57" data-ai-tag="container" data-lucide="layout"></i>
+</div>
+<h4 class="text-xl font-bold text-gray-900 mb-3" data-ai-id="58" data-ai-tag="heading">{{headings.4.text}}</h4>
+<p class="text-gray-600 leading-relaxed" data-ai-id="59" data-ai-tag="container">{{text_blocks.5}}</p>
+</div><div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group" data-ai-id="60" data-ai-tag="container">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300" data-ai-id="61" data-ai-tag="container">
+<i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-ai-id="62" data-ai-tag="container" data-lucide="pen-tool"></i>
+</div>
+<h4 class="text-xl font-bold text-gray-900 mb-3" data-ai-id="63" data-ai-tag="heading">{{headings.5.text}}</h4>
+<p class="text-gray-600 leading-relaxed" data-ai-id="64" data-ai-tag="container">{{text_blocks.6}}</p>
+</div><div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group" data-ai-id="65" data-ai-tag="container">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300" data-ai-id="66" data-ai-tag="container">
+<i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-ai-id="67" data-ai-tag="container" data-lucide="image"></i>
+</div>
+<h4 class="text-xl font-bold text-gray-900 mb-3" data-ai-id="68" data-ai-tag="heading">{{headings.6.text}}</h4>
+<p class="text-gray-600 leading-relaxed" data-ai-id="69" data-ai-tag="container">{{text_blocks.7}}</p>
+</div><div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group" data-ai-id="70" data-ai-tag="container">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300" data-ai-id="71" data-ai-tag="container">
+<i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-ai-id="72" data-ai-tag="container" data-lucide="arrow-right"></i>
+</div>
+<h4 class="text-xl font-bold text-gray-900 mb-3" data-ai-id="73" data-ai-tag="heading">{{headings.7.text}}</h4>
+<p class="text-gray-600 leading-relaxed" data-ai-id="74" data-ai-tag="container">{{text_blocks.8}}</p>
+</div><div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group" data-ai-id="75" data-ai-tag="container">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 transition-colors duration-300" data-ai-id="76" data-ai-tag="container">
+<i class="text-orange-500 group-hover:text-white transition-colors duration-300 w-7 h-7" data-ai-id="77" data-ai-tag="container" data-lucide="external-link"></i>
+</div>
+<h4 class="text-xl font-bold text-gray-900 mb-3" data-ai-id="78" data-ai-tag="heading">{{headings.8.text}}</h4>
+<p class="text-gray-600 leading-relaxed" data-ai-id="79" data-ai-tag="container">{{text_blocks.9}}</p>
+</div>{{text_blocks.3}}</div>
+</div>
+</section>
+<!-- Portfolio / Gallery Section -->
+<section class="py-24 bg-white" data-ai-id="80" data-ai-tag="section" id="portfolio">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-ai-id="81" data-ai-tag="container">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12" data-ai-id="82" data-ai-tag="container">
+<div class="mb-6 md:mb-0" data-ai-id="83" data-ai-tag="container">
+<h2 class="text-orange-500 font-semibold tracking-wide uppercase text-sm mb-2" data-ai-id="84" data-ai-tag="heading">{{headings.9.text}}</h2>
+<h3 class="text-3xl md:text-4xl font-bold text-gray-900" data-ai-id="85" data-ai-tag="heading">{{headings.10.text}}</h3>
+</div>
+<button class="hidden md:flex items-center text-gray-600 hover:text-orange-500 font-medium transition-colors" data-ai-id="86" data-ai-tag="button"><i class="ml-2 w-5 h-5" data-ai-id="87" data-ai-tag="container" data-lucide="arrow-right"></i>{{buttons.1.text}}</button>
+</div>
+<!-- Masonry-style Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]" data-ai-id="88" data-ai-tag="container"><div class="md:col-span-8 md:row-span-2 relative group overflow-hidden rounded-2xl h-64 md:h-full cursor-pointer" data-ai-id="89" data-ai-tag="container">
+<img alt="{{images.1.alt}}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-ai-id="90" data-ai-tag="image" onerror="this.src='https://images.unsplash.com/photo-1558655146-d09347e0d7a8?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80'" src="{{images.1.src}}"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8" data-ai-id="91" data-ai-tag="container">
+<div data-ai-id="92" data-ai-tag="container">
+<h4 class="text-white text-2xl font-bold" data-ai-id="93" data-ai-tag="heading">{{headings.11.text}}</h4>
+<p class="text-gray-300" data-ai-id="94" data-ai-tag="container">{{text_blocks.11}}</p>
+</div>
+</div>
+</div><div class="md:col-span-4 md:row-span-1 relative group overflow-hidden rounded-2xl h-64 md:h-full cursor-pointer" data-ai-id="95" data-ai-tag="container">
+<img alt="{{images.2.alt}}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-ai-id="96" data-ai-tag="image" onerror="this.src='https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80'" src="{{images.2.src}}"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" data-ai-id="97" data-ai-tag="container">
+<span class="text-white font-bold border border-white px-4 py-2 rounded-full" data-ai-id="98" data-ai-tag="container">{{text_blocks.12}}</span>
+</div>
+</div><div class="md:col-span-4 md:row-span-1 relative group overflow-hidden rounded-2xl h-64 md:h-full cursor-pointer" data-ai-id="99" data-ai-tag="container">
+<img alt="{{images.3.alt}}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-ai-id="100" data-ai-tag="image" onerror="this.src='https://images.unsplash.com/photo-1586717791821-3f44a5638d0f?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80'" src="{{images.3.src}}"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" data-ai-id="101" data-ai-tag="container">
+<span class="text-white font-bold border border-white px-4 py-2 rounded-full" data-ai-id="102" data-ai-tag="container">{{text_blocks.13}}</span>
+</div>
+</div>{{text_blocks.10}}</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6" data-ai-id="103" data-ai-tag="container">
+<div class="relative group overflow-hidden rounded-2xl h-64 cursor-pointer" data-ai-id="104" data-ai-tag="container">
+<img alt="{{images.4.alt}}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-ai-id="105" data-ai-tag="image" onerror="this.src='https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80'" src="{{images.4.src}}"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center" data-ai-id="106" data-ai-tag="container">
+<span class="text-white font-bold border border-white px-4 py-2 rounded-full" data-ai-id="107" data-ai-tag="container">{{text_blocks.14}}</span>
+</div>
+</div>
+<div class="bg-gray-100 rounded-2xl h-64 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-gray-300 hover:border-orange-500 transition-colors cursor-pointer group" data-ai-id="108" data-ai-tag="container">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform" data-ai-id="109" data-ai-tag="container">
+<i class="text-orange-500 w-8 h-8" data-ai-id="110" data-ai-tag="container" data-lucide="arrow-right"></i>
+</div>
+<h4 class="text-xl font-bold text-gray-900" data-ai-id="111" data-ai-tag="heading">{{headings.12.text}}</h4>
+<p class="text-gray-500 text-sm mt-2" data-ai-id="112" data-ai-tag="container">{{text_blocks.15}}</p>
+</div>
+</div>
+<div class="mt-8 text-center md:hidden" data-ai-id="113" data-ai-tag="container">
+<button class="px-6 py-3 border border-gray-300 rounded-full font-medium text-gray-700 hover:border-orange-500 hover:text-orange-500 transition-colors" data-ai-id="114" data-ai-tag="button">{{buttons.2.text}}</button>
+</div>
+</div>
+</section>
+<!-- Stats/Experience Section -->
+<section class="py-20 bg-gray-900 text-white" data-ai-id="115" data-ai-tag="section">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-ai-id="116" data-ai-tag="container">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center" data-ai-id="117" data-ai-tag="container">
+<div class="p-4" data-ai-id="118" data-ai-tag="container">
+<div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2" data-ai-id="119" data-ai-tag="container">{{text_blocks.16}}</div>
+<div class="text-gray-400 font-medium" data-ai-id="120" data-ai-tag="container">{{text_blocks.17}}</div>
+</div>
+<div class="p-4" data-ai-id="121" data-ai-tag="container">
+<div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2" data-ai-id="122" data-ai-tag="container">{{text_blocks.18}}</div>
+<div class="text-gray-400 font-medium" data-ai-id="123" data-ai-tag="container">{{text_blocks.19}}</div>
+</div>
+<div class="p-4" data-ai-id="124" data-ai-tag="container">
+<div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2" data-ai-id="125" data-ai-tag="container">{{text_blocks.20}}</div>
+<div class="text-gray-400 font-medium" data-ai-id="126" data-ai-tag="container">{{text_blocks.21}}</div>
+</div>
+<div class="p-4" data-ai-id="127" data-ai-tag="container">
+<div class="text-4xl md:text-5xl font-bold text-orange-500 mb-2" data-ai-id="128" data-ai-tag="container">{{text_blocks.22}}</div>
+<div class="text-gray-400 font-medium" data-ai-id="129" data-ai-tag="container">{{text_blocks.23}}</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="py-24 bg-gray-50" data-ai-id="130" data-ai-tag="section" id="contact">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-ai-id="131" data-ai-tag="container">
+<h2 class="text-orange-500 font-semibold tracking-wide uppercase text-sm mb-2" data-ai-id="132" data-ai-tag="heading">{{headings.13.text}}</h2>
+<h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8" data-ai-id="133" data-ai-tag="heading">{{headings.14.text}}</h3>
+<p class="text-gray-600 mb-12 text-lg" data-ai-id="134" data-ai-tag="container">{{text_blocks.24}}</p>
+<div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100" data-ai-id="135" data-ai-tag="container">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-ai-id="136" data-ai-tag="container">
+<a class="flex flex-col items-center group hover:-translate-y-2 transition-transform duration-300" data-ai-id="137" data-ai-tag="link" href="{{links.10.href}}"><div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-500 group-hover:text-white transition-colors" data-ai-id="138" data-ai-tag="container">
+<i class="w-7 h-7" data-ai-id="139" data-ai-tag="container" data-lucide="phone"></i>
+</div><span class="font-bold text-gray-900 mb-1" data-ai-id="140" data-ai-tag="container">{{text_blocks.25}}</span><span class="text-gray-500 text-sm" data-ai-id="141" data-ai-tag="container">{{text_blocks.26}}</span>{{links.10.text}}</a>
+<a class="flex flex-col items-center group hover:-translate-y-2 transition-transform duration-300" data-ai-id="142" data-ai-tag="link" href="{{links.11.href}}"><div class="w-16 h-16 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mb-4 group-hover:bg-orange-500 group-hover:text-white transition-colors" data-ai-id="143" data-ai-tag="container">
+<i class="w-7 h-7" data-ai-id="144" data-ai-tag="container" data-lucide="mail"></i>
+</div><span class="font-bold text-gray-900 mb-1" data-ai-id="145" data-ai-tag="container">{{text_blocks.27}}</span><span class="text-gray-500 text-sm" data-ai-id="146" data-ai-tag="container">{{text_blocks.28}}</span>{{links.11.text}}</a>
+<a class="flex flex-col items-center group hover:-translate-y-2 transition-transform duration-300" data-ai-id="147" data-ai-tag="link" href="{{links.12.href}}" rel="noopener noreferrer" target="_blank"><div class="w-16 h-16 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center mb-4 group-hover:bg-purple-500 group-hover:text-white transition-colors" data-ai-id="148" data-ai-tag="container">
+<i class="w-7 h-7" data-ai-id="149" data-ai-tag="container" data-lucide="globe"></i>
+</div><span class="font-bold text-gray-900 mb-1" data-ai-id="150" data-ai-tag="container">{{text_blocks.29}}</span><span class="text-gray-500 text-sm truncate w-full px-2" data-ai-id="151" data-ai-tag="container">{{text_blocks.30}}</span>{{links.12.text}}</a>
+</div>
+<div class="mt-12 pt-12 border-t border-gray-100" data-ai-id="152" data-ai-tag="container">
+<form class="space-y-4 text-left" data-ai-id="153" data-ai-tag="container" onsubmit="event.preventDefault();">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-ai-id="154" data-ai-tag="container">
+<div data-ai-id="155" data-ai-tag="container">
+<label class="block text-sm font-medium text-gray-700 mb-1" data-ai-id="156" data-ai-tag="container">Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all" data-ai-id="157" data-ai-tag="container" placeholder="Your Name" type="text"/>
+</div>
+<div data-ai-id="158" data-ai-tag="container">
+<label class="block text-sm font-medium text-gray-700 mb-1" data-ai-id="159" data-ai-tag="container">Email</label>
+<input class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all" data-ai-id="160" data-ai-tag="container" placeholder="your@email.com" type="email"/>
+</div>
+</div>
+<div data-ai-id="161" data-ai-tag="container">
+<label class="block text-sm font-medium text-gray-700 mb-1" data-ai-id="162" data-ai-tag="container">Message</label>
+<textarea class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all" data-ai-id="163" data-ai-tag="container" placeholder="Tell me about your project..." rows="4"></textarea>
+</div>
+<button class="w-full py-4 bg-gray-900 text-white font-bold rounded-lg hover:bg-gray-800 transition-colors" data-ai-id="164" data-ai-tag="button" type="submit">{{buttons.3.text}}</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatebots-for-cpa.html">For CPAs</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+					websites-for-business
+					     <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/websites-for-business.html">Website for Business Search Dominance</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+<!-- Scripts -->
+<script data-ai-id="179" data-ai-tag="script">
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        const logo = document.getElementById('brand-logo');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const desktopLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+                navbar.classList.remove('nav-transparent');
+                
+                logo.classList.remove('md:text-white');
+                logo.classList.add('text-gray-900');
+                
+                mobileMenuBtn.classList.remove('text-white');
+                mobileMenuBtn.classList.add('text-gray-900');
+
+                desktopLinks.forEach(link => {
+                    link.classList.remove('text-gray-200');
+                    link.classList.add('nav-text');
+                });
+            } else {
+                navbar.classList.remove('nav-scrolled');
+                navbar.classList.add('nav-transparent');
+                
+                logo.classList.add('md:text-white');
+                logo.classList.remove('text-gray-900');
+                
+                mobileMenuBtn.classList.add('text-white');
+                mobileMenuBtn.classList.remove('text-gray-900');
+
+                desktopLinks.forEach(link => {
+                    link.classList.add('text-gray-200');
+                    link.classList.remove('nav-text');
+                });
+            }
+        });
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileIcon = menuBtn.querySelector('svg'); // The lucide icon svg
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            
+            // Note: Lucide replaces <i> tags with <svg>, so we can't easily toggle class on the i tag anymore.
+            // Simple logic: if menu is visible, user might want to close it.
+            // For simplicity in vanilla HTML/Lucide without re-rendering, we just toggle visibility.
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+
+</body></html>

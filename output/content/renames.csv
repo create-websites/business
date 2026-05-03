@@ -48,6 +48,7 @@ band-website\musician.html,band-website\index.html,yes,merged
 barber\barber-index.html,barber\index.html,yes,merged
 builder\example-builder.html,builder\index.html,yes,merged
 cake-shop\cakeshop-index.html,cake-shop\index.html,yes,merged
+cake-shop\cakeshop-index_tagged.html,cake-shop\cakeshop-index_tagged.html,no,merged
 chef-website\chef-website.html,chef-website\index.html,yes,merged
 chef-website\example-chef.html,chef-website\example-chef.html,yes,merged
 chocolate-shop\index.html,chocolate-shop\index.html,yes,merged
@@ -73,6 +74,9 @@ data-lineage-webpages\data-lineage.html,data-lineage-webpages\data-lineage.html,
 data-literate-pages\data-signals-finance.html,data-literate-pages\data-signals-finance.html,yes,merged
 dermatologies\dermatologies-landing-page.html,dermatologies\index.html,yes,merged
 designer-portfolio\designer-portfolio.html,designer-portfolio\index.html,yes,merged
+designer-portfolio\designer-portfolio_tagged.html,designer-portfolio\designer-portfolio_tagged.html,no,merged
+electrician\electrician-2.html,electrician\king-county-electrician.html,yes,merged
+electrician\electrician-3.html,electrician\electrician-3.html,no,merged
 electrician\electrician.html,electrician\electrician.html,yes,merged
 event-planner\event-planner.html,event-planner\index.html,yes,merged
 example-product\kreate.html,example-product\kreate.html,yes,merged
@@ -88,6 +92,7 @@ framework-webpage-style\architecting-document-intelligence.html,framework-webpag
 free-payslip-generator\free-index.html,free-payslip-generator\free-index.html,yes,merged
 free-payslip-generator\free-payslip-generator-4-fixed.html,free-payslip-generator\free-payslip-generator-4-fixed.html,yes,merged
 free-payslip-generator\index.html,free-payslip-generator\index.html,yes,merged
+free-payslip-generator\vinayak.html,free-payslip-generator\vinayak.html,no,merged
 games-pages\casino-games-guide.html,games-pages\index.html,yes,merged
 gardner\gardner-landscaper.html,gardner\index.html,yes,merged
 genai-cost-calculation\gemini-model-pricing-calculator-multi-modal.html,genai-cost-calculation\gemini-model-pricing-calculator-multi-modal.html,yes,merged

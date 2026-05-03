@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <!-- SEO & GEO Optimization -->
+    <title>Expert Electrician Services | King County, WA | 425-341-1222</title>
+    <meta content="Professional residential and commercial electrical services in King County, WA. Serving Redmond, Kirkland, Bellevue, and surrounding areas. Get a free estimate today for panel upgrades, EV chargers, and more." name="description"/>
+    <meta content="Electrician King County, Redmond Electrician, Kirkland Electrical Services, Bellevue Electrician, EV Charger Installation WA, Electrical Panel Upgrade Seattle, Residential Electrician Sammamish" name="keywords"/>
+    <link href="https://kingcounty-electrician.com" rel="canonical"/>
+    
+    <!-- Open Graph for Social Media -->
+    <meta content="Expert Electrician Services | King County, WA" property="og:title"/>
+    <meta content="Certified electricians serving Redmond, Kirkland, and all of King County. Reliable, safe, and professional." property="og:description"/>
+    <meta content="https://kingcounty-electrician.com" property="og:url"/>
+    <meta content="website" property="og:type"/>
+
+    <!-- Structured Data (JSON-LD) for GEO/SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "King County Electrician",
+      "image": "https://storage.googleapis.com/imagesu/electrician/electrician1.jpg",
+      "@id": "https://kingcounty-electrician.com",
+      "url": "https://kingcounty-electrician.com",
+      "telephone": "425-341-1222",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Serving King County",
+        "addressLocality": "Redmond",
+        "addressRegion": "WA",
+        "postalCode": "98052",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 47.6740,
+        "longitude": -122.1215
+      },
+      "servesCrawl": ["Redmond", "Kirkland", "Sammamish", "Bellevue", "Renton", "Snohomish", "Kenmore", "Mercer Island", "Bothell", "Shoreline"],
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "07:00",
+        "closes": "20:00"
+      }
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
+                        url('https://storage.googleapis.com/imagesu/electrician/electrician1.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-250px * 6)); }
+        }
+
+        .slider {
+            width: 100%;
+            overflow: hidden;
+            background: white;
+            padding: 40px 0;
+        }
+
+        .slide-track {
+            display: flex;
+            width: calc(250px * 12);
+            animation: scroll 40s linear infinite;
+        }
+
+        .slide {
+            width: 250px;
+            padding: 0 15px;
+            flex-shrink: 0;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Top Bar -->
+    <div class="bg-blue-900 text-white py-2 px-4 hidden md:block">
+        <div class="max-w-7xl mx-auto flex justify-between items-center text-sm">
+            <div class="flex space-x-6">
+                <span><i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>Serving All of King County, WA</span>
+                <span><i class="fas fa-envelope text-yellow-400 mr-2"></i>service@kingcounty-electrician.com</span>
+            </div>
+            <div class="font-semibold text-lg">
+                <i class="fas fa-phone-alt text-yellow-400 mr-2"></i><a href="tel:4253411222">425-341-1222</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky-nav border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <a class="text-2xl font-bold text-blue-900 flex items-center" href="/">
+                        <i class="fas fa-bolt text-yellow-500 mr-2"></i>KING COUNTY ELECTRIC
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a class="text-slate-600 hover:text-blue-900 font-medium" href="#services">Services</a>
+                    <a class="text-slate-600 hover:text-blue-900 font-medium" href="#projects">Projects</a>
+                    <a class="text-slate-600 hover:text-blue-900 font-medium" href="#areas">Areas Served</a>
+                    <a class="bg-blue-900 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-800 transition" href="tel:4253411222">
+                        Call Now: 425-341-1222
+                    </a>
+                </div>
+                <a class="md:hidden text-blue-900 text-2xl" href="tel:4253411222">
+                    <i class="fas fa-phone-square-alt"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-gradient text-white py-24 px-4">
+        <div class="max-w-7xl mx-auto text-center md:text-left grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                    Trusted Local Electricians in <span class="text-yellow-400">King County</span>
+                </h1>
+                <p class="text-xl text-slate-300 mb-10 max-w-lg">
+                    Providing safety-first electrical solutions for Redmond, Bellevue, and Kirkland. Licensed, bonded, and insured experts ready to help.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <button class="bg-yellow-500 text-blue-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-400 transition shadow-xl" onclick="document.getElementById('estimate').scrollIntoView({behavior: 'smooth'})">
+                        Get a Free Estimate
+                    </button>
+                    <a class="bg-white/10 backdrop-blur-md border-2 border-white/30 px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition text-white text-center" href="tel:4253411222">
+                        425-341-1222
+                    </a>
+                </div>
+            </div>
+            <div class="hidden md:block relative">
+                <img alt="Licensed Electrician in Redmond" class="rounded-2xl shadow-2xl border-4 border-white/10" src="https://storage.googleapis.com/imagesu/electrician/electrician2.jpg"/>
+            </div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section class="py-20 px-4 bg-white" id="services">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-blue-900 mb-4">Why Choose King County Electric?</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">We provide a wide range of electrical services with a focus on safety, efficiency, and local building codes.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="service-card p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-plug text-blue-900 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Residential Experts</h3>
+                    <p class="text-slate-600">From lighting installs to full home rewires in Kirkland and Redmond.</p>
+                </div>
+                <div class="service-card p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-charging-station text-blue-900 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">EV Charging</h3>
+                    <p class="text-slate-600">Professional Level 2 EV charger installations for all electric vehicle brands.</p>
+                </div>
+                <div class="service-card p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-shield-alt text-blue-900 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Panel Safety</h3>
+                    <p class="text-slate-600">Electrical panel upgrades and circuit breaker replacements for modern safety.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Centered Carousel -->
+    <section class="py-16 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 mb-10 text-center">
+            <h2 class="text-3xl font-bold text-blue-900">Our Work in the Field</h2>
+        </div>
+        <div class="slider">
+            <div class="slide-track">
+                <!-- Double the images for infinite scroll effect -->
+                <div class="slide"><img alt="Gallery 1" src="https://storage.googleapis.com/imagesu/electrician/electrician-9.jpg"/></div>
+                <div class="slide"><img alt="Gallery 2" src="https://storage.googleapis.com/imagesu/electrician/electrician-10.jpg"/></div>
+                <div class="slide"><img alt="Gallery 3" src="https://storage.googleapis.com/imagesu/electrician/electrician-11.jpg"/></div>
+                <div class="slide"><img alt="Gallery 4" src="https://storage.googleapis.com/imagesu/electrician/electrician-12.jpg"/></div>
+                <div class="slide"><img alt="Gallery 5" src="https://storage.googleapis.com/imagesu/electrician/electrician-13.jpg"/></div>
+                <div class="slide"><img alt="Gallery 6" src="https://storage.googleapis.com/imagesu/electrician/electrician-14.jpg"/></div>
+                <!-- Clones -->
+                <div class="slide"><img alt="Gallery 1" src="https://storage.googleapis.com/imagesu/electrician/electrician-9.jpg"/></div>
+                <div class="slide"><img alt="Gallery 2" src="https://storage.googleapis.com/imagesu/electrician/electrician-10.jpg"/></div>
+                <div class="slide"><img alt="Gallery 3" src="https://storage.googleapis.com/imagesu/electrician/electrician-11.jpg"/></div>
+                <div class="slide"><img alt="Gallery 4" src="https://storage.googleapis.com/imagesu/electrician/electrician-12.jpg"/></div>
+                <div class="slide"><img alt="Gallery 5" src="https://storage.googleapis.com/imagesu/electrician/electrician-13.jpg"/></div>
+                <div class="slide"><img alt="Gallery 6" src="https://storage.googleapis.com/imagesu/electrician/electrician-14.jpg"/></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Projects -->
+    <section class="py-20 px-4 bg-slate-900 text-white" id="projects">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Successful Projects in King County</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="rounded-xl overflow-hidden shadow-lg bg-slate-800">
+                    <img alt="Redmond Panel" class="w-full h-48 object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician3.jpg"/>
+                    <div class="p-4"><p class="font-semibold text-yellow-400">Panel Replacement</p><p class="text-sm text-slate-300">Redmond, WA</p></div>
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-lg bg-slate-800">
+                    <img alt="Kirkland Lighting" class="w-full h-48 object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician4.jpg"/>
+                    <div class="p-4"><p class="font-semibold text-yellow-400">LED Lighting Upgrade</p><p class="text-sm text-slate-300">Kirkland, WA</p></div>
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-lg bg-slate-800">
+                    <img alt="Bellevue Commercial" class="w-full h-48 object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician5.jpg"/>
+                    <div class="p-4"><p class="font-semibold text-yellow-400">Commercial Wiring</p><p class="text-sm text-slate-300">Bellevue, WA</p></div>
+                </div>
+                <div class="rounded-xl overflow-hidden shadow-lg bg-slate-800">
+                    <img alt="Sammamish EV" class="w-full h-48 object-cover" src="https://storage.googleapis.com/imagesu/electrician/electrician6.jpg"/>
+                    <div class="p-4"><p class="font-semibold text-yellow-400">EV Station Install</p><p class="text-sm text-slate-300">Sammamish, WA</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Areas We Serve -->
+    <section class="py-20 px-4 bg-white" id="areas">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl font-bold text-blue-900 mb-8">Service Areas</h2>
+            <p class="text-slate-600 mb-12">We provide licensed electrical services to the following King County communities:</p>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Redmond</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Kirkland</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Sammamish</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Bellevue</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Renton</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Snohomish</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Kenmore</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Mercer Island</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Bothell</div>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg font-semibold">Shoreline</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-blue-900 text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-12">Customer Reviews</h2>
+            <div class="italic text-xl mb-8">
+                "Top notch service! They installed an EV charger for my Tesla in Bellevue. On time, clean work, and very professional."
+            </div>
+            <div class="font-bold">- Mark R., Bellevue Resident</div>
+        </div>
+    </section>
+
+    <!-- Estimate Section -->
+    <section class="py-24 px-4 bg-white" id="estimate">
+        <div class="max-w-4xl mx-auto bg-slate-50 p-10 rounded-3xl shadow-2xl border border-slate-200">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-bold text-blue-900 mb-2">Request Your Free Estimate</h2>
+                <p class="text-slate-600">Submit your details and we will contact you shortly.</p>
+            </div>
+            
+            <!-- Contact Form Update: mailto logic -->
+            <form class="space-y-6" id="contactForm">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <input class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" id="userName" placeholder="Your Name" required="" type="text"/>
+                    <input class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" id="userPhone" placeholder="Your Phone Number" required="" type="tel"/>
+                </div>
+                <select class="w-full px-5 py-4 rounded-xl border border-slate-200 outline-none" id="serviceType">
+                    <option>EV Charger Install</option>
+                    <option>Panel Upgrade</option>
+                    <option>Lighting &amp; Fixtures</option>
+                    <option>General Repair</option>
+                    <option>Commercial Service</option>
+                </select>
+                <textarea class="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" id="userMessage" placeholder="Tell us about your project..." required="" rows="5"></textarea>
+                
+                <button class="w-full bg-blue-900 text-white py-5 rounded-xl font-bold text-xl hover:bg-blue-800 transition transform hover:scale-[1.02] shadow-lg" type="submit">
+                    Send My Request via Email
+                </button>
+            </form>
+            
+            <div class="mt-12 pt-12 border-t border-slate-200 text-center">
+                <p class="text-slate-500 mb-4">Or call us directly at:</p>
+                <a class="text-3xl font-bold text-blue-900" href="tel:4253411222">425-341-1222</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 py-16">
+<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<div class="col-span-2 lg:col-span-2">
+<a class="flex items-center gap-3 mb-4" href="#">
+<img alt="Create Websites Logo" class="h-10 w-10 bg-white rounded-full p-1" src="https://storage.googleapis.com/kreatewebsite/logo-images/create-websites.png"/>
+<span class="text-2xl font-bold text-white">Create Websites</span>
+</a>
+<p class="text-stone-400 max-w-xs">We build professional websites that help your business grow, build trust, and generate leads.</p>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Services</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tax-consultant/">Tax Consultant</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/plumber/">Plumber</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/gardner/">Gardner and Landscaper</a></li>
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/tatto-studio/">Tatto Studio</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/real-estate/">Real Estate</a></li>
+<li><a class="hover:text-white transition-colors" href="https://designs.kreatewebsites.com/vitamin-supplements/">Vitamin and Supplments</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Industries</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-local-business.html">For Local Businesses</a></li> <!-- 5 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-creators.html">For Creators</a></li> <!-- 6 -->
+<li><a business.kreatewebsites.com="" class="hover:text-white transition-colors" geo-for-.html"="" href="" https:="">For Startups</a></li> <!-- 7 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatewebsites-for-freelancers.html">For Creatives</a></li> <!-- 8 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/kreatebots-for-cpa.html">For CPAs</a></li> <!-- 8 -->
+</ul>
+</div>
+<div>
+<h5 class="font-semibold text-white uppercase tracking-wider mb-4">Company</h5>
+<ul class="space-y-3">
+					websites-for-business
+					     <li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/websites-for-business.html">Website for Business Search Dominance</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/fast-and-effective-websites.html">Fast and Effective</a></li> <!-- 9 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/ai-agent-webmaster.html">AI Agent for Managing Site</a></li> <!-- 10 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/data-centric-websites.html">Data centric</a></li> <!-- 11 -->
+<li><a class="hover:text-white transition-colors" href="https://business.kreatewebsites.com/geo-for-chatgpt-gemini-ai-crawler.html">GEO Indexing</a></li> <!-- 12 -->
+</ul>
+</div>
+</div>
+<div class="mt-12 border-t border-stone-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
+<p class="text-stone-400">© 2025 Create Websites. All rights reserved.</p>
+<div class="flex gap-4 mt-4 sm:mt-0">
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/privacypolicy,html">Privacy Policy</a> <!-- 13 -->
+<a class="text-stone-400 hover:text-white" href="https://business.kreatewebsites.com/sitemap.html">Sitemap</a> <!-- 14 -->
+</div>
+</div>
+</div>
+</footer>
+
+    <script>
+        // Form Handling for Email Client
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const service = document.getElementById('serviceType').value;
+            const msg = document.getElementById('userMessage').value;
+            
+            const subject = encodeURIComponent(`Estimate Request: ${service} - ${name}`);
+            const body = encodeURIComponent(
+                `New Estimate Request from Website:\n\n` +
+                `Name: ${name}\n` +
+                `Phone: ${phone}\n` +
+                `Service: ${service}\n\n` +
+                `Details:\n${msg}`
+            );
+            
+            // Trigger the email client
+            window.location.href = `mailto:service@kingcounty-electrician.com?subject=${subject}&body=${body}`;
+        });
+    </script>
+
+
+</body></html>

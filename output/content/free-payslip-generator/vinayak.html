@@ -234,8 +234,8 @@ Faridabad India</textarea>
       </div>
 
       <div class="field">
-        <label>Pay Period</label>
-        <input id="payPeriod" placeholder="e.g., February 2026" value="February 2026"/>
+        <label>Payslip Month</label>
+        <input id="payslipMonth" placeholder="e.g., November 2025" value="September 2025"/>
       </div>
 
       <div class="field">
@@ -248,20 +248,23 @@ Faridabad India</textarea>
     <div class="grid">
       <div class="field">
         <label>Employee Name</label>
-        <input id="employeeName" value="Enter Employee Name"/>
+        <input id="employeeName" value="Vinayak Gaikar"/>
       </div>
       <div class="field">
         <label>Employee ID</label>
-        <input id="employeeId" value="Enter Employee ID"/>
+        <input id="employeeId" value="14"/>
       </div>
-
+      <div class="field full">
+        <label>Pay Period</label>
+        <input id="payPeriod" value="September 2025"/>
+      </div>
     </div>
 
     <h2 style="margin-top:14px;">Earnings</h2>
     <div class="grid">
       <div class="field">
         <label>Basic (₹)</label>
-        <input id="basic" min="0" step="0.01" type="number" value="0"/>
+        <input id="basic" min="0" step="0.01" type="number" value="25000"/>
       </div>
       <div class="field">
         <label>House Rent Allowance (₹)</label>
@@ -307,14 +310,15 @@ Faridabad India</textarea>
           </div>
 
           <div>
-            <p class="company" id="vCompanyName">Company Name</p>
-            <p class="addr" id="vCompanyAddress">Enter Company Address</p>
+            <p class="company" id="vCompanyName">Dataknobs</p>
+            <p class="addr" id="vCompanyAddress">RPS Auria, Flat No-102, Tower - T2, First floor
+Faridabad India</p>
           </div>
         </div>
 
         <div class="titlebox">
-          <p class="title">Payslip For the Pay Period</p>
-          <p class="month" id="vPayPeriodTitle">Enter Pay Period (E.g. March 2026)</p>
+          <p class="title">Payslip For the Month</p>
+          <p class="month" id="vPayslipMonth">September 2025</p>
         </div>
       </div>
 
@@ -322,17 +326,17 @@ Faridabad India</textarea>
         <div>
           <h3>EMPLOYEE SUMMARY</h3>
           <div class="kv">
-            <div class="k">Employee Name</div><div id="vEmployeeName">Employee Name</div>
+            <div class="k">Employee Name</div><div id="vEmployeeName">Vinayak Gaikar</div>
             <div class="k">Employee ID</div><div id="vEmployeeId">14</div>
-            <div class="k">Pay Period</div><div id="vPayPeriod"></div>
-            <div class="k">Pay Date</div><div id="vPayDate"></div>
+            <div class="k">Pay Period</div><div id="vPayPeriod">September 2025</div>
+            <div class="k">Pay Date</div><div id="vPayDate">07/10/2025</div>
           </div>
         </div>
 
         <div class="netpay">
           <div class="netpayBox">
             <p class="label">TOTAL NET PAY</p>
-            <div class="amount" id="vNetPay">₹0</div>
+            <div class="amount" id="vNetPay">₹25,000.00</div>
           </div>
         </div>
       </div>
@@ -341,11 +345,11 @@ Faridabad India</textarea>
         <table>
           <thead><tr><th>EARNINGS</th><th class="r">AMOUNT</th></tr></thead>
           <tbody>
-            <tr><td>Basic</td><td class="r" id="vBasic">₹0</td></tr>
+            <tr><td>Basic</td><td class="r" id="vBasic">₹25,000.00</td></tr>
             <tr><td>House Rent Allowance</td><td class="r" id="vHra">₹0.00</td></tr>
             <tr><td>Other Earnings</td><td class="r" id="vOtherEarnings">₹0.00</td></tr>
           </tbody>
-          <tfoot><tr><td>Gross Earnings</td><td class="r" id="vGross">₹0</td></tr></tfoot>
+          <tfoot><tr><td>Gross Earnings</td><td class="r" id="vGross">₹25,000.00</td></tr></tfoot>
         </table>
 
         <table>
@@ -360,15 +364,15 @@ Faridabad India</textarea>
       </div>
 
       <div class="totals">
-        <div class="row"><span>GROSS EARNINGS</span><span id="vGross2">₹0</span></div>
+        <div class="row"><span>GROSS EARNINGS</span><span id="vGross2">₹25,000.00</span></div>
         <div class="row"><span>TOTAL DEDUCTIONS</span><span id="vTotalDeductions2">₹0.00</span></div>
 
         <div class="netPayableBox">
           <div class="label">TOTAL NET PAYABLE</div>
-          <div class="value" id="vNetPay2">₹0</div>
+          <div class="value" id="vNetPay2">₹25,000.00</div>
         </div>
 
-        <div class="words"><span class="k">Amount In Words :</span> <span id="vWords">Indian Rupee </span></div>
+        <div class="words"><span class="k">Amount In Words :</span> <span id="vWords">Indian Rupee Twenty-Five Thousand Only</span></div>
       </div>
 
       <div class="foot">-- This is a system-generated document. --</div>
@@ -474,7 +478,10 @@ Faridabad India</textarea>
   }
 
   function syncPeriodFieldsFromDate(){
-    // Pay Period is intentionally independent from Pay Date.
+    const monthYear = monthYearFromDate(val("payDate"));
+    if(!monthYear) return;
+    getEl("payslipMonth").value = monthYear;
+    getEl("payPeriod").value = monthYear;
   }
 
   function safeSlug(s){
@@ -577,8 +584,8 @@ Faridabad India</textarea>
 
   // ---------- Preview Update ----------
   const ids = [
-    "companyName","companyAddress","payPeriod","payDate",
-    "employeeName","employeeId",
+    "companyName","companyAddress","payslipMonth","payDate",
+    "employeeName","employeeId","payPeriod",
     "basic","hra","otherEarnings","incomeTax","pf","otherDeductions"
   ];
 
@@ -586,8 +593,8 @@ Faridabad India</textarea>
     getEl("vCompanyName").textContent = val("companyName");
     getEl("vCompanyAddress").textContent = val("companyAddress");
 
-    // Pay Period is independent from Pay Date
-    getEl("vPayPeriodTitle").textContent = val("payPeriod");
+    // ✅ Always bind preview month from the input (source of truth)
+    getEl("vPayslipMonth").textContent = val("payslipMonth");
 
     getEl("vEmployeeName").textContent = val("employeeName");
     getEl("vEmployeeId").textContent = val("employeeId");
@@ -627,9 +634,11 @@ Faridabad India</textarea>
 
   ids.forEach(id => {
     getEl(id).addEventListener("input", () => {
+      if(id === "payDate") syncPeriodFieldsFromDate();
       updatePreview();
     });
     getEl(id).addEventListener("change", () => {
+      if(id === "payDate") syncPeriodFieldsFromDate();
       updatePreview();
     });
   });
@@ -637,6 +646,7 @@ Faridabad India</textarea>
   // ---------- PDF Download ----------
   async function downloadPDF(){
     // Ensure preview text is current (especially if user typed but didn't blur)
+    syncPeriodFieldsFromDate();
     updatePreview();
 
     const el = getEl("payslip");
@@ -668,12 +678,13 @@ Faridabad India</textarea>
     const company = safeSlug(val("companyName") || "Company");
     const employee = safeSlug(val("employeeName") || "Employee");
 
-    // Pay Period comes from the input at click-time
-    const month = safeSlug(val("payPeriod") || "Pay_Period");
+    // ✅ Month comes from the input at click-time (not any cached value)
+    const month = safeSlug(val("payslipMonth") || "Payslip");
 
     const logoTag = logoDataUrl ? `with_logo_${(logoFileExt || "img")}` : "no_logo";
 
     // Debug if needed:
+    // console.log("Filename month:", val("payslipMonth"));
 
     pdf.save(`Payslip_${company}_${employee}_${month}_${logoTag}.pdf`);
   }
@@ -683,10 +694,11 @@ Faridabad India</textarea>
   getEl("resetBtn").addEventListener("click", () => {
     getEl("companyName").value = "Dataknobs";
     getEl("companyAddress").value = "RPS Auria, Flat No-102, Tower - T2, First floor\nFaridabad India";
-    getEl("payPeriod").value = "February 2026";
-    getEl("payDate").value = "07/03/2026";
+    getEl("payslipMonth").value = "September 2025";
+    getEl("payDate").value = "07/10/2025";
     getEl("employeeName").value = "Vinayak Gaikar";
     getEl("employeeId").value = "14";
+    getEl("payPeriod").value = "September 2025";
     getEl("basic").value = "25000";
     getEl("hra").value = "0";
     getEl("otherEarnings").value = "0";
@@ -694,9 +706,11 @@ Faridabad India</textarea>
     getEl("pf").value = "0";
     getEl("otherDeductions").value = "0";
     clearLogo();
+    syncPeriodFieldsFromDate();
     updatePreview();
   });
 
+  syncPeriodFieldsFromDate();
   updatePreview();
 </script>
 
