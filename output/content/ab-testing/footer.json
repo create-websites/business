@@ -1,0 +1,26 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Ab Test Sample Size Calculator": "https://www.kreatewebsites.com.business/ab-testing/ab-test-sample-size-calculator.html",
+    "Ab Testing For Ai": "https://www.kreatewebsites.com.business/ab-testing/ab-testing-for-ai.html",
+    "Ab Testing Stats Guide": "https://www.kreatewebsites.com.business/ab-testing/ab-testing-stats-guide.html",
+    "Chi Squared Test Calculator": "https://www.kreatewebsites.com.business/ab-testing/chi-squared-test-calculator.html",
+    "Two Sample T Test Analyzer": "https://www.kreatewebsites.com.business/ab-testing/two-sample-t-test-analyzer.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

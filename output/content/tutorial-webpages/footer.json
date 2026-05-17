@@ -1,0 +1,32 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Ai Agent Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/ai-agent-tutorial.html",
+    "Data Signal Movie Review": "https://www.kreatewebsites.com.business/tutorial-webpages/data-signal-movie-review.html",
+    "Fine Tuned Model In Agentic Ai Systems": "https://www.kreatewebsites.com.business/tutorial-webpages/fine-tuned-model-in-agentic-ai-systems.html",
+    "Genai Architecture Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/genai-architecture-tutorial.html",
+    "Langchain Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/langchain-tutorial.html",
+    "Llm Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/llm-tutorial.html",
+    "Mongo Db Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/mongo-db-tutorial.html",
+    "Multi Agent Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/multi-agent-tutorial.html",
+    "Postgresql Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/postgresql-tutorial.html",
+    "Prompt Engineering Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/prompt-engineering-tutorial.html",
+    "Vector Database Tutorial": "https://www.kreatewebsites.com.business/tutorial-webpages/vector-database-tutorial.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

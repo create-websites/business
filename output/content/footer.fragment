@@ -1,0 +1,123 @@
+
+<footer class="bg-gray-800 text-gray-300">
+  <div class="container mx-auto px-6 py-12 lg:px-8">
+
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Brand</h5>
+        <ul class="space-y-2">
+          <li><a href="Create Websites" class="hover:text-white hover:underline transition-colors duration-200">Name</a></li>
+          <li><a href="We build professional websites that help your business grow, build trust, and generate leads." class="hover:text-white hover:underline transition-colors duration-200">Description</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Services</h5>
+        <ul class="space-y-2">
+          <li><a href="https://business.kreatewebsites.com/tax-consultant/" class="hover:text-white hover:underline transition-colors duration-200">Tax Consultant</a></li>
+          <li><a href="https://designs.kreatewebsites.com/plumber/" class="hover:text-white hover:underline transition-colors duration-200">Plumber</a></li>
+          <li><a href="https://business.kreatewebsites.com/gardner/" class="hover:text-white hover:underline transition-colors duration-200">Gardner and Landscaper</a></li>
+          <li><a href="https://business.kreatewebsites.com/tatto-studio/" class="hover:text-white hover:underline transition-colors duration-200">Tatto Studio</a></li>
+          <li><a href="https://designs.kreatewebsites.com/real-estate/" class="hover:text-white hover:underline transition-colors duration-200">Real Estate</a></li>
+          <li><a href="https://designs.kreatewebsites.com/vitamin-supplements/" class="hover:text-white hover:underline transition-colors duration-200">Vitamin and Supplments</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Folders</h5>
+        <ul class="space-y-2">
+          <li><a href="https://www.kreatewebsites.com.business/ab-testing/" class="hover:text-white hover:underline transition-colors duration-200">Ab Testing</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/band-website/" class="hover:text-white hover:underline transition-colors duration-200">Band Website</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/barber/" class="hover:text-white hover:underline transition-colors duration-200">Barber</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/builder/" class="hover:text-white hover:underline transition-colors duration-200">Builder</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/cake-shop/" class="hover:text-white hover:underline transition-colors duration-200">Cake Shop</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/chef-website/" class="hover:text-white hover:underline transition-colors duration-200">Chef Website</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/chocolate-shop/" class="hover:text-white hover:underline transition-colors duration-200">Chocolate Shop</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/cleaning-services/" class="hover:text-white hover:underline transition-colors duration-200">Cleaning Services</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/clothing-store/" class="hover:text-white hover:underline transition-colors duration-200">Clothing Store</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/cpa-firm/" class="hover:text-white hover:underline transition-colors duration-200">Cpa Firm</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/dermatologies/" class="hover:text-white hover:underline transition-colors duration-200">Dermatologies</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/designer-portfolio/" class="hover:text-white hover:underline transition-colors duration-200">Designer Portfolio</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/dietitian/" class="hover:text-white hover:underline transition-colors duration-200">Dietitian</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/education-coaching/" class="hover:text-white hover:underline transition-colors duration-200">Education Coaching</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/electrician/" class="hover:text-white hover:underline transition-colors duration-200">Electrician</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/event-planner/" class="hover:text-white hover:underline transition-colors duration-200">Event Planner</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/feature-vendor-comparison-websites/" class="hover:text-white hover:underline transition-colors duration-200">Feature Vendor Comparison Websites</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/franchise/" class="hover:text-white hover:underline transition-colors duration-200">Franchise</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/free-payslip-generator/" class="hover:text-white hover:underline transition-colors duration-200">Free Payslip Generator</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/games-pages/" class="hover:text-white hover:underline transition-colors duration-200">Games Pages</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/gardner/" class="hover:text-white hover:underline transition-colors duration-200">Gardner</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/genai-cost-calculation/" class="hover:text-white hover:underline transition-colors duration-200">Genai Cost Calculation</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/house-builder/" class="hover:text-white hover:underline transition-colors duration-200">House Builder</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/interior-designer/" class="hover:text-white hover:underline transition-colors duration-200">Interior Designer</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/journey-webpages/" class="hover:text-white hover:underline transition-colors duration-200">Journey Webpages</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kindergarden-school/" class="hover:text-white hover:underline transition-colors duration-200">Kindergarden School</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/land-scaping/" class="hover:text-white hover:underline transition-colors duration-200">Land Scaping</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/lawyer/" class="hover:text-white hover:underline transition-colors duration-200">Lawyer</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/moving-company/" class="hover:text-white hover:underline transition-colors duration-200">Moving Company</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/personal-trainer/" class="hover:text-white hover:underline transition-colors duration-200">Personal Trainer</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/pet-company/" class="hover:text-white hover:underline transition-colors duration-200">Pet Company</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/real-estate/" class="hover:text-white hover:underline transition-colors duration-200">Real Estate</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/security-bouncer/" class="hover:text-white hover:underline transition-colors duration-200">Security Bouncer</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/tattoo-studio/" class="hover:text-white hover:underline transition-colors duration-200">Tattoo Studio</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/tax-consultant/" class="hover:text-white hover:underline transition-colors duration-200">Tax Consultant</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/tax-filing-services/" class="hover:text-white hover:underline transition-colors duration-200">Tax Filing Services</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/tutorial-webpages/" class="hover:text-white hover:underline transition-colors duration-200">Tutorial Webpages</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/yoga-instructor/" class="hover:text-white hover:underline transition-colors duration-200">Yoga Instructor</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Pages</h5>
+        <ul class="space-y-2">
+          <li><a href="https://www.kreatewebsites.com.business/ai-agent-webmaster.html" class="hover:text-white hover:underline transition-colors duration-200">Ai Agent Webmaster</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/ai-collapsed-the-web-stack.html" class="hover:text-white hover:underline transition-colors duration-200">Ai Collapsed The Web Stack</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/ai-data-product.html" class="hover:text-white hover:underline transition-colors duration-200">Ai Data Product</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/automated-seo-geo.html" class="hover:text-white hover:underline transition-colors duration-200">Automated Seo Geo</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/business-kreatewebsite-landing-emoji-org.html" class="hover:text-white hover:underline transition-colors duration-200">Business Kreatewebsite Landing Emoji Org</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/datacentric-websites.html" class="hover:text-white hover:underline transition-colors duration-200">Datacentric Websites</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/example-business-websites-ai-assistants.html" class="hover:text-white hover:underline transition-colors duration-200">Example Business Websites Ai Assistants</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/fast-and-effective-websites.html" class="hover:text-white hover:underline transition-colors duration-200">Fast And Effective Websites</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/free-payslip-generator-2.html" class="hover:text-white hover:underline transition-colors duration-200">Free Payslip Generator 2</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/free-payslip-generator-3.html" class="hover:text-white hover:underline transition-colors duration-200">Free Payslip Generator 3</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/free-payslip-generator-4.html" class="hover:text-white hover:underline transition-colors duration-200">Free Payslip Generator 4</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/free-payslip-generator.html" class="hover:text-white hover:underline transition-colors duration-200">Free Payslip Generator</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/generative-engine-optimization-kreatewebsites.html" class="hover:text-white hover:underline transition-colors duration-200">Generative Engine Optimization Kreatewebsites</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/generative-engine-optimzation-guide.html" class="hover:text-white hover:underline transition-colors duration-200">Generative Engine Optimzation Guide</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/geo-for-chatgpt-gemini-ai-crawler.html" class="hover:text-white hover:underline transition-colors duration-200">Geo For Chatgpt Gemini Ai Crawler</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/geo-overview.html" class="hover:text-white hover:underline transition-colors duration-200">Geo Overview</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/index-2.html" class="hover:text-white hover:underline transition-colors duration-200">Index 2</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/index.html.bak.html" class="hover:text-white hover:underline transition-colors duration-200">Index.Html.Bak</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/index_business_kreatewebsites.html" class="hover:text-white hover:underline transition-colors duration-200">Index Business Kreatewebsites</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreate-agency-2.html" class="hover:text-white hover:underline transition-colors duration-200">Kreate Agency 2</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatebots-for-cpa-automation.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatebots For Cpa Automation</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatebots-for-cpa.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatebots For Cpa</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatewebsites-advantages.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatewebsites Advantages</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatewebsites-for-creators.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatewebsites For Creators</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatewebsites-for-fastest-development.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatewebsites For Fastest Development</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatewebsites-for-freelancers.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatewebsites For Freelancers</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatewebsites-for-local-business.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatewebsites For Local Business</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/kreatewebsites-web-stack.html" class="hover:text-white hover:underline transition-colors duration-200">Kreatewebsites Web Stack</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/privacypolicy.html" class="hover:text-white hover:underline transition-colors duration-200">Privacypolicy</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/sitemap.html" class="hover:text-white hover:underline transition-colors duration-200">Sitemap</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/websites-for-business.html" class="hover:text-white hover:underline transition-colors duration-200">Websites For Business</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Footer Links</h5>
+        <ul class="space-y-2">
+          <li><a href="https://business.kreatewebsites.com/privacypolicy,html" class="hover:text-white hover:underline transition-colors duration-200">Privacy Policy</a></li>
+          <li><a href="https://business.kreatewebsites.com/sitemap.html" class="hover:text-white hover:underline transition-colors duration-200">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 border-t border-gray-700 pt-8 flex flex-col items-center justify-between sm:flex-row">
+      <p class="text-sm text-gray-400">&copy; 2026 Dataknobs for Builing Data Products. All rights reserved.</p>
+      
+    </div>
+
+  </div>
+</footer>

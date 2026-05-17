@@ -1,0 +1,58 @@
+
+<footer class="bg-gray-800 text-gray-300">
+  <div class="container mx-auto px-6 py-12 lg:px-8">
+
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Brand</h5>
+        <ul class="space-y-2">
+          <li><a href="Create Websites" class="hover:text-white hover:underline transition-colors duration-200">Name</a></li>
+          <li><a href="We build professional websites that help your business grow, build trust, and generate leads." class="hover:text-white hover:underline transition-colors duration-200">Description</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Services</h5>
+        <ul class="space-y-2">
+          <li><a href="https://business.kreatewebsites.com/tax-consultant/" class="hover:text-white hover:underline transition-colors duration-200">Tax Consultant</a></li>
+          <li><a href="https://designs.kreatewebsites.com/plumber/" class="hover:text-white hover:underline transition-colors duration-200">Plumber</a></li>
+          <li><a href="https://business.kreatewebsites.com/gardner/" class="hover:text-white hover:underline transition-colors duration-200">Gardner and Landscaper</a></li>
+          <li><a href="https://business.kreatewebsites.com/tatto-studio/" class="hover:text-white hover:underline transition-colors duration-200">Tatto Studio</a></li>
+          <li><a href="https://designs.kreatewebsites.com/real-estate/" class="hover:text-white hover:underline transition-colors duration-200">Real Estate</a></li>
+          <li><a href="https://designs.kreatewebsites.com/vitamin-supplements/" class="hover:text-white hover:underline transition-colors duration-200">Vitamin and Supplments</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Pages</h5>
+        <ul class="space-y-2">
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/acive-learning-infographics.html" class="hover:text-white hover:underline transition-colors duration-200">Acive Learning Infographics</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/data-centric-playbook-info.html" class="hover:text-white hover:underline transition-colors duration-200">Data Centric Playbook Info</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/data-governance-for-ai-info.html" class="hover:text-white hover:underline transition-colors duration-200">Data Governance For Ai Info</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/data-lineage-info.html" class="hover:text-white hover:underline transition-colors duration-200">Data Lineage Info</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/demand-sensing-food-info.html" class="hover:text-white hover:underline transition-colors duration-200">Demand Sensing Food Info</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/lead-generation-strategy-explorer-info.html" class="hover:text-white hover:underline transition-colors duration-200">Lead Generation Strategy Explorer Info</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/optimal-transport-summary-2.html" class="hover:text-white hover:underline transition-colors duration-200">Optimal Transport Summary 2</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/option-data-provider-info.html" class="hover:text-white hover:underline transition-colors duration-200">Option Data Provider Info</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/privacy-ai-assistant-info.html" class="hover:text-white hover:underline transition-colors duration-200">Privacy Ai Assistant Info</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/infographic-webpages/vulnerability-management-info.html" class="hover:text-white hover:underline transition-colors duration-200">Vulnerability Management Info</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Footer Links</h5>
+        <ul class="space-y-2">
+          <li><a href="https://business.kreatewebsites.com/privacypolicy,html" class="hover:text-white hover:underline transition-colors duration-200">Privacy Policy</a></li>
+          <li><a href="https://business.kreatewebsites.com/sitemap.html" class="hover:text-white hover:underline transition-colors duration-200">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 border-t border-gray-700 pt-8 flex flex-col items-center justify-between sm:flex-row">
+      <p class="text-sm text-gray-400">&copy; 2026 Dataknobs for Builing Data Products. All rights reserved.</p>
+      
+    </div>
+
+  </div>
+</footer>

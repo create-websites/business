@@ -1,0 +1,26 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Architect Data Sets": "https://www.kreatewebsites.com.business/playbook-webpages/architect-data-sets.html",
+    "Data Centric Ai Playbook": "https://www.kreatewebsites.com.business/playbook-webpages/data-centric-ai-playbook.html",
+    "Dataproduct Vs Data As Product": "https://www.kreatewebsites.com.business/playbook-webpages/dataproduct-vs-data-as-product.html",
+    "Optimal Transport": "https://www.kreatewebsites.com.business/playbook-webpages/optimal-transport.html",
+    "Playbook Architect Document Intelligence": "https://www.kreatewebsites.com.business/playbook-webpages/playbook-architect-document-intelligence.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

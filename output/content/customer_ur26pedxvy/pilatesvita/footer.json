@@ -1,0 +1,40 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {
+    "Booking": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/booking/",
+    "Certification": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/certification/",
+    "Contact": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/contact/",
+    "Our Instructors 1": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/our-instructors-1/",
+    "Policies": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/policies/",
+    "Reviews": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/reviews/",
+    "Sessions": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/sessions/",
+    "Seven Principles Of Pilates": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/seven-principles-of-pilates/"
+  },
+  "Pages": {
+    "Booking": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/booking.html",
+    "Certification": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/certification.html",
+    "Contact": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/contact.html",
+    "Intro Session": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/intro-session.html",
+    "Introduction To Pilates": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/introduction-to-pilates.html",
+    "Our Instructors 1": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/our-instructors-1.html",
+    "Policies": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/policies.html",
+    "Reviews": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/reviews.html",
+    "Sessions": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/sessions.html",
+    "Seven Principles Of Pilates": "https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/seven-principles-of-pilates.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Ai Agent For Compliance": "https://www.kreatewebsites.com.business/training/ai-agent-for-compliance.html",
+    "Gcp Security Awareness For Startup": "https://www.kreatewebsites.com.business/training/gcp-security-awareness-for-startup.html",
+    "Just In Time Security Access": "https://www.kreatewebsites.com.business/training/just-in-time-security-access.html",
+    "Rpa Guide": "https://www.kreatewebsites.com.business/training/rpa-guide.html",
+    "Security Just In Time Access": "https://www.kreatewebsites.com.business/training/security-just-in-time-access.html",
+    "Security Training Agent Ai": "https://www.kreatewebsites.com.business/training/security-training-agent-ai.html",
+    "Security Training Genai": "https://www.kreatewebsites.com.business/training/security-training-genai.html",
+    "Training Ai Model Governance": "https://www.kreatewebsites.com.business/training/training-ai-model-governance.html",
+    "Training Data Lineage": "https://www.kreatewebsites.com.business/training/training-data-lineage.html",
+    "Training Data Privacy": "https://www.kreatewebsites.com.business/training/training-data-privacy.html",
+    "Training Ml Ops Pipeline": "https://www.kreatewebsites.com.business/training/training-ml-ops-pipeline.html",
+    "Training Secure Code": "https://www.kreatewebsites.com.business/training/training-secure-code.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

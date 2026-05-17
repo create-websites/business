@@ -1,0 +1,72 @@
+
+<footer class="bg-gray-800 text-gray-300">
+  <div class="container mx-auto px-6 py-12 lg:px-8">
+
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+      
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Brand</h5>
+        <ul class="space-y-2">
+          <li><a href="Create Websites" class="hover:text-white hover:underline transition-colors duration-200">Name</a></li>
+          <li><a href="We build professional websites that help your business grow, build trust, and generate leads." class="hover:text-white hover:underline transition-colors duration-200">Description</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Services</h5>
+        <ul class="space-y-2">
+          <li><a href="https://business.kreatewebsites.com/tax-consultant/" class="hover:text-white hover:underline transition-colors duration-200">Tax Consultant</a></li>
+          <li><a href="https://designs.kreatewebsites.com/plumber/" class="hover:text-white hover:underline transition-colors duration-200">Plumber</a></li>
+          <li><a href="https://business.kreatewebsites.com/gardner/" class="hover:text-white hover:underline transition-colors duration-200">Gardner and Landscaper</a></li>
+          <li><a href="https://business.kreatewebsites.com/tatto-studio/" class="hover:text-white hover:underline transition-colors duration-200">Tatto Studio</a></li>
+          <li><a href="https://designs.kreatewebsites.com/real-estate/" class="hover:text-white hover:underline transition-colors duration-200">Real Estate</a></li>
+          <li><a href="https://designs.kreatewebsites.com/vitamin-supplements/" class="hover:text-white hover:underline transition-colors duration-200">Vitamin and Supplments</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Folders</h5>
+        <ul class="space-y-2">
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/booking/" class="hover:text-white hover:underline transition-colors duration-200">Booking</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/certification/" class="hover:text-white hover:underline transition-colors duration-200">Certification</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/contact/" class="hover:text-white hover:underline transition-colors duration-200">Contact</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/our-instructors-1/" class="hover:text-white hover:underline transition-colors duration-200">Our Instructors 1</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/policies/" class="hover:text-white hover:underline transition-colors duration-200">Policies</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/reviews/" class="hover:text-white hover:underline transition-colors duration-200">Reviews</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/sessions/" class="hover:text-white hover:underline transition-colors duration-200">Sessions</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/seven-principles-of-pilates/" class="hover:text-white hover:underline transition-colors duration-200">Seven Principles Of Pilates</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Pages</h5>
+        <ul class="space-y-2">
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/booking.html" class="hover:text-white hover:underline transition-colors duration-200">Booking</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/certification.html" class="hover:text-white hover:underline transition-colors duration-200">Certification</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/contact.html" class="hover:text-white hover:underline transition-colors duration-200">Contact</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/intro-session.html" class="hover:text-white hover:underline transition-colors duration-200">Intro Session</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/introduction-to-pilates.html" class="hover:text-white hover:underline transition-colors duration-200">Introduction To Pilates</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/our-instructors-1.html" class="hover:text-white hover:underline transition-colors duration-200">Our Instructors 1</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/policies.html" class="hover:text-white hover:underline transition-colors duration-200">Policies</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/reviews.html" class="hover:text-white hover:underline transition-colors duration-200">Reviews</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/sessions.html" class="hover:text-white hover:underline transition-colors duration-200">Sessions</a></li>
+          <li><a href="https://www.kreatewebsites.com.business/customer_ur26pedxvy/pilatesvita/seven-principles-of-pilates.html" class="hover:text-white hover:underline transition-colors duration-200">Seven Principles Of Pilates</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-lg font-semibold text-white mb-4">Footer Links</h5>
+        <ul class="space-y-2">
+          <li><a href="https://business.kreatewebsites.com/privacypolicy,html" class="hover:text-white hover:underline transition-colors duration-200">Privacy Policy</a></li>
+          <li><a href="https://business.kreatewebsites.com/sitemap.html" class="hover:text-white hover:underline transition-colors duration-200">Sitemap</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 border-t border-gray-700 pt-8 flex flex-col items-center justify-between sm:flex-row">
+      <p class="text-sm text-gray-400">&copy; 2026 Dataknobs for Builing Data Products. All rights reserved.</p>
+      
+    </div>
+
+  </div>
+</footer>

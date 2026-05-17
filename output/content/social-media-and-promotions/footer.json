@@ -1,0 +1,27 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Best Practices For Rss Feeds": "https://www.kreatewebsites.com.business/social-media-and-promotions/best-practices-for-rss-feeds.html",
+    "Facebook Page Stolen": "https://www.kreatewebsites.com.business/social-media-and-promotions/facebook-page-stolen.html",
+    "Google Ad Coupon Complaint": "https://www.kreatewebsites.com.business/social-media-and-promotions/google-ad-coupon-complaint.html",
+    "How To Increase Linkedin Post Impressions": "https://www.kreatewebsites.com.business/social-media-and-promotions/how-to-increase-linkedin-post-impressions.html",
+    "Linkedin Premium Business": "https://www.kreatewebsites.com.business/social-media-and-promotions/linkedin-premium-business.html",
+    "Preventing Competitive Inquiries": "https://www.kreatewebsites.com.business/social-media-and-promotions/preventing-competitive-inquiries.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

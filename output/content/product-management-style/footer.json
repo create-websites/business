@@ -1,0 +1,25 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Data Signal Movie Review": "https://www.kreatewebsites.com.business/product-management-style/data-signal-movie-review.html",
+    "Data Signals Vunerability Management": "https://www.kreatewebsites.com.business/product-management-style/data-signals-vunerability-management.html",
+    "Lead Generation For Web Developers": "https://www.kreatewebsites.com.business/product-management-style/lead-generation-for-web-developers.html",
+    "Lead Strategy For Web Dev Leads": "https://www.kreatewebsites.com.business/product-management-style/lead-strategy-for-web-dev-leads.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

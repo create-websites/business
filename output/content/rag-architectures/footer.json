@@ -1,0 +1,29 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "12 Types Of Rag": "https://www.kreatewebsites.com.business/rag-architectures/12-types-of-rag.html",
+    "Ai Embeddings": "https://www.kreatewebsites.com.business/rag-architectures/ai-embeddings.html",
+    "Chunking And Tokenization": "https://www.kreatewebsites.com.business/rag-architectures/chunking-and-tokenization.html",
+    "Evolution Of Rag": "https://www.kreatewebsites.com.business/rag-architectures/evolution-of-rag.html",
+    "Fine Grained Orchestrator Guide": "https://www.kreatewebsites.com.business/rag-architectures/fine-grained-orchestrator-guide.html",
+    "Privacy In Rag": "https://www.kreatewebsites.com.business/rag-architectures/privacy-in-rag.html",
+    "Rag Architecture Explorer": "https://www.kreatewebsites.com.business/rag-architectures/rag-architecture-explorer.html",
+    "Rag Architectures": "https://www.kreatewebsites.com.business/rag-architectures/rag-architectures.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

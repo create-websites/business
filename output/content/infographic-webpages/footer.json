@@ -1,0 +1,31 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Acive Learning Infographics": "https://www.kreatewebsites.com.business/infographic-webpages/acive-learning-infographics.html",
+    "Data Centric Playbook Info": "https://www.kreatewebsites.com.business/infographic-webpages/data-centric-playbook-info.html",
+    "Data Governance For Ai Info": "https://www.kreatewebsites.com.business/infographic-webpages/data-governance-for-ai-info.html",
+    "Data Lineage Info": "https://www.kreatewebsites.com.business/infographic-webpages/data-lineage-info.html",
+    "Demand Sensing Food Info": "https://www.kreatewebsites.com.business/infographic-webpages/demand-sensing-food-info.html",
+    "Lead Generation Strategy Explorer Info": "https://www.kreatewebsites.com.business/infographic-webpages/lead-generation-strategy-explorer-info.html",
+    "Optimal Transport Summary 2": "https://www.kreatewebsites.com.business/infographic-webpages/optimal-transport-summary-2.html",
+    "Option Data Provider Info": "https://www.kreatewebsites.com.business/infographic-webpages/option-data-provider-info.html",
+    "Privacy Ai Assistant Info": "https://www.kreatewebsites.com.business/infographic-webpages/privacy-ai-assistant-info.html",
+    "Vulnerability Management Info": "https://www.kreatewebsites.com.business/infographic-webpages/vulnerability-management-info.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

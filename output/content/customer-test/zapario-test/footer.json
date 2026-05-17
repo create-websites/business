@@ -1,0 +1,30 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Electronics Engineering Design": "https://www.kreatewebsites.com.business/customer-test/zapario-test/electronics-engineering-design.html",
+    "Electronics Hardware Design": "https://www.kreatewebsites.com.business/customer-test/zapario-test/electronics-hardware-design.html",
+    "Iot 2025": "https://www.kreatewebsites.com.business/customer-test/zapario-test/iot-2025.html",
+    "Iot Intelligent Cloud Blue": "https://www.kreatewebsites.com.business/customer-test/zapario-test/iot-intelligent-cloud-blue.html",
+    "Iot Intelligent Cloud Red": "https://www.kreatewebsites.com.business/customer-test/zapario-test/iot-intelligent-cloud-red.html",
+    "Iot Intelligent Edge": "https://www.kreatewebsites.com.business/customer-test/zapario-test/iot-intelligent-edge.html",
+    "Iot Use Case For Oem": "https://www.kreatewebsites.com.business/customer-test/zapario-test/iot-use-case-for-oem.html",
+    "Iot": "https://www.kreatewebsites.com.business/customer-test/zapario-test/iot.html",
+    "Zapario 2025": "https://www.kreatewebsites.com.business/customer-test/zapario-test/zapario-2025.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}

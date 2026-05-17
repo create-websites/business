@@ -1,0 +1,24 @@
+{
+  "Brand": {
+    "Name": "Create Websites",
+    "Description": "We build professional websites that help your business grow, build trust, and generate leads."
+  },
+  "Services": {
+    "Tax Consultant": "https://business.kreatewebsites.com/tax-consultant/",
+    "Plumber": "https://designs.kreatewebsites.com/plumber/",
+    "Gardner and Landscaper": "https://business.kreatewebsites.com/gardner/",
+    "Tatto Studio": "https://business.kreatewebsites.com/tatto-studio/",
+    "Real Estate": "https://designs.kreatewebsites.com/real-estate/",
+    "Vitamin and Supplments": "https://designs.kreatewebsites.com/vitamin-supplements/"
+  },
+  "Folders": {},
+  "Pages": {
+    "Ai Assistant Vs Digtial Human": "https://www.kreatewebsites.com.business/feature-vendor-comparison-websites/ai-assistant-vs-digtial-human.html",
+    "Big Query Vs Redshift Vs Snowflake Vs Databricks": "https://www.kreatewebsites.com.business/feature-vendor-comparison-websites/big-query-vs-redshift-vs-snowflake-vs-databricks.html",
+    "Choosing Llm Model": "https://www.kreatewebsites.com.business/feature-vendor-comparison-websites/choosing-llm-model.html"
+  },
+  "Footer Links": {
+    "Privacy Policy": "https://business.kreatewebsites.com/privacypolicy,html",
+    "Sitemap": "https://business.kreatewebsites.com/sitemap.html"
+  }
+}
